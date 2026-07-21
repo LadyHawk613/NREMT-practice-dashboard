@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NREMT Progressive Case Study #1: Difficulty Breathing</title>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #34495e;
+            --accent-color: #e74c3c;
+            --success-color: #27ae60;
+            --bg-color: #f4f7f6;
+            --card-bg: #ffffff;
+            --text-color: #333;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .container {
+            max-width: 800px;
+            width: 100%;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 3px solid var(--primary-color);
+            padding-bottom: 10px;
+        }
+
+        .case-card {
+            background: var(--card-bg);
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            padding: 30px;
+            margin-bottom: 20px;
+            display: none;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        .case-card.active {
+            display: block;
+        }
+
+        h2 {
+            color: var(--primary-color);
+            margin-top: 0;
+        }
+
+        .info-box {
+            background: #eef2f7;
+            border-left: 5px solid var(--secondary-color);
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+
+        .vitals-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 10px;
+            margin: 15px 0;
+            background: #f9f9f9;
+            padding: 15px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
+
+        .vital-item {
+            font-weight: bold;
+        }
+
+        .question-box {
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 1px dashed #ccc;
+        }
+
+        .options {
+            list-style: none;
+            padding: 0;
+        }
+
+        .option {
+            background: #fff;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            padding: 12px 15px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .option:hover {
+            border-color: var(--secondary-color);
+            background: #f0f4f8;
+        }
+
+        .option.selected {
+            border-color: var(--primary-color);
+            background: #e8eff5;
+        }
+
+        .option.correct {
+            background: #d4edda;
+            border-color: var(--success-color);
+        }
+
+        .option.wrong {
+            background: #f8d7da;
+            border-color: var(--accent-color);
+        }
+
+        button {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            float: right;
+            margin-top: 10px;
+        }
+
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        .feedback {
+            margin-top: 15px;
+            font-weight: bold;
+            display: none;
+        }
+
+        .progress-bar {
+            height: 10px;
+            background: #ddd;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--success-color);
+            width: 0%;
+            transition: width 0.3s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .final-report {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            border: 2px solid var(--primary-color);
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>NREMT Progressive Case Study #1</h1>
+        <p>Topic: Difficulty Breathing</p>
+    </header>
+
+    <div class="progress-bar">
+        <div class="progress-fill" id="progressFill"></div>
+    </div>
+
+    <!-- Step 1 -->
+    <div class="case-card active" id="step1">
+        <h2>Step 1 – Initial Dispatch</h2>
+        <div class="info-box">
+            <p>You are dispatched at 1430 for a 62-year-old male having difficulty breathing. Family states he "can't catch his breath."</p>
+            <p>You arrive to find the patient sitting upright in a recliner. He is speaking in short sentences.</p>
+        </div>
+        
+        <h3>Assessment</h3>
+        <ul>
+            <li>Awake and oriented</li>
+            <li>Skin cool and pale</li>
+            <li>Respiratory rate 30/min</li>
+            <li>Audible wheezing</li>
+            <li>Pulse 118</li>
+            <li>Radial pulses present</li>
+        </ul>
+
+        <div class="question-box">
+            <p><strong>Question 1:</strong> What should the EMT do FIRST?</p>
+            <ul class="options" data-answer="B">
+                <li class="option" onclick="selectOption(this, 'A')">A. Assist with the patient's albuterol inhaler</li>
+                <li class="option" onclick="selectOption(this, 'B')">B. Apply high-flow oxygen and perform a primary assessment</li>
+                <li class="option" onclick="selectOption(this, 'C')">C. Obtain a SAMPLE history</li>
+                <li class="option" onclick="selectOption(this, 'D')">D. Place the patient on the stretcher</li>
+            </ul>
+            <div class="feedback"></div>
+            <button onclick="nextStep(1)" id="btn1" disabled>Next Step</button>
+        </div>
+    </div>
+
+    <!-- Step 2 -->
+    <div class="case-card" id="step2">
+        <h2>Step 2 – More Information</h2>
+        <div class="info-box">
+            <p>After oxygen is applied, you obtain additional information.</p>
+            <p><strong>Medical History:</strong> CHF, Hypertension, Diabetes</p>
+            <p>Family states he became short of breath while watching television.</p>
+        </div>
+
+        <div class="vitals-grid">
+            <div class="vital-item">BP: 178/96</div>
+            <div class="vital-item">Pulse: 118</div>
+            <div class="vital-item">Respirations: 30</div>
+            <div class="vital-item">SpO₂: 86%</div>
+        </div>
+
+        <p><strong>Lung sounds:</strong> Crackles at both bases, Mild wheezing</p>
+
+        <div class="question-box">
+            <p><strong>Question 2:</strong> These findings MOST strongly suggest:</p>
+            <ul class="options" data-answer="B">
+                <li class="option" onclick="selectOption(this, 'A')">A. Asthma</li>
+                <li class="option" onclick="selectOption(this, 'B')">B. Pulmonary edema</li>
+                <li class="option" onclick="selectOption(this, 'C')">C. COPD exacerbation</li>
+                <li class="option" onclick="selectOption(this, 'D')">D. Pneumonia</li>
+            </ul>
+            <div class="feedback"></div>
+            <button onclick="nextStep(2)" id="btn2" disabled>Next Step</button>
+        </div>
+    </div>
+
+    <!-- Step 3 -->
+    <div class="case-card" id="step3">
+        <h2>Step 3 – Patient Worsens</h2>
+        <div class="info-box">
+            <p>While preparing for transport, the patient becomes more anxious.</p>
+            <p>He now presents with:</p>
+            <ul>
+                <li>Pink frothy sputum</li>
+                <li>Increasing crackles</li>
+            </ul>
+        </div>
+
+        <div class="vitals-grid">
+            <div class="vital-item">SpO₂: 82%</div>
+            <div class="vital-item">Respirations: 36</div>
+        </div>
+
+        <div class="question-box">
+            <p><strong>Question 3:</strong> Which intervention is MOST appropriate?</p>
+            <ul class="options" data-answer="C">
+                <li class="option" onclick="selectOption(this, 'A')">A. Encourage the patient to lie flat</li>
+                <li class="option" onclick="selectOption(this, 'B')">B. Assist with albuterol</li>
+                <li class="option" onclick="selectOption(this, 'C')">C. Apply CPAP if available and indicated</li>
+                <li class="option" onclick="selectOption(this, 'D')">D. Delay transport for additional assessment</li>
+            </ul>
+            <div class="feedback"></div>
+            <button onclick="nextStep(3)" id="btn3" disabled>Next Step</button>
+        </div>
+    </div>
+
+    <!-- Step 4 -->
+    <div class="case-card" id="step4">
+        <h2>Step 4 – En Route</h2>
+        <div class="info-box">
+            <p>Five minutes into transport, you reassess the patient.</p>
+            <p>Patient reports less shortness of breath.</p>
+        </div>
+
+        <div class="vitals-grid">
+            <div class="vital-item">BP: 168/90</div>
+            <div class="vital-item">Pulse: 122</div>
+            <div class="vital-item">SpO₂: 91%</div>
+            <div class="vital-item">Respirations: 26</div>
+        </div>
+
+        <div class="question-box">
+            <p><strong>Question 4:</strong> What indicates your treatment is effective?</p>
+            <ul class="options" data-answer="C">
+                <li class="option" onclick="selectOption(this, 'A')">A. Heart rate increased</li>
+                <li class="option" onclick="selectOption(this, 'B')">B. Blood pressure remains elevated</li>
+                <li class="option" onclick="selectOption(this, 'C')">C. Oxygen saturation improved and work of breathing decreased</li>
+                <li class="option" onclick="selectOption(this, 'D')">D. Patient is still anxious</li>
+            </ul>
+            <div class="feedback"></div>
+            <button onclick="nextStep(4)" id="btn4" disabled>Next Step</button>
+        </div>
+    </div>
+
+    <!-- Step 5 -->
+    <div class="case-card" id="step5">
+        <h2>Step 5 – Hospital Arrival</h2>
+        <div class="info-box">
+            <p>You arrive at the emergency department. The receiving nurse asks for your turnover report.</p>
+        </div>
+
+        <div class="question-box">
+            <p><strong>Question 5:</strong> Which information is MOST important to include?</p>
+            <ul class="options" data-answer="C">
+                <li class="option" onclick="selectOption(this, 'A')">A. The patient watches television every afternoon.</li>
+                <li class="option" onclick="selectOption(this, 'B')">B. The patient has diabetes.</li>
+                <li class="option" onclick="selectOption(this, 'C')">C. Initial respiratory distress, crackles, pink frothy sputum, CPAP response, and trending vital signs.</li>
+                <li class="option" onclick="selectOption(this, 'D')">D. The family called 911 immediately.</li>
+            </ul>
+            <div class="feedback"></div>
+            <button onclick="showFinal()" id="btn5" disabled>Finish Case Study</button>
+        </div>
+    </div>
+
+    <!-- Final -->
+    <div class="case-card" id="final">
+        <h2>Case Study Complete</h2>
+        <div class="final-report">
+            <p>Great job! You have successfully managed a patient with acute pulmonary edema.</p>
+            <h3>Key Takeaways for the NREMT:</h3>
+            <ul>
+                <li><strong>Primary Assessment:</strong> Always address life-threats (Airway, Breathing, Circulation) first. High-flow O2 is critical for respiratory distress.</li>
+                <li><strong>Pulmonary Edema:</strong> History of CHF + crackles + hypertension + pink frothy sputum = Pulmonary Edema.</li>
+                <li><strong>CPAP:</strong> Continuous Positive Airway Pressure is the gold standard for conscious patients with pulmonary edema to push fluid out of the alveoli.</li>
+                <li><strong>Trending:</strong> Monitoring the response to treatment (improved SpO2, decreased work of breathing) is vital for reassessment.</li>
+                <li><strong>Reporting:</strong> A professional turnover focuses on the chief complaint, interventions, and patient response.</li>
+            </ul>
+        </div>
+        <button onclick="location.reload()" style="float: none; display: block; margin: 20px auto;">Restart Case Study</button>
+    </div>
+</div>
+
+<script>
+    let currentStep = 1;
+    const totalSteps = 5;
+
+    function selectOption(element, letter) {
+        const parent = element.parentElement;
+        const correctAnswer = parent.getAttribute('data-answer');
+        const options = parent.querySelectorAll('.option');
+        const feedback = parent.nextElementSibling;
+        const nextBtn = feedback.nextElementSibling;
+
+        // Prevent changing answer after selection
+        if (parent.classList.contains('answered')) return;
+
+        options.forEach(opt => opt.classList.remove('selected'));
+        element.classList.add('selected');
+
+        parent.classList.add('answered');
+        
+        if (letter === correctAnswer) {
+            element.classList.add('correct');
+            feedback.innerHTML = "Correct!";
+            feedback.style.color = "var(--success-color)";
+        } else {
+            element.classList.add('wrong');
+            // Show the correct one
+            options.forEach(opt => {
+                if (opt.innerText.startsWith(correctAnswer)) {
+                    opt.classList.add('correct');
+                }
+            });
+            feedback.innerHTML = "Incorrect. The correct answer was " + correctAnswer + ".";
+            feedback.style.color = "var(--accent-color)";
+        }
+
+        feedback.style.display = "block";
+        nextBtn.disabled = false;
+        
+        updateProgress();
+    }
+
+    function updateProgress() {
+        const fill = document.getElementById('progressFill');
+        const percentage = (currentStep / totalSteps) * 100;
+        fill.style.width = percentage + '%';
+    }
+
+    function nextStep(step) {
+        document.getElementById('step' + step).classList.remove('active');
+        currentStep = step + 1;
+        document.getElementById('step' + currentStep).classList.add('active');
+        window.scrollTo(0, 0);
+    }
+
+    function showFinal() {
+        document.getElementById('step5').classList.remove('active');
+        document.getElementById('final').classList.add('active');
+        updateProgress();
+        window.scrollTo(0, 0);
+    }
+</script>
+
+</body>
+</html>
