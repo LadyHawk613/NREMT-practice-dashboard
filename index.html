@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>NREMT Practice Dashboard</title>
+
+<style>
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  background: linear-gradient(135deg, #e0f7fa, #80deea);
+  min-height: 100vh;
+  margin: 0;
+  padding: 40px 20px;
+  text-align: center;
+}
+
+h1 {
+  color: #083344;
+  margin-bottom: 10px;
+}
+
+.subtitle {
+  color: #164e63;
+  margin-bottom: 30px;
+}
+
+.dashboard {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 20px;
+  max-width: 900px;
+  margin: auto;
+}
+
+.card {
+  background: white;
+  border-radius: 15px;
+  padding: 25px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+}
+
+button {
+  width: 100%;
+  padding: 15px;
+  border: none;
+  border-radius: 12px;
+  background: #0284c7;
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #0369a1;
+  transform: translateY(-2px);
+}
+
+.description {
+  margin-top: 12px;
+  color: #475569;
+  font-size: 14px;
+}
+</style>
+
+</head>
+
+<body>
+
+<h1>🚑 NREMT Practice Dashboard</h1>
+
+<div class="subtitle">
+Select a practice activity
+</div>
+
+
+<div class="dashboard">
+
+  <div class="card">
+    <button onclick="location.href='airway.html'">
+      Airway Management
+    </button>
+    <div class="description">
+      Trauma airway priorities and interventions
+    </div>
+  </div>
+
+
+  <div class="card">
+    <button onclick="location.href='trauma.html'">
+      Trauma Assessment
+    </button>
+    <div class="description">
+      Sequence and treatment priorities
+    </div>
+  </div>
+
+
+  <div class="card">
+    <button onclick="location.href='cardiac.html'">
+      Cardiac Emergencies
+    </button>
+    <div class="description">
+      Cardiac assessment and care
+    </div>
+  </div>
+
+
+  <div class="card">
+    <button onclick="location.href='stroke.html'">
+      Stroke Recognition
+    </button>
+    <div class="description">
+      FAST assessment and treatment
+    </div>
+  </div>
+
+
+  <div class="card">
+    <button onclick="location.href='burns.html'">
+      Burns
+    </button>
+    <div class="description">
+      Burn classification and management
+    </div>
+  </div>
+
+
+  <div class="card">
+    <button onclick="location.href='pediatric.html'">
+      Pediatrics
+    </button>
+    <div class="description">
+      Pediatric assessment principles
+    </div>
+  </div>
+
+
+</div>
+
+</body>
+</html>
