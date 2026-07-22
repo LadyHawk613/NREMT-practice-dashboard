@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Adult Cardiac Arrest Algorithm</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', Tahoma, Verdana, sans-serif;
+    background: #0f1f38;
+    min-height: 100vh;
+    margin: 0;
+    padding: 30px 15px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  h1 {
+    color: #ffffff;
+    margin-bottom: 6px;
+    text-align: center;
+  }
+
+  .instructions {
+    background: #16294a;
+    border: 3px dashed #2e5c9a;
+    border-radius: 14px;
+    padding: 16px 22px;
+    max-width: 520px;
+    margin-bottom: 24px;
+    color: #dce6f5;
+    font-size: 15px;
+    line-height: 1.5;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+  }
+
+  .instructions strong { color: #6cb4ff; }
+
+  .game-area {
+    display: flex;
+    gap: 40px;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: flex-start;
+  }
+
+  .slots {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .slot {
+    width: 300px;
+    height: 64px;
+    background: rgba(255,255,255,0.04);
+    border: 3px dashed #3a5a85;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    transition: background 0.2s, border-color 0.2s, transform 0.15s;
+    padding-left: 34px;
+  }
+
+  .slot .slot-num {
+    position: absolute;
+    top: 50%;
+    left: 10px;
+    transform: translateY(-50%);
+    font-size: 13px;
+    color: #7fa8d9;
+    font-weight: bold;
+  }
+
+  .slot.over {
+    background: rgba(108, 180, 255, 0.15);
+    border-color: #6cb4ff;
+    transform: scale(1.03);
+  }
+
+  .slot.correct {
+    border-color: #2ecc71;
+    background: rgba(46, 204, 113, 0.15);
+  }
+
+  .slot.incorrect {
+    border-color: #e74c3c;
+    background: rgba(231, 76, 60, 0.15);
+  }
+
+  .bank {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    padding: 18px;
+    background: rgba(255,255,255,0.03);
+    border-radius: 18px;
+    min-height: 100px;
+    min-width: 300px;
+  }
+
+  .card {
+    width: 300px;
+    min-height: 58px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    font-size: 15px;
+    font-weight: 700;
+    color: #fff;
+    cursor: grab;
+    padding: 8px 14px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.35);
+    user-select: none;
+    transition: transform 0.15s, box-shadow 0.15s;
+    background: #16294a;
+    border: 2px solid #2e5c9a;
+  }
+
+  .card:active { cursor: grabbing; }
+
+  .card.dragging {
+    opacity: 0.35;
+  }
+
+  .card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 14px rgba(0,0,0,0.4);
+  }
+
+  /* last step card gets the green highlight, matching the flowchart's ROSC box */
+  .card[data-color="final"] {
+    background: #1f6b45;
+    border-color: #2ecc71;
+  }
+
+  .buttons {
+    margin-top: 26px;
+    display: flex;
+    gap: 14px;
+  }
+
+  button {
+    border: none;
+    padding: 12px 22px;
+    border-radius: 30px;
+    font-size: 15px;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+    transition: transform 0.15s;
+  }
+
+  button:hover { transform: translateY(-2px); }
+
+  #checkBtn { background: #2ecc71; color: white; }
+  #resetBtn { background: #e17055; color: white; }
+
+  #message {
+    margin-top: 18px;
+    font-size: 17px;
+    font-weight: bold;
+    min-height: 26px;
+    color: #dce6f5;
+    text-align: center;
+  }
+</style>
+</head>
+<body>
+
+<h1>Adult Cardiac Arrest Algorithm</h1>
+
+<div class="instructions">
+  <strong>How to play:</strong> Drag each step from the tray on the right into the numbered boxes on the left,
+  arranging them in the <strong>correct order</strong> for the adult cardiac arrest algorithm.
+  Drop a card onto a box to place it — drag it back to the tray if you change your mind.
+  When all boxes are filled, click <strong>Check Order</strong> to see how you did!
+</div>
+
+<div class="game-area">
+  <div class="slots" id="slots">
+    <div class="slot" data-index="0"><span class="slot-num">1</span></div>
+    <div class="slot" data-index="1"><span class="slot-num">2</span></div>
+    <div class="slot" data-index="2"><span class="slot-num">3</span></div>
+    <div class="slot" data-index="3"><span class="slot-num">4</span></div>
+    <div class="slot" data-index="4"><span class="slot-num">5</span></div>
+    <div class="slot" data-index="5"><span class="slot-num">6</span></div>
+    <div class="slot" data-index="6"><span class="slot-num">7</span></div>
+  </div>
+
+  <div class="bank" id="bank"></div>
+</div>
+
+<div class="buttons">
+  <button id="checkBtn">✅ Check Order</button>
+  <button id="resetBtn">🔄 Reset</button>
+</div>
+
+<div id="message"></div>
+
+<script>
+  // Correct sequence, in order. Last item gets the special "final" green color,
+  // matching the ROSC / Continued Care box in the source flowchart.
+  const correctOrder = [
+    { text: "Unresponsive", color: "step" },
+    { text: "No Pulse", color: "step" },
+    { text: "CPR", color: "step" },
+    { text: "AED", color: "step" },
+    { text: "Shock if Advised", color: "step" },
+    { text: "Resume CPR", color: "step" },
+    { text: "ROSC or Continued Care", color: "final" }
+  ];
+
+  const bank = document.getElementById("bank");
+  const slots = document.querySelectorAll(".slot");
+  const message = document.getElementById("message");
+
+  function shuffle(arr) {
+    const a = [...arr];
+    for (let i = a.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+  }
+
+  function createCard(item) {
+    const card = document.createElement("div");
+    card.className = "card";
+    card.draggable = true;
+    card.dataset.text = item.text;
+    card.dataset.color = item.color;
+    card.textContent = item.text;
+
+    card.addEventListener("dragstart", () => {
+      card.classList.add("dragging");
+    });
+    card.addEventListener("dragend", () => {
+      card.classList.remove("dragging");
+      clearMessage();
+    });
+
+    return card;
+  }
+
+  function initGame() {
+    bank.innerHTML = "";
+    slots.forEach(slot => {
+      slot.innerHTML = `<span class="slot-num">${parseInt(slot.dataset.index) + 1}</span>`;
+      slot.classList.remove("correct", "incorrect");
+    });
+    shuffle(correctOrder).forEach(item => bank.appendChild(createCard(item)));
+    clearMessage();
+  }
+
+  function clearMessage() {
+    message.textContent = "";
+  }
+
+  function getDragCard() {
+    return document.querySelector(".dragging");
+  }
+
+  [...slots, bank].forEach(target => {
+    target.addEventListener("dragover", e => {
+      e.preventDefault();
+      if (target.classList.contains("slot")) target.classList.add("over");
+    });
+    target.addEventListener("dragleave", () => {
+      target.classList.remove("over");
+    });
+    target.addEventListener("drop", e => {
+      e.preventDefault();
+      target.classList.remove("over");
+      const card = getDragCard();
+      if (!card) return;
+
+      if (target.classList.contains("slot")) {
+        const existing = target.querySelector(".card");
+        if (existing && existing !== card) {
+          bank.appendChild(existing);
+        }
+        target.appendChild(card);
+      } else {
+        target.appendChild(card);
+      }
+      slots.forEach(s => s.classList.remove("correct", "incorrect"));
+      clearMessage();
+    });
+  });
+
+  document.getElementById("checkBtn").addEventListener("click", () => {
+    let filled = 0;
+    let allCorrect = true;
+
+    slots.forEach(slot => {
+      const card = slot.querySelector(".card");
+      slot.classList.remove("correct", "incorrect");
+      if (!card) {
+        allCorrect = false;
+        return;
+      }
+      filled++;
+      const idx = parseInt(slot.dataset.index);
+      if (card.dataset.text === correctOrder[idx].text) {
+        slot.classList.add("correct");
+      } else {
+        slot.classList.add("incorrect");
+        allCorrect = false;
+      }
+    });
+
+    if (filled < correctOrder.length) {
+      message.textContent = "Fill all the boxes before checking! 📦";
+      message.style.color = "#e2b93b";
+    } else if (allCorrect) {
+      message.textContent = "🎉 Perfect! That's the correct sequence!";
+      message.style.color = "#2ecc71";
+    } else {
+      message.textContent = "Not quite — green boxes are correct, red boxes need fixing. Try again!";
+      message.style.color = "#e74c3c";
+    }
+  });
+
+  document.getElementById("resetBtn").addEventListener("click", initGame);
+
+  initGame();
+</script>
+
+</body>
+</html>
