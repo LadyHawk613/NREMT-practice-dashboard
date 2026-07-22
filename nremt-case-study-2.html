@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NREMT Progressive Case Study #2: Suspected Stroke</title>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #34495e;
+            --accent-color: #e74c3c;
+            --success-color: #27ae60;
+            --bg-color: #f4f7f6;
+            --card-bg: #ffffff;
+            --text-color: #333;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .container {
+            max-width: 800px;
+            width: 100%;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 3px solid var(--primary-color);
+            padding-bottom: 10px;
+        }
+
+        .case-card {
+            background: var(--card-bg);
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            padding: 30px;
+            margin-bottom: 20px;
+            display: none;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        .case-card.active {
+            display: block;
+        }
+
+        h2 {
+            color: var(--primary-color);
+            margin-top: 0;
+        }
+
+        .info-box {
+            background: #eef2f7;
+            border-left: 5px solid var(--secondary-color);
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+
+        .vitals-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 10px;
+            margin: 15px 0;
+            background: #f9f9f9;
+            padding: 15px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
+
+        .vital-item {
+            font-weight: bold;
+        }
+
+        .question-box {
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 1px dashed #ccc;
+        }
+
+        .options {
+            list-style: none;
+            padding: 0;
+        }
+
+        .option {
+            background: #fff;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            padding: 12px 15px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .option:hover {
+            border-color: var(--secondary-color);
+            background: #f0f4f8;
+        }
+
+        .option.selected {
+            border-color: var(--primary-color);
+            background: #e8eff5;
+        }
+
+        .option.correct {
+            background: #d4edda;
+            border-color: var(--success-color);
+        }
+
+        .option.wrong {
+            background: #f8d7da;
+            border-color: var(--accent-color);
+        }
+
+        button {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            float: right;
+            margin-top: 10px;
+        }
+
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        .feedback {
+            margin-top: 15px;
+            font-weight: normal;
+            display: none;
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        .progress-bar {
+            height: 10px;
+            background: #ddd;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--success-color);
+            width: 0%;
+            transition: width 0.3s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .final-report {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            border: 2px solid var(--primary-color);
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>NREMT Progressive Case Study #2</h1>
+        <p>Topic: Neurologic Emergency (Suspected Stroke)</p>
+    </header>
+
+    <div class="progress-bar">
+        <div class="progress-fill" id="progressFill"></div>
+    </div>
+
+    <!-- Step 1 -->
+    <div class="case-card active" id="step1">
+        <h2>Step 1 – Initial Dispatch</h2>
+        <div class="info-box">
+            <p>You are dispatched at 0815 for a 71-year-old female with sudden weakness. Family reports she "started acting strange about 20 minutes ago."</p>
+            <p>You arrive to find the patient sitting on the couch. She is awake but appears confused.</p>
+        </div>
+        
+        <h3>Initial Assessment</h3>
+        <ul>
+            <li>Airway is patent</li>
+            <li>Breathing is adequate (Rate: 18/min)</li>
+            <li>Pulse: 92/min, regular</li>
+            <li>Skin warm and dry</li>
+            <li><strong>Findings:</strong> Slurred speech and weakness in her right arm.</li>
+        </ul>
+
+        <div class="question-box">
+            <p><strong>Question 1:</strong> What should the EMT do FIRST?</p>
+            <ul class="options" data-answer="B">
+                <li class="option" onclick="selectOption(this, 'A')">A. Help the patient walk to the ambulance.</li>
+                <li class="option" onclick="selectOption(this, 'B')">B. Perform a rapid neurologic assessment using a stroke scale.</li>
+                <li class="option" onclick="selectOption(this, 'C')">C. Give the patient aspirin.</li>
+                <li class="option" onclick="selectOption(this, 'D')">D. Obtain a detailed medical history before continuing.</li>
+            </ul>
+            <div class="feedback"></div>
+            <button onclick="nextStep(1)" id="btn1" disabled>Next Step</button>
+        </div>
+    </div>
+
+    <!-- Step 2 -->
+    <div class="case-card" id="step2">
+        <h2>Step 2 – More Information</h2>
+        <div class="info-box">
+            <p>You perform a stroke assessment and gather more details.</p>
+            <p><strong>Onset:</strong> Symptoms began suddenly while eating breakfast, approximately 25 minutes ago.</p>
+        </div>
+
+        <h3>Assessment Findings:</h3>
+        <ul>
+            <li>Right facial droop</li>
+            <li>Right arm drifts downward</li>
+            <li>Slurred speech</li>
+        </ul>
+
+        <div class="vitals-grid">
+            <div class="vital-item">BP: 188/96</div>
+            <div class="vital-item">Pulse: 90/min</div>
+            <div class="vital-item">Resp: 18/min</div>
+            <div class="vital-item">SpO₂: 96%</div>
+            <div class="vital-item">Glucose: 112 mg/dL</div>
+        </div>
+
+        <div class="question-box">
+            <p><strong>Question 2:</strong> These findings MOST strongly suggest:</p>
+            <ul class="options" data-answer="B">
+                <li class="option" onclick="selectOption(this, 'A')">A. Hypoglycemia</li>
+                <li class="option" onclick="selectOption(this, 'B')">B. Acute ischemic stroke</li>
+                <li class="option" onclick="selectOption(this, 'C')">C. Syncope</li>
+                <li class="option" onclick="selectOption(this, 'D')">D. Seizure</li>
+            </ul>
+            <div class="feedback"></div>
+            <button onclick="nextStep(2)" id="btn2" disabled>Next Step</button>
+        </div>
+    </div>
+
+    <!-- Step 3 -->
+    <div class="case-card" id="step3">
+        <h2>Step 3 – Patient Condition Changes</h2>
+        <div class="info-box">
+            <p>While preparing for transport, the patient's condition changes.</p>
+            <p><strong>New Findings:</strong></p>
+            <ul>
+                <li>Increasing difficulty speaking</li>
+                <li>Unable to move the right leg</li>
+            </ul>
+            <p>Airway remains open and respirations remain adequate.</p>
+        </div>
+
+        <div class="question-box">
+            <p><strong>Question 3:</strong> What is the MOST appropriate next action?</p>
+            <ul class="options" data-answer="B">
+                <li class="option" onclick="selectOption(this, 'A')">A. Delay transport while repeating a complete physical exam.</li>
+                <li class="option" onclick="selectOption(this, 'B')">B. Begin immediate transport to the nearest appropriate stroke center while continuing reassessment.</li>
+                <li class="option" onclick="selectOption(this, 'C')">C. Encourage the patient to drink water.</li>
+                <li class="option" onclick="selectOption(this, 'D')">D. Allow the patient to rest until symptoms improve.</li>
+            </ul>
+            <div class="feedback"></div>
+            <button onclick="nextStep(3)" id="btn3" disabled>Next Step</button>
+        </div>
+    </div>
+
+    <!-- Step 4 -->
+    <div class="case-card" id="step4">
+        <h2>Step 4 – En Route</h2>
+        <div class="info-box">
+            <p>During transport, the patient vomits once and becomes drowsy.</p>
+        </div>
+
+        <h3>Reassessment:</h3>
+        <ul>
+            <li>Airway: Partially obstructed by vomit</li>
+            <li>Respirations: 20/min</li>
+            <li>Pulse: 96/min</li>
+        </ul>
+
+        <div class="question-box">
+            <p><strong>Question 4:</strong> What should the EMT do FIRST?</p>
+            <ul class="options" data-answer="B">
+                <li class="option" onclick="selectOption(this, 'A')">A. Insert an oropharyngeal airway immediately.</li>
+                <li class="option" onclick="selectOption(this, 'B')">B. Suction the airway and protect it while maintaining spinal alignment as indicated.</li>
+                <li class="option" onclick="selectOption(this, 'C')">C. Give oral glucose.</li>
+                <li class="option" onclick="selectOption(this, 'D')">D. Reassess blood pressure before treating the airway.</li>
+            </ul>
+            <div class="feedback"></div>
+            <button onclick="nextStep(4)" id="btn4" disabled>Next Step</button>
+        </div>
+    </div>
+
+    <!-- Step 5 -->
+    <div class="case-card" id="step5">
+        <h2>Step 5 – Hospital Arrival</h2>
+        <div class="info-box">
+            <p>You arrive at the stroke center. The physician asks for your report.</p>
+        </div>
+
+        <div class="question-box">
+            <p><strong>Question 5:</strong> Which piece of information is MOST important to include?</p>
+            <ul class="options" data-answer="B">
+                <li class="option" onclick="selectOption(this, 'A')">A. The patient skipped breakfast yesterday.</li>
+                <li class="option" onclick="selectOption(this, 'B')">B. The patient's exact time symptoms began, neurologic findings, blood glucose result, and changes during transport.</li>
+                <li class="option" onclick="selectOption(this, 'C')">C. The patient usually watches television in the morning.</li>
+                <li class="option" onclick="selectOption(this, 'D')">D. The patient has high blood pressure.</li>
+            </ul>
+            <div class="feedback"></div>
+            <button onclick="showFinal()" id="btn5" disabled>Finish Case Study</button>
+        </div>
+    </div>
+
+    <!-- Final -->
+    <div class="case-card" id="final">
+        <h2>Case Study Complete</h2>
+        <div class="final-report">
+            <p>Excellent work. You successfully recognized and managed a time-sensitive neurologic emergency.</p>
+            <h3>Learning Objectives Covered:</h3>
+            <ul>
+                <li><strong>Stroke Recognition:</strong> Identifying sudden unilateral weakness, facial droop, and speech difficulty.</li>
+                <li><strong>Stroke Scale:</strong> The importance of using validated assessment tools early.</li>
+                <li><strong>Differential Diagnosis:</strong> Using blood glucose to rule out hypoglycemia.</li>
+                <li><strong>Urgency:</strong> Prioritizing rapid transport to a specialized stroke center.</li>
+                <li><strong>Airway Protection:</strong> Managing complications like vomiting in a patient with decreased level of consciousness.</li>
+                <li><strong>Communication:</strong> Providing a critical report focusing on "Last Known Well" time.</li>
+            </ul>
+            <div class="info-box" style="margin-top:20px; border-left-color: var(--success-color);">
+                <strong>NREMT Competencies:</strong> Neurologic Emergencies, Primary Assessment, Airway Management, Medical Decision-Making.
+            </div>
+        </div>
+        <button onclick="location.reload()" style="float: none; display: block; margin: 20px auto;">Restart Case Study</button>
+    </div>
+</div>
+
+<script>
+    let currentStep = 1;
+    const totalSteps = 5;
+
+    const rationales = {
+        1: "After confirming airway, breathing, and circulation are adequate, the priority is recognizing a possible stroke using a validated stroke assessment tool. Early recognition is critical because time-sensitive treatments may be available.",
+        2: "The patient's blood glucose is normal, making hypoglycemia less likely. Sudden unilateral weakness, facial droop, and speech difficulty strongly suggest an acute stroke.",
+        3: "Stroke patients require rapid transport to an appropriate facility. Worsening neurologic deficits increase the urgency but do not change the priority of timely transport.",
+        4: "Airway management always takes priority. Vomitus should be suctioned immediately to prevent aspiration before continuing transport.",
+        5: "Stroke treatment decisions depend heavily on the last known well time, neurologic assessment findings, blood glucose, and progression of symptoms. This information directly affects eligibility for time-sensitive interventions."
+    };
+
+    function selectOption(element, letter) {
+        const parent = element.parentElement;
+        const correctAnswer = parent.getAttribute('data-answer');
+        const options = parent.querySelectorAll('.option');
+        const feedback = parent.nextElementSibling;
+        const nextBtn = feedback.nextElementSibling;
+
+        if (parent.classList.contains('answered')) return;
+
+        options.forEach(opt => opt.classList.remove('selected'));
+        element.classList.add('selected');
+        parent.classList.add('answered');
+        
+        if (letter === correctAnswer) {
+            element.classList.add('correct');
+            feedback.style.backgroundColor = "#d4edda";
+            feedback.style.borderLeft = "5px solid var(--success-color)";
+            feedback.innerHTML = "<strong>Correct!</strong><br>" + rationales[currentStep];
+        } else {
+            element.classList.add('wrong');
+            options.forEach(opt => {
+                if (opt.innerText.startsWith(correctAnswer)) {
+                    opt.classList.add('correct');
+                }
+            });
+            feedback.style.backgroundColor = "#f8d7da";
+            feedback.style.borderLeft = "5px solid var(--accent-color)";
+            feedback.innerHTML = "<strong>Incorrect.</strong> The correct answer was " + correctAnswer + ".<br>" + rationales[currentStep];
+        }
+
+        feedback.style.display = "block";
+        nextBtn.disabled = false;
+        updateProgress();
+    }
+
+    function updateProgress() {
+        const fill = document.getElementById('progressFill');
+        const percentage = (currentStep / totalSteps) * 100;
+        fill.style.width = percentage + '%';
+    }
+
+    function nextStep(step) {
+        document.getElementById('step' + step).classList.remove('active');
+        currentStep = step + 1;
+        document.getElementById('step' + currentStep).classList.add('active');
+        window.scrollTo(0, 0);
+    }
+
+    function showFinal() {
+        document.getElementById('step5').classList.remove('active');
+        document.getElementById('final').classList.add('active');
+        updateProgress();
+        window.scrollTo(0, 0);
+    }
+</script>
+
+</body>
+</html>
