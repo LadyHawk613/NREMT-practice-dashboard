@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NREMT Cardiac Assessment Challenge</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', Tahoma, Verdana, sans-serif;
+    background: linear-gradient(135deg, #fceabb 0%, #f8b500 100%);
+    min-height: 100vh;
+    margin: 0;
+    padding: 30px 15px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .container {
+    max-width: 900px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  h1 {
+    color: #3d2b1f;
+    text-shadow: 2px 2px 0 #fff8e1;
+    margin-bottom: 6px;
+    text-align: center;
+  }
+
+  .progress-bar {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+
+  .dot {
+    width: 15px;
+    height: 15px;
+    background: rgba(255,255,255,0.5);
+    border-radius: 50%;
+    border: 2px solid #3d2b1f;
+  }
+
+  .dot.active {
+    background: #3d2b1f;
+  }
+
+  .scenario-box {
+    background: #fff8e1;
+    border: 3px solid #f8b500;
+    border-radius: 14px;
+    padding: 20px;
+    width: 100%;
+    margin-bottom: 24px;
+    color: #4a3826;
+    font-size: 15px;
+    line-height: 1.5;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  }
+
+  .scenario-box h2 {
+    margin-top: 0;
+    color: #d35400;
+    font-size: 1.2em;
+  }
+
+  .game-area {
+    display: flex;
+    gap: 40px;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: flex-start;
+    width: 100%;
+  }
+
+  .slots {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .slot {
+    width: 320px;
+    min-height: 64px;
+    background: rgba(255,255,255,0.5);
+    border: 3px dashed #a1887f;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    transition: background 0.2s, border-color 0.2s, transform 0.15s;
+    padding: 5px 5px 5px 45px;
+  }
+
+  .slot .slot-num {
+    position: absolute;
+    top: 50%;
+    left: 15px;
+    transform: translateY(-50%);
+    font-size: 16px;
+    color: #8d6e63;
+    font-weight: bold;
+  }
+
+  .slot.over {
+    background: rgba(255, 214, 92, 0.6);
+    border-color: #f39c12;
+    transform: scale(1.03);
+  }
+
+  .slot.correct {
+    border-color: #2ecc71;
+    background: rgba(46, 204, 113, 0.25);
+  }
+
+  .slot.incorrect {
+    border-color: #e74c3c;
+    background: rgba(231, 76, 60, 0.2);
+  }
+
+  .bank {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    padding: 18px;
+    background: rgba(255,255,255,0.35);
+    border-radius: 18px;
+    min-height: 100px;
+    width: 320px;
+  }
+
+  .card {
+    width: 100%;
+    min-height: 58px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    font-size: 14px;
+    font-weight: 700;
+    color: #fff;
+    cursor: grab;
+    padding: 10px 14px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.25);
+    user-select: none;
+    transition: transform 0.15s, box-shadow 0.15s;
+  }
+
+  .card:active { cursor: grabbing; }
+  .card.dragging { opacity: 0.35; }
+  .card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 14px rgba(0,0,0,0.3);
+  }
+
+  .card[data-color="1"] { background: linear-gradient(135deg, #ff7675, #d63031); }
+  .card[data-color="2"] { background: linear-gradient(135deg, #74b9ff, #0984e3); }
+  .card[data-color="3"] { background: linear-gradient(135deg, #a29bfe, #6c5ce7); }
+  .card[data-color="4"] { background: linear-gradient(135deg, #55efc4, #00b894); }
+  .card[data-color="5"] { background: linear-gradient(135deg, #fd79a8, #e84393); }
+
+  .buttons {
+    margin-top: 26px;
+    display: flex;
+    gap: 14px;
+  }
+
+  button {
+    border: none;
+    padding: 12px 22px;
+    border-radius: 30px;
+    font-size: 15px;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    transition: transform 0.15s;
+  }
+
+  button:hover { transform: translateY(-2px); }
+  button:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  #checkBtn { background: #2ecc71; color: white; }
+  #nextBtn { background: #3498db; color: white; display: none; }
+  #resetBtn { background: #e17055; color: white; }
+
+  #message {
+    margin-top: 18px;
+    font-size: 17px;
+    font-weight: bold;
+    min-height: 26px;
+    color: #3d2b1f;
+    text-align: center;
+    max-width: 600px;
+  }
+
+  .rationale {
+    margin-top: 20px;
+    padding: 15px;
+    background: #fff;
+    border-radius: 10px;
+    border-left: 5px solid #2ecc71;
+    display: none;
+    font-size: 14px;
+    color: #2c3e50;
+    text-align: left;
+    width: 100%;
+  }
+
+  @media (max-width: 700px) {
+    .game-area { flex-direction: column; align-items: center; }
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <h1>NREMT Cardiac Assessment</h1>
+
+  <div class="progress-bar" id="progress">
+    <div class="dot active"></div>
+    <div class="dot"></div>
+    <div class="dot"></div>
+  </div>
+
+  <div class="scenario-box" id="scenario">
+    <!-- Scenario content will be injected here -->
+  </div>
+
+  <div class="game-area">
+    <div class="slots" id="slots">
+      <div class="slot" data-index="0"><span class="slot-num">1</span></div>
+      <div class="slot" data-index="1"><span class="slot-num">2</span></div>
+      <div class="slot" data-index="2"><span class="slot-num">3</span></div>
+      <div class="slot" data-index="3"><span class="slot-num">4</span></div>
+      <div class="slot" data-index="4"><span class="slot-num">5</span></div>
+    </div>
+
+    <div class="bank" id="bank"></div>
+  </div>
+
+  <div class="buttons">
+    <button id="checkBtn">✅ Check Order</button>
+    <button id="nextBtn">➡️ Next Question</button>
+    <button id="resetBtn">🔄 Reset</button>
+  </div>
+
+  <div id="message"></div>
+  <div id="rationale" class="rationale"></div>
+</div>
+
+<script>
+  const questions = [
+    {
+      title: "Question 1: Cardiac Chain of Survival",
+      scenario: "<strong>Scenario:</strong> 58-year-old male collapsed at a grocery store. Unresponsive for 3 mins. Agonal gasps, no pulse, pale/cool skin. Bystander says AED is at front entrance.<br><br><strong>Task:</strong> Place the actions in the <strong>correct order of priority</strong>.",
+      correctOrder: [
+        { text: "Recognize cardiac arrest and activate EMS response", color: "1" },
+        { text: "Begin high-quality CPR", color: "2" },
+        { text: "Apply AED and analyze rhythm", color: "3" },
+        { text: "Deliver shock if indicated", color: "4" },
+        { text: "Resume CPR immediately after shock", color: "5" }
+      ],
+      rationale: "<strong>Rationale:</strong> Early recognition and activation begins the cardiac chain of survival. CPR should not be delayed while waiting for an AED. AED analysis determines whether a shockable rhythm is present. After a shock, CPR resumes immediately to maintain perfusion."
+    },
+    {
+      title: "Question 2: Pulseless Electrical Activity (PEA)",
+      scenario: "<strong>Scenario:</strong> 67-year-old female collapsed. Unresponsive, apneic, no pulse. Cardiac monitor shows organized electrical rhythm at 70 bpm. AED states: <strong>'No shock advised.'</strong><br><br><strong>Task:</strong> Place the appropriate actions into the <strong>correct priority order</strong>.",
+      correctOrder: [
+        { text: "Confirm no pulse", color: "1" },
+        { text: "Begin CPR immediately", color: "2" },
+        { text: "Provide ventilations with oxygen", color: "3" },
+        { text: "Identify possible reversible causes", color: "4" },
+        { text: "Continue CPR until ALS arrives", color: "5" }
+      ],
+      rationale: "<strong>Rationale:</strong> The patient has PEA (Pulseless Electrical Activity). This is NOT shockable. Treatment requires immediate CPR and searching for reversible causes (Hs and Ts). NREMT focus: No pulse + organized rhythm = CPR, not shock."
+    },
+    {
+      title: "Question 3: Acute Coronary Syndrome (ACS) Priority Assessment",
+      scenario: "<strong>Scenario:</strong> 54-year-old male with severe chest pressure ('sitting on chest') for 20 mins. Pale/sweaty. Resp 20, Pulse 96, BP 146/88, SpO2 95%. Has prescribed nitroglycerin and aspirin.<br><br><strong>Task:</strong> Place the actions in the <strong>correct order</strong>.",
+      correctOrder: [
+        { text: "Perform focused assessment and obtain vital signs", color: "1" },
+        { text: "Administer aspirin if no contraindications exist", color: "2" },
+        { text: "Provide oxygen if indicated", color: "3" },
+        { text: "Assist with prescribed nitroglycerin if allowed by protocol", color: "4" },
+        { text: "Rapid transport and reassessment", color: "5" }
+      ],
+      rationale: "<strong>Rationale:</strong> 1. Assessment first (confirm vitals/contraindications). 2. Early aspirin for suspected ACS. 3. Oxygen only if indicated (SpO2 < 94% or distress). 4. Nitroglycerin requires BP check and prescription verification."
+    }
+  ];
+
+  let currentQuestionIndex = 0;
+  const bank = document.getElementById("bank");
+  const slots = document.querySelectorAll(".slot");
+  const message = document.getElementById("message");
+  const rationaleBox = document.getElementById("rationale");
+  const scenarioBox = document.getElementById("scenario");
+  const nextBtn = document.getElementById("nextBtn");
+  const checkBtn = document.getElementById("checkBtn");
+  const progressDots = document.querySelectorAll(".dot");
+
+  function shuffle(arr) {
+    const a = [...arr];
+    for (let i = a.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+  }
+
+  function createCard(item) {
+    const card = document.createElement("div");
+    card.className = "card";
+    card.draggable = true;
+    card.dataset.text = item.text;
+    card.dataset.color = item.color;
+    card.textContent = item.text;
+
+    card.addEventListener("dragstart", () => {
+      card.classList.add("dragging");
+    });
+    card.addEventListener("dragend", () => {
+      card.classList.remove("dragging");
+    });
+
+    return card;
+  }
+
+  function loadQuestion() {
+    const q = questions[currentQuestionIndex];
+    scenarioBox.innerHTML = `<h2>${q.title}</h2><p>${q.scenario}</p>`;
+    bank.innerHTML = "";
+    slots.forEach(slot => {
+      slot.innerHTML = `<span class="slot-num">${parseInt(slot.dataset.index) + 1}</span>`;
+      slot.classList.remove("correct", "incorrect");
+    });
+    
+    // Shuffle and add cards to bank
+    shuffle(q.correctOrder).forEach(item => bank.appendChild(createCard(item)));
+    
+    message.textContent = "";
+    rationaleBox.style.display = "none";
+    nextBtn.style.display = "none";
+    checkBtn.style.display = "inline-block";
+    
+    // Update progress
+    progressDots.forEach((dot, idx) => {
+      dot.classList.toggle("active", idx === currentQuestionIndex);
+    });
+  }
+
+  function getDragCard() {
+    return document.querySelector(".dragging");
+  }
+
+  [...slots, bank].forEach(target => {
+    target.addEventListener("dragover", e => {
+      e.preventDefault();
+      if (target.classList.contains("slot")) target.classList.add("over");
+    });
+    target.addEventListener("dragleave", () => {
+      target.classList.remove("over");
+    });
+    target.addEventListener("drop", e => {
+      e.preventDefault();
+      target.classList.remove("over");
+      const card = getDragCard();
+      if (!card) return;
+
+      if (target.classList.contains("slot")) {
+        const existing = target.querySelector(".card");
+        if (existing && existing !== card) {
+          bank.appendChild(existing);
+        }
+        target.appendChild(card);
+      } else {
+        target.appendChild(card);
+      }
+      slots.forEach(s => s.classList.remove("correct", "incorrect"));
+      message.textContent = "";
+    });
+  });
+
+  checkBtn.addEventListener("click", () => {
+    const q = questions[currentQuestionIndex];
+    let filled = 0;
+    let allCorrect = true;
+
+    slots.forEach(slot => {
+      const card = slot.querySelector(".card");
+      slot.classList.remove("correct", "incorrect");
+      if (!card) {
+        allCorrect = false;
+        return;
+      }
+      filled++;
+      const idx = parseInt(slot.dataset.index);
+      if (card.dataset.text === q.correctOrder[idx].text) {
+        slot.classList.add("correct");
+      } else {
+        slot.classList.add("incorrect");
+        allCorrect = false;
+      }
+    });
+
+    if (filled < q.correctOrder.length) {
+      message.textContent = "Fill all the boxes before checking! 📦";
+      message.style.color = "#d35400";
+    } else if (allCorrect) {
+      message.textContent = "🎉 Perfect! That's the correct sequence!";
+      message.style.color = "#27ae60";
+      rationaleBox.innerHTML = q.rationale;
+      rationaleBox.style.display = "block";
+      checkBtn.style.display = "none";
+      nextBtn.style.display = "inline-block";
+      if (currentQuestionIndex === questions.length - 1) {
+        nextBtn.textContent = "🏁 Finish Challenge";
+      }
+    } else {
+      message.textContent = "Not quite — green boxes are correct, red boxes need fixing. Try again!";
+      message.style.color = "#c0392b";
+    }
+  });
+
+  nextBtn.addEventListener("click", () => {
+    if (currentQuestionIndex < questions.length - 1) {
+      currentQuestionIndex++;
+      loadQuestion();
+    } else {
+      // End game
+      scenarioBox.innerHTML = "<h2>Challenge Complete!</h2><p>You have successfully completed all NREMT Cardiac Assessment scenarios. Great job!</p>";
+      bank.innerHTML = "";
+      document.getElementById("slots").style.display = "none";
+      document.querySelector(".bank").style.display = "none";
+      checkBtn.style.display = "none";
+      nextBtn.style.display = "none";
+      message.textContent = "🏆 Excellent work, EMT!";
+      message.style.color = "#27ae60";
+    }
+  });
+
+  document.getElementById("resetBtn").addEventListener("click", loadQuestion);
+
+  loadQuestion();
+</script>
+
+</body>
+</html>
