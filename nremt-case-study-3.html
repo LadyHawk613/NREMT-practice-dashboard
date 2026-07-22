@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NREMT Progressive Case Study #3: Cardiac Emergency</title>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #34495e;
+            --accent-color: #e74c3c;
+            --success-color: #27ae60;
+            --bg-color: #f4f7f6;
+            --card-bg: #ffffff;
+            --text-color: #333;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .container {
+            max-width: 800px;
+            width: 100%;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 3px solid var(--primary-color);
+            padding-bottom: 10px;
+        }
+
+        .case-card {
+            background: var(--card-bg);
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            padding: 30px;
+            margin-bottom: 20px;
+            display: none;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        .case-card.active {
+            display: block;
+        }
+
+        h2 {
+            color: var(--primary-color);
+            margin-top: 0;
+        }
+
+        .info-box {
+            background: #eef2f7;
+            border-left: 5px solid var(--secondary-color);
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+
+        .vitals-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 10px;
+            margin: 15px 0;
+            background: #f9f9f9;
+            padding: 15px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
+
+        .vital-item {
+            font-weight: bold;
+        }
+
+        .question-box {
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 1px dashed #ccc;
+        }
+
+        .options {
+            list-style: none;
+            padding: 0;
+        }
+
+        .option {
+            background: #fff;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            padding: 12px 15px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .option:hover {
+            border-color: var(--secondary-color);
+            background: #f0f4f8;
+        }
+
+        .option.selected {
+            border-color: var(--primary-color);
+            background: #e8eff5;
+        }
+
+        .option.correct {
+            background: #d4edda;
+            border-color: var(--success-color);
+        }
+
+        .option.wrong {
+            background: #f8d7da;
+            border-color: var(--accent-color);
+        }
+
+        button {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            float: right;
+            margin-top: 10px;
+        }
+
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        .feedback {
+            margin-top: 15px;
+            font-weight: normal;
+            display: none;
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        .progress-bar {
+            height: 10px;
+            background: #ddd;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--success-color);
+            width: 0%;
+            transition: width 0.3s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .final-report {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            border: 2px solid var(--primary-color);
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>NREMT Progressive Case Study #3</h1>
+        <p>Topic: Cardiac Emergency (Suspected ACS)</p>
+    </header>
+
+    <div class="progress-bar">
+        <div class="progress-fill" id="progressFill"></div>
+    </div>
+
+    <!-- Step 1 -->
+    <div class="case-card active" id="step1">
+        <h2>Step 1 – Initial Dispatch</h2>
+        <div class="info-box">
+            <p>You are dispatched at 10:15 for a 55-year-old male complaining of sudden onset chest pain. His wife states he "just grabbed his chest and said it felt like an elephant was sitting on him."</p>
+            <p>You arrive to find the patient sitting on the living room floor, clutching his chest. He appears pale and diaphoretic.</p>
+        </div>
+        
+        <h3>Assessment</h3>
+        <ul>
+            <li>Awake, anxious, and responsive to verbal stimuli.</li>
+            <li>Skin cool, pale, and diaphoretic.</li>
+            <li>Respiratory rate: 20/min, unlabored.</li>
+            <li>Pulse: 100/min, regular, strong radial pulses.</li>
+            <li>Complains of 8/10 crushing chest pain radiating to his left arm and jaw.</li>
+        </ul>
+
+        <div class="question-box">
+            <p><strong>Question 1:</strong> What is the EMT's FIRST priority after ensuring scene safety and initial patient contact?</p>
+            <ul class="options" data-answer="C">
+                <li class="option" onclick="selectOption(this, 'A')">A. Administer oxygen via nasal cannula.</li>
+                <li class="option" onclick="selectOption(this, 'B')">B. Obtain a full set of vital signs.</li>
+                <li class="option" onclick="selectOption(this, 'C')">C. Administer aspirin and assist with nitroglycerin (if prescribed and indicated).</li>
+                <li class="option" onclick="selectOption(this, 'D')">D. Perform a rapid transport to the nearest hospital.</li>
+            </ul>
+            <div class="feedback"></div>
+            <button onclick="nextStep(1)" id="btn1" disabled>Next Step</button>
+        </div>
+    </div>
+
+    <!-- Step 2 -->
+    <div class="case-card" id="step2">
+        <h2>Step 2 – More Information</h2>
+        <div class="info-box">
+            <p>After administering aspirin (324mg chewable) and confirming the patient does not have a prescribed nitroglycerin, you obtain additional information.</p>
+        </div>
+
+        <div class="vitals-grid">
+            <div class="vital-item">BP: 140/90</div>
+            <div class="vital-item">Pulse: 98/min</div>
+            <div class="vital-item">Resp: 18/min</div>
+            <div class="vital-item">SpO₂: 96%</div>
+            <div class="vital-item">Glucose: 105 mg/dL</div>
+        </div>
+
+        <h3>History</h3>
+        <ul>
+            <li><strong>Medical History:</strong> Hypertension, Hyperlipidemia.</li>
+            <li><strong>Medications:</strong> Lisinopril, Atorvastatin.</li>
+            <li><strong>Allergies:</strong> Penicillin.</li>
+            <li><strong>Events:</strong> Pain started suddenly while reading the newspaper.</li>
+            <li><strong>Family History:</strong> Father died of a heart attack at 60.</li>
+        </ul>
+
+        <div class="question-box">
+            <p><strong>Question 2:</strong> Based on the patient's presentation, vital signs, and medical history, what is the MOST likely underlying cause of his chest pain?</p>
+            <ul class="options" data-answer="C">
+                <li class="option" onclick="selectOption(this, 'A')">A. Anxiety attack</li>
+                <li class="option" onclick="selectOption(this, 'B')">B. Musculoskeletal injury</li>
+                <li class="option" onclick="selectOption(this, 'C')">C. Acute Coronary Syndrome (ACS)</li>
+                <li class="option" onclick="selectOption(this, 'D')">D. Gastroesophageal Reflux Disease (GERD)</li>
+            </ul>
+            <div class="feedback"></div>
+            <button onclick="nextStep(2)" id="btn2" disabled>Next Step</button>
+        </div>
+    </div>
+
+    <!-- Step 3 -->
+    <div class="case-card" id="step3">
+        <h2>Step 3 – Patient Condition Changes</h2>
+        <div class="info-box">
+            <p>While preparing for transport, the patient's pain level increases to 9/10. He becomes more agitated and short of breath.</p>
+        </div>
+
+        <h3>New Assessment Findings:</h3>
+        <ul>
+            <li>Respiratory rate: 24/min, shallow.</li>
+            <li>SpO₂: 92% on room air.</li>
+            <li>New onset of mild crackles in both lung bases.</li>
+            <li>BP: 150/96 mmHg.</li>
+        </ul>
+
+        <div class="question-box">
+            <p><strong>Question 3:</strong> Which intervention is MOST appropriate at this point?</p>
+            <ul class="options" data-answer="B">
+                <li class="option" onclick="selectOption(this, 'A')">A. Administer a second dose of aspirin.</li>
+                <li class="option" onclick="selectOption(this, 'B')">B. Apply high-flow oxygen via non-rebreather mask.</li>
+                <li class="option" onclick="selectOption(this, 'C')">C. Encourage the patient to stand and walk to the ambulance.</li>
+                <li class="option" onclick="selectOption(this, 'D')">D. Delay transport to obtain a 12-lead ECG.</li>
+            </ul>
+            <div class="feedback"></div>
+            <button onclick="nextStep(3)" id="btn3" disabled>Next Step</button>
+        </div>
+    </div>
+
+    <!-- Step 4 -->
+    <div class="case-card" id="step4">
+        <h2>Step 4 – En Route</h2>
+        <div class="info-box">
+            <p>Five minutes into transport, after high-flow oxygen has been applied, the patient reports his pain has decreased to 6/10. He is still anxious but his breathing is less labored.</p>
+        </div>
+
+        <div class="vitals-grid">
+            <div class="vital-item">BP: 130/88</div>
+            <div class="vital-item">Pulse: 90/min</div>
+            <div class="vital-item">Resp: 20/min</div>
+            <div class="vital-item">SpO₂: 98% (on NRB)</div>
+        </div>
+
+        <div class="question-box">
+            <p><strong>Question 4:</strong> What indicates your treatment is effective?</p>
+            <ul class="options" data-answer="C">
+                <li class="option" onclick="selectOption(this, 'A')">A. The patient's blood pressure has decreased.</li>
+                <li class="option" onclick="selectOption(this, 'B')">B. The patient is still anxious.</li>
+                <li class="option" onclick="selectOption(this, 'C')">C. Improved SpO₂ and decreased subjective pain and work of breathing.</li>
+                <li class="option" onclick="selectOption(this, 'D')">D. The pulse rate has decreased.</li>
+            </ul>
+            <div class="feedback"></div>
+            <button onclick="nextStep(4)" id="btn4" disabled>Next Step</button>
+        </div>
+    </div>
+
+    <!-- Step 5 -->
+    <div class="case-card" id="step5">
+        <h2>Step 5 – Hospital Arrival</h2>
+        <div class="info-box">
+            <p>You arrive at the emergency department. The receiving physician asks for your report.</p>
+        </div>
+
+        <div class="question-box">
+            <p><strong>Question 5:</strong> Which information is MOST important to include in your verbal report?</p>
+            <ul class="options" data-answer="C">
+                <li class="option" onclick="selectOption(this, 'A')">A. The patient's wife was very worried.</li>
+                <li class="option" onclick="selectOption(this, 'B')">B. The patient's last oral intake was breakfast 2 hours ago.</li>
+                <li class="option" onclick="selectOption(this, 'C')">C. Chief complaint, onset time, initial assessment findings, interventions performed (aspirin, oxygen), patient's response to treatment, and trending vital signs.</li>
+                <li class="option" onclick="selectOption(this, 'D')">D. The patient has a family history of heart disease.</li>
+            </ul>
+            <div class="feedback"></div>
+            <button onclick="showFinal()" id="btn5" disabled>Finish Case Study</button>
+        </div>
+    </div>
+
+    <!-- Final -->
+    <div class="case-card" id="final">
+        <h2>Case Study Complete</h2>
+        <div class="final-report">
+            <p>Great work. You have successfully managed a suspected Acute Coronary Syndrome (ACS) case.</p>
+            <h3>Learning Objectives Recap:</h3>
+            <ul>
+                <li><strong>ACS Recognition:</strong> Crushing chest pain, radiation to jaw/arm, and diaphoresis are hallmarks of cardiac compromise.</li>
+                <li><strong>Priority Interventions:</strong> Administering aspirin early is a critical, life-saving step for suspected ACS.</li>
+                <li><strong>Airway & Oxygen:</strong> High-flow oxygen is essential when signs of respiratory distress or hypoxia (SpO₂ < 94%) develop.</li>
+                <li><strong>Reassessment:</strong> Continually monitoring pain levels and work of breathing is vital for gauging treatment efficacy.</li>
+                <li><strong>Handoff Report:</strong> Focusing on onset, interventions, and trends ensures a seamless transition of care.</li>
+            </ul>
+            <div class="info-box" style="margin-top:20px; border-left-color: var(--success-color);">
+                <strong>NREMT Competencies:</strong> Cardiac Emergencies, Pharmacology (Aspirin), Patient Assessment, EMS Communication.
+            </div>
+        </div>
+        <button onclick="location.reload()" style="float: none; display: block; margin: 20px auto;">Restart Case Study</button>
+    </div>
+</div>
+
+<script>
+    let currentStep = 1;
+    const totalSteps = 5;
+
+    const rationales = {
+        1: "After ensuring scene safety and initial patient contact, the immediate priority for a patient with suspected ACS is to administer aspirin and assist with nitroglycerin (if prescribed and indicated). These interventions are time-sensitive and can significantly reduce cardiac workload and improve coronary blood flow.",
+        2: "The patient's crushing chest pain radiating to the left arm and jaw, diaphoresis, and significant medical history are classic signs and symptoms highly suggestive of Acute Coronary Syndrome (ACS).",
+        3: "The patient's increasing shortness of breath, decreasing SpO₂, and new crackles indicate worsening respiratory status. High-flow oxygen is crucial to improve oxygenation and reduce myocardial workload.",
+        4: "Effective treatment for ACS is indicated by an improvement in the patient's symptoms and objective vital signs. A decrease in subjective pain, reduced work of breathing, and improved oxygen saturation are key indicators.",
+        5: "A concise and comprehensive report should focus on critical information: chief complaint, onset time, assessment findings, interventions (especially aspirin), response to treatment, and trending vital signs."
+    };
+
+    function selectOption(element, letter) {
+        const parent = element.parentElement;
+        const correctAnswer = parent.getAttribute('data-answer');
+        const options = parent.querySelectorAll('.option');
+        const feedback = parent.nextElementSibling;
+        const nextBtn = feedback.nextElementSibling;
+
+        if (parent.classList.contains('answered')) return;
+
+        options.forEach(opt => opt.classList.remove('selected'));
+        element.classList.add('selected');
+        parent.classList.add('answered');
+        
+        if (letter === correctAnswer) {
+            element.classList.add('correct');
+            feedback.style.backgroundColor = "#d4edda";
+            feedback.style.borderLeft = "5px solid var(--success-color)";
+            feedback.innerHTML = "<strong>Correct!</strong><br>" + rationales[currentStep];
+        } else {
+            element.classList.add('wrong');
+            options.forEach(opt => {
+                if (opt.innerText.startsWith(correctAnswer)) {
+                    opt.classList.add('correct');
+                }
+            });
+            feedback.style.backgroundColor = "#f8d7da";
+            feedback.style.borderLeft = "5px solid var(--accent-color)";
+            feedback.innerHTML = "<strong>Incorrect.</strong> The correct answer was " + correctAnswer + ".<br>" + rationales[currentStep];
+        }
+
+        feedback.style.display = "block";
+        nextBtn.disabled = false;
+        updateProgress();
+    }
+
+    function updateProgress() {
+        const fill = document.getElementById('progressFill');
+        const percentage = (currentStep / totalSteps) * 100;
+        fill.style.width = percentage + '%';
+    }
+
+    function nextStep(step) {
+        document.getElementById('step' + step).classList.remove('active');
+        currentStep = step + 1;
+        document.getElementById('step' + currentStep).classList.add('active');
+        window.scrollTo(0, 0);
+    }
+
+    function showFinal() {
+        document.getElementById('step5').classList.remove('active');
+        document.getElementById('final').classList.add('active');
+        updateProgress();
+        window.scrollTo(0, 0);
+    }
+</script>
+
+</body>
+</html>

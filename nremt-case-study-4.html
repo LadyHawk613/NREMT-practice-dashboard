@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NREMT Progressive Case Study #4: Cardiogenic Shock</title>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #34495e;
+            --accent-color: #e74c3c;
+            --success-color: #27ae60;
+            --bg-color: #f4f7f6;
+            --card-bg: #ffffff;
+            --text-color: #333;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .container {
+            max-width: 800px;
+            width: 100%;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 3px solid var(--primary-color);
+            padding-bottom: 10px;
+        }
+
+        .case-card {
+            background: var(--card-bg);
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            padding: 30px;
+            margin-bottom: 20px;
+            display: none;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        .case-card.active {
+            display: block;
+        }
+
+        h2 {
+            color: var(--primary-color);
+            margin-top: 0;
+        }
+
+        .info-box {
+            background: #eef2f7;
+            border-left: 5px solid var(--secondary-color);
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+
+        .vitals-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 10px;
+            margin: 15px 0;
+            background: #f9f9f9;
+            padding: 15px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
+
+        .vital-item {
+            font-weight: bold;
+        }
+
+        .question-box {
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 1px dashed #ccc;
+        }
+
+        .options {
+            list-style: none;
+            padding: 0;
+        }
+
+        .option {
+            background: #fff;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            padding: 12px 15px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .option:hover {
+            border-color: var(--secondary-color);
+            background: #f0f4f8;
+        }
+
+        .option.selected {
+            border-color: var(--primary-color);
+            background: #e8eff5;
+        }
+
+        .option.correct {
+            background: #d4edda;
+            border-color: var(--success-color);
+        }
+
+        .option.wrong {
+            background: #f8d7da;
+            border-color: var(--accent-color);
+        }
+
+        button {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            float: right;
+            margin-top: 10px;
+        }
+
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        .feedback {
+            margin-top: 15px;
+            font-weight: normal;
+            display: none;
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        .progress-bar {
+            height: 10px;
+            background: #ddd;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--success-color);
+            width: 0%;
+            transition: width 0.3s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .final-report {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            border: 2px solid var(--primary-color);
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>NREMT Progressive Case Study #4</h1>
+        <p>Topic: Cardiac Emergency (Cardiogenic Shock)</p>
+    </header>
+
+    <div class="progress-bar">
+        <div class="progress-fill" id="progressFill"></div>
+    </div>
+
+    <!-- Step 1 -->
+    <div class="case-card active" id="step1">
+        <h2>Step 1 – Initial Dispatch</h2>
+        <div class="info-box">
+            <p>You are dispatched at 13:00 for a 68-year-old male experiencing severe chest pain and altered mental status. His daughter states, "My dad has been complaining of chest pain all morning, and now he's really confused and barely responding."</p>
+            <p>You arrive to find the patient lying supine on the couch. He is lethargic but opens his eyes to verbal stimuli. His skin is cool, pale, and clammy.</p>
+        </div>
+        
+        <h3>Assessment</h3>
+        <ul>
+            <li><strong>Level of Consciousness:</strong> Lethargic, opens eyes to verbal stimuli.</li>
+            <li><strong>Airway:</strong> Patent, but shallow respirations.</li>
+            <li><strong>Breathing:</strong> Respiratory rate 24/min, shallow.</li>
+            <li><strong>Circulation:</strong> Radial pulses weak and rapid. Capillary refill time > 3 seconds.</li>
+            <li><strong>Skin:</strong> Cool, pale, clammy.</li>
+            <li><strong>Chief Complaint:</strong> Severe chest pain prior to altered mental status.</li>
+        </ul>
+
+        <div class="question-box">
+            <p><strong>Question 1:</strong> What is the EMT's MOST immediate concern and intervention for this patient?</p>
+            <ul class="options" data-answer="C">
+                <li class="option" onclick="selectOption(this, 'A')">A. Administer 324 mg of aspirin.</li>
+                <li class="option" onclick="selectOption(this, 'B')">B. Obtain a detailed medical history from the daughter.</li>
+                <li class="option" onclick="selectOption(this, 'C')">C. Assess for signs of hypoperfusion and apply high-flow oxygen.</li>
+                <li class="option" onclick="selectOption(this, 'D')">D. Prepare for rapid transport to the nearest cardiac center.</li>
+            </ul>
+            <div class="feedback"></div>
+            <button onclick="nextStep(1)" id="btn1" disabled>Next Step</button>
+        </div>
+    </div>
+
+    <!-- Step 2 -->
+    <div class="case-card" id="step2">
+        <h2>Step 2 – More Information</h2>
+        <div class="info-box">
+            <p>After applying high-flow oxygen via non-rebreather mask, you obtain a set of vital signs and further history.</p>
+        </div>
+
+        <div class="vitals-grid">
+            <div class="vital-item">BP: 80/50</div>
+            <div class="vital-item">Pulse: 120/min</div>
+            <div class="vital-item">Resp: 28/min</div>
+            <div class="vital-item">SpO₂: 90% (on NRB)</div>
+            <div class="vital-item">Glucose: 130 mg/dL</div>
+        </div>
+
+        <h3>History</h3>
+        <ul>
+            <li><strong>Medical History:</strong> Previous Myocardial Infarction (MI) 2 years ago, Hypertension, Type 2 Diabetes.</li>
+            <li><strong>Medications:</strong> Metoprolol, Aspirin, Lisinopril, Metformin.</li>
+            <li><strong>Events:</strong> Chest pain started 3 hours ago, confusion developed in the last hour.</li>
+        </ul>
+
+        <div class="question-box">
+            <p><strong>Question 2:</strong> Based on these findings, what is the MOST likely diagnosis for the patient's current condition?</p>
+            <ul class="options" data-answer="C">
+                <li class="option" onclick="selectOption(this, 'A')">A. Hypoglycemic emergency</li>
+                <li class="option" onclick="selectOption(this, 'B')">B. Anaphylactic shock</li>
+                <li class="option" onclick="selectOption(this, 'C')">C. Cardiogenic shock</li>
+                <li class="option" onclick="selectOption(this, 'D')">D. Septic shock</li>
+            </ul>
+            <div class="feedback"></div>
+            <button onclick="nextStep(2)" id="btn2" disabled>Next Step</button>
+        </div>
+    </div>
+
+    <!-- Step 3 -->
+    <div class="case-card" id="step3">
+        <h2>Step 3 – Patient Worsens</h2>
+        <div class="info-box">
+            <p>While preparing for transport, the patient becomes increasingly dyspneic. You notice frothy sputum at the mouth and hear diffuse crackles upon auscultation of the lungs.</p>
+        </div>
+
+        <h3>New Assessment Findings:</h3>
+        <ul>
+            <li>Respiratory rate: 32/min, severe accessory muscle use.</li>
+            <li>SpO₂: 85% on non-rebreather mask.</li>
+            <li>Frothy sputum present.</li>
+            <li>Diffuse bilateral crackles in lung fields.</li>
+        </ul>
+
+        <div class="question-box">
+            <p><strong>Question 3:</strong> Which intervention is MOST appropriate given the patient's deteriorating respiratory status?</p>
+            <ul class="options" data-answer="B">
+                <li class="option" onclick="selectOption(this, 'A')">A. Administer another dose of aspirin.</li>
+                <li class="option" onclick="selectOption(this, 'B')">B. Initiate positive pressure ventilation (e.g., CPAP or BVM with PEEP) if available and indicated.</li>
+                <li class="option" onclick="selectOption(this, 'C')">C. Elevate the patient's legs to improve blood flow to the brain.</li>
+                <li class="option" onclick="selectOption(this, 'D')">D. Administer oral glucose to improve mental status.</li>
+            </ul>
+            <div class="feedback"></div>
+            <button onclick="nextStep(3)" id="btn3" disabled>Next Step</button>
+        </div>
+    </div>
+
+    <!-- Step 4 -->
+    <div class="case-card" id="step4">
+        <h2>Step 4 – En Route</h2>
+        <div class="info-box">
+            <p>En route to the hospital, you initiate CPAP at 10 cmH₂O. After 5 minutes, the patient's condition shows slight improvement.</p>
+        </div>
+
+        <div class="vitals-grid">
+            <div class="vital-item">BP: 85/55</div>
+            <div class="vital-item">Pulse: 110/min</div>
+            <div class="vital-item">Resp: 26/min</div>
+            <div class="vital-item">SpO₂: 92% (on CPAP)</div>
+        </div>
+
+        <p>Patient remains lethargic but is more responsive to verbal commands.</p>
+
+        <div class="question-box">
+            <p><strong>Question 4:</strong> What is the MOST important aspect of ongoing management for this patient during transport?</p>
+            <ul class="options" data-answer="A">
+                <li class="option" onclick="selectOption(this, 'A')">A. Continuously monitor vital signs and reassess respiratory and circulatory status.</li>
+                <li class="option" onclick="selectOption(this, 'B')">B. Administer a fluid bolus to increase blood pressure.</li>
+                <li class="option" onclick="selectOption(this, 'C')">C. Prepare for administration of intravenous nitroglycerin.</li>
+                <li class="option" onclick="selectOption(this, 'D')">D. Encourage the patient to cough forcefully to clear secretions.</li>
+            </ul>
+            <div class="feedback"></div>
+            <button onclick="nextStep(4)" id="btn4" disabled>Next Step</button>
+        </div>
+    </div>
+
+    <!-- Step 5 -->
+    <div class="case-card" id="step5">
+        <h2>Step 5 – Hospital Arrival</h2>
+        <div class="info-box">
+            <p>You arrive at the cardiac catheterization lab. The interventional cardiologist asks for your report.</p>
+        </div>
+
+        <div class="question-box">
+            <p><strong>Question 5:</strong> Which information is MOST critical to convey to the receiving physician?</p>
+            <ul class="options" data-answer="C">
+                <li class="option" onclick="selectOption(this, 'A')">A. The patient's daughter was very upset.</li>
+                <li class="option" onclick="selectOption(this, 'B')">B. The patient's exact last oral intake.</li>
+                <li class="option" onclick="selectOption(this, 'C')">C. Onset of chest pain and altered mental status, history of MI, signs of shock and pulmonary edema, interventions (oxygen, CPAP), and patient's response.</li>
+                <li class="option" onclick="selectOption(this, 'D')">D. The patient's home medications.</li>
+            </ul>
+            <div class="feedback"></div>
+            <button onclick="showFinal()" id="btn5" disabled>Finish Case Study</button>
+        </div>
+    </div>
+
+    <!-- Final -->
+    <div class="case-card" id="final">
+        <h2>Case Study Complete</h2>
+        <div class="final-report">
+            <p>Excellent work. You have successfully managed a critical case of Cardiogenic Shock.</p>
+            <h3>Learning Objectives Recap:</h3>
+            <ul>
+                <li><strong>Shock Recognition:</strong> Hypotension (BP < 90), tachycardia, and altered mental status are critical signs of shock.</li>
+                <li><strong>Cardiogenic Etiology:</strong> History of MI combined with signs of pump failure (pulmonary edema) points to Cardiogenic Shock.</li>
+                <li><strong>Positive Pressure Ventilation:</strong> CPAP or BVM with PEEP is vital for managing acute pulmonary edema by forcing fluid out of the alveoli.</li>
+                <li><strong>Fluid Management:</strong> Be cautious with fluids in cardiogenic shock, as they can exacerbate pulmonary edema.</li>
+                <li><strong>Continuous Reassessment:</strong> Unstable patients require constant monitoring of ABCs and vital signs during transport.</li>
+            </ul>
+            <div class="info-box" style="margin-top:20px; border-left-color: var(--success-color);">
+                <strong>NREMT Competencies:</strong> Shock Management, Cardiac Emergencies, Airway Management (PPV), EMS Communication.
+            </div>
+        </div>
+        <button onclick="location.reload()" style="float: none; display: block; margin: 20px auto;">Restart Case Study</button>
+    </div>
+</div>
+
+<script>
+    let currentStep = 1;
+    const totalSteps = 5;
+
+    const rationales = {
+        1: "The patient's altered mental status, cool/pale/clammy skin, weak/rapid pulses, and prolonged capillary refill time are all signs of hypoperfusion (shock). Addressing inadequate oxygenation and perfusion is the most immediate life-saving intervention.",
+        2: "The patient's history of MI, severe hypotension, tachycardia, labored breathing, and persistent hypoxemia strongly indicate cardiogenic shock. His normal blood glucose rules out hypoglycemia.",
+        3: "The patient is showing clear signs of acute pulmonary edema secondary to cardiogenic shock. Positive pressure ventilation (like CPAP or BVM with PEEP) is critical to force fluid out of the alveoli and improve oxygenation.",
+        4: "In cardiogenic shock, continuous monitoring and reassessment are paramount. Fluid boluses are generally contraindicated in cardiogenic shock with pulmonary edema, and nitroglycerin is contraindicated in hypotensive patients.",
+        5: "The most critical information includes the timeline of symptoms, relevant medical history (prior MI), key assessment findings (shock/edema), all interventions (oxygen, CPAP), and the patient's response."
+    };
+
+    function selectOption(element, letter) {
+        const parent = element.parentElement;
+        const correctAnswer = parent.getAttribute('data-answer');
+        const options = parent.querySelectorAll('.option');
+        const feedback = parent.nextElementSibling;
+        const nextBtn = feedback.nextElementSibling;
+
+        if (parent.classList.contains('answered')) return;
+
+        options.forEach(opt => opt.classList.remove('selected'));
+        element.classList.add('selected');
+        parent.classList.add('answered');
+        
+        if (letter === correctAnswer) {
+            element.classList.add('correct');
+            feedback.style.backgroundColor = "#d4edda";
+            feedback.style.borderLeft = "5px solid var(--success-color)";
+            feedback.innerHTML = "<strong>Correct!</strong><br>" + rationales[currentStep];
+        } else {
+            element.classList.add('wrong');
+            options.forEach(opt => {
+                if (opt.innerText.startsWith(correctAnswer)) {
+                    opt.classList.add('correct');
+                }
+            });
+            feedback.style.backgroundColor = "#f8d7da";
+            feedback.style.borderLeft = "5px solid var(--accent-color)";
+            feedback.innerHTML = "<strong>Incorrect.</strong> The correct answer was " + correctAnswer + ".<br>" + rationales[currentStep];
+        }
+
+        feedback.style.display = "block";
+        nextBtn.disabled = false;
+        updateProgress();
+    }
+
+    function updateProgress() {
+        const fill = document.getElementById('progressFill');
+        const percentage = (currentStep / totalSteps) * 100;
+        fill.style.width = percentage + '%';
+    }
+
+    function nextStep(step) {
+        document.getElementById('step' + step).classList.remove('active');
+        currentStep = step + 1;
+        document.getElementById('step' + currentStep).classList.add('active');
+        window.scrollTo(0, 0);
+    }
+
+    function showFinal() {
+        document.getElementById('step5').classList.remove('active');
+        document.getElementById('final').classList.add('active');
+        updateProgress();
+        window.scrollTo(0, 0);
+    }
+</script>
+
+</body>
+</html>
