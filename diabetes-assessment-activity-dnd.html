@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EMT Diabetes & Assessment Challenge</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', Tahoma, Verdana, sans-serif;
+    background: linear-gradient(135deg, #fceabb 0%, #f8b500 100%);
+    height: 100vh;
+    margin: 0;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow: hidden; /* Keep it on one screen */
+  }
+
+  .container {
+    max-width: 1200px;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  h1 {
+    color: #3d2b1f;
+    text-shadow: 1px 1px 0 #fff8e1;
+    margin: 5px 0;
+    font-size: 1.5rem;
+  }
+
+  .progress-bar {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 10px;
+  }
+
+  .dot {
+    width: 12px;
+    height: 12px;
+    background: rgba(255,255,255,0.5);
+    border-radius: 50%;
+    border: 2px solid #3d2b1f;
+  }
+  .dot.active { background: #3d2b1f; }
+
+  .instructions-box {
+    background: #fff8e1;
+    border: 2px solid #f8b500;
+    border-radius: 10px;
+    padding: 10px 15px;
+    width: 100%;
+    margin-bottom: 10px;
+    color: #4a3826;
+    font-size: 14px;
+    line-height: 1.3;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  }
+
+  .instructions-box h2 {
+    margin: 0 0 5px 0;
+    color: #d35400;
+    font-size: 1.1rem;
+  }
+
+  .game-area {
+    flex: 1;
+    display: flex;
+    width: 100%;
+    gap: 15px;
+    justify-content: center;
+    align-items: stretch;
+    min-height: 0; /* Allow inner content to scroll if needed, though we aim for no scroll */
+  }
+
+  /* 3-Column Sorting Layout */
+  .sorting-layout {
+    display: flex;
+    width: 100%;
+    gap: 15px;
+    align-items: stretch;
+  }
+
+  .category-zone {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    background: rgba(255,255,255,0.25);
+    border-radius: 14px;
+    padding: 10px;
+    border: 2px solid rgba(255,255,255,0.4);
+  }
+
+  .category-title {
+    text-align: center;
+    font-weight: bold;
+    color: #3d2b1f;
+    margin-bottom: 8px;
+    font-size: 1rem;
+    padding: 5px;
+    background: rgba(255,255,255,0.5);
+    border-radius: 8px;
+  }
+
+  .drop-container {
+    flex: 1;
+    border: 3px dashed #a1887f;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 10px;
+    transition: background 0.2s;
+    overflow-y: auto;
+  }
+
+  .drop-container.over {
+    background: rgba(255, 214, 92, 0.4);
+    border-color: #f39c12;
+  }
+
+  .bank-column {
+    width: 300px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .bank {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 10px;
+    background: rgba(255,255,255,0.35);
+    border-radius: 14px;
+    border: 2px solid rgba(255,255,255,0.5);
+    overflow-y: auto;
+  }
+
+  /* Ordering Layout */
+  .ordering-layout {
+    display: flex;
+    gap: 30px;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+  }
+
+  .slots {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .slot {
+    width: 350px;
+    min-height: 60px;
+    background: rgba(255,255,255,0.5);
+    border: 3px dashed #a1887f;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    padding: 5px 5px 5px 45px;
+  }
+
+  .slot .slot-num {
+    position: absolute;
+    top: 50%;
+    left: 15px;
+    transform: translateY(-50%);
+    font-size: 16px;
+    color: #8d6e63;
+    font-weight: bold;
+  }
+
+  .slot.over { background: rgba(255, 214, 92, 0.6); border-color: #f39c12; }
+
+  /* Card Style */
+  .card {
+    width: 100%;
+    min-height: 44px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    font-size: 13px;
+    font-weight: 700;
+    color: #fff;
+    cursor: grab;
+    padding: 6px 10px;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.2);
+    user-select: none;
+    transition: transform 0.1s;
+  }
+
+  .card:active { cursor: grabbing; }
+  .card.dragging { opacity: 0.3; }
+  .card:hover { transform: scale(1.02); }
+
+  .card[data-color="1"] { background: linear-gradient(135deg, #ff7675, #d63031); }
+  .card[data-color="2"] { background: linear-gradient(135deg, #74b9ff, #0984e3); }
+  .card[data-color="3"] { background: linear-gradient(135deg, #a29bfe, #6c5ce7); }
+  .card[data-color="4"] { background: linear-gradient(135deg, #55efc4, #00b894); }
+  .card[data-color="5"] { background: linear-gradient(135deg, #fd79a8, #e84393); }
+  .card[data-color="6"] { background: linear-gradient(135deg, #fab1a0, #e17055); }
+  .card[data-color="7"] { background: linear-gradient(135deg, #81ecec, #00cec9); }
+  .card[data-color="8"] { background: linear-gradient(135deg, #ffeaa7, #fdcb6e); }
+
+  .buttons {
+    margin: 10px 0;
+    display: flex;
+    gap: 12px;
+  }
+
+  button {
+    border: none;
+    padding: 10px 20px;
+    border-radius: 25px;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.15);
+    transition: transform 0.1s;
+  }
+
+  button:hover { transform: translateY(-2px); }
+  #checkBtn { background: #2ecc71; color: white; }
+  #nextBtn { background: #3498db; color: white; display: none; }
+  #resetBtn { background: #e17055; color: white; }
+
+  #message {
+    font-size: 16px;
+    font-weight: bold;
+    color: #3d2b1f;
+    margin-bottom: 5px;
+    height: 20px;
+  }
+
+  .debrief {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 90%;
+    max-width: 800px;
+    padding: 15px;
+    background: #fff;
+    border-radius: 12px;
+    border-left: 6px solid #2ecc71;
+    display: none;
+    font-size: 14px;
+    color: #2c3e50;
+    box-shadow: 0 -5px 20px rgba(0,0,0,0.2);
+    z-index: 100;
+  }
+
+  .debrief h3 { margin: 0 0 5px 0; color: #27ae60; font-size: 1rem; }
+  .debrief p { margin: 0; }
+
+</style>
+</head>
+<body>
+
+<div class="container">
+  <h1>EMT Diabetes & Assessment</h1>
+
+  <div class="progress-bar" id="progress">
+    <div class="dot active"></div>
+    <div class="dot"></div>
+    <div class="dot"></div>
+  </div>
+
+  <div class="instructions-box" id="instructions">
+    <!-- Content injected here -->
+  </div>
+
+  <div id="message"></div>
+
+  <div class="game-area" id="gameArea">
+    <!-- Layout injected here -->
+  </div>
+
+  <div class="buttons">
+    <button id="checkBtn">✅ Check Answer</button>
+    <button id="nextBtn">➡️ Next Activity</button>
+    <button id="resetBtn">🔄 Reset</button>
+  </div>
+
+  <div id="debrief" class="debrief"></div>
+</div>
+
+<script>
+  const activities = [
+    {
+      type: "sorting",
+      title: "Activity 1: Match the Condition to the Findings",
+      directions: "Drag findings to <strong>Hypoglycemia (Left)</strong> or <strong>Hyperglycemia (Right)</strong>.",
+      categories: [
+        { name: "Hypoglycemia", id: "hypo", correctItems: ["Cool, clammy skin", "Sudden onset", "Blood glucose <60 mg/dL", "Rapid improvement after glucose"] },
+        { name: "Hyperglycemia/DKA", id: "hyper", correctItems: ["Fruity breath", "Kussmaul respirations", "Warm, dry skin", "Excessive thirst", "Gradual onset"] }
+      ],
+      allCards: [
+        { text: "Fruity breath", color: "1" },
+        { text: "Cool, clammy skin", color: "2" },
+        { text: "Kussmaul respirations", color: "3" },
+        { text: "Sudden onset", color: "4" },
+        { text: "Warm, dry skin", color: "5" },
+        { text: "Excessive thirst", color: "6" },
+        { text: "Blood glucose <60 mg/dL", color: "7" },
+        { text: "Gradual onset", color: "8" },
+        { text: "Rapid improvement after glucose", color: "2" }
+      ],
+      debrief: "<h3>Instructor Debrief</h3><p>Emphasize that <strong>cool and clammy = think hypoglycemia</strong>, while <strong>warm and dry + dehydration = hyperglycemia</strong>.</p>"
+    },
+    {
+      type: "sorting",
+      title: "Activity 2: Signs of DKA vs. HHS",
+      directions: "Place each finding into <strong>DKA (Left)</strong> or <strong>HHS (Right)</strong>.",
+      categories: [
+        { name: "DKA", id: "dka", correctItems: ["Usually Type 1 diabetes", "Ketones present", "Fruity breath", "Kussmaul respirations"] },
+        { name: "HHS", id: "hhs", correctItems: ["Usually Type 2 diabetes", "Severe dehydration", "Very high blood glucose", "Minimal or no ketones"] }
+      ],
+      allCards: [
+        { text: "Usually Type 1 diabetes", color: "1" },
+        { text: "Usually Type 2 diabetes", color: "2" },
+        { text: "Ketones present", color: "3" },
+        { text: "Severe dehydration", color: "4" },
+        { text: "Kussmaul respirations", color: "5" },
+        { text: "Fruity breath", color: "6" },
+        { text: "Very high blood glucose", color: "7" },
+        { text: "Minimal or no ketones", color: "8" }
+      ],
+      debrief: "<h3>Instructor Tip</h3><p><strong>DKA</strong> = Ketones + Kussmaul. <strong>HHS</strong> = Higher glucose + More dehydration.</p>"
+    },
+    {
+      type: "ordering",
+      title: "Activity 3: EMT Assessment Priorities",
+      directions: "Put the assessment steps in the correct priority order.",
+      correctOrder: [
+        { text: "Obtain blood glucose", color: "1" },
+        { text: "Assess mental status", color: "2" },
+        { text: "Assess for dehydration", color: "3" },
+        { text: "Obtain insulin history and last meal", color: "4" }
+      ],
+      debrief: "<h3>Instructor Debrief</h3><p>Sequence: 1. Glucose, 2. Neuro status, 3. Dehydration check, 4. History/Meds.</p>"
+    }
+  ];
+
+  let currentIdx = 0;
+  const gameArea = document.getElementById("gameArea");
+  const instructions = document.getElementById("instructions");
+  const debriefBox = document.getElementById("debrief");
+  const message = document.getElementById("message");
+  const nextBtn = document.getElementById("nextBtn");
+  const checkBtn = document.getElementById("checkBtn");
+  const progressDots = document.querySelectorAll(".dot");
+
+  function shuffle(arr) { return [...arr].sort(() => Math.random() - 0.5); }
+
+  function createCard(item) {
+    const card = document.createElement("div");
+    card.className = "card";
+    card.draggable = true;
+    card.dataset.text = item.text;
+    card.dataset.color = item.color;
+    card.textContent = item.text;
+    card.addEventListener("dragstart", () => card.classList.add("dragging"));
+    card.addEventListener("dragend", () => card.classList.remove("dragging"));
+    return card;
+  }
+
+  function loadActivity() {
+    const act = activities[currentIdx];
+    instructions.innerHTML = `<h2>${act.title}</h2><p>${act.directions}</p>`;
+    gameArea.innerHTML = "";
+    message.textContent = "";
+    debriefBox.style.display = "none";
+    nextBtn.style.display = "none";
+    checkBtn.style.display = "inline-block";
+    
+    progressDots.forEach((dot, i) => dot.classList.toggle("active", i === currentIdx));
+
+    if (act.type === "sorting") {
+      const sortingDiv = document.createElement("div");
+      sortingDiv.className = "sorting-layout";
+      
+      // Left Category
+      const leftZone = document.createElement("div");
+      leftZone.className = "category-zone";
+      leftZone.innerHTML = `<div class="category-title">${act.categories[0].name}</div>`;
+      const leftDrop = document.createElement("div");
+      leftDrop.className = "drop-container";
+      leftDrop.id = act.categories[0].id;
+      leftZone.appendChild(leftDrop);
+      
+      // Center Bank
+      const bankCol = document.createElement("div");
+      bankCol.className = "bank-column";
+      const bankDiv = document.createElement("div");
+      bankDiv.className = "bank";
+      bankDiv.id = "bank";
+      shuffle(act.allCards).forEach(c => bankDiv.appendChild(createCard(c)));
+      bankCol.appendChild(bankDiv);
+
+      // Right Category
+      const rightZone = document.createElement("div");
+      rightZone.className = "category-zone";
+      rightZone.innerHTML = `<div class="category-title">${act.categories[1].name}</div>`;
+      const rightDrop = document.createElement("div");
+      rightDrop.className = "drop-container";
+      rightDrop.id = act.categories[1].id;
+      rightZone.appendChild(rightDrop);
+      
+      sortingDiv.appendChild(leftZone);
+      sortingDiv.appendChild(bankCol);
+      sortingDiv.appendChild(rightZone);
+      gameArea.appendChild(sortingDiv);
+    } else {
+      const orderingDiv = document.createElement("div");
+      orderingDiv.className = "ordering-layout";
+      
+      const slotsDiv = document.createElement("div");
+      slotsDiv.className = "slots";
+      act.correctOrder.forEach((_, i) => {
+        const slot = document.createElement("div");
+        slot.className = "slot";
+        slot.dataset.index = i;
+        slot.innerHTML = `<span class="slot-num">${i + 1}</span>`;
+        slotsDiv.appendChild(slot);
+      });
+      
+      const bankDiv = document.createElement("div");
+      bankDiv.className = "bank";
+      bankDiv.id = "bank";
+      bankDiv.style.width = "350px";
+      shuffle(act.correctOrder).forEach(c => bankDiv.appendChild(createCard(c)));
+      
+      orderingDiv.appendChild(slotsDiv);
+      orderingDiv.appendChild(bankDiv);
+      gameArea.appendChild(orderingDiv);
+    }
+    setupDragDrop();
+  }
+
+  function setupDragDrop() {
+    const targets = document.querySelectorAll(".drop-container, .slot, #bank");
+    targets.forEach(target => {
+      target.addEventListener("dragover", e => {
+        e.preventDefault();
+        if (target.id !== "bank") target.classList.add("over");
+      });
+      target.addEventListener("dragleave", () => target.classList.remove("over"));
+      target.addEventListener("drop", e => {
+        e.preventDefault();
+        target.classList.remove("over");
+        const card = document.querySelector(".dragging");
+        if (!card) return;
+
+        if (target.classList.contains("slot")) {
+          const existing = target.querySelector(".card");
+          if (existing && existing !== card) document.getElementById("bank").appendChild(existing);
+          target.appendChild(card);
+        } else {
+          target.appendChild(card);
+        }
+        message.textContent = "";
+      });
+    });
+  }
+
+  checkBtn.addEventListener("click", () => {
+    const act = activities[currentIdx];
+    let isCorrect = true;
+    let totalPlaced = 0;
+
+    if (act.type === "sorting") {
+      act.categories.forEach(cat => {
+        const container = document.getElementById(cat.id);
+        const cards = container.querySelectorAll(".card");
+        totalPlaced += cards.length;
+        cards.forEach(card => {
+          if (!cat.correctItems.includes(card.dataset.text)) isCorrect = false;
+        });
+        if (cards.length !== cat.correctItems.length) isCorrect = false;
+      });
+      if (totalPlaced < act.allCards.length) {
+        message.textContent = "Sort all items first! 📥";
+        message.style.color = "#d35400";
+        return;
+      }
+    } else {
+      const slots = document.querySelectorAll(".slot");
+      slots.forEach((slot, i) => {
+        const card = slot.querySelector(".card");
+        if (!card) { isCorrect = false; return; }
+        totalPlaced++;
+        if (card.dataset.text !== act.correctOrder[i].text) isCorrect = false;
+      });
+      if (totalPlaced < act.correctOrder.length) {
+        message.textContent = "Order all steps first! 📦";
+        message.style.color = "#d35400";
+        return;
+      }
+    }
+
+    if (isCorrect) {
+      message.textContent = "🎉 Correct!";
+      message.style.color = "#27ae60";
+      debriefBox.innerHTML = act.debrief;
+      debriefBox.style.display = "block";
+      checkBtn.style.display = "none";
+      nextBtn.style.display = "inline-block";
+    } else {
+      message.textContent = "Not quite. Try again!";
+      message.style.color = "#c0392b";
+    }
+  });
+
+  nextBtn.addEventListener("click", () => {
+    if (currentIdx < activities.length - 1) {
+      currentIdx++;
+      loadActivity();
+    } else {
+      instructions.innerHTML = "<h2>Challenge Complete!</h2>";
+      gameArea.innerHTML = "<div style='font-size: 80px;'>🏆</div>";
+      checkBtn.style.display = "none";
+      nextBtn.style.display = "none";
+      message.textContent = "Great job, EMT!";
+    }
+  });
+
+  document.getElementById("resetBtn").addEventListener("click", loadActivity);
+  loadActivity();
+</script>
+
+</body>
+</html>
