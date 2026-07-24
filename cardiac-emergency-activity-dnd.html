@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NREMT Cardiac Emergencies Challenge</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', Tahoma, Verdana, sans-serif;
+    background: linear-gradient(135deg, #fceabb 0%, #f8b500 100%);
+    height: 100vh;
+    margin: 0;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow: hidden;
+  }
+
+  .container {
+    max-width: 1200px;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  h1 {
+    color: #3d2b1f;
+    text-shadow: 1px 1px 0 #fff8e1;
+    margin: 5px 0;
+    font-size: 1.6rem;
+  }
+
+  .progress-bar {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 8px;
+  }
+
+  .dot {
+    width: 14px;
+    height: 14px;
+    background: rgba(255,255,255,0.5);
+    border-radius: 50%;
+    border: 2px solid #3d2b1f;
+  }
+  .dot.active { background: #3d2b1f; }
+
+  .instructions-box {
+    background: #fff8e1;
+    border: 2px solid #f8b500;
+    border-radius: 12px;
+    padding: 8px 15px;
+    width: 100%;
+    margin-bottom: 10px;
+    color: #4a3826;
+    font-size: 14px;
+    line-height: 1.3;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  }
+
+  .instructions-box h2 {
+    margin: 0 0 3px 0;
+    color: #d35400;
+    font-size: 1.1rem;
+  }
+
+  .game-area {
+    flex: 1;
+    display: flex;
+    width: 100%;
+    gap: 15px;
+    justify-content: center;
+    align-items: stretch;
+    min-height: 0;
+  }
+
+  /* Common Column Components */
+  .column {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 10px;
+    background: rgba(255,255,255,0.25);
+    border-radius: 16px;
+    border: 2px solid rgba(255,255,255,0.4);
+  }
+
+  .column-title {
+    text-align: center;
+    font-weight: bold;
+    color: #3d2b1f;
+    margin-bottom: 5px;
+    font-size: 0.9rem;
+    padding: 5px;
+    background: rgba(255,255,255,0.5);
+    border-radius: 8px;
+  }
+
+  /* Sorting Layout */
+  .sorting-layout {
+    display: flex;
+    width: 100%;
+    gap: 15px;
+    align-items: stretch;
+  }
+
+  .drop-container {
+    flex: 1;
+    border: 3px dashed #a1887f;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 8px;
+    transition: background 0.2s;
+    overflow-y: auto;
+  }
+
+  .drop-container.over {
+    background: rgba(255, 214, 92, 0.4);
+    border-color: #f39c12;
+  }
+
+  /* Matching Layout (3-Column) */
+  .matching-layout {
+    display: flex;
+    width: 100%;
+    gap: 10px;
+    align-items: stretch;
+  }
+
+  .matching-labels {
+    flex: 0 0 220px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .matching-label {
+    height: 54px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255,255,255,0.6);
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: bold;
+    color: #3d2b1f;
+    padding: 5px 10px;
+    text-align: center;
+    border: 1px solid rgba(0,0,0,0.1);
+  }
+
+  .matching-drops {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .matching-drop-zone {
+    height: 54px;
+    border: 2px dashed #a1887f;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s;
+    background: rgba(255,255,255,0.2);
+  }
+
+  .matching-drop-zone.over {
+    background: rgba(255, 214, 92, 0.4);
+    border-color: #f39c12;
+  }
+
+  .bank {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 10px;
+    background: rgba(255,255,255,0.35);
+    border-radius: 16px;
+    border: 2px solid rgba(255,255,255,0.5);
+    overflow-y: auto;
+  }
+
+  /* Ordering Layout */
+  .ordering-layout {
+    display: flex;
+    gap: 30px;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+  }
+
+  .slots {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .slot {
+    width: 420px;
+    height: 54px;
+    background: rgba(255,255,255,0.5);
+    border: 3px dashed #a1887f;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    padding: 5px 5px 5px 45px;
+  }
+
+  .slot .slot-num {
+    position: absolute;
+    top: 50%;
+    left: 15px;
+    transform: translateY(-50%);
+    font-size: 16px;
+    color: #8d6e63;
+    font-weight: bold;
+  }
+
+  .slot.over { background: rgba(255, 214, 92, 0.6); border-color: #f39c12; }
+
+  /* Card Style */
+  .card {
+    width: 100%;
+    min-height: 42px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    font-size: 12px;
+    font-weight: 700;
+    color: #fff;
+    cursor: grab;
+    padding: 6px 10px;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.2);
+    user-select: none;
+    transition: transform 0.1s;
+  }
+
+  .card:active { cursor: grabbing; }
+  .card.dragging { opacity: 0.3; }
+  .card:hover { transform: scale(1.02); }
+
+  .card[data-color="1"] { background: linear-gradient(135deg, #ff7675, #d63031); }
+  .card[data-color="2"] { background: linear-gradient(135deg, #74b9ff, #0984e3); }
+  .card[data-color="3"] { background: linear-gradient(135deg, #a29bfe, #6c5ce7); }
+  .card[data-color="4"] { background: linear-gradient(135deg, #55efc4, #00b894); }
+  .card[data-color="5"] { background: linear-gradient(135deg, #fd79a8, #e84393); }
+  .card[data-color="6"] { background: linear-gradient(135deg, #fab1a0, #e17055); }
+  .card[data-color="7"] { background: linear-gradient(135deg, #81ecec, #00cec9); }
+  .card[data-color="8"] { background: linear-gradient(135deg, #ffeaa7, #fdcb6e); }
+
+  .buttons {
+    margin: 8px 0;
+    display: flex;
+    gap: 15px;
+  }
+
+  button {
+    border: none;
+    padding: 8px 22px;
+    border-radius: 25px;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.15);
+    transition: transform 0.1s;
+  }
+
+  button:hover { transform: translateY(-2px); }
+  #checkBtn { background: #2ecc71; color: white; }
+  #nextBtn { background: #3498db; color: white; display: none; }
+  #resetBtn { background: #e17055; color: white; }
+
+  #message {
+    font-size: 17px;
+    font-weight: bold;
+    color: #3d2b1f;
+    margin-bottom: 5px;
+    height: 22px;
+    text-align: center;
+  }
+
+</style>
+</head>
+<body>
+
+<div class="container">
+  <h1>NREMT Cardiac Emergencies</h1>
+
+  <div class="progress-bar" id="progress">
+    <div class="dot active"></div>
+    <div class="dot"></div>
+    <div class="dot"></div>
+  </div>
+
+  <div class="instructions-box" id="instructions">
+    <!-- Content injected here -->
+  </div>
+
+  <div id="message"></div>
+
+  <div class="game-area" id="gameArea">
+    <!-- Layout injected here -->
+  </div>
+
+  <div class="buttons">
+    <button id="checkBtn">✅ Check Answer</button>
+    <button id="nextBtn">➡️ Next Activity</button>
+    <button id="resetBtn">🔄 Reset</button>
+  </div>
+</div>
+
+<script>
+  const activities = [
+    {
+      type: "sorting",
+      title: "Activity 1: Sort the Findings",
+      directions: "Drag each finding into the correct category: <strong>ACS (Left)</strong> or <strong>CHF (Right)</strong>.",
+      categories: [
+        { name: "Acute Coronary Syndrome (ACS)", id: "acs", correctItems: ["Crushing substernal chest pressure", "Pain radiating to the jaw", "Diaphoresis and nausea", "Pain caused by decreased blood flow to heart muscle", "Anxiety with a feeling of impending doom"] },
+        { name: "Congestive Heart Failure (CHF)", id: "chf", correctItems: ["Crackles in the lungs", "Pink frothy sputum", "Bilateral lower extremity edema", "Shortness of breath when lying flat", "Fluid backing up into the lungs"] }
+      ],
+      allCards: [
+        { text: "Crushing substernal chest pressure", color: "1" },
+        { text: "Pain radiating to the jaw", color: "2" },
+        { text: "Diaphoresis and nausea", color: "3" },
+        { text: "Crackles in the lungs", color: "4" },
+        { text: "Pink frothy sputum", color: "5" },
+        { text: "Bilateral lower extremity edema", color: "6" },
+        { text: "Shortness of breath when lying flat", color: "7" },
+        { text: "Pain caused by decreased blood flow to heart muscle", color: "8" },
+        { text: "Anxiety with a feeling of impending doom", color: "1" },
+        { text: "Fluid backing up into the lungs", color: "2" }
+      ]
+    },
+    {
+      type: "ordering",
+      title: "Activity 2: Prioritize EMT Actions",
+      directions: "<strong>Scenario:</strong> 58M sudden chest pressure, pale/diaphoretic. BP 104/68, P 112, R 22.<br>Place actions in the correct priority order.",
+      correctOrder: [
+        { text: "Perform primary assessment and identify life threats", color: "1" },
+        { text: "Obtain vital signs and assess the patient's history", color: "2" },
+        { text: "Provide oxygen if indicated", color: "3" },
+        { text: "Administer aspirin if indicated and allowed by protocol", color: "4" },
+        { text: "Reassess the patient and prepare for rapid transport", color: "5" }
+      ]
+    },
+    {
+      type: "matching",
+      title: "Activity 3: Match Condition with Appropriate Finding",
+      directions: "Match each cardiovascular condition (Left) with its most appropriate finding (Middle) by dragging from the Bank (Right).",
+      pairs: [
+        { condition: "Acute Coronary Syndrome", finding: "Chest pressure radiating to the left arm with sweating", color: "1" },
+        { condition: "Congestive Heart Failure", finding: "Crackles, orthopnea, and pink frothy sputum", color: "2" },
+        { condition: "Cardiogenic Shock", finding: "Hypotension, cool clammy skin, and weak pulse", color: "3" },
+        { condition: "Hypertensive Emergency", finding: "Severe hypertension with altered mental status", color: "4" },
+        { condition: "Pulmonary Embolism", finding: "Sudden shortness of breath with sharp chest pain", color: "5" }
+      ]
+    }
+  ];
+
+  let currentIdx = 0;
+  const gameArea = document.getElementById("gameArea");
+  const instructions = document.getElementById("instructions");
+  const message = document.getElementById("message");
+  const nextBtn = document.getElementById("nextBtn");
+  const checkBtn = document.getElementById("checkBtn");
+  const progressDots = document.querySelectorAll(".dot");
+
+  function shuffle(arr) { return [...arr].sort(() => Math.random() - 0.5); }
+
+  function createCard(text, color) {
+    const card = document.createElement("div");
+    card.className = "card";
+    card.draggable = true;
+    card.dataset.text = text;
+    card.dataset.color = color;
+    card.textContent = text;
+    card.addEventListener("dragstart", () => card.classList.add("dragging"));
+    card.addEventListener("dragend", () => card.classList.remove("dragging"));
+    return card;
+  }
+
+  function loadActivity() {
+    const act = activities[currentIdx];
+    instructions.innerHTML = `<h2>${act.title}</h2><p>${act.directions}</p>`;
+    gameArea.innerHTML = "";
+    message.textContent = "";
+    nextBtn.style.display = "none";
+    checkBtn.style.display = "inline-block";
+    
+    progressDots.forEach((dot, i) => dot.classList.toggle("active", i === currentIdx));
+
+    if (act.type === "sorting") {
+      const sortingDiv = document.createElement("div");
+      sortingDiv.className = "sorting-layout";
+      
+      const leftCol = document.createElement("div");
+      leftCol.className = "column";
+      leftCol.style.flex = "1";
+      leftCol.innerHTML = `<div class="column-title">${act.categories[0].name}</div>`;
+      const leftDrop = document.createElement("div");
+      leftDrop.className = "drop-container";
+      leftDrop.id = act.categories[0].id;
+      leftCol.appendChild(leftDrop);
+      
+      const bankCol = document.createElement("div");
+      bankCol.className = "bank";
+      bankCol.id = "bank";
+      bankCol.style.flex = "0 0 320px";
+      shuffle(act.allCards).forEach(c => bankCol.appendChild(createCard(c.text, c.color)));
+
+      const rightCol = document.createElement("div");
+      rightCol.className = "column";
+      rightCol.style.flex = "1";
+      rightCol.innerHTML = `<div class="column-title">${act.categories[1].name}</div>`;
+      const rightDrop = document.createElement("div");
+      rightDrop.className = "drop-container";
+      rightDrop.id = act.categories[1].id;
+      rightCol.appendChild(rightDrop);
+      
+      sortingDiv.appendChild(leftCol);
+      sortingDiv.appendChild(bankCol);
+      sortingDiv.appendChild(rightCol);
+      gameArea.appendChild(sortingDiv);
+    } else if (act.type === "ordering") {
+      const orderingDiv = document.createElement("div");
+      orderingDiv.className = "ordering-layout";
+      
+      const slotsDiv = document.createElement("div");
+      slotsDiv.className = "slots";
+      act.correctOrder.forEach((_, i) => {
+        const slot = document.createElement("div");
+        slot.className = "slot";
+        slot.dataset.index = i;
+        slot.innerHTML = `<span class="slot-num">${i + 1}</span>`;
+        slotsDiv.appendChild(slot);
+      });
+      
+      const bankDiv = document.createElement("div");
+      bankDiv.className = "bank";
+      bankDiv.id = "bank";
+      bankDiv.style.width = "420px";
+      shuffle(act.correctOrder).forEach(c => bankDiv.appendChild(createCard(c.text, c.color)));
+      
+      orderingDiv.appendChild(slotsDiv);
+      orderingDiv.appendChild(bankDiv);
+      gameArea.appendChild(orderingDiv);
+    } else if (act.type === "matching") {
+      const matchingDiv = document.createElement("div");
+      matchingDiv.className = "matching-layout";
+      
+      // Column 1: Labels
+      const labelsCol = document.createElement("div");
+      labelsCol.className = "matching-labels";
+      act.pairs.forEach(p => {
+        const lbl = document.createElement("div");
+        lbl.className = "matching-label";
+        lbl.textContent = p.condition;
+        labelsCol.appendChild(lbl);
+      });
+
+      // Column 2: Drop Zones
+      const dropsCol = document.createElement("div");
+      dropsCol.className = "matching-drops";
+      act.pairs.forEach(p => {
+        const drop = document.createElement("div");
+        drop.className = "matching-drop-zone";
+        drop.dataset.condition = p.condition;
+        dropsCol.appendChild(drop);
+      });
+
+      // Column 3: Bank
+      const bankDiv = document.createElement("div");
+      bankDiv.className = "bank";
+      bankDiv.id = "bank";
+      shuffle(act.pairs).forEach(p => bankDiv.appendChild(createCard(p.finding, p.color)));
+      
+      matchingDiv.appendChild(labelsCol);
+      matchingDiv.appendChild(dropsCol);
+      matchingDiv.appendChild(bankDiv);
+      gameArea.appendChild(matchingDiv);
+    }
+    setupDragDrop();
+  }
+
+  function setupDragDrop() {
+    const targets = document.querySelectorAll(".drop-container, .slot, .matching-drop-zone, #bank");
+    targets.forEach(target => {
+      target.addEventListener("dragover", e => {
+        e.preventDefault();
+        if (target.id !== "bank") target.classList.add("over");
+      });
+      target.addEventListener("dragleave", () => target.classList.remove("over"));
+      target.addEventListener("drop", e => {
+        e.preventDefault();
+        target.classList.remove("over");
+        const card = document.querySelector(".dragging");
+        if (!card) return;
+
+        const currentActivity = activities[currentIdx];
+
+        if (target.id === "bank") {
+          target.appendChild(card);
+        } else if (target.classList.contains("slot") || target.classList.contains("matching-drop-zone")) {
+          // Single-item swap logic
+          const existing = target.querySelector(".card");
+          if (existing && existing !== card) document.getElementById("bank").appendChild(existing);
+          target.appendChild(card);
+        } else if (target.classList.contains("drop-container")) {
+          // Multi-item append logic
+          target.appendChild(card);
+        }
+        message.textContent = "";
+      });
+    });
+  }
+
+  checkBtn.addEventListener("click", () => {
+    const act = activities[currentIdx];
+    let isCorrect = true;
+    let totalPlaced = 0;
+
+    if (act.type === "sorting") {
+      act.categories.forEach(cat => {
+        const container = document.getElementById(cat.id);
+        const cards = container.querySelectorAll(".card");
+        totalPlaced += cards.length;
+        cards.forEach(card => {
+          if (!cat.correctItems.includes(card.dataset.text)) isCorrect = false;
+        });
+        if (cards.length !== cat.correctItems.length) isCorrect = false;
+      });
+      if (totalPlaced < act.allCards.length) {
+        message.textContent = "Sort all items first! 📥";
+        message.style.color = "#d35400";
+        return;
+      }
+    } else if (act.type === "ordering") {
+      const slots = document.querySelectorAll(".slot");
+      slots.forEach((slot, i) => {
+        const card = slot.querySelector(".card");
+        if (!card) { isCorrect = false; return; }
+        totalPlaced++;
+        if (card.dataset.text !== act.correctOrder[i].text) isCorrect = false;
+      });
+      if (totalPlaced < act.correctOrder.length) {
+        message.textContent = "Order all steps first! 📦";
+        message.style.color = "#d35400";
+        return;
+      }
+    } else if (act.type === "matching") {
+      const drops = document.querySelectorAll(".matching-drop-zone");
+      drops.forEach(drop => {
+        const card = drop.querySelector(".card");
+        if (!card) { isCorrect = false; return; }
+        totalPlaced++;
+        const pair = act.pairs.find(p => p.condition === drop.dataset.condition);
+        if (card.dataset.text !== pair.finding) isCorrect = false;
+      });
+      if (totalPlaced < act.pairs.length) {
+        message.textContent = "Match all conditions first! 🔗";
+        message.style.color = "#d35400";
+        return;
+      }
+    }
+
+    if (isCorrect) {
+      message.textContent = "🎉 Correct!";
+      message.style.color = "#27ae60";
+      checkBtn.style.display = "none";
+      nextBtn.style.display = "inline-block";
+    } else {
+      message.textContent = "Not quite. Try again!";
+      message.style.color = "#c0392b";
+    }
+  });
+
+  nextBtn.addEventListener("click", () => {
+    if (currentIdx < activities.length - 1) {
+      currentIdx++;
+      loadActivity();
+    } else {
+      instructions.innerHTML = "<h2>Challenge Complete!</h2>";
+      gameArea.innerHTML = "<div style='font-size: 80px;'>🏆</div>";
+      checkBtn.style.display = "none";
+      nextBtn.style.display = "none";
+      message.textContent = "Great job, EMT!";
+    }
+  });
+
+  document.getElementById("resetBtn").addEventListener("click", loadActivity);
+  loadActivity();
+</script>
+
+</body>
+</html>
