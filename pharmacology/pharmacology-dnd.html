@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NREMT Pharmacology Drag and Drop</title>
+  <style>
+    :root {
+      --bg-yellow: #f1cb42;
+      --card-bg: #fff1b8;
+      --text-dark: #333;
+      --accent-green: #2ecc71;
+      --accent-blue: #3498db;
+      --btn-hover: #27ae60;
+    }
+
+    * {
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-yellow);
+      margin: 0;
+      padding: 20px;
+      color: var(--text-dark);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    /* Header Styling */
+    header {
+      text-align: center;
+      margin-bottom: 15px;
+    }
+
+    header h1 {
+      margin: 0 0 5px 0;
+      font-size: 26px;
+      color: #222;
+    }
+
+    .dots {
+      display: flex;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      border: 2px solid #333;
+    }
+
+    .dot.active {
+      background-color: #333;
+    }
+
+    /* Instruction Box */
+    .instructions-card {
+      background-color: #fff9e6;
+      border-radius: 12px;
+      padding: 12px 20px;
+      width: 100%;
+      max-width: 950px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    }
+
+    .instructions-card h2 {
+      margin: 0 0 4px 0;
+      color: #d35400;
+      font-size: 18px;
+    }
+
+    .instructions-card p {
+      margin: 0;
+      font-size: 14px;
+      color: #444;
+    }
+
+    /* Main Activity Grid Layout */
+    .activity-container {
+      display: grid;
+      grid-template-columns: 1fr 1.1fr 1fr;
+      gap: 15px;
+      width: 100%;
+      max-width: 950px;
+      margin-bottom: 20px;
+    }
+
+    .drop-zone-container {
+      background-color: var(--card-bg);
+      border-radius: 15px;
+      padding: 15px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    }
+
+    .zone-title {
+      font-weight: bold;
+      font-size: 15px;
+      margin-bottom: 12px;
+      text-align: center;
+    }
+
+    .drop-zone {
+      width: 100%;
+      min-height: 320px;
+      border: 2px dashed #b5a468;
+      border-radius: 10px;
+      padding: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      transition: background-color 0.2s, border-color 0.2s;
+    }
+
+    .drop-zone.drag-over {
+      background-color: #ffe993;
+      border-color: #8c7835;
+    }
+
+    /* Scrollable Middle Items Container */
+    .items-container {
+      background-color: rgba(255, 255, 255, 0.4);
+      border-radius: 15px;
+      padding: 12px;
+      max-height: 380px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    /* Draggable Item Styles */
+    .draggable {
+      padding: 12px 14px;
+      border-radius: 8px;
+      color: white;
+      font-size: 13px;
+      font-weight: 600;
+      text-align: center;
+      cursor: grab;
+      user-select: none;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+      transition: transform 0.1s, opacity 0.2s;
+    }
+
+    .draggable:active {
+      cursor: grabbing;
+    }
+
+    .draggable.dragging {
+      opacity: 0.4;
+    }
+
+    /* Colors matching the design */
+    .c-purple { background-color: #7d5fff; }
+    .c-teal   { background-color: #1dd1a1; }
+    .c-blue   { background-color: #54a0ff; }
+    .c-dblue  { background-color: #2e86de; }
+    .c-orange { background-color: #ff9ff3; color: #333; }
+    .c-peach  { background-color: #fca580; color: #333; }
+    .c-red    { background-color: #ff6b6b; }
+    .c-yellow { background-color: #feca57; color: #333; }
+
+    /* Controls / Buttons */
+    .controls {
+      display: flex;
+      gap: 15px;
+    }
+
+    .btn {
+      padding: 10px 24px;
+      border: none;
+      border-radius: 20px;
+      font-weight: bold;
+      font-size: 14px;
+      color: white;
+      cursor: pointer;
+      box-shadow: 0 3px 6px rgba(0,0,0,0.16);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: transform 0.1s, background-color 0.2s;
+    }
+
+    .btn:active {
+      transform: scale(0.97);
+    }
+
+    .btn-check { background-color: #2ecc71; }
+    .btn-check:hover { background-color: #27ae60; }
+
+    .btn-reset { background-color: #ff6b6b; }
+    .btn-reset:hover { background-color: #ee5253; }
+
+    /* Results Feedback */
+    .feedback {
+      margin-top: 15px;
+      font-weight: bold;
+      font-size: 16px;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>NREMT Pharmacology</h1>
+    <div class="dots">
+      <div class="dot active"></div>
+      <div class="dot"></div>
+      <div class="dot"></div>
+    </div>
+  </header>
+
+  <div class="instructions-card">
+    <h2>Activity 1: Sort the Findings & Mechanisms</h2>
+    <p>Drag each item into the correct category: <strong>Albuterol (Left)</strong> or <strong>Nitroglycerin (Right)</strong>.</p>
+  </div>
+
+  <div class="activity-container">
+    <!-- Left Category Zone -->
+    <div class="drop-zone-container">
+      <div class="zone-title">Albuterol</div>
+      <div class="drop-zone" id="zone-albuterol" data-category="albuterol"></div>
+    </div>
+
+    <!-- Center Draggable Items List -->
+    <div class="items-container" id="source-pool">
+      <div class="draggable c-purple" draggable="true" id="item-1" data-correct="albuterol">
+        Relieves bronchospasm in asthma/COPD
+      </div>
+      <div class="draggable c-teal" draggable="true" id="item-2" data-correct="nitro">
+        Causes systemic vasodilation
+      </div>
+      <div class="draggable c-blue" draggable="true" id="item-3" data-correct="albuterol">
+        Administered via Metered-Dose Inhaler (MDI)
+      </div>
+      <div class="draggable c-dblue" draggable="true" id="item-4" data-correct="nitro">
+        Administered sublingually (SL)
+      </div>
+      <div class="draggable c-peach" draggable="true" id="item-5" data-correct="albuterol">
+        Common side effect: Tachycardia and tremors
+      </div>
+      <div class="draggable c-red" draggable="true" id="item-6" data-correct="nitro">
+        Common side effect: Throbbing headache & hypotension
+      </div>
+      <div class="draggable c-yellow" draggable="true" id="item-7" data-correct="nitro">
+        Contraindicated if systolic BP is &lt; 100 mmHg
+      </div>
+      <div class="draggable c-purple" draggable="true" id="item-8" data-correct="albuterol">
+        Beta-2 agonist mechanism of action
+      </div>
+    </div>
+
+    <!-- Right Category Zone -->
+    <div class="drop-zone-container">
+      <div class="zone-title">Nitroglycerin</div>
+      <div class="drop-zone" id="zone-nitro" data-category="nitro"></div>
+    </div>
+  </div>
+
+  <div class="controls">
+    <button class="btn btn-check" onclick="checkAnswers()">✔ Check Answer</button>
+    <button class="btn btn-reset" onclick="resetActivity()">🔄 Reset</button>
+  </div>
+
+  <div class="feedback" id="feedback"></div>
+
+  <script>
+    const draggables = document.querySelectorAll('.draggable');
+    const dropZones = document.querySelectorAll('.drop-zone, .items-container');
+
+    draggables.forEach(draggable => {
+      draggable.addEventListener('dragstart', () => {
+        draggable.classList.add('dragging');
+      });
+
+      draggable.addEventListener('dragend', () => {
+        draggable.classList.remove('dragging');
+      });
+    });
+
+    dropZones.forEach(zone => {
+      zone.addEventListener('dragover', e => {
+        e.preventDefault();
+        zone.classList.add('drag-over');
+      });
+
+      zone.addEventListener('dragleave', () => {
+        zone.classList.remove('drag-over');
+      });
+
+      zone.addEventListener('drop', e => {
+        e.preventDefault();
+        zone.classList.remove('drag-over');
+        const draggingItem = document.querySelector('.dragging');
+        if (draggingItem) {
+          zone.appendChild(draggingItem);
+        }
+      });
+    });
+
+    function checkAnswers() {
+      const items = document.querySelectorAll('.draggable');
+      let correctCount = 0;
+      let totalPlaced = 0;
+
+      items.forEach(item => {
+        const parentZone = item.parentElement.dataset.category;
+        const correctZone = item.dataset.correct;
+
+        if (parentZone) {
+          totalPlaced++;
+          if (parentZone === correctZone) {
+            correctCount++;
+            item.style.border = "2px solid #2ecc71";
+          } else {
+            item.style.border = "2px solid #e74c3c";
+          }
+        }
+      });
+
+      const feedback = document.getElementById('feedback');
+      if (totalPlaced < items.length) {
+        feedback.textContent = "Please sort all items before checking!";
+        feedback.style.color = "#d35400";
+      } else if (correctCount === items.length) {
+        feedback.textContent = "Great job! All answers are correct.";
+        feedback.style.color = "#27ae60";
+      } else {
+        feedback.textContent = `You got ${correctCount} out of ${items.length} correct. Try again!`;
+        feedback.style.color = "#c0392b";
+      }
+    }
+
+    function resetActivity() {
+      const sourcePool = document.getElementById('source-pool');
+      const items = document.querySelectorAll('.draggable');
+      const feedback = document.getElementById('feedback');
+
+      items.forEach(item => {
+        item.style.border = "none";
+        sourcePool.appendChild(item);
+      });
+
+      feedback.textContent = "";
+    }
+  </script>
+</body>
+</html>
