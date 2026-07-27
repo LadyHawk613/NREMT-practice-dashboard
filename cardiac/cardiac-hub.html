@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Cardiology Activities | NREMT Practice</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    font-family: Arial, Helvetica, sans-serif;
+    background: linear-gradient(135deg, #e0f7fa, #80deea);
+    min-height: 100vh;
+    margin: 0;
+    padding: 40px 20px;
+    text-align: center;
+  }
+  h1 { color: #083344; margin-bottom: 10px; }
+  .subtitle { color: #164e63; margin-bottom: 30px; }
+  .dashboard {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 20px;
+    max-width: 900px;
+    margin: auto;
+  }
+  .card {
+    background: white;
+    border-radius: 15px;
+    padding: 25px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+  }
+  button {
+    width: 100%;
+    padding: 15px;
+    border: none;
+    border-radius: 12px;
+    background: #0284c7;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+  }
+  button:hover { background: #0369a1; transform: translateY(-2px); }
+  .back-btn {
+    background: #475569;
+    max-width: 200px;
+    margin-bottom: 25px;
+  }
+  .back-btn:hover { background: #334155; }
+  .description { margin-top: 12px; color: #475569; font-size: 14px; }
+</style>
+</head>
+<body>
+
+  <button class="back-btn" onclick="location.href='index.html'">← Main Dashboard</button>
+
+  <h1>🫀 Cardiology Practice Activities</h1>
+  <div class="subtitle">Select a specific cardiac activity to begin</div>
+
+  <div class="dashboard">
+
+    <div class="card">
+      <button onclick="location.href='cardiac-emergency-activity-dnd.html'">
+        Cardiac Emergency Activity
+      </button>
+      <div class="description">Drag-and-Drop Practice</div>
+    </div>
+
+    <div class="card">
+      <button onclick="location.href='nremt-case-study-3.html'">
+        Cardiac Case Study #1
+      </button>
+      <div class="description">Assessment and clinical care</div>
+    </div>
+
+    <div class="card">
+      <button onclick="location.href='nremt-case-study-4.html'">
+        Cardiac Case Study #2
+      </button>
+      <div class="description">Assessment and clinical care</div>
+    </div>
+
+    <div class="card">
+      <button onclick="location.href='cardiac-arrest-sequence-dnd.html'">
+        Cardiac Arrest Sequence
+      </button>
+      <div class="description">Sequence Drag-and-Drop</div>
+    </div>
+
+    <div class="card">
+      <button onclick="location.href='nremt-cardiac-assessment-dnd.html'">
+        Cardiac Arrest (3 DnD)
+      </button>
+      <div class="description">Multi-part Drag-and-Drop</div>
+    </div>
+
+  </div>
+
+</body>
+</html>
