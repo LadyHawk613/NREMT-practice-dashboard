@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Pharmacology Activities | NREMT Practice</title>
+<style>
+  * {
+    box-sizing: border-box;
+  }
+  body {
+    font-family: Arial, Helvetica, sans-serif;
+    background: linear-gradient(135deg, #e0f7fa, #80deea);
+    min-height: 100vh;
+    margin: 0;
+    padding: 40px 20px;
+    text-align: center;
+  }
+  h1 {
+    color: #083344;
+    margin-bottom: 10px;
+  }
+  .subtitle {
+    color: #164e63;
+    margin-bottom: 30px;
+  }
+  .dashboard {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 20px;
+    max-width: 900px;
+    margin: auto;
+  }
+  .card {
+    background: white;
+    border-radius: 15px;
+    padding: 25px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+  }
+  button {
+    width: 100%;
+    padding: 15px;
+    border: none;
+    border-radius: 12px;
+    background: #0284c7;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+  }
+  button:hover {
+    background: #0369a1;
+    transform: translateY(-2px);
+  }
+  .back-btn {
+    background: #475569;
+    max-width: 200px;
+    margin: 0 auto 25px auto;
+  }
+  .back-btn:hover {
+    background: #334155;
+  }
+  .description {
+    margin-top: 12px;
+    color: #475569;
+    font-size: 14px;
+  }
+</style>
+</head>
+<body>
+
+  <!--
+  <button class="back-btn" onclick="location.href='index.html'">← Main Dashboard</button>
+  -->
+
+  <h1>💊 Environmental Activities</h1>
+  <div class="subtitle">Select a practice activity to begin</div>
+
+  <div class="dashboard">
+
+    <!-- Activity 1 in the pharmacology subfolder -->
+    <div class="card">
+      <button onclick="location.href='medication-decision-challenge.html'">
+        Activity 1
+      </button>
+      <div class="description"> Activity 1</div>
+    </div>
+
+    <!-- Activity 2 in the pharmacology subfolder -->
+    <div class="card">
+      <button onclick="location.href='pharmacology-dnd.html'">
+        Drag-n-Drop
+      </button>
+      <div class="description"> Activity 2</div>
+    </div>
+  
+    <!-- Activity 3 in the pharmacology subfolder -->
+   <div class="card">
+      <button onclick="location.href='https://manus.im/share/file/fcf02942-65a8-40b7-8ba5-af867a1e9cb3'">
+        Progressive Case Study
+      </button>
+      <div class="description">Scenario-based decisions</div>
+    </div>
+
+    <!-- Activity 4 in the pharmacology subfolder -->
+   <div class="card">
+      <button onclick="location.href='https://share.gemini.google/krf6JvI0WX3s'">
+        20 Questions
+      </button>
+      <div class="description">Scenario-based Multiple Choice</div>
+    </div>
+
+  </div>
+</body>
+</html>
