@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NREMT Environmental Emergencies Case Study</title>
+
+<style>
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f7fb;
+    color: #1a1a1a;
+    max-width: 900px;
+    margin: auto;
+    padding: 20px;
+}
+
+h1 {
+    background-color: #071B2D;
+    color: white;
+    padding: 20px;
+    text-align: center;
+    border-radius: 10px;
+}
+
+.section {
+    background: white;
+    padding: 20px;
+    margin: 20px 0;
+    border-radius: 10px;
+    box-shadow: 0 2px 6px #ccc;
+}
+
+.question {
+    background-color: #eaf2ff;
+    padding: 15px;
+    border-left: 5px solid #071B2D;
+    margin-top: 20px;
+}
+
+button {
+    display: block;
+    width: 100%;
+    text-align: left;
+    padding: 12px;
+    margin: 8px 0;
+    border-radius: 6px;
+    border: 1px solid #999;
+    background-color: white;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+button:hover {
+    background-color: #dbeafe;
+}
+
+.answer {
+    display: none;
+    background-color: #e8f5e9;
+    padding: 15px;
+    margin-top: 10px;
+    border-radius: 8px;
+}
+
+.next {
+    background-color: #071B2D;
+    color: white;
+    text-align: center;
+}
+
+.next:hover {
+    background-color: #12395a;
+}
+
+.nremt {
+    background-color: #fff3cd;
+    padding: 15px;
+    border-radius: 8px;
+    margin-top: 15px;
+}
+</style>
+
+<script>
+function showAnswer(id, next) {
+    document.getElementById(id).style.display = "block";
+    document.getElementById(next).style.display = "block";
+}
+
+function showSection(id) {
+    document.getElementById(id).style.display = "block";
+}
+</script>
+
+</head>
+
+<body>
+
+<h1>NREMT Progressive Case Study<br>
+Environmental Emergencies: Heat Stroke</h1>
+
+<div class="section">
+
+<h2>Dispatch Information</h2>
+
+<p>
+You are dispatched to a local hiking trail for a 
+<strong>"person feeling weak and dizzy after hiking."</strong>
+</p>
+
+<p>
+Weather conditions:
+</p>
+
+<ul>
+<li>Temperature: 102°F (39°C)</li>
+<li>High humidity</li>
+<li>Patient has been hiking for several hours</li>
+</ul>
+
+<p>
+You arrive and find a 45-year-old male sitting beside the trail.
+He appears exhausted and anxious.
+</p>
+
+</div>
+
+
+<div class="section">
+
+<h2>Question 1: Scene Size-Up</h2>
+
+<div class="question">
+
+<p>
+Which action should the EMT perform first?
+</p>
+
+<button onclick="showAnswer('answer1','section2')">
+A. Immediately assess the patient's blood pressure
+</button>
+
+<button onclick="showAnswer('answer1','section2')">
+B. Ask the patient what medications he takes
+</button>
+
+<button onclick="showAnswer('answer1','section2')">
+C. Perform a scene size-up and assess environmental hazards
+</button>
+
+<button onclick="showAnswer('answer1','section2')">
+D. Give the patient water to drink
+</button>
+
+
+<div class="answer" id="answer1">
+
+<strong>Correct Answer: C</strong>
+
+<p>
+The EMT must ensure the scene is safe before patient contact.
+Environmental emergencies may place rescuers at risk.
+</p>
+
+<div class="nremt">
+<strong>NREMT Thinking:</strong><br>
+"Before I treat the patient, is the environment safe for me?"
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+
+
+<div class="section" id="section2" style="display:none;">
+
+<h2>New Information</h2>
+
+<p>
+The scene is safe.
+</p>
+
+<p>
+The patient states:
+</p>
+
+<blockquote>
+"I was hiking for about four hours. I started feeling dizzy, but I thought I could push through it."
+</blockquote>
+
+<ul>
+<li>Skin: Cool and moist</li>
+<li>Respirations: 24/min</li>
+<li>Pulse: 118/min</li>
+<li>Blood Pressure: 102/68 mmHg</li>
+<li>SpO₂: 98%</li>
+<li>Alert and oriented ×4</li>
+</ul>
+
+
+<h2>Question 2: Patient Classification</h2>
+
+<div class="question">
+
+<p>
+Which condition is most likely?
+</p>
+
+<button onclick="showAnswer('answer2','section3')">
+A. Heat stroke
+</button>
+
+<button onclick="showAnswer('answer2','section3')">
+B. Heat exhaustion
+</button>
+
+<button onclick="showAnswer('answer2','section3')">
+C. Hypothermia
+</button>
+
+<button onclick="showAnswer('answer2','section3')">
+D. Dehydration with shock
+</button>
+
+
+<div class="answer" id="answer2">
+
+<strong>Correct Answer: B</strong>
+
+<p>
+The patient has heat exhaustion:
+</p>
+
+<ul>
+<li>Heavy sweating</li>
+<li>Weakness</li>
+<li>Dizziness</li>
+<li>Normal mental status</li>
+</ul>
+
+<p>
+Heat stroke is suspected when altered mental status develops.
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+
+
+
+<div class="section" id="section3" style="display:none;">
+
+<h2>Condition Changes</h2>
+
+<p>
+The patient suddenly becomes confused.
+</p>
+
+<p>
+He says:
+</p>
+
+<blockquote>
+"I need to get back to the trail... my dog is waiting."
+</blockquote>
+
+<ul>
+<li>Skin: Hot</li>
+<li>Pulse: 132/min</li>
+<li>Respirations: 30/min</li>
+<li>Blood Pressure: 94/58 mmHg</li>
+<li>Temperature: 105°F (40.5°C)</li>
+</ul>
+
+
+<h2>Question 3: Treatment Priority</h2>
+
+<div class="question">
+
+<p>
+What is the EMT's priority action?
+</p>
+
+<button onclick="showAnswer('answer3','section4')">
+A. Provide oral fluids
+</button>
+
+<button onclick="showAnswer('answer3','section4')">
+B. Begin active cooling measures
+</button>
+
+<button onclick="showAnswer('answer3','section4')">
+C. Obtain a complete SAMPLE history
+</button>
+
+<button onclick="showAnswer('answer3','section4')">
+D. Apply blankets to prevent shock
+</button>
+
+
+<div class="answer" id="answer3">
+
+<strong>Correct Answer: B</strong>
+
+<p>
+The patient now has heat stroke:
+</p>
+
+<ul>
+<li>Altered mental status</li>
+<li>Hot skin</li>
+<li>Temperature above 104°F</li>
+</ul>
+
+<p>
+Rapid cooling is the priority.
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+
+
+<div class="section" id="section4" style="display:none;">
+
+<h2>Further Information</h2>
+
+<p>
+The patient becomes increasingly confused and begins vomiting.
+</p>
+
+
+<h2>Question 4: Oral Fluids Decision</h2>
+
+<div class="question">
+
+<p>
+What should the EMT do regarding oral fluids?
+</p>
+
+
+<button onclick="showAnswer('answer4','section5')">
+A. Give small sips of water
+</button>
+
+<button onclick="showAnswer('answer4','section5')">
+B. Give electrolyte drinks
+</button>
+
+<button onclick="showAnswer('answer4','section5')">
+C. Withhold oral fluids
+</button>
+
+<button onclick="showAnswer('answer4','section5')">
+D. Give fluids if requested
+</button>
+
+
+<div class="answer" id="answer4">
+
+<strong>Correct Answer: C</strong>
+
+<p>
+Altered mental status creates an aspiration risk.
+Do not give oral fluids.
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+
+
+<div class="section" id="section5" style="display:none;">
+
+<h2>Final Assessment</h2>
+
+<ul>
+<li>GCS decreases from 14 to 10</li>
+<li>Respirations become shallow</li>
+<li>Pulse remains rapid</li>
+</ul>
+
+
+<h2>Question 5: Airway/Breathing Decision</h2>
+
+<div class="question">
+
+<p>
+What is the most appropriate next action?
+</p>
+
+
+<button onclick="showAnswer('finalAnswer','final')">
+A. Continue cooling and monitor airway status
+</button>
+
+<button onclick="showAnswer('finalAnswer','final')">
+B. Stop cooling and focus only on transport
+</button>
+
+<button onclick="showAnswer('finalAnswer','final')">
+C. Place patient upright and give fluids
+</button>
+
+<button onclick="showAnswer('finalAnswer','final')">
+D. Delay transport until temperature is normal
+</button>
+
+
+<div class="answer" id="finalAnswer">
+
+<strong>Correct Answer: A</strong>
+
+<p>
+Continue:
+</p>
+
+<ul>
+<li>Rapid cooling</li>
+<li>Airway monitoring</li>
+<li>Oxygen support as needed</li>
+<li>Rapid transport</li>
+</ul>
+
+</div>
+
+</div>
+
+
+<div id="final" class="nremt">
+
+<h2>NREMT Key Takeaways</h2>
+
+<p><strong>Heat Exhaustion:</strong></p>
+<ul>
+<li>Sweating</li>
+<li>Weakness</li>
+<li>Dizziness</li>
+<li>Normal mental status</li>
+</ul>
+
+<p><strong>Heat Stroke:</strong></p>
+<ul>
+<li>Altered mental status</li>
+<li>Hot skin</li>
+<li>Temperature greater than 104°F</li>
+<li>Rapid cooling required</li>
+</ul>
+
+<p>
+<strong>NREMT Trigger:</strong><br>
+Hot environment + confusion = Heat Stroke → COOL NOW
+</p>
+
+</div>
+
+
+</body>
+</html>
