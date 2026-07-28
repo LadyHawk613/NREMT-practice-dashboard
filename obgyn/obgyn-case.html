@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NREMT Progressive Case Study: OB/GYN Emergencies</title>
+    <style>
+        :root {
+            --bg-color: #f4f6f9;
+            --card-bg: #ffffff;
+            --primary: #1e3a8a;
+            --primary-hover: #1e40af;
+            --text-main: #1f2937;
+            --text-muted: #6b7280;
+            --border-color: #e5e7eb;
+            --success: #059669;
+            --success-bg: #ecfdf5;
+            --error: #dc2626;
+            --error-bg: #fef2f2;
+            --accent-bg: #eff6ff;
+            --accent-border: #3b82f6;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        header {
+            background-color: var(--primary);
+            color: white;
+            padding: 24px;
+            border-radius: 12px;
+            margin-bottom: 24px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        header h1 {
+            margin: 0 0 8px 0;
+            font-size: 1.5rem;
+        }
+
+        header p {
+            margin: 4px 0;
+            opacity: 0.9;
+            font-size: 0.95rem;
+        }
+
+        .progress-bar-container {
+            background-color: #dbeafe;
+            height: 10px;
+            border-radius: 5px;
+            margin-top: 16px;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            background-color: #60a5fa;
+            height: 100%;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .phase-card {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 24px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            border: 1px solid var(--border-color);
+            display: none;
+            animation: fadeIn 0.4s ease-in-out;
+        }
+
+        .phase-card.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .phase-title {
+            color: var(--primary);
+            font-size: 1.25rem;
+            margin-top: 0;
+            margin-bottom: 16px;
+            border-bottom: 2px solid var(--bg-color);
+            padding-bottom: 8px;
+        }
+
+        .vitals-box, .clinical-info {
+            background-color: var(--accent-bg);
+            border-left: 4px solid var(--accent-border);
+            padding: 12px 16px;
+            border-radius: 0 8px 8px 0;
+            margin: 16px 0;
+        }
+
+        .vitals-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+            gap: 8px;
+            margin-top: 8px;
+            font-weight: 600;
+        }
+
+        .question-text {
+            font-weight: 600;
+            font-size: 1.05rem;
+            margin: 20px 0 12px 0;
+        }
+
+        .options-list {
+            list-style: none;
+            padding: 0;
+            margin: 0 0 20px 0;
+        }
+
+        .option-item {
+            margin-bottom: 10px;
+        }
+
+        .option-label {
+            display: flex;
+            align-items: flex-start;
+            padding: 12px 16px;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .option-label:hover {
+            border-color: #9ca3af;
+            background-color: #f9fafb;
+        }
+
+        .option-label input {
+            margin-right: 12px;
+            margin-top: 4px;
+        }
+
+        .option-item.correct .option-label {
+            border-color: var(--success);
+            background-color: var(--success-bg);
+            color: #065f46;
+            font-weight: bold;
+        }
+
+        .option-item.incorrect .option-label {
+            border-color: var(--error);
+            background-color: var(--error-bg);
+            color: #991b1b;
+        }
+
+        .btn {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            font-size: 1rem;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+
+        .btn:hover {
+            background-color: var(--primary-hover);
+        }
+
+        .btn:disabled {
+            background-color: #9ca3af;
+            cursor: not-allowed;
+        }
+
+        .rationale-box {
+            margin-top: 20px;
+            padding: 16px;
+            border-radius: 8px;
+            display: none;
+        }
+
+        .rationale-box.correct {
+            background-color: var(--success-bg);
+            border: 1px solid var(--success);
+            color: #065f46;
+        }
+
+        .rationale-box.incorrect {
+            background-color: var(--error-bg);
+            border: 1px solid var(--error);
+            color: #991b1b;
+        }
+
+        .summary-card {
+            display: none;
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            padding: 32px;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            border: 1px solid var(--border-color);
+        }
+
+        .summary-card.active {
+            display: block;
+        }
+
+        .score-display {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--primary);
+            margin: 16px 0;
+        }
+
+        .competency-list {
+            text-align: left;
+            background-color: var(--bg-color);
+            padding: 20px 20px 20px 40px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>NREMT Progressive Case Study: OB/GYN</h1>
+        <p><strong>Topic:</strong> Third Trimester Vaginal Bleeding</p>
+        <p><strong>Cognitive Level:</strong> 3–4 (Application, Analysis, Clinical Judgment)</p>
+        <div class="progress-bar-container">
+            <div class="progress-bar" id="progress-bar"></div>
+        </div>
+    </header>
+
+    <main id="case-container">
+        <!-- Phase 1 -->
+        <div class="phase-card active" id="phase-1">
+            <h2 class="phase-title">Phase 1: Initial Dispatch</h2>
+            <p>You are dispatched to a private residence for a 31-year-old female with vaginal bleeding. On arrival, the patient is sitting on the couch holding her abdomen. She states:</p>
+            <blockquote style="border-left: 3px solid var(--primary); margin: 12px 0; padding-left: 12px; font-style: italic;">
+                "I'm 35 weeks pregnant. About 20 minutes ago I started bleeding."
+            </blockquote>
+            <p>She appears anxious.</p>
+            
+            <div class="vitals-box">
+                <strong>Initial Vital Signs:</strong>
+                <div class="vitals-grid">
+                    <span>BP: 108/72 mmHg</span>
+                    <span>HR: 104/min</span>
+                    <span>RR: 20/min</span>
+                    <span>SpO₂: 98% (RA)</span>
+                </div>
+                <div style="margin-top: 8px; font-size: 0.9rem;"><strong>Skin:</strong> Warm, pale, slightly diaphoretic</div>
+            </div>
+
+            <div class="question-text">Question 1: What should be your highest priority at this point?</div>
+            <ul class="options-list" id="opts-1">
+                <li class="option-item"><label class="option-label"><input type="radio" name="q1" value="A"> A. Perform a vaginal examination to determine cervical dilation.</label></li>
+                <li class="option-item"><label class="option-label"><input type="radio" name="q1" value="B"> B. Determine if delivery is imminent while beginning the primary assessment.</label></li>
+                <li class="option-item"><label class="option-label"><input type="radio" name="q1" value="C"> C. Place the patient in Trendelenburg position.</label></li>
+                <li class="option-item"><label class="option-label"><input type="radio" name="q1" value="D"> D. Encourage the patient to walk to improve circulation.</label></li>
+            </ul>
+
+            <button class="btn" onclick="submitAnswer(1, 'B')">Submit Answer</button>
+            <div class="rationale-box" id="rat-1"></div>
+            <button class="btn" id="next-1" style="display:none; margin-top: 16px;" onclick="nextPhase(2)">Proceed to Phase 2 &rarr;</button>
+        </div>
+
+        <!-- Phase 2 -->
+        <div class="phase-card" id="phase-2">
+            <h2 class="phase-title">Phase 2: New Information</h2>
+            <p>During your assessment, the patient tells you:</p>
+            <div class="clinical-info">
+                <ul>
+                    <li>Bleeding is bright red</li>
+                    <li>She has no abdominal pain</li>
+                    <li>She has had no trauma</li>
+                    <li>She has soaked one sanitary pad</li>
+                    <li>She reports normal fetal movement</li>
+                </ul>
+            </div>
+
+            <div class="question-text">Question 2: Which condition is most likely?</div>
+            <ul class="options-list" id="opts-2">
+                <li class="option-item"><label class="option-label"><input type="radio" name="q2" value="A"> A. Abruptio placentae</label></li>
+                <li class="option-item"><label class="option-label"><input type="radio" name="q2" value="B"> B. Placenta previa</label></li>
+                <li class="option-item"><label class="option-label"><input type="radio" name="q2" value="C"> C. Uterine rupture</label></li>
+                <li class="option-item"><label class="option-label"><input type="radio" name="q2" value="D"> D. Ectopic pregnancy</label></li>
+            </ul>
+
+            <button class="btn" onclick="submitAnswer(2, 'B')">Submit Answer</button>
+            <div class="rationale-box" id="rat-2"></div>
+            <button class="btn" id="next-2" style="display:none; margin-top: 16px;" onclick="nextPhase(3)">Proceed to Phase 3 &rarr;</button>
+        </div>
+
+        <!-- Phase 3 -->
+        <div class="phase-card" id="phase-3">
+            <h2 class="phase-title">Phase 3: Patient Deterioration</h2>
+            <p>While preparing for transport, the patient suddenly becomes pale and dizzy. Bleeding continues.</p>
+            
+            <div class="vitals-box" style="border-left-color: #ef4444;">
+                <strong>Updated Vital Signs:</strong>
+                <div class="vitals-grid">
+                    <span>BP: 90/58 mmHg</span>
+                    <span>HR: 124/min</span>
+                    <span>RR: 24/min</span>
+                    <span>SpO₂: 97%</span>
+                </div>
+            </div>
+
+            <div class="question-text">Question 3: Which intervention is most appropriate?</div>
+            <ul class="options-list" id="opts-3">
+                <li class="option-item"><label class="option-label"><input type="radio" name="q3" value="A"> A. Delay transport until bleeding stops.</label></li>
+                <li class="option-item"><label class="option-label"><input type="radio" name="q3" value="B"> B. Place the patient on her left side, administer oxygen as needed, treat for shock, and transport rapidly.</label></li>
+                <li class="option-item"><label class="option-label"><input type="radio" name="q3" value="C"> C. Apply direct pressure inside the vagina.</label></li>
+                <li class="option-item"><label class="option-label"><input type="radio" name="q3" value="D"> D. Encourage the patient to remain standing.</label></li>
+            </ul>
+
+            <button class="btn" onclick="submitAnswer(3, 'B')">Submit Answer</button>
+            <div class="rationale-box" id="rat-3"></div>
+            <button class="btn" id="next-3" style="display:none; margin-top: 16px;" onclick="nextPhase(4)">Proceed to Phase 4 &rarr;</button>
+        </div>
+
+        <!-- Phase 4 -->
+        <div class="phase-card" id="phase-4">
+            <h2 class="phase-title">Phase 4: Complication</h2>
+            <p>During transport, the patient states:</p>
+            <blockquote style="border-left: 3px solid #ef4444; margin: 12px 0; padding-left: 12px; font-style: italic;">
+                "I think I'm having contractions."
+            </blockquote>
+            <p>Contractions are every 2 minutes. You observe crowning.</p>
+
+            <div class="question-text">Question 4: What should you do next?</div>
+            <ul class="options-list" id="opts-4">
+                <li class="option-item"><label class="option-label"><input type="radio" name="q4" value="A"> A. Attempt to delay delivery until arriving at the hospital.</label></li>
+                <li class="option-item"><label class="option-label"><input type="radio" name="q4" value="B"> B. Prepare for an emergency field delivery.</label></li>
+                <li class="option-item"><label class="option-label"><input type="radio" name="q4" value="C"> C. Push the baby's head back into the birth canal.</label></li>
+                <li class="option-item"><label class="option-label"><input type="radio" name="q4" value="D"> D. Have the patient cross her legs.</label></li>
+            </ul>
+
+            <button class="btn" onclick="submitAnswer(4, 'B')">Submit Answer</button>
+            <div class="rationale-box" id="rat-4"></div>
+            <button class="btn" id="next-4" style="display:none; margin-top: 16px;" onclick="nextPhase(5)">Proceed to Phase 5 &rarr;</button>
+        </div>
+
+        <!-- Phase 5 -->
+        <div class="phase-card" id="phase-5">
+            <h2 class="phase-title">Phase 5: Delivery</h2>
+            <p>The infant delivers. The newborn:</p>
+            <div class="clinical-info" style="border-left-color: #f59e0b;">
+                <ul>
+                    <li>Is limp</li>
+                    <li>Is not crying</li>
+                    <li>Heart rate is 80/min</li>
+                    <li>Has poor muscle tone</li>
+                </ul>
+            </div>
+
+            <div class="question-text">Question 5: What is the highest-priority intervention?</div>
+            <ul class="options-list" id="opts-5">
+                <li class="option-item"><label class="option-label"><input type="radio" name="q5" value="A"> A. Begin chest compressions.</label></li>
+                <li class="option-item"><label class="option-label"><input type="radio" name="q5" value="B"> B. Dry and stimulate the infant only.</label></li>
+                <li class="option-item"><label class="option-label"><input type="radio" name="q5" value="C"> C. Begin positive-pressure ventilation with a bag-mask device.</label></li>
+                <li class="option-item"><label class="option-label"><input type="radio" name="q5" value="D"> D. Suction for 30 seconds before doing anything else.</label></li>
+            </ul>
+
+            <button class="btn" onclick="submitAnswer(5, 'C')">Submit Answer</button>
+            <div class="rationale-box" id="rat-5"></div>
+            <button class="btn" id="next-5" style="display:none; margin-top: 16px;" onclick="nextPhase(6)">Proceed to Reflection &rarr;</button>
+        </div>
+
+        <!-- Reflection / Phase 6 -->
+        <div class="phase-card" id="phase-6">
+            <h2 class="phase-title">Phase 6: Clinical Judgment Reflection</h2>
+            
+            <!-- Reflection Q1 -->
+            <div class="question-text">1. What finding most strongly suggested placenta previa rather than abruptio placentae?</div>
+            <ul class="options-list" id="opts-r1">
+                <li class="option-item"><label class="option-label"><input type="radio" name="qr1" value="A"> A. Third trimester pregnancy</label></li>
+                <li class="option-item"><label class="option-label"><input type="radio" name="qr1" value="B"> B. Bright-red painless vaginal bleeding</label></li>
+                <li class="option-item"><label class="option-label"><input type="radio" name="qr1" value="C"> C. Mild tachycardia</label></li>
+                <li class="option-item"><label class="option-label"><input type="radio" name="qr1" value="D"> D. Anxiety</label></li>
+            </ul>
+
+            <!-- Reflection Q2 -->
+            <div class="question-text" style="margin-top: 32px;">2. Which finding indicated the patient was developing hypoperfusion?</div>
+            <ul class="options-list" id="opts-r2">
+                <li class="option-item"><label class="option-label"><input type="radio" name="qr2" value="A"> A. Normal fetal movement</label></li>
+                <li class="option-item"><label class="option-label"><input type="radio" name="qr2" value="B"> B. BP 90/58 with HR 124</label></li>
+                <li class="option-item"><label class="option-label"><input type="radio" name="qr2" value="C"> C. Pregnancy at 35 weeks</label></li>
+                <li class="option-item"><label class="option-label"><input type="radio" name="qr2" value="D"> D. Bright-red bleeding</label></li>
+            </ul>
+
+            <!-- Reflection Q3 -->
+            <div class="question-text" style="margin-top: 32px;">3. Why is rapid transport essential in this case?</div>
+            <ul class="options-list" id="opts-r3">
+                <li class="option-item"><label class="option-label"><input type="radio" name="qr3" value="A"> A. Vaginal bleeding in late pregnancy can quickly threaten both maternal and fetal circulation.</label></li>
+                <li class="option-item"><label class="option-label"><input type="radio" name="qr3" value="B"> B. Labor always requires lights-and-siren transport.</label></li>
+                <li class="option-item"><label class="option-label"><input type="radio" name="qr3" value="C"> C. Placenta previa usually resolves on its own.</label></li>
+                <li class="option-item"><label class="option-label"><input type="radio" name="qr3" value="D"> D. Every pregnant patient must immediately deliver.</label></li>
+            </ul>
+
+            <button class="btn" onclick="submitReflection()" style="margin-top: 16px;">Finalize Case Study</button>
+            <div class="rationale-box" id="rat-reflection"></div>
+            <button class="btn" id="next-6" style="display:none; margin-top: 16px;" onclick="showSummary()">View Performance Report &rarr;</button>
+        </div>
+
+        <!-- Final Summary Screen -->
+        <div class="summary-card" id="summary-card">
+            <h2>Case Study Complete</h2>
+            <p>You have finished the NREMT Progressive Case Study: OB/GYN Emergencies.</p>
+            
+            <div class="score-display" id="final-score">0 / 8</div>
+            <p id="score-feedback"></p>
+
+            <div class="competency-list">
+                <h3 style="margin-top: 0;">NREMT Competencies Assessed:</h3>
+                <ul>
+                    <li>Primary assessment and scene priorities</li>
+                    <li>Recognition of obstetric emergencies</li>
+                    <li>Differentiation of placenta previa vs. abruptio placentae</li>
+                    <li>Shock recognition and management</li>
+                    <li>Decision-making for imminent delivery</li>
+                    <li>Neonatal assessment and resuscitation priorities</li>
+                    <li>Maternal positioning and transport decisions</li>
+                </ul>
+            </div>
+
+            <button class="btn" onclick="window.location.reload()">Restart Case Study</button>
+        </div>
+    </main>
+</div>
+
+<script>
+    const rationales = {
+        1: "<strong>Rationale:</strong> The primary assessment comes first. The EMT should determine if childbirth is imminent while assessing airway, breathing, circulation, and major life threats. EMTs never perform vaginal examinations.",
+        2: "<strong>Rationale:</strong> Placenta previa typically presents with bright-red vaginal bleeding, little or no pain, and occurs in the third trimester. Abruptio placentae usually causes painful bleeding with a rigid uterus.",
+        3: "<strong>Rationale:</strong> This patient is developing hypoperfusion. Appropriate EMT care includes left lateral positioning, high-flow oxygen if indicated by protocol or shock, keeping the patient warm, rapid transport, and ongoing reassessment.",
+        4: "<strong>Rationale:</strong> Once crowning is present, delivery is imminent. Attempting to delay birth or push the infant back into the birth canal is inappropriate and dangerous.",
+        5: "<strong>Rationale:</strong> According to current neonatal resuscitation priorities: Heart rate above 60 but inadequate respirations → positive-pressure ventilation is the priority. Chest compressions are indicated only if the heart rate remains below 60/min after effective ventilation."
+    };
+
+    let totalScore = 0;
+    const totalPhases = 6;
+
+    function updateProgress(phaseNum) {
+        const percent = Math.min(((phaseNum - 1) / totalPhases) * 100, 100);
+        document.getElementById('progress-bar').style.width = percent + '%';
+    }
+
+    function submitAnswer(phaseNum, correctAnswer) {
+        const selected = document.querySelector(`input[name="q${phaseNum}"]:checked`);
+        if (!selected) {
+            alert("Please select an answer before proceeding.");
+            return;
+        }
+
+        const userVal = selected.value;
+        const optionsList = document.querySelectorAll(`#opts-${phaseNum} .option-item`);
+        
+        // Disable inputs
+        document.querySelectorAll(`input[name="q${phaseNum}"]`).forEach(input => input.disabled = true);
+
+        // Highlight correct/incorrect
+        optionsList.forEach(item => {
+            const input = item.querySelector('input');
+            if (input.value === correctAnswer) {
+                item.classList.add('correct');
+            }
+            if (input.value === userVal && userVal !== correctAnswer) {
+                item.classList.add('incorrect');
+            }
+        });
+
+        const ratBox = document.getElementById(`rat-${phaseNum}`);
+        ratBox.style.display = 'block';
+        
+        if (userVal === correctAnswer) {
+            totalScore++;
+            ratBox.className = "rationale-box correct";
+            ratBox.innerHTML = `<strong>Correct!</strong><br>${rationales[phaseNum]}`;
+        } else {
+            ratBox.className = "rationale-box incorrect";
+            ratBox.innerHTML = `<strong>Incorrect.</strong><br>${rationales[phaseNum]}`;
+        }
+
+        // Hide submit button, show next button
+        event.target.style.display = 'none';
+        document.getElementById(`next-${phaseNum}`).style.display = 'inline-block';
+    }
+
+    function submitReflection() {
+        const q1 = document.querySelector('input[name="qr1"]:checked');
+        const q2 = document.querySelector('input[name="qr2"]:checked');
+        const q3 = document.querySelector('input[name="qr3"]:checked');
+
+        if (!q1 || !q2 || !q3) {
+            alert("Please answer all reflection questions before finalizing.");
+            return;
+        }
+
+        // Disable all
+        ['qr1', 'qr2', 'qr3'].forEach(name => {
+            document.querySelectorAll(`input[name="${name}"]`).forEach(i => i.disabled = true);
+        });
+
+        // Evaluate Q1 (B)
+        evaluateReflectQuestion('qr1', 'B', 'opts-r1');
+        // Evaluate Q2 (B)
+        evaluateReflectQuestion('qr2', 'B', 'opts-r2');
+        // Evaluate Q3 (A)
+        evaluateReflectQuestion('qr3', 'A', 'opts-r3');
+
+        const ratBox = document.getElementById('rat-reflection');
+        ratBox.className = "rationale-box correct";
+        ratBox.style.display = 'block';
+        ratBox.innerHTML = "<strong>Reflection Review Complete!</strong><br>1. Painless bright-red bleeding distinguishes previa.<br>2. Hypotension (90/58) + Tachycardia (124) indicates decompensating shock.<br>3. Rapid transport is critical for combined maternal/fetal perfusion threats.";
+
+        event.target.style.display = 'none';
+        document.getElementById('next-6').style.display = 'inline-block';
+    }
+
+    function evaluateReflectQuestion(qName, correctVal, containerId) {
+        const selected = document.querySelector(`input[name="${qName}"]:checked`).value;
+        if (selected === correctVal) totalScore++;
+
+        document.querySelectorAll(`#${containerId} .option-item`).forEach(item => {
+            const input = item.querySelector('input');
+            if (input.value === correctVal) item.classList.add('correct');
+            if (input.value === selected && selected !== correctVal) item.classList.add('incorrect');
+        });
+    }
+
+    function nextPhase(nextPhaseNum) {
+        document.querySelectorAll('.phase-card').forEach(card => card.classList.remove('active'));
+        document.getElementById(`phase-${nextPhaseNum}`).classList.add('active');
+        updateProgress(nextPhaseNum);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function showSummary() {
+        document.querySelectorAll('.phase-card').forEach(card => card.classList.remove('active'));
+        const summaryCard = document.getElementById('summary-card');
+        summaryCard.classList.add('active');
+        
+        document.getElementById('progress-bar').style.width = '100%';
+        document.getElementById('final-score').innerText = `${totalScore} / 8`;
+
+        const feedback = document.getElementById('score-feedback');
+        if (totalScore === 8) {
+            feedback.innerText = "Mastery Level: Outstanding! Excellent clinical judgment across all critical decisions.";
+        } else if (totalScore >= 6) {
+            feedback.innerText = "Mastery Level: Pass. Strong understanding of OB/GYN priorities and resuscitation.";
+        } else {
+            feedback.innerText = "Mastery Level: Needs Review. Re-examine OB/GYN hemorrhage differentials and neonatal resuscitation protocols.";
+        }
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // Initialize progress bar
+    updateProgress(1);
+</script>
+</body>
+</html>
