@@ -1,0 +1,431 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NREMT Neurological Emergencies Quiz</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        .fade-in { animation: fadeIn 0.3s ease-in; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body class="bg-slate-50 min-h-screen flex flex-col items-center py-8 px-4">
+
+    <div class="max-w-2xl w-full bg-white rounded-xl shadow-lg overflow-hidden border border-slate-200">
+        <!-- Header -->
+        <div class="bg-indigo-700 p-6 text-white text-center">
+            <h1 class="text-2xl font-bold">Neurological Emergencies Practice</h1>
+            <p class="text-indigo-100 text-sm mt-1">NREMT Cognitive Exam (Level 3–4 Clinical Reasoning)</p>
+        </div>
+
+        <!-- Progress Bar -->
+        <div class="w-full bg-slate-200 h-2">
+            <div id="progress" class="bg-indigo-500 h-2 transition-all duration-500" style="width: 0%"></div>
+        </div>
+
+        <div id="quiz-container" class="p-6">
+            <!-- Question Section -->
+            <div id="question-box" class="fade-in">
+                <div class="flex justify-between items-center mb-4">
+                    <span id="question-number" class="text-xs font-bold text-slate-500 uppercase tracking-wider">Question 1 of 20</span>
+                    <span id="score-display" class="text-xs font-bold text-indigo-600 bg-indigo-50 px-2 py-1 rounded">Score: 0</span>
+                </div>
+                
+                <h2 id="question-text" class="text-lg font-semibold text-slate-800 mb-6 leading-snug">
+                    Loading question...
+                </h2>
+
+                <div id="options" class="space-y-3">
+                    <!-- Options injected here -->
+                </div>
+
+                <!-- Feedback Section (Hidden by default) -->
+                <div id="feedback" class="mt-6 p-4 rounded-lg hidden border">
+                    <div class="flex items-center mb-2">
+                        <span id="feedback-icon" class="mr-2 font-bold"></span>
+                        <span id="feedback-status" class="font-bold text-sm uppercase"></span>
+                    </div>
+                    <p id="feedback-text" class="text-sm text-slate-600 italic"></p>
+                </div>
+
+                <!-- Navigation -->
+                <button id="next-btn" class="mt-8 w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-6 rounded-lg transition-colors hidden shadow-md">
+                    Next Question
+                </button>
+            </div>
+
+            <!-- Results Section (Hidden by default) -->
+            <div id="results-box" class="hidden text-center py-10 fade-in">
+                <div class="text-6xl mb-4">🧠</div>
+                <h2 class="text-3xl font-bold text-slate-800 mb-2">Quiz Complete!</h2>
+                <p class="text-slate-500 mb-6">You've finished the NREMT Neurological Emergencies assessment.</p>
+                
+                <div class="inline-block p-8 bg-indigo-50 rounded-2xl mb-8 border border-indigo-100">
+                    <div id="final-score" class="text-5xl font-bold text-indigo-700 mb-2">0/20</div>
+                    <div id="percentage" class="text-xl font-semibold text-indigo-500">0%</div>
+                </div>
+
+                <div id="result-message" class="mb-8 px-4 text-slate-700 italic"></div>
+                
+                <button onclick="location.reload()" class="bg-slate-800 hover:bg-slate-900 text-white font-bold py-3 px-8 rounded-lg transition-colors shadow-md">
+                    Try Again
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const questions = [
+            {
+                q: "A 68-year-old female suddenly develops slurred speech and right arm weakness while eating lunch. Symptoms began 20 minutes ago. What is the EMT's highest priority?",
+                options: [
+                    "Administer oral glucose immediately",
+                    "Perform a Cincinnati Prehospital Stroke Scale assessment and transport to a stroke center",
+                    "Place the patient in Trendelenburg position",
+                    "Give aspirin to reduce clot formation"
+                ],
+                answer: 1,
+                explanation: "Early stroke recognition and rapid transport to an appropriate stroke center are critical. Oral glucose should only be given if hypoglycemia is confirmed. Aspirin is contraindicated in suspected stroke because the stroke could be hemorrhagic."
+            },
+            {
+                q: "A patient has left facial droop but equal grip strength and no speech abnormalities. What does this finding most likely indicate?",
+                options: [
+                    "Hypoglycemia",
+                    "Bell's palsy",
+                    "Stroke involving facial muscles",
+                    "Syncope"
+                ],
+                answer: 1,
+                explanation: "Bell's palsy affects the entire side of the face, including the forehead. Stroke typically spares the forehead because of bilateral cortical innervation."
+            },
+            {
+                q: "During transport, a patient suddenly begins having a generalized tonic-clonic seizure. Your first intervention should be to:",
+                options: [
+                    "Insert an oral airway",
+                    "Restrain the patient",
+                    "Protect the patient from injury and maintain the airway",
+                    "Place something between the teeth"
+                ],
+                answer: 2,
+                explanation: "Do not place anything in the mouth or restrain the patient. Protect from injury and manage the airway once it is safe."
+            },
+            {
+                q: "Which patient is most likely experiencing a transient ischemic attack (TIA)?",
+                options: [
+                    "Weakness lasting 8 hours",
+                    "Facial droop that completely resolves after 10 minutes",
+                    "Progressive confusion over several weeks",
+                    "Loss of consciousness after standing"
+                ],
+                answer: 1,
+                explanation: "TIAs produce temporary neurological deficits that resolve completely, often within minutes."
+            },
+            {
+                q: "A diabetic patient becomes confused and has slurred speech. Before activating a stroke alert, the EMT should:",
+                options: [
+                    "Administer aspirin",
+                    "Check the patient's blood glucose if available",
+                    "Begin CPR",
+                    "Give nitroglycerin"
+                ],
+                answer: 1,
+                explanation: "Hypoglycemia can closely mimic stroke and should be ruled out whenever possible."
+            },
+            {
+                q: "Which finding is most suggestive of increased intracranial pressure?",
+                options: [
+                    "Bradycardia with hypertension",
+                    "Tachycardia with hypotension",
+                    "Warm, flushed skin",
+                    "Wheezing"
+                ],
+                answer: 0,
+                explanation: "Bradycardia and hypertension are components of Cushing's reflex, indicating increased intracranial pressure."
+            },
+            {
+                q: "A patient who experienced a seizure is now confused but gradually becoming more alert. This phase is called the:",
+                options: [
+                    "Aura",
+                    "Tonic phase",
+                    "Clonic phase",
+                    "Postictal phase"
+                ],
+                answer: 3,
+                explanation: "The postictal phase follows seizure activity and is characterized by confusion and gradual recovery."
+            },
+            {
+                q: "A stroke patient has a blood glucose of 42 mg/dL and is able to swallow. What should the EMT do?",
+                options: [
+                    "Begin transport without treatment",
+                    "Administer oral glucose",
+                    "Give aspirin",
+                    "Request helicopter transport immediately"
+                ],
+                answer: 1,
+                explanation: "Symptomatic hypoglycemia should be treated with oral glucose if the patient can safely swallow."
+            },
+            {
+                q: "Which assessment finding suggests a large vessel stroke?",
+                options: [
+                    "Isolated finger numbness",
+                    "Facial droop, arm drift, and aphasia",
+                    "Mild headache only",
+                    "Dizziness after standing"
+                ],
+                answer: 1,
+                explanation: "Multiple focal neurological deficits strongly suggest an acute stroke."
+            },
+            {
+                q: "A patient is actively seizing for more than five minutes without regaining consciousness. This condition is known as:",
+                options: [
+                    "Syncope",
+                    "Status epilepticus",
+                    "TIA",
+                    "Migraine"
+                ],
+                answer: 1,
+                explanation: "Continuous seizures lasting more than five minutes constitute status epilepticus and are a medical emergency."
+            },
+            {
+                q: "Which patient should be transported to the closest appropriate stroke center with the highest priority?",
+                options: [
+                    "Symptoms began yesterday",
+                    "Symptoms resolved before EMS arrival",
+                    "Symptoms began 30 minutes ago",
+                    "Symptoms began one week ago"
+                ],
+                answer: 2,
+                explanation: "Rapid transport is essential because patients may be eligible for time-sensitive stroke interventions."
+            },
+            {
+                q: "A patient with suspected stroke suddenly vomits while lying supine. What should the EMT do first?",
+                options: [
+                    "Administer oral glucose",
+                    "Roll the patient while maintaining spinal alignment if indicated and clear the airway",
+                    "Continue the neurological assessment",
+                    "Begin chest compressions"
+                ],
+                answer: 1,
+                explanation: "Airway protection always takes priority."
+            },
+            {
+                q: "Which history question is most important when assessing a suspected stroke?",
+                options: [
+                    "Last oral intake",
+                    "Last known well time",
+                    "Employment history",
+                    "Travel history"
+                ],
+                answer: 1,
+                explanation: "Stroke treatment eligibility depends heavily on the time the patient was last known to be neurologically normal."
+            },
+            {
+                q: "During your assessment, the patient cannot hold both arms extended equally for 10 seconds. This finding represents:",
+                options: [
+                    "Aphasia",
+                    "Arm drift",
+                    "Ataxia",
+                    "Syncope"
+                ],
+                answer: 1,
+                explanation: "Arm drift is one component of the Cincinnati Prehospital Stroke Scale."
+            },
+            {
+                q: "Which symptom is most consistent with an intracranial hemorrhage?",
+                options: [
+                    "Gradual weakness over months",
+                    "Sudden severe headache with altered mental status",
+                    "Mild dizziness after exercise",
+                    "Fever and cough"
+                ],
+                answer: 1,
+                explanation: "A sudden, severe headache accompanied by neurological changes is highly suspicious for intracranial bleeding."
+            },
+            {
+                q: "A patient experienced a seizure and now has snoring respirations with an SpO₂ of 86%. What should the EMT do first?",
+                options: [
+                    "Complete the neurological exam",
+                    "Administer oral glucose",
+                    "Open the airway and assist ventilations with a bag-valve mask as needed",
+                    "Obtain a detailed medication history"
+                ],
+                answer: 2,
+                explanation: "Airway and breathing take priority over all other assessments."
+            },
+            {
+                q: "A bystander reports the patient had facial drooping that resolved before EMS arrived. The patient now appears normal. What is the most appropriate action?",
+                options: [
+                    "Advise the patient to follow up with a physician next week",
+                    "Recommend rest at home",
+                    "Transport promptly for evaluation because a TIA may have occurred",
+                    "No treatment is necessary"
+                ],
+                answer: 2,
+                explanation: "TIAs are warning signs of possible future stroke and require urgent medical evaluation."
+            },
+            {
+                q: "Which patient has the highest risk for stroke?",
+                options: [
+                    "A healthy 19-year-old with seasonal allergies",
+                    "A 72-year-old with atrial fibrillation and hypertension",
+                    "A 35-year-old with a sprained ankle",
+                    "A 28-year-old with influenza"
+                ],
+                answer: 1,
+                explanation: "Advanced age, atrial fibrillation, and hypertension are significant stroke risk factors."
+            },
+            {
+                q: "A patient complains of a severe headache and has unequal pupils after falling down stairs. What should the EMT suspect?",
+                options: [
+                    "Migraine",
+                    "Concussion only",
+                    "Increased intracranial pressure from traumatic brain injury",
+                    "Hypoglycemia"
+                ],
+                answer: 2,
+                explanation: "Unequal pupils following head trauma are concerning for brain injury with increased intracranial pressure."
+            },
+            {
+                q: "Which statement best reflects current NREMT priorities for neurological emergencies?",
+                options: [
+                    "Complete a full head-to-toe assessment before transport.",
+                    "Delay transport until neurological deficits improve.",
+                    "Rapidly identify neurological deficits, manage ABCs, determine symptom onset, and transport to the appropriate facility.",
+                    "Treat every altered mental status patient as having a stroke."
+                ],
+                answer: 2,
+                explanation: "NREMT emphasizes rapid recognition, stabilization of airway, breathing, and circulation, determination of the last known well time, stroke screening, and prompt transport to the most appropriate hospital."
+            }
+        ];
+
+        let currentQuestion = 0;
+        let score = 0;
+        let answered = false;
+
+        const questionText = document.getElementById('question-text');
+        const optionsContainer = document.getElementById('options');
+        const questionNumber = document.getElementById('question-number');
+        const scoreDisplay = document.getElementById('score-display');
+        const feedback = document.getElementById('feedback');
+        const feedbackText = document.getElementById('feedback-text');
+        const feedbackStatus = document.getElementById('feedback-status');
+        const feedbackIcon = document.getElementById('feedback-icon');
+        const nextBtn = document.getElementById('next-btn');
+        const progressBar = document.getElementById('progress');
+
+        function loadQuestion() {
+            answered = false;
+            const q = questions[currentQuestion];
+            
+            // Reset UI
+            feedback.classList.add('hidden');
+            nextBtn.classList.add('hidden');
+            optionsContainer.innerHTML = '';
+            
+            // Set Text
+            questionNumber.innerText = `Question ${currentQuestion + 1} of ${questions.length}`;
+            questionText.innerText = q.q;
+            progressBar.style.width = `${((currentQuestion) / questions.length) * 100}%`;
+
+            // Create Options
+            q.options.forEach((opt, index) => {
+                const btn = document.createElement('button');
+                btn.className = "w-full text-left p-4 rounded-lg border-2 border-slate-200 hover:border-indigo-300 hover:bg-indigo-50 transition-all font-medium text-slate-700 flex items-start";
+                btn.innerHTML = `<span class="bg-slate-100 text-slate-500 w-6 h-6 rounded-full inline-flex items-center justify-center mr-3 flex-shrink-0 text-xs">${String.fromCharCode(65 + index)}</span> <span>${opt}</span>`;
+                btn.onclick = () => checkAnswer(index, btn);
+                optionsContainer.appendChild(btn);
+            });
+        }
+
+        function checkAnswer(selectedIndex, clickedBtn) {
+            if (answered) return;
+            answered = true;
+
+            const correct = questions[currentQuestion].answer;
+            const allBtns = optionsContainer.querySelectorAll('button');
+
+            if (selectedIndex === correct) {
+                score++;
+                scoreDisplay.innerText = `Score: ${score}`;
+                clickedBtn.classList.replace('border-slate-200', 'border-green-500');
+                clickedBtn.classList.add('bg-green-50');
+                showFeedback(true);
+            } else {
+                clickedBtn.classList.replace('border-slate-200', 'border-red-500');
+                clickedBtn.classList.add('bg-red-50');
+                allBtns[correct].classList.replace('border-slate-200', 'border-green-500');
+                allBtns[correct].classList.add('bg-green-50');
+                showFeedback(false);
+            }
+
+            allBtns.forEach(btn => btn.disabled = true);
+            nextBtn.classList.remove('hidden');
+            
+            if (currentQuestion === questions.length - 1) {
+                nextBtn.innerText = "See Results";
+            }
+        }
+
+        function showFeedback(isCorrect) {
+            feedback.classList.remove('hidden');
+            if (isCorrect) {
+                feedback.classList.add('bg-green-50', 'border-green-100');
+                feedback.classList.remove('bg-red-50', 'border-red-100');
+                feedbackStatus.innerText = "Correct";
+                feedbackStatus.className = "font-bold text-sm uppercase text-green-700";
+                feedbackIcon.innerText = "✓";
+                feedbackIcon.className = "mr-2 font-bold text-green-700";
+            } else {
+                feedback.classList.add('bg-red-50', 'border-red-100');
+                feedback.classList.remove('bg-green-50', 'border-green-100');
+                feedbackStatus.innerText = "Incorrect";
+                feedbackStatus.className = "font-bold text-sm uppercase text-red-700";
+                feedbackIcon.innerText = "✗";
+                feedbackIcon.className = "mr-2 font-bold text-red-700";
+            }
+            feedbackText.innerText = questions[currentQuestion].explanation;
+        }
+
+        nextBtn.onclick = () => {
+            currentQuestion++;
+            if (currentQuestion < questions.length) {
+                loadQuestion();
+            } else {
+                showResults();
+            }
+        };
+
+        function showResults() {
+            document.getElementById('question-box').classList.add('hidden');
+            const resultsBox = document.getElementById('results-box');
+            resultsBox.classList.remove('hidden');
+            progressBar.style.width = '100%';
+
+            const finalScore = document.getElementById('final-score');
+            const percentage = document.getElementById('percentage');
+            const message = document.getElementById('result-message');
+
+            const percent = Math.round((score / questions.length) * 100);
+            finalScore.innerText = `${score}/${questions.length}`;
+            percentage.innerText = `${percent}%`;
+
+            if (percent >= 85) {
+                message.innerText = "Outstanding job! You have demonstrated strong clinical decision-making skills in NREMT Neurological Emergencies.";
+            } else if (percent >= 70) {
+                message.innerText = "Good effort! Review the questions you missed, especially last known well time, Cushing's triad, and seizure management priorities.";
+            } else {
+                message.innerText = "Keep practicing! Revisit core neurological concepts, paying close attention to airway management, stroke protocols, and differential diagnoses like hypoglycemia.";
+            }
+        }
+
+        // Initialize quiz
+        loadQuestion();
+    </script>
+</body>
+</html>
+
+```
