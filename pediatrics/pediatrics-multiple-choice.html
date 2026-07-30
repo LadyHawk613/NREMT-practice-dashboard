@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NREMT Pediatric Emergencies Quiz</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        .fade-in { animation: fadeIn 0.3s ease-in; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body class="bg-slate-50 min-h-screen flex flex-col items-center py-8 px-4">
+
+    <div class="max-w-2xl w-full bg-white rounded-xl shadow-lg overflow-hidden border border-slate-200">
+        <!-- Header -->
+        <div class="bg-teal-700 p-6 text-white text-center">
+            <h1 class="text-2xl font-bold">Pediatric Emergencies Practice</h1>
+            <p class="text-teal-100 text-sm mt-1">NREMT Cognitive Exam (Level 3+ Clinical Reasoning)</p>
+        </div>
+
+        <!-- Progress Bar -->
+        <div class="w-full bg-slate-200 h-2">
+            <div id="progress" class="bg-teal-500 h-2 transition-all duration-500" style="width: 0%"></div>
+        </div>
+
+        <div id="quiz-container" class="p-6">
+            <!-- Question Section -->
+            <div id="question-box" class="fade-in">
+                <div class="flex justify-between items-center mb-4">
+                    <span id="question-number" class="text-xs font-bold text-slate-500 uppercase tracking-wider">Question 1 of 20</span>
+                    <span id="score-display" class="text-xs font-bold text-teal-600 bg-teal-50 px-2 py-1 rounded">Score: 0</span>
+                </div>
+                
+                <h2 id="question-text" class="text-lg font-semibold text-slate-800 mb-6 leading-snug">
+                    Loading question...
+                </h2>
+
+                <div id="options" class="space-y-3">
+                    <!-- Options injected here -->
+                </div>
+
+                <!-- Feedback Section (Hidden by default) -->
+                <div id="feedback" class="mt-6 p-4 rounded-lg hidden border">
+                    <div class="flex items-center mb-2">
+                        <span id="feedback-icon" class="mr-2 font-bold"></span>
+                        <span id="feedback-status" class="font-bold text-sm uppercase"></span>
+                    </div>
+                    <p id="feedback-text" class="text-sm text-slate-600 italic"></p>
+                </div>
+
+                <!-- Navigation -->
+                <button id="next-btn" class="mt-8 w-full bg-teal-600 hover:bg-teal-700 text-white font-bold py-3 px-6 rounded-lg transition-colors hidden shadow-md">
+                    Next Question
+                </button>
+            </div>
+
+            <!-- Results Section (Hidden by default) -->
+            <div id="results-box" class="hidden text-center py-10 fade-in">
+                <div class="text-6xl mb-4">🧸</div>
+                <h2 class="text-3xl font-bold text-slate-800 mb-2">Quiz Complete!</h2>
+                <p class="text-slate-500 mb-6">You've finished the NREMT Pediatric Emergencies assessment.</p>
+                
+                <div class="inline-block p-8 bg-teal-50 rounded-2xl mb-8 border border-teal-100">
+                    <div id="final-score" class="text-5xl font-bold text-teal-700 mb-2">0/20</div>
+                    <div id="percentage" class="text-xl font-semibold text-teal-500">0%</div>
+                </div>
+
+                <div id="result-message" class="mb-8 px-4 text-slate-700 italic"></div>
+                
+                <button onclick="location.reload()" class="bg-slate-800 hover:bg-slate-900 text-white font-bold py-3 px-8 rounded-lg transition-colors shadow-md">
+                    Try Again
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const questions = [
+            {
+                q: "A 3-year-old child is sitting upright in their parent's arms. The child is anxious, has nasal flaring, intercostal retractions, and a respiratory rate of 48/min. Breath sounds reveal wheezing throughout both lungs. The child is alert but becomes tired during assessment. What should the EMT do FIRST?",
+                options: [
+                    "Administer oxygen via nonrebreather mask",
+                    "Obtain a detailed SAMPLE history from the parent",
+                    "Assist the child with prescribed bronchodilator medication",
+                    "Begin positive pressure ventilation"
+                ],
+                answer: 0,
+                explanation: "The child is showing respiratory distress. Oxygen administration is the priority. The child is still breathing adequately, so BVM ventilation is not yet indicated."
+            },
+            {
+                q: "A 6-month-old infant is experiencing respiratory distress. Which anatomical difference places infants at greater risk for airway obstruction?",
+                options: [
+                    "Larger lower airway diameter",
+                    "More rigid tracheal structures",
+                    "Smaller and more easily obstructed airway",
+                    "Larger lung capacity compared to adults"
+                ],
+                answer: 2,
+                explanation: "Infants have smaller airways, making even slight swelling or secretions significantly affect airflow."
+            },
+            {
+                q: "A 2-year-old child has a seizure lasting 2 minutes. The parent states the child developed a fever earlier today. After the seizure stops, the child is confused but breathing adequately. What is the EMT's priority?",
+                options: [
+                    "Restrain the child to prevent another seizure",
+                    "Place the child in a position to maintain the airway",
+                    "Immediately administer oral fluids",
+                    "Apply ice packs to lower the fever"
+                ],
+                answer: 1,
+                explanation: "Post-seizure care focuses on airway protection and preventing aspiration."
+            },
+            {
+                q: "You arrive at the scene of a 4-year-old child who is unresponsive and not breathing normally. You cannot feel a pulse. What should you do next?",
+                options: [
+                    "Perform CPR and apply the AED",
+                    "Give two rescue breaths only",
+                    "Transport immediately",
+                    "Perform abdominal thrusts"
+                ],
+                answer: 0,
+                explanation: "Pediatric cardiac arrest requires immediate CPR and AED use when available."
+            },
+            {
+                q: "A 5-year-old child fell from a bicycle. The child has pale skin, delayed capillary refill, tachycardia, and cool extremities. Blood pressure is normal. What does this MOST likely indicate?",
+                options: [
+                    "Respiratory failure",
+                    "Compensated shock",
+                    "Hypertensive emergency",
+                    "Spinal cord injury"
+                ],
+                answer: 1,
+                explanation: "Children maintain blood pressure until late shock. Tachycardia and poor perfusion indicate compensated shock."
+            },
+            {
+                q: "A 4-year-old with asthma initially has loud wheezing. After several minutes, the wheezing becomes quiet and the child becomes drowsy. What does this finding indicate?",
+                options: [
+                    "The asthma attack is improving",
+                    "The child is becoming fatigued and may be failing",
+                    "The airway is opening",
+                    "The child is experiencing anxiety"
+                ],
+                answer: 1,
+                explanation: "A 'silent chest' is a dangerous sign indicating decreased airflow and impending respiratory failure."
+            },
+            {
+                q: "A 4-year-old child presents with fever, difficulty breathing, drooling, and sitting forward in a tripod position. What should the EMT do?",
+                options: [
+                    "Inspect the throat with a tongue depressor",
+                    "Encourage the child to lie down",
+                    "Keep the child calm and provide oxygen",
+                    "Force fluids to prevent dehydration"
+                ],
+                answer: 2,
+                explanation: "Epiglottitis can rapidly obstruct the airway. Avoid upsetting the child or manipulating the airway."
+            },
+            {
+                q: "A 20-kg child requires medication based on a weight-based protocol. The EMT should understand that pediatric medication dosing is primarily based on:",
+                options: [
+                    "Age",
+                    "Height",
+                    "Weight",
+                    "Gender"
+                ],
+                answer: 2,
+                explanation: "Pediatric medications are typically calculated using kilograms of body weight."
+            },
+            {
+                q: "A 3-year-old child has bruises on the upper arms, back, and abdomen. The caregiver states, 'The child falls a lot.' What should the EMT suspect?",
+                options: [
+                    "Normal childhood injuries",
+                    "Possible abuse",
+                    "A bleeding disorder only",
+                    "A sports injury"
+                ],
+                answer: 1,
+                explanation: "Injuries in protected areas or inconsistent explanations are concerning for abuse."
+            },
+            {
+                q: "A 7-year-old trauma patient has decreased consciousness after a fall. Respirations are shallow and slow. What should the EMT do?",
+                options: [
+                    "Apply a cervical collar and wait",
+                    "Assist ventilations with a BVM",
+                    "Give oral glucose",
+                    "Place the patient in a sitting position"
+                ],
+                answer: 1,
+                explanation: "Altered mental status with inadequate breathing requires assisted ventilation."
+            },
+            {
+                q: "A 2-month-old infant has a respiratory rate of 70/min, nasal flaring, and grunting. Which finding is MOST concerning?",
+                options: [
+                    "Crying during assessment",
+                    "Respiratory rate of 70/min",
+                    "Sleeping after feeding",
+                    "Heart rate of 110/min"
+                ],
+                answer: 1,
+                explanation: "Significant tachypnea in infants is a major sign of respiratory distress."
+            },
+            {
+                q: "A 6-year-old child becomes confused and lethargic after playing outside all day. The child has warm skin and a temperature of 105°F (40.6°C). What is the MOST likely condition?",
+                options: [
+                    "Hypothermia",
+                    "Heat stroke",
+                    "Seizure disorder",
+                    "Hypoglycemia"
+                ],
+                answer: 1,
+                explanation: "Altered mental status with severe hyperthermia indicates heat stroke."
+            },
+            {
+                q: "An EMT is ventilating a 2-month-old infant with a BVM. The EMT notices poor chest rise. What should the EMT do FIRST?",
+                options: [
+                    "Increase ventilation pressure immediately",
+                    "Reposition the infant's airway",
+                    "Stop ventilation",
+                    "Insert an advanced airway"
+                ],
+                answer: 1,
+                explanation: "Infant airway positioning is critical. The sniffing position helps align the airway."
+            },
+            {
+                q: "A 4-year-old diabetic child is confused, sweaty, and trembling. The child is conscious and able to swallow. What is appropriate?",
+                options: [
+                    "Give oral glucose",
+                    "Give activated charcoal",
+                    "Restrict fluids",
+                    "Place the child prone"
+                ],
+                answer: 0,
+                explanation: "Conscious pediatric patients who can swallow may receive oral glucose."
+            },
+            {
+                q: "A 2-year-old child is coughing forcefully after choking on a toy. What should the EMT do?",
+                options: [
+                    "Perform abdominal thrusts immediately",
+                    "Encourage coughing and monitor",
+                    "Sweep the mouth with fingers",
+                    "Begin CPR"
+                ],
+                answer: 1,
+                explanation: "Effective coughing indicates partial obstruction. Encourage coughing."
+            },
+            {
+                q: "A child involved in a motor vehicle collision is awake but complains of severe abdominal pain. Vital signs are currently normal. What should concern the EMT?",
+                options: [
+                    "Children rarely experience internal injuries",
+                    "Normal blood pressure excludes shock",
+                    "Children can compensate until late shock",
+                    "Abdominal pain is not significant"
+                ],
+                answer: 2,
+                explanation: "Pediatric patients can maintain vital signs despite serious internal bleeding."
+            },
+            {
+                q: "A newborn is not crying after delivery. The infant is breathing but has poor muscle tone. What should the EMT do?",
+                options: [
+                    "Begin chest compressions immediately",
+                    "Provide warmth, dry, and stimulate the newborn",
+                    "Administer oral glucose",
+                    "Place the infant upright"
+                ],
+                answer: 1,
+                explanation: "Initial newborn care includes warming, drying, and stimulation."
+            },
+            {
+                q: "A 10-month-old infant has a cough, fever, wheezing, and decreased feeding. Which condition is MOST likely?",
+                options: [
+                    "Bronchiolitis",
+                    "Stroke",
+                    "Appendicitis",
+                    "Diabetic emergency"
+                ],
+                answer: 0,
+                explanation: "Bronchiolitis commonly affects infants and causes wheezing and respiratory distress."
+            },
+            {
+                q: "A child has a heart rate of 190/min, poor skin color, altered mental status, and weak pulses. What should the EMT recognize?",
+                options: [
+                    "Normal pediatric tachycardia",
+                    "Possible shock or cardiac compromise",
+                    "Normal response to fear",
+                    "Mild dehydration only"
+                ],
+                answer: 1,
+                explanation: "Tachycardia with poor perfusion is a serious finding."
+            },
+            {
+                q: "You arrive at a scene involving a 5-year-old child who is crying, has a deformed arm, and is breathing normally. Which action should occur FIRST?",
+                options: [
+                    "Splint the arm",
+                    "Assess airway and breathing",
+                    "Obtain a detailed injury history",
+                    "Apply a cold pack"
+                ],
+                answer: 1,
+                explanation: "NREMT follows the primary assessment sequence: airway, breathing, circulation before focused injury care."
+            }
+        ];
+
+        let currentQuestion = 0;
+        let score = 0;
+        let answered = false;
+
+        const questionText = document.getElementById('question-text');
+        const optionsContainer = document.getElementById('options');
+        const questionNumber = document.getElementById('question-number');
+        const scoreDisplay = document.getElementById('score-display');
+        const feedback = document.getElementById('feedback');
+        const feedbackText = document.getElementById('feedback-text');
+        const feedbackStatus = document.getElementById('feedback-status');
+        const feedbackIcon = document.getElementById('feedback-icon');
+        const nextBtn = document.getElementById('next-btn');
+        const progressBar = document.getElementById('progress');
+
+        function loadQuestion() {
+            answered = false;
+            const q = questions[currentQuestion];
+            
+            // Reset UI
+            feedback.classList.add('hidden');
+            nextBtn.classList.add('hidden');
+            optionsContainer.innerHTML = '';
+            
+            // Set Text
+            questionNumber.innerText = `Question ${currentQuestion + 1} of ${questions.length}`;
+            questionText.innerText = q.q;
+            progressBar.style.width = `${((currentQuestion) / questions.length) * 100}%`;
+
+            // Create Options
+            q.options.forEach((opt, index) => {
+                const btn = document.createElement('button');
+                btn.className = "w-full text-left p-4 rounded-lg border-2 border-slate-200 hover:border-teal-300 hover:bg-teal-50 transition-all font-medium text-slate-700 flex items-start";
+                btn.innerHTML = `<span class="bg-slate-100 text-slate-500 w-6 h-6 rounded-full inline-flex items-center justify-center mr-3 flex-shrink-0 text-xs">${String.fromCharCode(65 + index)}</span> <span>${opt}</span>`;
+                btn.onclick = () => checkAnswer(index, btn);
+                optionsContainer.appendChild(btn);
+            });
+        }
+
+        function checkAnswer(selectedIndex, clickedBtn) {
+            if (answered) return;
+            answered = true;
+
+            const correct = questions[currentQuestion].answer;
+            const allBtns = optionsContainer.querySelectorAll('button');
+
+            if (selectedIndex === correct) {
+                score++;
+                scoreDisplay.innerText = `Score: ${score}`;
+                clickedBtn.classList.replace('border-slate-200', 'border-green-500');
+                clickedBtn.classList.add('bg-green-50');
+                showFeedback(true);
+            } else {
+                clickedBtn.classList.replace('border-slate-200', 'border-red-500');
+                clickedBtn.classList.add('bg-red-50');
+                allBtns[correct].classList.replace('border-slate-200', 'border-green-500');
+                allBtns[correct].classList.add('bg-green-50');
+                showFeedback(false);
+            }
+
+            allBtns.forEach(btn => btn.disabled = true);
+            nextBtn.classList.remove('hidden');
+            
+            if (currentQuestion === questions.length - 1) {
+                nextBtn.innerText = "See Results";
+            }
+        }
+
+        function showFeedback(isCorrect) {
+            feedback.classList.remove('hidden');
+            if (isCorrect) {
+                feedback.classList.add('bg-green-50', 'border-green-100');
+                feedback.classList.remove('bg-red-50', 'border-red-100');
+                feedbackStatus.innerText = "Correct";
+                feedbackStatus.className = "font-bold text-sm uppercase text-green-700";
+                feedbackIcon.innerText = "✓";
+                feedbackIcon.className = "mr-2 font-bold text-green-700";
+            } else {
+                feedback.classList.add('bg-red-50', 'border-red-100');
+                feedback.classList.remove('bg-green-50', 'border-green-100');
+                feedbackStatus.innerText = "Incorrect";
+                feedbackStatus.className = "font-bold text-sm uppercase text-red-700";
+                feedbackIcon.innerText = "✗";
+                feedbackIcon.className = "mr-2 font-bold text-red-700";
+            }
+            feedbackText.innerText = questions[currentQuestion].explanation;
+        }
+
+        nextBtn.onclick = () => {
+            currentQuestion++;
+            if (currentQuestion < questions.length) {
+                loadQuestion();
+            } else {
+                showResults();
+            }
+        };
+
+        function showResults() {
+            document.getElementById('question-box').classList.add('hidden');
+            const resultsBox = document.getElementById('results-box');
+            resultsBox.classList.remove('hidden');
+            progressBar.style.width = '100%';
+
+            const finalScore = document.getElementById('final-score');
+            const percentage = document.getElementById('percentage');
+            const message = document.getElementById('result-message');
+
+            const percent = Math.round((score / questions.length) * 100);
+            finalScore.innerText = `${score}/${questions.length}`;
+            percentage.innerText = `${percent}%`;
+
+            if (percent >= 85) {
+                message.innerText = "Outstanding job! You have demonstrated strong clinical decision-making skills in NREMT Pediatric Emergencies.";
+            } else if (percent >= 70) {
+                message.innerText = "Good effort! Review the questions you missed, especially pediatric airway positioning, compensated shock indicators, and epiglottitis protocols.";
+            } else {
+                message.innerText = "Keep practicing! Revisit core pediatric concepts, paying close attention to primary assessment priorities, pediatric respiratory failure, and neonatal care.";
+            }
+        }
+
+        // Initialize quiz
+        loadQuestion();
+    </script>
+</body>
+</html>
