@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NREMT Pediatric Emergencies Challenge</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', Tahoma, Verdana, sans-serif;
+    background: linear-gradient(135deg, #fceabb 0%, #f8b500 100%);
+    height: 100vh;
+    margin: 0;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow: hidden;
+  }
+
+  .container {
+    max-width: 1200px;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  h1 {
+    color: #3d2b1f;
+    text-shadow: 1px 1px 0 #fff8e1;
+    margin: 5px 0;
+    font-size: 1.6rem;
+    text-align: center;
+  }
+
+  .progress-bar {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 8px;
+  }
+
+  .dot {
+    width: 14px;
+    height: 14px;
+    background: rgba(255,255,255,0.5);
+    border-radius: 50%;
+    border: 2px solid #3d2b1f;
+  }
+  .dot.active { background: #3d2b1f; }
+
+  .instructions-box {
+    background: #fff8e1;
+    border: 2px solid #f8b500;
+    border-radius: 12px;
+    padding: 8px 15px;
+    width: 100%;
+    margin-bottom: 10px;
+    color: #4a3826;
+    font-size: 14px;
+    line-height: 1.3;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  }
+
+  .instructions-box h2 {
+    margin: 0 0 3px 0;
+    color: #d35400;
+    font-size: 1.1rem;
+  }
+
+  .game-area {
+    flex: 1;
+    display: flex;
+    width: 100%;
+    gap: 20px;
+    justify-content: center;
+    align-items: center;
+    min-height: 0;
+  }
+
+  /* Ordering Layout */
+  .ordering-layout {
+    display: flex;
+    gap: 40px;
+    justify-content: center;
+    align-items: flex-start;
+    width: 100%;
+    height: 100%;
+  }
+
+  .slots {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    flex: 0 0 450px;
+  }
+
+  .slot {
+    width: 100%;
+    height: 58px;
+    background: rgba(255,255,255,0.5);
+    border: 3px dashed #a1887f;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    padding: 5px 5px 5px 50px;
+    transition: background 0.2s, border-color 0.2s;
+  }
+
+  .slot .slot-num {
+    position: absolute;
+    top: 50%;
+    left: 15px;
+    transform: translateY(-50%);
+    font-size: 16px;
+    color: #8d6e63;
+    font-weight: bold;
+  }
+
+  .slot.over { background: rgba(255, 214, 92, 0.6); border-color: #f39c12; }
+  .slot.correct { border-color: #2ecc71; background: rgba(46, 204, 113, 0.25); }
+  .slot.incorrect { border-color: #e74c3c; background: rgba(231, 76, 60, 0.2); }
+
+  .right-panel {
+    flex: 0 0 450px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    height: 100%;
+    min-height: 0;
+  }
+
+  .bank {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 12px;
+    background: rgba(255,255,255,0.35);
+    border-radius: 16px;
+    border: 2px solid rgba(255,255,255,0.5);
+    overflow-y: auto;
+  }
+
+  .explanation {
+    flex: 0 1 auto;
+    width: 100%;
+    padding: 15px;
+    background: #fff;
+    border-radius: 12px;
+    border-left: 6px solid #3498db;
+    display: none;
+    font-size: 14px;
+    color: #2c3e50;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    overflow-y: auto;
+    max-height: 100%;
+  }
+  .explanation h3 { margin: 0 0 8px 0; color: #2980b9; font-size: 1.1rem; }
+
+  /* Card Style */
+  .card {
+    width: 100%;
+    min-height: 48px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    font-size: 13px;
+    font-weight: 700;
+    color: #fff;
+    cursor: grab;
+    padding: 8px 12px;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.2);
+    user-select: none;
+    transition: transform 0.1s;
+  }
+
+  .card:active { cursor: grabbing; }
+  .card.dragging { opacity: 0.3; }
+  .card:hover { transform: scale(1.02); }
+
+  .card[data-color="1"] { background: linear-gradient(135deg, #ff7675, #d63031); }
+  .card[data-color="2"] { background: linear-gradient(135deg, #74b9ff, #0984e3); }
+  .card[data-color="3"] { background: linear-gradient(135deg, #a29bfe, #6c5ce7); }
+  .card[data-color="4"] { background: linear-gradient(135deg, #55efc4, #00b894); }
+  .card[data-color="5"] { background: linear-gradient(135deg, #fd79a8, #e84393); }
+
+  .buttons {
+    margin: 15px 0;
+    display: flex;
+    gap: 15px;
+  }
+
+  button {
+    border: none;
+    padding: 10px 25px;
+    border-radius: 30px;
+    font-size: 15px;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+    transition: transform 0.1s;
+  }
+
+  button:hover { transform: translateY(-2px); }
+  #checkBtn { background: #2ecc71; color: white; }
+  #nextBtn { background: #3498db; color: white; display: none; }
+  #resetBtn { background: #e17055; color: white; }
+
+  #message {
+    font-size: 18px;
+    font-weight: bold;
+    color: #3d2b1f;
+    margin-bottom: 5px;
+    height: 25px;
+    text-align: center;
+  }
+
+</style>
+</head>
+<body>
+
+<div class="container">
+  <h1>🚑 Pediatric Emergencies</h1>
+
+  <div class="progress-bar" id="progress">
+    <div class="dot active"></div>
+    <div class="dot"></div>
+    <div class="dot"></div>
+  </div>
+
+  <div class="instructions-box" id="instructions">
+    <!-- Content injected here -->
+  </div>
+
+  <div id="message"></div>
+
+  <div class="game-area" id="gameArea">
+    <!-- Layout injected here -->
+  </div>
+
+  <div class="buttons">
+    <button id="checkBtn">✅ Check Order</button>
+    <button id="nextBtn">➡️ Next Activity</button>
+    <button id="resetBtn">🔄 Reset</button>
+  </div>
+</div>
+
+<script>
+  const activities = [
+    {
+      title: "Activity 1: Pediatric Respiratory Distress Management",
+      scenario: "<strong>Scenario:</strong> 3-year-old child sitting upright, anxious, nasal flaring, retractions, SpO₂ 88%.<br>Place the EMT actions in the <strong>correct order of priority</strong>.",
+      correctOrder: [
+        { text: "Perform the primary assessment (Airway, Breathing, Circulation)", color: "1" },
+        { text: "Apply appropriate oxygen therapy", color: "2" },
+        { text: "Reassess respiratory effort and oxygen saturation", color: "3" },
+        { text: "Prepare for assisted ventilation if the child deteriorates", color: "4" },
+        { text: "Obtain a detailed SAMPLE history from the parent", color: "5" }
+      ],
+      explanation: "<h3>NREMT Priority:</h3>1. Identify life threats<br>2. Treat immediate problems<br>3. Reassess response<br>4. Prepare for deterioration<br>5. Obtain history when stable."
+    },
+    {
+      title: "Activity 2: Pediatric Seizure Management",
+      scenario: "<strong>Scenario:</strong> 2-year-old child had a seizure; it has stopped. Child is confused and sleepy.<br>Place the EMT actions in the <strong>correct order</strong>.",
+      correctOrder: [
+        { text: "Protect the child from injury during seizure activity", color: "1" },
+        { text: "Assess airway and breathing after seizure stops", color: "2" },
+        { text: "Provide oxygen if indicated", color: "3" },
+        { text: "Obtain seizure history from the caregiver", color: "4" },
+        { text: "Transport and continue reassessment", color: "5" }
+      ],
+      explanation: "<h3>NREMT Priority:</h3>Protect from injury first. Airway management is the priority after seizure activity. Gather history once immediate threats are addressed."
+    },
+    {
+      title: "Activity 3: Pediatric Trauma and Shock Recognition",
+      scenario: "<strong>Scenario:</strong> 6-year-old fell. Findings: Abdominal pain, pale/cool skin, HR 150, delayed cap refill, BP normal.<br>Arrange the EMT actions in the <strong>correct order</strong>.",
+      correctOrder: [
+        { text: "Perform rapid trauma assessment", color: "1" },
+        { text: "Recognize signs of compensated shock", color: "2" },
+        { text: "Provide oxygen and support ventilation as needed", color: "3" },
+        { text: "Obtain SAMPLE history while preparing for transport", color: "4" },
+        { text: "Perform ongoing reassessment during transport", color: "5" }
+      ],
+      explanation: "<h3>NREMT Priority:</h3>1. Identify life-threatening injuries<br>2. Recognize early shock signs<br>3. Support oxygenation/perfusion<br>4. Gather history without delaying transport<br>5. Continuously reassess."
+    }
+  ];
+
+  let currentIdx = 0;
+  const gameArea = document.getElementById("gameArea");
+  const instructions = document.getElementById("instructions");
+  const message = document.getElementById("message");
+  const nextBtn = document.getElementById("nextBtn");
+  const checkBtn = document.getElementById("checkBtn");
+  const progressDots = document.querySelectorAll(".dot");
+
+  function shuffle(arr) { return [...arr].sort(() => Math.random() - 0.5); }
+
+  function createCard(text, color) {
+    const card = document.createElement("div");
+    card.className = "card";
+    card.draggable = true;
+    card.dataset.text = text;
+    card.dataset.color = color;
+    card.textContent = text;
+    card.addEventListener("dragstart", () => card.classList.add("dragging"));
+    card.addEventListener("dragend", () => card.classList.remove("dragging"));
+    return card;
+  }
+
+  function loadActivity() {
+    const act = activities[currentIdx];
+    instructions.innerHTML = `<h2>${act.title}</h2><p>${act.scenario}</p>`;
+    gameArea.innerHTML = "";
+    message.textContent = "";
+    nextBtn.style.display = "none";
+    checkBtn.style.display = "inline-block";
+    
+    progressDots.forEach((dot, i) => dot.classList.toggle("active", i === currentIdx));
+
+    const orderingDiv = document.createElement("div");
+    orderingDiv.className = "ordering-layout";
+    
+    const slotsDiv = document.createElement("div");
+    slotsDiv.className = "slots";
+    act.correctOrder.forEach((_, i) => {
+      const slot = document.createElement("div");
+      slot.className = "slot";
+      slot.dataset.index = i;
+      slot.innerHTML = `<span class="slot-num">${i + 1}</span>`;
+      slotsDiv.appendChild(slot);
+    });
+    
+    const rightPanel = document.createElement("div");
+    rightPanel.className = "right-panel";
+    
+    const bankDiv = document.createElement("div");
+    bankDiv.className = "bank";
+    bankDiv.id = "bank";
+    shuffle(act.correctOrder).forEach(c => bankDiv.appendChild(createCard(c.text, c.color)));
+    
+    const explanationDiv = document.createElement("div");
+    explanationDiv.className = "explanation";
+    explanationDiv.id = "explanation";
+    
+    rightPanel.appendChild(bankDiv);
+    rightPanel.appendChild(explanationDiv);
+    
+    orderingDiv.appendChild(slotsDiv);
+    orderingDiv.appendChild(rightPanel);
+    gameArea.appendChild(orderingDiv);
+    
+    setupDragDrop();
+  }
+
+  function setupDragDrop() {
+    const targets = document.querySelectorAll(".slot, #bank");
+    targets.forEach(target => {
+      target.addEventListener("dragover", e => {
+        e.preventDefault();
+        if (target.id !== "bank") target.classList.add("over");
+      });
+      target.addEventListener("dragleave", () => target.classList.remove("over"));
+      target.addEventListener("drop", e => {
+        e.preventDefault();
+        target.classList.remove("over");
+        const card = document.querySelector(".dragging");
+        if (!card) return;
+
+        if (target.classList.contains("slot")) {
+          const existing = target.querySelector(".card");
+          if (existing && existing !== card) document.getElementById("bank").appendChild(existing);
+          target.appendChild(card);
+        } else {
+          target.appendChild(card);
+        }
+        message.textContent = "";
+        document.querySelectorAll(".slot").forEach(s => s.classList.remove("correct", "incorrect"));
+      });
+    });
+  }
+
+  checkBtn.addEventListener("click", () => {
+    const act = activities[currentIdx];
+    let isCorrect = true;
+    let filledCount = 0;
+
+    const slots = document.querySelectorAll(".slot");
+    slots.forEach((slot, i) => {
+      const card = slot.querySelector(".card");
+      slot.classList.remove("correct", "incorrect");
+      if (!card) { isCorrect = false; return; }
+      filledCount++;
+      if (card.dataset.text === act.correctOrder[i].text) {
+        slot.classList.add("correct");
+      } else {
+        slot.classList.add("incorrect");
+        isCorrect = false;
+      }
+    });
+
+    if (filledCount < act.correctOrder.length) {
+      message.textContent = "Fill all the boxes before checking! 📦";
+      message.style.color = "#d35400";
+      return;
+    }
+
+    if (isCorrect) {
+      message.textContent = "🎉 Correct sequence!";
+      message.style.color = "#27ae60";
+      const explanationBox = document.getElementById("explanation");
+      explanationBox.innerHTML = act.explanation;
+      explanationBox.style.display = "block";
+      
+      // Optionally hide bank to save space if correct
+      document.getElementById("bank").style.display = "none";
+      
+      checkBtn.style.display = "none";
+      nextBtn.style.display = "inline-block";
+      if (currentIdx === activities.length - 1) nextBtn.textContent = "🏁 Finish Challenge";
+    } else {
+      message.textContent = "Not quite. Green boxes are correct, red boxes need fixing.";
+      message.style.color = "#c0392b";
+    }
+  });
+
+  nextBtn.addEventListener("click", () => {
+    if (currentIdx < activities.length - 1) {
+      currentIdx++;
+      loadActivity();
+    } else {
+      instructions.innerHTML = "<h2>Pediatrics Challenge Complete!</h2>";
+      gameArea.innerHTML = "<div style='font-size: 80px;'>🏆</div>";
+      checkBtn.style.display = "none";
+      nextBtn.style.display = "none";
+      message.textContent = "Great job, EMT!";
+    }
+  });
+
+  document.getElementById("resetBtn").addEventListener("click", loadActivity);
+  loadActivity();
+</script>
+
+</body>
+</html>
