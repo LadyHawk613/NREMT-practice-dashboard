@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NREMT EMS Operations Quiz</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        .fade-in { animation: fadeIn 0.3s ease-in; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body class="bg-slate-50 min-h-screen flex flex-col items-center py-8 px-4">
+
+    <div class="max-w-2xl w-full bg-white rounded-xl shadow-lg overflow-hidden border border-slate-200">
+        <!-- Header -->
+        <div class="bg-amber-600 p-6 text-white text-center">
+            <h1 class="text-2xl font-bold">EMS Operations Practice</h1>
+            <p class="text-amber-100 text-sm mt-1">NREMT Cognitive Exam (Level 3+ Clinical Judgment & Operations)</p>
+        </div>
+
+        <!-- Progress Bar -->
+        <div class="w-full bg-slate-200 h-2">
+            <div id="progress" class="bg-amber-500 h-2 transition-all duration-500" style="width: 0%"></div>
+        </div>
+
+        <div id="quiz-container" class="p-6">
+            <!-- Question Section -->
+            <div id="question-box" class="fade-in">
+                <div class="flex justify-between items-center mb-4">
+                    <span id="question-number" class="text-xs font-bold text-slate-500 uppercase tracking-wider">Question 1 of 20</span>
+                    <span id="score-display" class="text-xs font-bold text-amber-600 bg-amber-50 px-2 py-1 rounded">Score: 0</span>
+                </div>
+                
+                <h2 id="question-text" class="text-lg font-semibold text-slate-800 mb-6 leading-snug">
+                    Loading question...
+                </h2>
+
+                <div id="options" class="space-y-3">
+                    <!-- Options injected here -->
+                </div>
+
+                <!-- Feedback Section (Hidden by default) -->
+                <div id="feedback" class="mt-6 p-4 rounded-lg hidden border">
+                    <div class="flex items-center mb-2">
+                        <span id="feedback-icon" class="mr-2 font-bold"></span>
+                        <span id="feedback-status" class="font-bold text-sm uppercase"></span>
+                    </div>
+                    <p id="feedback-text" class="text-sm text-slate-600 italic"></p>
+                </div>
+
+                <!-- Navigation -->
+                <button id="next-btn" class="mt-8 w-full bg-amber-600 hover:bg-amber-700 text-white font-bold py-3 px-6 rounded-lg transition-colors hidden shadow-md">
+                    Next Question
+                </button>
+            </div>
+
+            <!-- Results Section (Hidden by default) -->
+            <div id="results-box" class="hidden text-center py-10 fade-in">
+                <div class="text-6xl mb-4">🚑</div>
+                <h2 class="text-3xl font-bold text-slate-800 mb-2">Quiz Complete!</h2>
+                <p class="text-slate-500 mb-6">You've finished the NREMT EMS Operations assessment.</p>
+                
+                <div class="inline-block p-8 bg-amber-50 rounded-2xl mb-8 border border-amber-100">
+                    <div id="final-score" class="text-5xl font-bold text-amber-700 mb-2">0/20</div>
+                    <div id="percentage" class="text-xl font-semibold text-amber-500">0%</div>
+                </div>
+
+                <div id="result-message" class="mb-8 px-4 text-slate-700 italic"></div>
+                
+                <button onclick="location.reload()" class="bg-slate-800 hover:bg-slate-900 text-white font-bold py-3 px-8 rounded-lg transition-colors shadow-md">
+                    Try Again
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const questions = [
+            {
+                q: "You arrive at the scene of a motor vehicle collision. One vehicle is overturned, smoke is coming from the engine compartment, and several bystanders are standing nearby. What should you do FIRST?",
+                options: [
+                    "Begin triage of injured patients",
+                    "Remove patients from the vehicle",
+                    "Ensure scene safety and request additional resources",
+                    "Obtain a SAMPLE history from the driver"
+                ],
+                answer: 2,
+                explanation: "The EMT must ensure the scene is safe before entering. Hazards such as fire, unstable vehicles, and bystanders must be addressed first."
+            },
+            {
+                q: "You arrive at a large-scale incident involving multiple patients. A firefighter tells you that you should begin directing all EMS operations. What should you do?",
+                options: [
+                    "Take command immediately",
+                    "Establish a unified command structure",
+                    "Begin treating the closest patient",
+                    "Wait until a supervisor arrives"
+                ],
+                answer: 1,
+                explanation: "Large incidents require an organized command structure. EMS should integrate into ICS rather than operate independently."
+            },
+            {
+                q: "An EMT is asked by a physician at the scene to perform a procedure that is not included in the EMT's scope of practice. What should the EMT do?",
+                options: [
+                    "Perform the procedure because a physician requested it",
+                    "Refuse and explain that it is outside their scope of practice",
+                    "Ask another EMT to perform the procedure",
+                    "Perform it if the patient gives consent"
+                ],
+                answer: 1,
+                explanation: "EMTs must operate within their scope of practice regardless of who requests an action."
+            },
+            {
+                q: "An EMT posts a picture of an unusual trauma scene on social media but does not include the patient's name. What is the MOST appropriate interpretation?",
+                options: [
+                    "This is acceptable because the name was removed",
+                    "This may violate patient privacy regulations",
+                    "This is acceptable if coworkers approve",
+                    "This is allowed after the patient is transported"
+                ],
+                answer: 1,
+                explanation: "Patient information, images, and identifying details may violate HIPAA even without a name."
+            },
+            {
+                q: "An EMT forgets to document that oxygen was administered during a patient care report. What is the BEST action?",
+                options: [
+                    "Delete the report and start over",
+                    "Add the information according to agency correction procedures",
+                    "Ignore the error because treatment was completed",
+                    "Ask another EMT to document it"
+                ],
+                answer: 1,
+                explanation: "Medical records must be accurate. Corrections should follow agency policy and never falsify documentation."
+            },
+            {
+                q: "A conscious adult patient refuses transport after being evaluated. What should the EMT do FIRST?",
+                options: [
+                    "Force the patient into the ambulance",
+                    "Explain risks and ensure the patient understands the consequences",
+                    "Leave immediately",
+                    "Ask family members to sign the refusal"
+                ],
+                answer: 1,
+                explanation: "A competent adult may refuse care, but the EMT must ensure informed refusal."
+            },
+            {
+                q: "An unconscious patient is found after a fall. No family members are present. The EMT should:",
+                options: [
+                    "Wait for permission before treatment",
+                    "Assume consent for emergency treatment",
+                    "Contact law enforcement before care",
+                    "Leave the patient until a guardian arrives"
+                ],
+                answer: 1,
+                explanation: "Implied consent allows treatment when a patient cannot provide consent and delay would risk harm."
+            },
+            {
+                q: "While transporting a patient, the EMT notices that the ambulance driver is speeding excessively. What should the EMT do?",
+                options: [
+                    "Ignore it because the driver is responsible",
+                    "Request the driver slow down due to safety concerns",
+                    "Document it after the call only",
+                    "Open the rear doors to improve airflow"
+                ],
+                answer: 1,
+                explanation: "Crew safety and patient safety are priorities. Unsafe driving should be addressed immediately."
+            },
+            {
+                q: "A hospital requests additional patient information after receiving a radio report. What should the EMT do?",
+                options: [
+                    "Provide only information necessary for patient care",
+                    "Refuse because radio reports are confidential",
+                    "Provide all information about the patient",
+                    "Give information to anyone answering the phone"
+                ],
+                answer: 0,
+                explanation: "Patient information should be shared only with individuals involved in care."
+            },
+            {
+                q: "At a mass casualty incident, an adult patient is walking around and asking for help. According to START triage, this patient should initially be:",
+                options: [
+                    "Red",
+                    "Yellow",
+                    "Green",
+                    "Black"
+                ],
+                answer: 2,
+                explanation: "Walking wounded are initially categorized as green (minor)."
+            },
+            {
+                q: "An EMT is preparing to treat a patient with uncontrolled bleeding. Which PPE is MOST appropriate?",
+                options: [
+                    "Gloves only",
+                    "Gloves and eye protection",
+                    "No PPE because bleeding is external",
+                    "A surgical mask only"
+                ],
+                answer: 1,
+                explanation: "Blood exposure requires protection against splashes and droplets."
+            },
+            {
+                q: "You arrive at a chemical spill with an unknown substance leaking from a container. What should you do?",
+                options: [
+                    "Enter quickly and remove the patient",
+                    "Identify the chemical by smell",
+                    "Stay uphill and upwind and request HazMat resources",
+                    "Spray water on the container"
+                ],
+                answer: 2,
+                explanation: "Unknown hazardous materials require isolation, avoidance, and specialized resources."
+            },
+            {
+                q: "An EMT receives an order from medical control that conflicts with local protocol. What should the EMT do?",
+                options: [
+                    "Follow the physician's order automatically",
+                    "Follow agency policy and contact medical control for clarification",
+                    "Ignore medical control",
+                    "Allow the patient to decide"
+                ],
+                answer: 1,
+                explanation: "EMTs must operate within their protocols and clarify conflicting instructions."
+            },
+            {
+                q: "Police request that an EMT leave a knife found near a stabbing victim untouched. The EMT should:",
+                options: [
+                    "Move the knife away for safety",
+                    "Handle the knife using gloves",
+                    "Avoid disturbing the item unless necessary for patient care",
+                    "Dispose of the knife"
+                ],
+                answer: 2,
+                explanation: "Evidence should be preserved whenever possible."
+            },
+            {
+                q: "Before beginning a shift, an EMT discovers that the oxygen cylinder is nearly empty. What should the EMT do?",
+                options: [
+                    "Start the shift and replace it later",
+                    "Notify the supervisor and replace the cylinder",
+                    "Hide the issue to avoid paperwork",
+                    "Use it only for critical patients"
+                ],
+                answer: 1,
+                explanation: "Equipment checks ensure operational readiness and patient safety."
+            },
+            {
+                q: "You arrive at the emergency department with a patient. When is your responsibility for the patient transferred?",
+                options: [
+                    "When you enter the hospital",
+                    "When the patient is placed in the waiting room",
+                    "When you provide a verbal report and transfer care",
+                    "When hospital staff see the patient"
+                ],
+                answer: 2,
+                explanation: "EMT responsibility ends after appropriate handoff and transfer of care."
+            },
+            {
+                q: "An EMT suspects that an elderly patient is being neglected by a caregiver. What should the EMT do?",
+                options: [
+                    "Ignore it unless the patient complains",
+                    "Report the concern according to state law and agency policy",
+                    "Confront the caregiver immediately",
+                    "Post about it online"
+                ],
+                answer: 1,
+                explanation: "EMTs are mandatory reporters for suspected abuse or neglect."
+            },
+            {
+                q: "During a call, one EMT notices the partner forgot to reassess the patient's airway. What is the BEST action?",
+                options: [
+                    "Say nothing to avoid conflict",
+                    "Immediately address the concern professionally",
+                    "Wait until after the call",
+                    "Report the partner before helping"
+                ],
+                answer: 1,
+                explanation: "Effective teamwork requires communication and correcting safety issues promptly."
+            },
+            {
+                q: "An ambulance approaches a red traffic light while transporting a critical patient. The driver should:",
+                options: [
+                    "Drive through without slowing",
+                    "Stop only if another vehicle is present",
+                    "Slow down and ensure the intersection is safe before proceeding",
+                    "Turn off emergency lights"
+                ],
+                answer: 2,
+                explanation: "Emergency vehicles must still operate safely and avoid unnecessary collisions."
+            },
+            {
+                q: "An EMS agency reviews patient care reports to identify patterns of medication errors. This process is an example of:",
+                options: [
+                    "Punitive discipline",
+                    "Quality improvement",
+                    "Patient refusal",
+                    "Medical control"
+                ],
+                answer: 1,
+                explanation: "QI uses data to improve EMS performance and patient outcomes."
+            }
+        ];
+
+        let currentQuestion = 0;
+        let score = 0;
+        let answered = false;
+
+        const questionText = document.getElementById('question-text');
+        const optionsContainer = document.getElementById('options');
+        const questionNumber = document.getElementById('question-number');
+        const scoreDisplay = document.getElementById('score-display');
+        const feedback = document.getElementById('feedback');
+        const feedbackText = document.getElementById('feedback-text');
+        const feedbackStatus = document.getElementById('feedback-status');
+        const feedbackIcon = document.getElementById('feedback-icon');
+        const nextBtn = document.getElementById('next-btn');
+        const progressBar = document.getElementById('progress');
+
+        function loadQuestion() {
+            answered = false;
+            const q = questions[currentQuestion];
+            
+            // Reset UI
+            feedback.classList.add('hidden');
+            nextBtn.classList.add('hidden');
+            optionsContainer.innerHTML = '';
+            
+            // Set Text
+            questionNumber.innerText = `Question ${currentQuestion + 1} of ${questions.length}`;
+            questionText.innerText = q.q;
+            progressBar.style.width = `${((currentQuestion) / questions.length) * 100}%`;
+
+            // Create Options
+            q.options.forEach((opt, index) => {
+                const btn = document.createElement('button');
+                btn.className = "w-full text-left p-4 rounded-lg border-2 border-slate-200 hover:border-amber-300 hover:bg-amber-50 transition-all font-medium text-slate-700 flex items-start";
+                btn.innerHTML = `<span class="bg-slate-100 text-slate-500 w-6 h-6 rounded-full inline-flex items-center justify-center mr-3 flex-shrink-0 text-xs">${String.fromCharCode(65 + index)}</span> <span>${opt}</span>`;
+                btn.onclick = () => checkAnswer(index, btn);
+                optionsContainer.appendChild(btn);
+            });
+        }
+
+        function checkAnswer(selectedIndex, clickedBtn) {
+            if (answered) return;
+            answered = true;
+
+            const correct = questions[currentQuestion].answer;
+            const allBtns = optionsContainer.querySelectorAll('button');
+
+            if (selectedIndex === correct) {
+                score++;
+                scoreDisplay.innerText = `Score: ${score}`;
+                clickedBtn.classList.replace('border-slate-200', 'border-green-500');
+                clickedBtn.classList.add('bg-green-50');
+                showFeedback(true);
+            } else {
+                clickedBtn.classList.replace('border-slate-200', 'border-red-500');
+                clickedBtn.classList.add('bg-red-50');
+                allBtns[correct].classList.replace('border-slate-200', 'border-green-500');
+                allBtns[correct].classList.add('bg-green-50');
+                showFeedback(false);
+            }
+
+            allBtns.forEach(btn => btn.disabled = true);
+            nextBtn.classList.remove('hidden');
+            
+            if (currentQuestion === questions.length - 1) {
+                nextBtn.innerText = "See Results";
+            }
+        }
+
+        function showFeedback(isCorrect) {
+            feedback.classList.remove('hidden');
+            if (isCorrect) {
+                feedback.classList.add('bg-green-50', 'border-green-100');
+                feedback.classList.remove('bg-red-50', 'border-red-100');
+                feedbackStatus.innerText = "Correct";
+                feedbackStatus.className = "font-bold text-sm uppercase text-green-700";
+                feedbackIcon.innerText = "✓";
+                feedbackIcon.className = "mr-2 font-bold text-green-700";
+            } else {
+                feedback.classList.add('bg-red-50', 'border-red-100');
+                feedback.classList.remove('bg-green-50', 'border-green-100');
+                feedbackStatus.innerText = "Incorrect";
+                feedbackStatus.className = "font-bold text-sm uppercase text-red-700";
+                feedbackIcon.innerText = "✗";
+                feedbackIcon.className = "mr-2 font-bold text-red-700";
+            }
+            feedbackText.innerText = questions[currentQuestion].explanation;
+        }
+
+        nextBtn.onclick = () => {
+            currentQuestion++;
+            if (currentQuestion < questions.length) {
+                loadQuestion();
+            } else {
+                showResults();
+            }
+        };
+
+        function showResults() {
+            document.getElementById('question-box').classList.add('hidden');
+            const resultsBox = document.getElementById('results-box');
+            resultsBox.classList.remove('hidden');
+            progressBar.style.width = '100%';
+
+            const finalScore = document.getElementById('final-score');
+            const percentage = document.getElementById('percentage');
+            const message = document.getElementById('result-message');
+
+            const percent = Math.round((score / questions.length) * 100);
+            finalScore.innerText = `${score}/${questions.length}`;
+            percentage.innerText = `${percent}%`;
+
+            if (percent >= 85) {
+                message.innerText = "Outstanding job! You have demonstrated strong clinical and operational decision-making skills in NREMT EMS Operations.";
+            } else if (percent >= 70) {
+                message.innerText = "Good effort! Review the questions you missed, especially START triage, HazMat protocols, legal/consent requirements, and crew resource management.";
+            } else {
+                message.innerText = "Keep practicing! Revisit core operations concepts, paying close attention to scene safety, incident command structure, documentation, and scope of practice limits.";
+            }
+        }
+
+        // Initialize quiz
+        loadQuestion();
+    </script>
+</body>
+</html>
