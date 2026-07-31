@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NREMT Trauma Practice</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        .fade-in { animation: fadeIn 0.3s ease-in; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body class="bg-slate-50 min-h-screen flex flex-col items-center py-8 px-4">
+
+    <div class="max-w-2xl w-full bg-white rounded-xl shadow-lg overflow-hidden border border-slate-200">
+        <!-- Header -->
+        <div class="bg-indigo-700 p-6 text-white text-center">
+            <h1 class="text-2xl font-bold">Trauma Emergencies Practice</h1>
+            <p class="text-indigo-100 text-sm mt-1">NREMT Cognitive Exam (Level 3–4 Clinical Reasoning)</p>
+        </div>
+
+        <!-- Progress Bar -->
+        <div class="w-full bg-slate-200 h-2">
+            <div id="progress" class="bg-indigo-500 h-2 transition-all duration-500" style="width: 0%"></div>
+        </div>
+
+        <div id="quiz-container" class="p-6">
+            <!-- Question Section -->
+            <div id="question-box" class="fade-in">
+                <div class="flex justify-between items-center mb-4">
+                    <span id="question-number" class="text-xs font-bold text-slate-500 uppercase tracking-wider">Question 1 of 8</span>
+                    <span id="score-display" class="text-xs font-bold text-indigo-600 bg-indigo-50 px-2 py-1 rounded">Score: 0</span>
+                </div>
+                
+                <h2 id="question-text" class="text-lg font-semibold text-slate-800 mb-6 leading-snug">
+                    Loading question...
+                </h2>
+
+                <div id="options" class="space-y-3">
+                    <!-- Options injected here -->
+                </div>
+
+                <!-- Feedback Section (Hidden by default) -->
+                <div id="feedback" class="mt-6 p-4 rounded-lg hidden border">
+                    <div class="flex items-center mb-2">
+                        <span id="feedback-icon" class="mr-2 font-bold"></span>
+                        <span id="feedback-status" class="font-bold text-sm uppercase"></span>
+                    </div>
+                    <p id="feedback-text" class="text-sm text-slate-600 italic"></p>
+                </div>
+
+                <!-- Navigation -->
+                <button id="next-btn" class="mt-8 w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-6 rounded-lg transition-colors hidden shadow-md">
+                    Next Question
+                </button>
+            </div>
+
+            <!-- Results Section (Hidden by default) -->
+            <div id="results-box" class="hidden text-center py-10 fade-in">
+                <div class="text-6xl mb-4">🚨</div>
+                <h2 class="text-3xl font-bold text-slate-800 mb-2">Quiz Complete!</h2>
+                <p class="text-slate-500 mb-6">You've finished the NREMT Trauma Emergencies assessment.</p>
+                
+                <div class="inline-block p-8 bg-indigo-50 rounded-2xl mb-8 border border-indigo-100">
+                    <div id="final-score" class="text-5xl font-bold text-indigo-700 mb-2">0/8</div>
+                    <div id="percentage" class="text-xl font-semibold text-indigo-500">0%</div>
+                </div>
+
+                <div id="result-message" class="mb-8 px-4 text-slate-700 italic"></div>
+                
+                <button onclick="location.reload()" class="bg-slate-800 hover:bg-slate-900 text-white font-bold py-3 px-8 rounded-lg transition-colors shadow-md">
+                    Try Again
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const questions = [
+            {
+                q: "Progressive Case 1 (Dispatch): You are dispatched to a two-vehicle, high-speed head-on collision on a rural highway. One patient is trapped inside the driver's seat. Fire rescue is stabilizing the vehicle. As you approach, what should be your FIRST priority?",
+                options: [
+                    "Obtain the patient's medical history",
+                    "Begin a detailed head-to-toe examination",
+                    "Ensure scene safety and determine the mechanism of injury",
+                    "Apply a cervical collar immediately"
+                ],
+                answer: 2,
+                explanation: "The NREMT emphasizes scene safety and identifying the mechanism of injury before patient contact. A high-speed collision indicates a high-energy mechanism with the potential for multiple life-threatening injuries."
+            },
+            {
+                q: "Progressive Case 1 (Update): The patient is a 38-year-old male. He is awake but confused. Airway is patent, respirations are 30/min and shallow, pulse is 124/min, BP is 100/64 mmHg, and skin is pale, cool, and diaphoretic with a seatbelt sign across the chest and bruising over the left upper abdomen. Which finding is MOST concerning?",
+                options: [
+                    "Confusion",
+                    "Seatbelt sign and left upper abdominal bruising",
+                    "Respiratory rate of 30/min",
+                    "Pale skin"
+                ],
+                answer: 1,
+                explanation: "A seatbelt sign combined with left upper quadrant bruising strongly suggests significant internal injuries, including splenic injury and internal hemorrhage."
+            },
+            {
+                q: "Progressive Case 1 (Update): While preparing for transport, the patient becomes increasingly anxious. BP drops to 82/54 mmHg, pulse climbs to 138/min, respirations are 34/min, skin remains cool and clammy, and the abdomen is becoming firm and tender. What is the MOST likely cause of the patient's deterioration?",
+                options: [
+                    "Spinal cord injury",
+                    "Internal hemorrhage resulting in hypovolemic shock",
+                    "Cardiac tamponade",
+                    "Traumatic brain injury"
+                ],
+                answer: 1,
+                explanation: "The falling blood pressure, tachycardia, and rigid abdomen strongly indicate worsening hemorrhagic shock from internal abdominal bleeding."
+            },
+            {
+                q: "Progressive Case 1 (Update): The nearest community hospital is 10 minutes away. A Level I trauma center is 25 minutes away by ground. What is the BEST transport decision?",
+                options: [
+                    "Transport to the closest hospital because it is closer.",
+                    "Delay transport until vital signs normalize.",
+                    "Transport rapidly to the trauma center while continuing reassessment and hemorrhage management.",
+                    "Remain on scene until ALS arrives."
+                ],
+                answer: 2,
+                explanation: "Patients with suspected internal hemorrhage benefit from transport to a trauma center capable of providing definitive surgical care."
+            },
+            {
+                q: "Progressive Case 2 (Dispatch): You respond to a construction site where a worker fell approximately 18 feet from a roof onto concrete. Based on the mechanism of injury alone, what should you suspect?",
+                options: [
+                    "Minor orthopedic injuries only",
+                    "Possible multisystem trauma",
+                    "Isolated concussion",
+                    "Simple ankle fracture"
+                ],
+                answer: 1,
+                explanation: "Falls greater than 15 feet are significant mechanisms and frequently result in multiple traumatic injuries."
+            },
+            {
+                q: "Progressive Case 2 (Update): The patient is lying supine, alert but anxious, complaining of severe back pain, and reports tingling in both legs. Respirations are 22/min, pulse is 110/min, and BP is 126/82 mmHg. What is your next priority?",
+                options: [
+                    "Assist the patient to stand.",
+                    "Apply spinal motion restriction while performing the primary assessment.",
+                    "Perform a detailed neurological examination before moving the patient.",
+                    "Splint the legs."
+                ],
+                answer: 1,
+                explanation: "Significant mechanism with neurologic symptoms warrants spinal motion restriction while prioritizing airway, breathing, and circulation."
+            },
+            {
+                q: "Progressive Case 2 (Update): During packaging, the patient suddenly develops respirations at 36/min, severe shortness of breath, absent breath sounds on the right, distended neck veins, BP of 84/58 mmHg, and a pulse of 136/min. Which life-threatening condition has MOST likely developed?",
+                options: [
+                    "Pulmonary embolism",
+                    "Tension pneumothorax",
+                    "Cardiac tamponade",
+                    "Pulmonary contusion"
+                ],
+                answer: 1,
+                explanation: "The combination of respiratory distress, unilateral absent breath sounds, hypotension, tachycardia, and jugular venous distention is highly suggestive of a tension pneumothorax."
+            },
+            {
+                q: "Progressive Case 2 (Update): ALS is 12 minutes away. The trauma center is 15 minutes away. The patient continues to deteriorate. What is the BEST course of action?",
+                options: [
+                    "Wait for ALS before transporting.",
+                    "Continue rapid transport, provide high-flow oxygen, monitor closely, and notify the receiving trauma center.",
+                    "Perform a complete secondary assessment before leaving the scene.",
+                    "Delay transport until a full set of vital signs has been repeated."
+                ],
+                answer: 1,
+                explanation: "The NREMT emphasizes minimizing scene time for unstable trauma patients. Immediate transport to definitive care while continuing supportive management is the highest priority."
+            }
+        ];
+
+        let currentQuestion = 0;
+        let score = 0;
+        let answered = false;
+
+        const questionText = document.getElementById('question-text');
+        const optionsContainer = document.getElementById('options');
+        const questionNumber = document.getElementById('question-number');
+        const scoreDisplay = document.getElementById('score-display');
+        const feedback = document.getElementById('feedback');
+        const feedbackText = document.getElementById('feedback-text');
+        const feedbackStatus = document.getElementById('feedback-status');
+        const feedbackIcon = document.getElementById('feedback-icon');
+        const nextBtn = document.getElementById('next-btn');
+        const progressBar = document.getElementById('progress');
+
+        function loadQuestion() {
+            answered = false;
+            const q = questions[currentQuestion];
+            
+            feedback.classList.add('hidden');
+            nextBtn.classList.add('hidden');
+            optionsContainer.innerHTML = '';
+            
+            questionNumber.innerText = `Question ${currentQuestion + 1} of ${questions.length}`;
+            questionText.innerText = q.q;
+            progressBar.style.width = `${((currentQuestion) / questions.length) * 100}%`;
+
+            q.options.forEach((opt, index) => {
+                const btn = document.createElement('button');
+                btn.className = "w-full text-left p-4 rounded-lg border-2 border-slate-200 hover:border-indigo-300 hover:bg-indigo-50 transition-all font-medium text-slate-700 flex items-start";
+                btn.innerHTML = `<span class="bg-slate-100 text-slate-500 w-6 h-6 rounded-full inline-flex items-center justify-center mr-3 flex-shrink-0 text-xs">${String.fromCharCode(65 + index)}</span> <span>${opt}</span>`;
+                btn.onclick = () => checkAnswer(index, btn);
+                optionsContainer.appendChild(btn);
+            });
+        }
+
+        function checkAnswer(selectedIndex, clickedBtn) {
+            if (answered) return;
+            answered = true;
+
+            const correct = questions[currentQuestion].answer;
+            const allBtns = optionsContainer.querySelectorAll('button');
+
+            if (selectedIndex === correct) {
+                score++;
+                scoreDisplay.innerText = `Score: ${score}`;
+                clickedBtn.classList.replace('border-slate-200', 'border-green-500');
+                clickedBtn.classList.add('bg-green-50');
+                showFeedback(true);
+            } else {
+                clickedBtn.classList.replace('border-slate-200', 'border-red-500');
+                clickedBtn.classList.add('bg-red-50');
+                allBtns[correct].classList.replace('border-slate-200', 'border-green-500');
+                allBtns[correct].classList.add('bg-green-50');
+                showFeedback(false);
+            }
+
+            allBtns.forEach(btn => btn.disabled = true);
+            nextBtn.classList.remove('hidden');
+            
+            if (currentQuestion === questions.length - 1) {
+                nextBtn.innerText = "See Results";
+            }
+        }
+
+        function showFeedback(isCorrect) {
+            feedback.classList.remove('hidden');
+            if (isCorrect) {
+                feedback.classList.add('bg-green-50', 'border-green-100');
+                feedback.classList.remove('bg-red-50', 'border-red-100');
+                feedbackStatus.innerText = "Correct";
+                feedbackStatus.className = "font-bold text-sm uppercase text-green-700";
+                feedbackIcon.innerText = "✓";
+                feedbackIcon.className = "mr-2 font-bold text-green-700";
+            } else {
+                feedback.classList.add('bg-red-50', 'border-red-100');
+                feedback.classList.remove('bg-green-50', 'border-green-100');
+                feedbackStatus.innerText = "Incorrect";
+                feedbackStatus.className = "font-bold text-sm uppercase text-red-700";
+                feedbackIcon.innerText = "✗";
+                feedbackIcon.className = "mr-2 font-bold text-red-700";
+            }
+            feedbackText.innerText = questions[currentQuestion].explanation;
+        }
+
+        nextBtn.onclick = () => {
+            currentQuestion++;
+            if (currentQuestion < questions.length) {
+                loadQuestion();
+            } else {
+                showResults();
+            }
+        };
+
+        function showResults() {
+            document.getElementById('question-box').classList.add('hidden');
+            const resultsBox = document.getElementById('results-box');
+            resultsBox.classList.remove('hidden');
+            progressBar.style.width = '100%';
+
+            const finalScore = document.getElementById('final-score');
+            const percentage = document.getElementById('percentage');
+            const message = document.getElementById('result-message');
+
+            const percent = Math.round((score / questions.length) * 100);
+            finalScore.innerText = `${score}/${questions.length}`;
+            percentage.innerText = `${percent}%`;
+
+            if (percent >= 85) {
+                message.innerText = "Outstanding job! You demonstrated elite trauma assessment and clinical decision-making skills.";
+            } else if (percent >= 70) {
+                message.innerText = "Good effort! Review the missed questions, particularly regarding trauma triage, tension pneumothorax, and shock recognition.";
+            } else {
+                message.innerText = "Keep practicing! Focus on core NREMT trauma priorities, mechanism of injury interpretation, and rapid transport criteria.";
+            }
+        }
+
+        loadQuestion();
+    </script>
+</body>
+</html>
