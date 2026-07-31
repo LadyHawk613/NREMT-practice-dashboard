@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NREMT Trauma SATA Quiz</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        .fade-in { animation: fadeIn 0.3s ease-in; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body class="bg-slate-50 min-h-screen flex flex-col items-center py-8 px-4">
+
+    <div class="max-w-2xl w-full bg-white rounded-xl shadow-lg overflow-hidden border border-slate-200">
+        <!-- Header -->
+        <div class="bg-indigo-700 p-6 text-white text-center">
+            <h1 class="text-2xl font-bold">Trauma Emergencies (SATA) Practice</h1>
+            <p class="text-indigo-100 text-sm mt-1">NREMT Cognitive Exam (Select All That Apply)</p>
+        </div>
+
+        <!-- Progress Bar -->
+        <div class="w-full bg-slate-200 h-2">
+            <div id="progress" class="bg-indigo-500 h-2 transition-all duration-500" style="width: 0%"></div>
+        </div>
+
+        <div id="quiz-container" class="p-6">
+            <!-- Question Section -->
+            <div id="question-box" class="fade-in">
+                <div class="flex justify-between items-center mb-4">
+                    <span id="question-number" class="text-xs font-bold text-slate-500 uppercase tracking-wider">Question 1 of 3</span>
+                    <span id="score-display" class="text-xs font-bold text-indigo-600 bg-indigo-50 px-2 py-1 rounded">Score: 0</span>
+                </div>
+                
+                <h2 id="question-text" class="text-lg font-semibold text-slate-800 mb-2 leading-snug">
+                    Loading question...
+                </h2>
+                <p class="text-xs text-indigo-600 font-semibold mb-6 uppercase tracking-wider">Select all that apply</p>
+
+                <div id="options" class="space-y-3">
+                    <!-- Options injected here -->
+                </div>
+
+                <!-- Feedback Section (Hidden by default) -->
+                <div id="feedback" class="mt-6 p-4 rounded-lg hidden border">
+                    <div class="flex items-center mb-2">
+                        <span id="feedback-icon" class="mr-2 font-bold"></span>
+                        <span id="feedback-status" class="font-bold text-sm uppercase"></span>
+                    </div>
+                    <p id="feedback-text" class="text-sm text-slate-600 italic"></p>
+                </div>
+
+                <!-- Navigation / Submit Button -->
+                <button id="submit-btn" class="mt-8 w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-6 rounded-lg transition-colors shadow-md">
+                    Submit Answer
+                </button>
+                <button id="next-btn" class="mt-8 w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-6 rounded-lg transition-colors hidden shadow-md">
+                    Next Question
+                </button>
+            </div>
+
+            <!-- Results Section (Hidden by default) -->
+            <div id="results-box" class="hidden text-center py-10 fade-in">
+                <div class="text-6xl mb-4">🚨</div>
+                <h2 class="text-3xl font-bold text-slate-800 mb-2">Quiz Complete!</h2>
+                <p class="text-slate-500 mb-6">You've finished the NREMT Trauma SATA assessment.</p>
+                
+                <div class="inline-block p-8 bg-indigo-50 rounded-2xl mb-8 border border-indigo-100">
+                    <div id="final-score" class="text-5xl font-bold text-indigo-700 mb-2">0/3</div>
+                    <div id="percentage" class="text-xl font-semibold text-indigo-500">0%</div>
+                </div>
+
+                <div id="result-message" class="mb-8 px-4 text-slate-700 italic"></div>
+                
+                <button onclick="location.reload()" class="bg-slate-800 hover:bg-slate-900 text-white font-bold py-3 px-8 rounded-lg transition-colors shadow-md">
+                    Try Again
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const questions = [
+            {
+                q: "Question 1: Recognition of Hemorrhagic Shock<br><br>A 27-year-old male was ejected from a motorcycle after striking a guardrail. He is alert but anxious. His skin is pale, cool, and diaphoretic. Vital signs are:<br>• BP: 90/58 mmHg<br>• HR: 132/min<br>• RR: 30/min<br><br>Which findings suggest the patient is experiencing hemorrhagic shock?",
+                options: [
+                    "Pale, cool, clammy skin",
+                    "Bradycardia",
+                    "Tachycardia",
+                    "Hypotension",
+                    "Anxiety and restlessness",
+                    "Hypertension"
+                ],
+                answers: [0, 2, 3, 4],
+                explanation: "These are classic findings of hemorrhagic (hypovolemic) shock. Bradycardia and hypertension are not typical findings in hemorrhagic shock."
+            },
+            {
+                q: "Question 2: Immediate Management of Chest Trauma<br><br>A 42-year-old patient sustained a penetrating injury to the right side of the chest. During your assessment, he has increasing respiratory distress and diminished breath sounds on the injured side.<br><br>Which interventions are appropriate?",
+                options: [
+                    "Administer high-concentration oxygen.",
+                    "Apply an occlusive dressing according to local protocol.",
+                    "Monitor for signs of tension pneumothorax.",
+                    "Delay transport until breath sounds improve.",
+                    "Perform frequent reassessments of airway and breathing.",
+                    "Remove the impaled object if present."
+                ],
+                answers: [0, 1, 2, 4],
+                explanation: "Patients with penetrating chest trauma require aggressive airway and breathing management and rapid transport. Impaled objects should not be removed in the field, and transport should not be delayed."
+            },
+            {
+                q: "Question 3: Findings That Require Rapid Transport to a Trauma Center<br><br>You are evaluating several trauma patients.<br><br>Which findings indicate a high-priority patient who should be transported rapidly to an appropriate trauma center?",
+                options: [
+                    "Systolic blood pressure of 84 mmHg after blunt trauma",
+                    "Glasgow Coma Scale (GCS) score of 12 after head injury",
+                    "Isolated closed wrist fracture with normal vital signs",
+                    "Penetrating injury to the chest",
+                    "Pelvic instability after a motor vehicle collision",
+                    "Small superficial laceration to the forearm"
+                ],
+                answers: [0, 1, 3, 4],
+                explanation: "These findings indicate potentially life-threatening injuries requiring rapid transport to a trauma center. An isolated wrist fracture and a superficial forearm laceration are generally lower-acuity injuries that do not, by themselves, meet trauma center transport criteria."
+            }
+        ];
+
+        let currentQuestion = 0;
+        let score = 0;
+        let answered = false;
+
+        const questionText = document.getElementById('question-text');
+        const optionsContainer = document.getElementById('options');
+        const questionNumber = document.getElementById('question-number');
+        const scoreDisplay = document.getElementById('score-display');
+        const feedback = document.getElementById('feedback');
+        const feedbackText = document.getElementById('feedback-text');
+        const feedbackStatus = document.getElementById('feedback-status');
+        const feedbackIcon = document.getElementById('feedback-icon');
+        const submitBtn = document.getElementById('submit-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const progressBar = document.getElementById('progress');
+
+        function loadQuestion() {
+            answered = false;
+            const q = questions[currentQuestion];
+            
+            feedback.classList.add('hidden');
+            submitBtn.classList.remove('hidden');
+            nextBtn.classList.add('hidden');
+            optionsContainer.innerHTML = '';
+            
+            questionNumber.innerText = `Question ${currentQuestion + 1} of ${questions.length}`;
+            questionText.innerHTML = q.q;
+            progressBar.style.width = `${((currentQuestion) / questions.length) * 100}%`;
+
+            q.options.forEach((opt, index) => {
+                const label = document.createElement('label');
+                label.className = "w-full text-left p-4 rounded-lg border-2 border-slate-200 hover:border-indigo-300 hover:bg-indigo-50 transition-all font-medium text-slate-700 flex items-start cursor-pointer";
+                label.innerHTML = `
+                    <input type="checkbox" value="${index}" class="mt-1 mr-3 h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-slate-300 rounded flex-shrink-0">
+                    <span class="bg-slate-100 text-slate-500 w-6 h-6 rounded-full inline-flex items-center justify-center mr-3 flex-shrink-0 text-xs">${String.fromCharCode(65 + index)}</span>
+                    <span class="flex-grow">${opt}</span>
+                `;
+                optionsContainer.appendChild(label);
+            });
+        }
+
+        submitBtn.onclick = () => {
+            if (answered) return;
+            answered = true;
+
+            const q = questions[currentQuestion];
+            const checkboxes = optionsContainer.querySelectorAll('input[type="checkbox"]');
+            const selectedIndices = [];
+            
+            checkboxes.forEach(cb => {
+                if (cb.checked) {
+                    selectedIndices.push(parseInt(cb.value));
+                }
+            });
+
+            // Check if arrays match perfectly
+            const correctSet = new Set(q.answers);
+            const selectedSet = new Set(selectedIndices);
+            
+            let isCorrect = correctSet.size === selectedSet.size && [...correctSet].every(val => selectedSet.has(val));
+
+            if (isCorrect) {
+                score++;
+                scoreDisplay.innerText = `Score: ${score}`;
+                showFeedback(true);
+            } else {
+                showFeedback(false);
+            }
+
+            // Highlight items
+            checkboxes.forEach((cb, idx) => {
+                const labelElement = cb.closest('label');
+                cb.disabled = true;
+                if (correctSet.has(idx)) {
+                    labelElement.classList.replace('border-slate-200', 'border-green-500');
+                    labelElement.classList.add('bg-green-50');
+                } else if (cb.checked) {
+                    labelElement.classList.replace('border-slate-200', 'border-red-500');
+                    labelElement.classList.add('bg-red-50');
+                }
+            });
+
+            submitBtn.classList.add('hidden');
+            nextBtn.classList.remove('hidden');
+            
+            if (currentQuestion === questions.length - 1) {
+                nextBtn.innerText = "See Results";
+            }
+        };
+
+        function showFeedback(isCorrect) {
+            feedback.classList.remove('hidden');
+            if (isCorrect) {
+                feedback.classList.add('bg-green-50', 'border-green-100');
+                feedback.classList.remove('bg-red-50', 'border-red-100');
+                feedbackStatus.innerText = "Correct";
+                feedbackStatus.className = "font-bold text-sm uppercase text-green-700";
+                feedbackIcon.innerText = "✓";
+                feedbackIcon.className = "mr-2 font-bold text-green-700";
+            } else {
+                feedback.classList.add('bg-red-50', 'border-red-100');
+                feedback.classList.remove('bg-green-50', 'border-green-100');
+                feedbackStatus.innerText = "Incorrect";
+                feedbackStatus.className = "font-bold text-sm uppercase text-red-700";
+                feedbackIcon.innerText = "✗";
+                feedbackIcon.className = "mr-2 font-bold text-red-700";
+            }
+            feedbackText.innerText = questions[currentQuestion].explanation;
+        }
+
+        nextBtn.onclick = () => {
+            currentQuestion++;
+            if (currentQuestion < questions.length) {
+                loadQuestion();
+            } else {
+                showResults();
+            }
+        };
+
+        function showResults() {
+            document.getElementById('question-box').classList.add('hidden');
+            const resultsBox = document.getElementById('results-box');
+            resultsBox.classList.remove('hidden');
+            progressBar.style.width = '100%';
+
+            const finalScore = document.getElementById('final-score');
+            const percentage = document.getElementById('percentage');
+            const message = document.getElementById('result-message');
+
+            const percent = Math.round((score / questions.length) * 100);
+            finalScore.innerText = `${score}/${questions.length}`;
+            percentage.innerText = `${percent}%`;
+
+            if (percent >= 85) {
+                message.innerText = "Outstanding job! You demonstrated elite trauma assessment and complex clinical decision-making skills.";
+            } else if (percent >= 70) {
+                message.innerText = "Good effort! Review the missed select-all-that-apply questions, particularly regarding shock signs, chest trauma interventions, and trauma center criteria.";
+            } else {
+                message.innerText = "Keep practicing! Focus on core NREMT trauma evaluation standards, multi-system criteria, and precise physiological indicators.";
+            }
+        }
+
+        loadQuestion();
+    </script>
+</body>
+</html>
