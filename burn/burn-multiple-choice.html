@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NREMT Burn Emergencies Quiz</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        .fade-in { animation: fadeIn 0.3s ease-in; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body class="bg-slate-50 min-h-screen flex flex-col items-center py-8 px-4">
+
+    <div class="max-w-2xl w-full bg-white rounded-xl shadow-lg overflow-hidden border border-slate-200">
+        <!-- Header -->
+        <div class="bg-indigo-700 p-6 text-white text-center">
+            <h1 class="text-2xl font-bold">Burn Emergencies Practice</h1>
+            <p class="text-indigo-100 text-sm mt-1">NREMT Cognitive Exam (Level 3–4 Clinical Reasoning)</p>
+        </div>
+
+        <!-- Progress Bar -->
+        <div class="w-full bg-slate-200 h-2">
+            <div id="progress" class="bg-indigo-500 h-2 transition-all duration-500" style="width: 0%"></div>
+        </div>
+
+        <div id="quiz-container" class="p-6">
+            <!-- Question Section -->
+            <div id="question-box" class="fade-in">
+                <div class="flex justify-between items-center mb-4">
+                    <span id="question-number" class="text-xs font-bold text-slate-500 uppercase tracking-wider">Question 1 of 20</span>
+                    <span id="score-display" class="text-xs font-bold text-indigo-600 bg-indigo-50 px-2 py-1 rounded">Score: 0</span>
+                </div>
+                
+                <h2 id="question-text" class="text-lg font-semibold text-slate-800 mb-6 leading-snug">
+                    Loading question...
+                </h2>
+
+                <div id="options" class="space-y-3">
+                    <!-- Options injected here -->
+                </div>
+
+                <!-- Feedback Section (Hidden by default) -->
+                <div id="feedback" class="mt-6 p-4 rounded-lg hidden border">
+                    <div class="flex items-center mb-2">
+                        <span id="feedback-icon" class="mr-2 font-bold"></span>
+                        <span id="feedback-status" class="font-bold text-sm uppercase"></span>
+                    </div>
+                    <p id="feedback-text" class="text-sm text-slate-600 italic"></p>
+                </div>
+
+                <!-- Navigation -->
+                <button id="next-btn" class="mt-8 w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-6 rounded-lg transition-colors hidden shadow-md">
+                    Next Question
+                </button>
+            </div>
+
+            <!-- Results Section (Hidden by default) -->
+            <div id="results-box" class="hidden text-center py-10 fade-in">
+                <div class="text-6xl mb-4">🔥</div>
+                <h2 class="text-3xl font-bold text-slate-800 mb-2">Quiz Complete!</h2>
+                <p class="text-slate-500 mb-6">You've finished the NREMT Burn Emergencies assessment.</p>
+                
+                <div class="inline-block p-8 bg-indigo-50 rounded-2xl mb-8 border border-indigo-100">
+                    <div id="final-score" class="text-5xl font-bold text-indigo-700 mb-2">0/20</div>
+                    <div id="percentage" class="text-xl font-semibold text-indigo-500">0%</div>
+                </div>
+
+                <div id="result-message" class="mb-8 px-4 text-slate-700 italic"></div>
+                
+                <button onclick="location.reload()" class="bg-slate-800 hover:bg-slate-900 text-white font-bold py-3 px-8 rounded-lg transition-colors shadow-md">
+                    Try Again
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const questions = [
+            {
+                q: "1. A 28-year-old male was rescued from a structural fire. He is confused, has a hoarse voice, soot around his mouth and nose, and singed nasal hairs. What is your FIRST clinical priority?",
+                options: [
+                    "Apply dry sterile dressings to all burn regions",
+                    "Administer high-flow oxygen via a non-rebreather mask",
+                    "Establish IV access for fluid resuscitation",
+                    "Assess total body surface area (TBSA) using the Rule of Nines"
+                ],
+                answer: 1,
+                explanation: "Airway management and high-concentration oxygen administration take immediate priority when signs of inhalation injury are present."
+            },
+            {
+                q: "2. An adult patient has partial-thickness burns to the entire anterior torso (chest and abdomen) and the entire anterior surface of both arms. Using the Rule of Nines, what is the estimated TBSA burned?",
+                options: [
+                    "18%",
+                    "27%",
+                    "36%",
+                    "45%"
+                ],
+                answer: 1,
+                explanation: "Anterior torso = 18%, and each entire arm is 9% (both arms anterior = 9%). 18% + 9% = 27%."
+            },
+            {
+                q: "3. Which characteristic is MOST indicative of a superficial partial-thickness (second-degree) burn?",
+                options: [
+                    "Dry, leathery, white or charred skin with no pain",
+                    "Red, dry skin that blanches with pressure without blistering",
+                    "Intense pain, moist/weepy appearance, and the presence of blisters",
+                    "Painless destruction of subcutaneous tissue, muscle, and bone"
+                ],
+                answer: 2,
+                explanation: "Second-degree (partial-thickness) burns typically present with intense pain, blistering, and a moist or weeping surface."
+            },
+            {
+                q: "4. You are treating an alert patient who sustained thermal burns to the face and neck in a grill explosion. She speaks with audible stridor and is growing increasingly anxious. What intervention is most critical?",
+                options: [
+                    "Apply cold water directly to constrict local blood vessels",
+                    "Closely monitor airway status for rapid swelling and potential obstruction",
+                    "Apply an occlusive petroleum gauze wrap tightly around the neck",
+                    "Administer oral analgesics for pain relief"
+                ],
+                answer: 1,
+                explanation: "Inhalation burns can cause rapid laryngeal edema and sudden airway closure; continuous airway monitoring is critical."
+            },
+            {
+                q: "5. A worker suffered an electrical burn after coming into contact with a high-voltage power line. What should concern you MOST during your assessment?",
+                options: [
+                    "The external skin damage visible at the entry site",
+                    "Underlying deep tissue, muscle, organ damage, and cardiac dysrhythmias",
+                    "Hypothermia from ambient environmental exposure",
+                    "Superficial blistering across the palms of the hands"
+                ],
+                answer: 1,
+                explanation: "Electrical currents travel along paths of least resistance through the body, causing severe hidden internal trauma and lethal cardiac rhythm disturbances."
+            },
+            {
+                q: "6. A chemical burn patient has a dry powder chemical spilled over both forearms. What is the correct initial management step?",
+                options: [
+                    "Flush immediately with copious amounts of sterile water",
+                    "Brush away the dry powder gently before flushing with water",
+                    "Neutralize the chemical using a weak acid solution",
+                    "Wrap the extremities tightly in dry gauze to trap the powder"
+                ],
+                answer: 1,
+                explanation: "Dry chemical powders must be brushed off thoroughly *before* flushing with water to prevent a reactive exothermic heat-producing chemical reaction."
+            },
+            {
+                q: "7. Which of the following pediatric burn patient configurations meets criteria for transport to a specialized burn center?",
+                options: [
+                    "Partial-thickness burn covering 5% of TBSA on an extremity",
+                    "Full-thickness burn covering greater than 10% of TBSA",
+                    "Superficial sunburn to the back",
+                    "A small, isolated first-degree burn to the cheek"
+                ],
+                answer: 1,
+                explanation: "In pediatric patients, full-thickness burns greater than 10% TBSA (or partial-thickness > 10%) meet critical burn center referral guidelines."
+            },
+            {
+                q: "8. A patient has sustained a circumferential full-thickness burn to the chest wall. Respirations are becoming increasingly shallow and difficult. What physiological phenomenon is likely occurring?",
+                options: [
+                    "Severe neurogenic shock from nerve endings burning off",
+                    "Constriction from hardened, inelastic eschar limiting chest expansion",
+                    "Spontaneous pneumothorax secondary to heat exposure",
+                    "Acute bronchospasm from toxic smoke inhalation"
+                ],
+                answer: 1,
+                explanation: "Circumferential burns create a tight, unyielding shell of dead tissue (eschar) that acts like a tourniquet, restricting chest wall expansion."
+            },
+            {
+                q: "9. When managing acute thermal burns in the field immediately after injury, you should:",
+                options: [
+                    "Apply ice packs directly to the burn to cool the tissue rapidly",
+                    "Pop large blisters to release fluid before dressing the wound",
+                    "Stop the burning process, remove smoldering clothing, and use cool, sterile water briefly",
+                    "Apply thick antibiotic ointments and butter to seal the skin"
+                ],
+                answer: 2,
+                explanation: "Stop the burn, remove non-adherent clothing, and cool gently. Never use ice (causes vasoconstriction/tissue damage), pop blisters, or apply greasy ointments."
+            },
+            {
+                q: "10. Using the Rule of Nines for an adult patient, what percentage is assigned to the entire left arm?",
+                options: [
+                    "4.5%",
+                    "9%",
+                    "18%",
+                    "1% (Rule of Palms)"
+                ],
+                answer: 1,
+                explanation: "Each entire upper extremity accounts for 9% of the adult total body surface area."
+            },
+            {
+                q: "11. A 45-year-old male is pulled from a burning garage. He is unconscious, cyanotic, and soot is visible around his nares. Pulse oximetry reads 99%. Why is this SpO2 reading potentially inaccurate or misleading?",
+                options: [
+                    "Pulse oximeters cannot detect body temperature drops",
+                    "Standard pulse oximetry cannot differentiate between oxyhemoglobin and carboxyhemoglobin",
+                    "Carbon monoxide lowers the heart rate, causing sensor failure",
+                    "Soot absorption blocks infrared light completely, showing zero"
+                ],
+                answer: 1,
+                explanation: "Carbon monoxide binds strongly to hemoglobin, creating carboxyhemoglobin. Standard pulse oximeters misread this as oxygen-saturated blood, showing falsely normal SpO2 values."
+            },
+            {
+                q: "12. What is the primary reason extensive burn patients are at extreme risk for hypothermia in the prehospital setting?",
+                options: [
+                    "Loss of protective skin barrier function and inability to regulate body temperature",
+                    "Constant administration of warm intravenous fluids",
+                    "Rapid loss of functional red blood cells from surface evaporation",
+                    "Inability of skeletal muscles to shiver due to local pain"
+                ],
+                answer: 0,
+                explanation: "The skin regulates body heat and fluid loss. Widespread destruction of skin layers leads to rapid evaporative heat loss and severe hypothermia."
+            },
+            {
+                q: "13. Using the Rule of Nines for an adult, the anterior trunk (chest and abdomen combined) represents what percentage of TBSA?",
+                options: [
+                    "9%",
+                    "18%",
+                    "27%",
+                    "36%"
+                ],
+                answer: 1,
+                explanation: "The anterior trunk accounts for 18% of the adult body surface area (chest is 9%, abdomen is 9%)."
+            },
+            {
+                q: "14. A patient has a full-thickness burn on the palm of his hand. Using the 'Rule of Palms', approximately what percentage of TBSA does this represent?",
+                options: [
+                    "0.5%",
+                    "1%",
+                    "5%",
+                    "9%"
+                ],
+                answer: 1,
+                explanation: "The patient's palm (including fingers) represents approximately 1% of total body surface area, useful for estimating patchy or irregularly distributed burns."
+            },
+            {
+                q: "15. Which burn depth involves only the epidermis, causing redness, minor pain, and dry skin without blistering?",
+                options: [
+                    "Superficial (First-degree)",
+                    "Partial-thickness (Second-degree)",
+                    "Full-thickness (Third-degree)",
+                    "Fourth-degree"
+                ],
+                answer: 0,
+                explanation: "Superficial burns affect only the outermost layer (epidermis), resulting in red, painful, non-blistering skin like a typical sunburn."
+            },
+            {
+                q: "16. Which of the following is an immediate life threat associated with major electrical shock besides cardiac arrest?",
+                options: [
+                    "Severe internal skeletal muscle breakdown leading to rhabdomyolysis and renal failure",
+                    "Immediate localized gangrene formation within minutes",
+                    "Rapid hypercalcemia from bone melting",
+                    "Instantaneous superficial skin healing"
+                ],
+                answer: 0,
+                explanation: "Massive electrical current destroys deep muscle tissue, releasing myoglobin into the bloodstream, which causes rhabdomyolysis and acute kidney injury."
+            },
+            {
+                q: "17. What type of dressing is traditionally recommended for prehospital management of acute partial and full-thickness thermal burns?",
+                options: [
+                    "Wet, ice-soaked bulky towels applied for hours",
+                    "Dry, sterile burn sheets or dressings",
+                    "Tight compressive elastic bandages wrapped heavily",
+                    "Adhesive bandages coated in petroleum jelly"
+                ],
+                answer: 1,
+                explanation: "Burns should be covered with dry, sterile dressings or clean burn sheets to minimize infection risk and protect exposed nerve endings from air drafts."
+            },
+            {
+                q: "18. Using the Rule of Nines for an adult, what is the combined percentage for both lower extremities in their entirety?",
+                options: [
+                    "18%",
+                    "27%",
+                    "36%",
+                    "45%"
+                ],
+                answer: 2,
+                explanation: "Each lower extremity accounts for 18% (9% anterior, 9% posterior). Combined, both legs equal 36% of the adult TBSA."
+            },
+            {
+                q: "19. Which category of burn injury requires mandatory evaluation and treatment at a certified burn center facility?",
+                options: [
+                    "Isolated first-degree sunburn on the shoulders",
+                    "Partial-thickness burns crossing major joints (e.g., hands, feet, face, groin, or joints)",
+                    "Small superficial scald burn on the forearm of an adult",
+                    "Minor friction blister from athletic shoes"
+                ],
+                answer: 1,
+                explanation: "Burns involving high-risk functional areas like hands, feet, face, genitalia, perineum, or major joints meet criteria for specialized burn center care to prevent long-term contractures."
+            },
+            {
+                q: "20. Why must emergency providers remove jewelry, rings, and watches early from an extremity that has sustained thermal burns?",
+                options: [
+                    "Jewelry reacts chemically with the burn tissue matrix",
+                    "Rapid localized soft tissue edema and swelling will cause rings or bands to act like tourniquets",
+                    "Metals melt easily at standard fire exposure thresholds",
+                    "Metal items interfere with pulse oximetry readings on fingers"
+                ],
+                answer: 1,
+                explanation: "Burn injuries cause rapid, profound interstitial swelling. Rings and tight jewelry quickly restrict circulation, acting as a tourniquet if not removed early."
+            }
+        ];
+
+        let currentQuestion = 0;
+        let score = 0;
+        let answered = false;
+
+        const questionText = document.getElementById('question-text');
+        const optionsContainer = document.getElementById('options');
+        const questionNumber = document.getElementById('question-number');
+        const scoreDisplay = document.getElementById('score-display');
+        const feedback = document.getElementById('feedback');
+        const feedbackText = document.getElementById('feedback-text');
+        const feedbackStatus = document.getElementById('feedback-status');
+        const feedbackIcon = document.getElementById('feedback-icon');
+        const nextBtn = document.getElementById('next-btn');
+        const progressBar = document.getElementById('progress');
+
+        function loadQuestion() {
+            answered = false;
+            const q = questions[currentQuestion];
+            
+            feedback.classList.add('hidden');
+            nextBtn.classList.add('hidden');
+            optionsContainer.innerHTML = '';
+            
+            questionNumber.innerText = `Question ${currentQuestion + 1} of ${questions.length}`;
+            questionText.innerText = q.q;
+            progressBar.style.width = `${((currentQuestion) / questions.length) * 100}%`;
+
+            q.options.forEach((opt, index) => {
+                const btn = document.createElement('button');
+                btn.className = "w-full text-left p-4 rounded-lg border-2 border-slate-200 hover:border-indigo-300 hover:bg-indigo-50 transition-all font-medium text-slate-700 flex items-start";
+                btn.innerHTML = `<span class="bg-slate-100 text-slate-500 w-6 h-6 rounded-full inline-flex items-center justify-center mr-3 flex-shrink-0 text-xs">${String.fromCharCode(65 + index)}</span> <span>${opt}</span>`;
+                btn.onclick = () => checkAnswer(index, btn);
+                optionsContainer.appendChild(btn);
+            });
+        }
+
+        function checkAnswer(selectedIndex, clickedBtn) {
+            if (answered) return;
+            answered = true;
+
+            const correct = questions[currentQuestion].answer;
+            const allBtns = optionsContainer.querySelectorAll('button');
+
+            if (selectedIndex === correct) {
+                score++;
+                scoreDisplay.innerText = `Score: ${score}`;
+                clickedBtn.classList.replace('border-slate-200', 'border-green-500');
+                clickedBtn.classList.add('bg-green-50');
+                showFeedback(true);
+            } else {
+                clickedBtn.classList.replace('border-slate-200', 'border-red-500');
+                clickedBtn.classList.add('bg-red-50');
+                allBtns[correct].classList.replace('border-slate-200', 'border-green-500');
+                allBtns[correct].classList.add('bg-green-50');
+                showFeedback(false);
+            }
+
+            allBtns.forEach(btn => btn.disabled = true);
+            nextBtn.classList.remove('hidden');
+            
+            if (currentQuestion === questions.length - 1) {
+                nextBtn.innerText = "See Results";
+            }
+        }
+
+        function showFeedback(isCorrect) {
+            feedback.classList.remove('hidden');
+            if (isCorrect) {
+                feedback.classList.add('bg-green-50', 'border-green-100');
+                feedback.classList.remove('bg-red-50', 'border-red-100');
+                feedbackStatus.innerText = "Correct";
+                feedbackStatus.className = "font-bold text-sm uppercase text-green-700";
+                feedbackIcon.innerText = "✓";
+                feedbackIcon.className = "mr-2 font-bold text-green-700";
+            } else {
+                feedback.classList.add('bg-red-50', 'border-red-100');
+                feedback.classList.remove('bg-green-50', 'border-green-100');
+                feedbackStatus.innerText = "Incorrect";
+                feedbackStatus.className = "font-bold text-sm uppercase text-red-700";
+                feedbackIcon.innerText = "✗";
+                feedbackIcon.className = "mr-2 font-bold text-red-700";
+            }
+            feedbackText.innerText = questions[currentQuestion].explanation;
+        }
+
+        nextBtn.onclick = () => {
+            currentQuestion++;
+            if (currentQuestion < questions.length) {
+                loadQuestion();
+            } else {
+                showResults();
+            }
+        };
+
+        function showResults() {
+            document.getElementById('question-box').classList.add('hidden');
+            const resultsBox = document.getElementById('results-box');
+            resultsBox.classList.remove('hidden');
+            progressBar.style.width = '100%';
+
+            const finalScore = document.getElementById('final-score');
+            const percentage = document.getElementById('percentage');
+            const message = document.getElementById('result-message');
+
+            const percent = Math.round((score / questions.length) * 100);
+            finalScore.innerText = `${score}/${questions.length}`;
+            percentage.innerText = `${percent}%`;
+
+            if (percent >= 85) {
+                message.innerText = "Outstanding job! You have demonstrated exceptional mastery of burn assessment, rule of nines calculations, and specialized clinical treatment protocols.";
+            } else if (percent >= 70) {
+                message.innerText = "Good effort! Review the questions you missed, particularly regarding inhalation signs, electrical hazards, chemical decontamination, and burn criteria.";
+            } else {
+                message.innerText = "Keep practicing! Revisit core burn management concepts, focusing heavily on airway protection, Rule of Nines calculations, and field treatment priorities.";
+            }
+        }
+
+        loadQuestion();
+    </script>
+</body>
+</html>
