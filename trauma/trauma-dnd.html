@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NREMT Trauma Emergencies Review</title>
+    <style>
+        :root {
+            --bg-gradient: linear-gradient(135deg, #ffcc33 0%, #ff6600 100%);
+            --card-bg: #ffffff;
+            --text-main: #333333;
+            --accent-orange: #ff6600;
+            --accent-yellow: #ffcc33;
+            --correct-green: #2ecc71;
+            --incorrect-red: #e74c3c;
+            --shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            user-select: none;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--bg-gradient);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: var(--text-main);
+            overflow: hidden; /* Prevent scrolling */
+        }
+
+        #game-container {
+            width: 98vw;
+            max-width: 1200px;
+            height: 96vh;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        h1 {
+            font-size: 1.5rem;
+            color: var(--accent-orange);
+            margin-bottom: 5px;
+        }
+
+        #progress-bar-container {
+            width: 100%;
+            height: 8px;
+            background: #eee;
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
+
+        #progress-bar {
+            height: 100%;
+            background: var(--accent-orange);
+            width: 33%;
+            border-radius: 4px;
+            transition: width 0.3s ease;
+        }
+
+        .activity-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            overflow: hidden;
+        }
+
+        .instructions {
+            background: #fff8e1;
+            padding: 8px 12px;
+            border-left: 5px solid var(--accent-yellow);
+            border-radius: 5px;
+            font-size: 0.9rem;
+            line-height: 1.3;
+        }
+
+        .game-area {
+            flex: 1;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            overflow: hidden;
+        }
+
+        .sorting-layout {
+            grid-template-columns: 1fr 1fr 1fr;
+        }
+
+        .matching-layout {
+            grid-template-columns: 220px 1fr 1fr;
+            gap: 8px;
+            align-content: start;
+        }
+
+        .ordering-layout {
+            grid-template-columns: 1fr 1fr;
+        }
+
+        .column {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            overflow-y: auto;
+            padding: 2px;
+        }
+
+        .column-title {
+            font-weight: bold;
+            text-align: center;
+            padding: 6px;
+            background: #f0f0f0;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            color: #555;
+        }
+
+        .drop-zone {
+            min-height: 50px;
+            background: rgba(0,0,0,0.05);
+            border: 2px dashed #ccc;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 5px;
+            transition: all 0.2s;
+            position: relative;
+        }
+
+        .drop-zone.hover {
+            background: rgba(255, 102, 0, 0.1);
+            border-color: var(--accent-orange);
+        }
+
+        .card {
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            padding: 8px 10px;
+            cursor: grab;
+            box-shadow: var(--shadow);
+            width: 100%;
+            font-size: 0.85rem;
+            line-height: 1.2;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .card:active { cursor: grabbing; }
+        .card.dragging { opacity: 0.5; transform: scale(0.98); }
+        
+        .card.correct { border: 2px solid var(--correct-green); background: #e8f8f0; }
+        .card.incorrect { border: 2px solid var(--incorrect-red); background: #fdeaea; }
+        
+        .drop-zone.correct { border-color: var(--correct-green); background: rgba(46, 204, 113, 0.1); }
+        .drop-zone.incorrect { border-color: var(--incorrect-red); background: rgba(231, 76, 60, 0.1); }
+
+        .matching-label {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding-right: 10px;
+            font-weight: bold;
+            font-size: 0.85rem;
+            text-align: right;
+            height: 60px;
+        }
+
+        .matching-slot {
+            height: 60px;
+            width: 100%;
+        }
+
+        .bank {
+            background: #f9f9f9;
+            border-radius: 8px;
+            padding: 10px;
+            border: 1px solid #eee;
+        }
+
+        #feedback-area {
+            position: absolute;
+            right: 15px;
+            top: 80px;
+            width: 320px;
+            max-height: 70%;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+            padding: 15px;
+            display: none;
+            z-index: 100;
+            overflow-y: auto;
+            border-left: 6px solid var(--correct-green);
+        }
+
+        #feedback-area h3 { color: var(--correct-green); margin-bottom: 8px; font-size: 1.2rem; }
+        #feedback-area p { font-size: 0.9rem; line-height: 1.4; color: #444; }
+
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid #eee;
+        }
+
+        .btn {
+            padding: 10px 25px;
+            border: none;
+            border-radius: 25px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+        }
+
+        .btn-check { background: var(--accent-orange); color: white; }
+        .btn-check:hover { background: #e65c00; transform: translateY(-1px); }
+
+        .btn-next { background: var(--correct-green); color: white; display: none; }
+        .btn-next:hover { background: #27ae60; transform: translateY(-1px); }
+
+        .btn-reset { background: #95a5a6; color: white; }
+
+        .hide-bank { display: none !important; }
+        .full-width-game { grid-template-columns: 1fr !important; }
+
+        .order-number {
+            position: absolute;
+            left: -25px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 20px;
+            height: 20px;
+            background: var(--accent-orange);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+<div id="game-container">
+    <header>
+        <h1 id="activity-title">Activity 1: Trauma Findings</h1>
+        <div id="progress-bar-container">
+            <div id="progress-bar"></div>
+        </div>
+    </header>
+
+    <div class="activity-content">
+        <div id="instructions" class="instructions"></div>
+        
+        <div id="game-area" class="game-area"></div>
+    </div>
+
+    <div id="feedback-area">
+        <h3 id="feedback-title">Correct!</h3>
+        <div id="feedback-text"></div>
+    </div>
+
+    <div class="controls">
+        <button id="reset-btn" class="btn btn-reset">Reset</button>
+        <button id="check-btn" class="btn btn-check">Check Answer</button>
+        <button id="next-btn" class="btn btn-next">Next Activity</button>
+    </div>
+</div>
+
+<script>
+    const activities = [
+        {
+            id: 1,
+            title: "Activity 1: Trauma Findings Matching",
+            type: "matching",
+            instructions: "Match each clinical finding to the most likely traumatic injury by dragging the cards to the correct boxes.",
+            conditions: [
+                { id: "c1", label: "Tension Pneumothorax" },
+                { id: "c2", label: "Flail Chest" },
+                { id: "c3", label: "Cardiac Tamponade" },
+                { id: "c4", label: "Basilar Skull Fracture" },
+                { id: "c5", label: "Spinal Cord Injury" }
+            ],
+            choices: [
+                { id: "a1", text: "Unilateral absent breath sounds, respiratory distress, hypotension, JVD", match: "c1" },
+                { id: "a2", text: "Paradoxical movement of a section of the chest wall", match: "c2" },
+                { id: "a3", text: "Hypotension, muffled heart sounds, jugular vein distention", match: "c3" },
+                { id: "a4", text: "Battle sign, raccoon eyes, CSF drainage from nose/ears", match: "c4" },
+                { id: "a5", text: "Loss of sensation and movement below an injury site", match: "c5" }
+            ],
+            rationale: "Recognizing these life-threatening patterns is crucial for NREMT. <strong>Tension Pneumothorax</strong> presents with absent breath sounds and obstructive shock signs. <strong>Cardiac Tamponade</strong> shows Beck's Triad (muffled heart sounds, JVD, hypotension). <strong>Flail Chest</strong> is defined by paradoxical motion. <strong>Basilar Skull Fracture</strong> presents with late signs like Battle sign or raccoon eyes. <strong>Spinal Cord Injury</strong> results in distal neurologic deficits."
+        },
+        {
+            id: 2,
+            title: "Activity 2: Trauma Triage Sorting",
+            type: "sorting",
+            instructions: "Sort the following trauma patients into their correct transport priority categories.",
+            categories: [
+                { id: "cat1", label: "🔴 Immediate / High Priority", color: "#d32f2f" },
+                { id: "cat2", label: "🟡 Delayed / Moderate", color: "#fbc02d" },
+                { id: "cat3", label: "🟢 Low / Minor", color: "#2e7d32" }
+            ],
+            choices: [
+                { id: "pA", text: "Patient A: 24M after MVC, BP 82/50, HR 138, cool/clammy, rigid abdomen.", match: "cat1" },
+                { id: "pB", text: "Patient B: 45F after fall, closed wrist deformity, normal vitals, alert/oriented.", match: "cat3" },
+                { id: "pC", text: "Patient C: 60M after fall, GCS 11, unequal pupils, increasing confusion.", match: "cat1" },
+                { id: "pD", text: "Patient D: 30-year-old with stable pelvic fracture, normal vitals and mental status.", match: "cat2" }
+            ],
+            rationale: "<strong>Patient A</strong> and <strong>Patient C</strong> are High Priority due to signs of decompensated shock (internal bleeding) and potential Traumatic Brain Injury (ICP signs). <strong>Patient D</strong> has a significant injury (pelvis) but is currently stable, making them Delayed. <strong>Patient B</strong> has an isolated extremity injury with normal vitals, placing them in the Low Priority category."
+        },
+        {
+            id: 3,
+            title: "Activity 3: Hemorrhage Control Ordering",
+            type: "ordering",
+            instructions: "A patient has a large bleeding wound to the thigh with blood pooling. Order the management steps correctly.",
+            slots: 5,
+            choices: [
+                { id: "o1", text: "Ensure scene safety and use appropriate PPE", order: 1 },
+                { id: "o2", text: "Identify and control life-threatening hemorrhage", order: 2 },
+                { id: "o3", text: "Perform a rapid trauma assessment", order: 3 },
+                { id: "o4", text: "Apply a tourniquet if bleeding is not controlled", order: 4 },
+                { id: "o5", text: "Reassess circulation and transport rapidly", order: 5 }
+            ],
+            rationale: "Following the <strong>XABCDE</strong> approach, you must first ensure safety, then immediately address life-threatening bleeding (X) before moving to the full assessment. If direct pressure/initial steps fail, a tourniquet is the definitive field treatment for extremity hemorrhage. Rapid transport and reassessment are the final priorities."
+        }
+    ];
+
+    let currentActivityIndex = 0;
+    let draggedElement = null;
+
+    const activityTitle = document.getElementById('activity-title');
+    const progressBar = document.getElementById('progress-bar');
+    const instructions = document.getElementById('instructions');
+    const gameArea = document.getElementById('game-area');
+    const feedbackArea = document.getElementById('feedback-area');
+    const feedbackText = document.getElementById('feedback-text');
+    const checkBtn = document.getElementById('check-btn');
+    const nextBtn = document.getElementById('next-btn');
+    const resetBtn = document.getElementById('reset-btn');
+
+    function initActivity() {
+        const activity = activities[currentActivityIndex];
+        activityTitle.innerText = activity.title;
+        instructions.innerText = activity.instructions;
+        progressBar.style.width = `${((currentActivityIndex + 1) / activities.length) * 100}%`;
+        
+        gameArea.innerHTML = '';
+        gameArea.className = 'game-area';
+        feedbackArea.style.display = 'none';
+        nextBtn.style.display = 'none';
+        checkBtn.style.display = 'block';
+        
+        if (activity.type === 'matching') {
+            gameArea.classList.add('matching-layout');
+            
+            const labelsCol = document.createElement('div');
+            labelsCol.className = 'column';
+            activity.conditions.forEach(cond => {
+                const label = document.createElement('div');
+                label.className = 'matching-label';
+                label.innerText = cond.label;
+                labelsCol.appendChild(label);
+            });
+            
+            const zonesCol = document.createElement('div');
+            zonesCol.className = 'column';
+            activity.conditions.forEach(cond => {
+                const zone = document.createElement('div');
+                zone.className = 'drop-zone matching-slot';
+                zone.dataset.match = cond.id;
+                zone.addEventListener('dragover', handleDragOver);
+                zone.addEventListener('dragleave', handleDragLeave);
+                zone.addEventListener('drop', handleDrop);
+                zonesCol.appendChild(zone);
+            });
+            
+            const bankCol = document.createElement('div');
+            bankCol.className = 'column bank';
+            bankCol.id = 'bank';
+            const shuffled = [...activity.choices].sort(() => Math.random() - 0.5);
+            shuffled.forEach(choice => {
+                const card = createCard(choice);
+                bankCol.appendChild(card);
+            });
+            
+            gameArea.appendChild(labelsCol);
+            gameArea.appendChild(zonesCol);
+            gameArea.appendChild(bankCol);
+            
+        } else if (activity.type === 'sorting') {
+            gameArea.classList.add('sorting-layout');
+            
+            const leftCol = document.createElement('div');
+            leftCol.className = 'column';
+            const cat1 = activity.categories[0];
+            const title1 = document.createElement('div');
+            title1.className = 'column-title';
+            title1.innerText = cat1.label;
+            leftCol.appendChild(title1);
+            const zone1 = document.createElement('div');
+            zone1.className = 'drop-zone';
+            zone1.style.flex = '1';
+            zone1.dataset.match = cat1.id;
+            zone1.dataset.multi = "true";
+            zone1.addEventListener('dragover', handleDragOver);
+            zone1.addEventListener('dragleave', handleDragLeave);
+            zone1.addEventListener('drop', handleDrop);
+            leftCol.appendChild(zone1);
+            
+            const bankCol = document.createElement('div');
+            bankCol.className = 'column bank';
+            bankCol.id = 'bank';
+            const titleBank = document.createElement('div');
+            titleBank.className = 'column-title';
+            titleBank.innerText = "Patients to Sort";
+            bankCol.appendChild(titleBank);
+            const shuffled = [...activity.choices].sort(() => Math.random() - 0.5);
+            shuffled.forEach(choice => {
+                const card = createCard(choice);
+                bankCol.appendChild(card);
+            });
+            
+            const rightCol = document.createElement('div');
+            rightCol.className = 'column';
+            
+            // Delayed
+            const cat2 = activity.categories[1];
+            const title2 = document.createElement('div');
+            title2.className = 'column-title';
+            title2.innerText = cat2.label;
+            rightCol.appendChild(title2);
+            const zone2 = document.createElement('div');
+            zone2.className = 'drop-zone';
+            zone2.style.height = '45%';
+            zone2.dataset.match = cat2.id;
+            zone2.dataset.multi = "true";
+            zone2.addEventListener('dragover', handleDragOver);
+            zone2.addEventListener('dragleave', handleDragLeave);
+            zone2.addEventListener('drop', handleDrop);
+            rightCol.appendChild(zone2);
+            
+            // Minor
+            const cat3 = activity.categories[2];
+            const title3 = document.createElement('div');
+            title3.className = 'column-title';
+            title3.innerText = cat3.label;
+            rightCol.appendChild(title3);
+            const zone3 = document.createElement('div');
+            zone3.className = 'drop-zone';
+            zone3.style.height = '45%';
+            zone3.dataset.match = cat3.id;
+            zone3.dataset.multi = "true";
+            zone3.addEventListener('dragover', handleDragOver);
+            zone3.addEventListener('dragleave', handleDragLeave);
+            zone3.addEventListener('drop', handleDrop);
+            rightCol.appendChild(zone3);
+            
+            gameArea.appendChild(leftCol);
+            gameArea.appendChild(bankCol);
+            gameArea.appendChild(rightCol);
+            
+        } else if (activity.type === 'ordering') {
+            gameArea.classList.add('ordering-layout');
+            
+            const orderCol = document.createElement('div');
+            orderCol.className = 'column';
+            for(let i=1; i<=activity.slots; i++) {
+                const zone = document.createElement('div');
+                zone.className = 'drop-zone';
+                zone.style.height = '70px';
+                zone.dataset.order = i;
+                
+                const num = document.createElement('div');
+                num.className = 'order-number';
+                num.innerText = i;
+                zone.appendChild(num);
+                
+                zone.addEventListener('dragover', handleDragOver);
+                zone.addEventListener('dragleave', handleDragLeave);
+                zone.addEventListener('drop', handleDrop);
+                orderCol.appendChild(zone);
+            }
+            
+            const bankCol = document.createElement('div');
+            bankCol.className = 'column bank';
+            bankCol.id = 'bank';
+            const shuffled = [...activity.choices].sort(() => Math.random() - 0.5);
+            shuffled.forEach(choice => {
+                const card = createCard(choice);
+                bankCol.appendChild(card);
+            });
+            
+            gameArea.appendChild(orderCol);
+            gameArea.appendChild(bankCol);
+        }
+    }
+
+    function createCard(choice) {
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.draggable = true;
+        card.innerText = choice.text;
+        card.dataset.id = choice.id;
+        if(choice.match) card.dataset.match = choice.match;
+        if(choice.order) card.dataset.order = choice.order;
+        
+        card.addEventListener('dragstart', handleDragStart);
+        card.addEventListener('dragend', handleDragEnd);
+        
+        // Mobile touch support
+        card.addEventListener('touchstart', handleTouchStart, {passive: false});
+        card.addEventListener('touchmove', handleTouchMove, {passive: false});
+        card.addEventListener('touchend', handleTouchEnd);
+        
+        return card;
+    }
+
+    function handleDragStart(e) {
+        draggedElement = e.target;
+        e.target.classList.add('dragging');
+        
+        // Clear previous highlights from zones and cards
+        document.querySelectorAll('.drop-zone').forEach(z => z.classList.remove('correct', 'incorrect'));
+        document.querySelectorAll('.card').forEach(c => c.classList.remove('correct', 'incorrect'));
+    }
+
+    function handleDragEnd(e) {
+        e.target.classList.remove('dragging');
+    }
+
+    function handleDragOver(e) {
+        e.preventDefault();
+        if (e.currentTarget.classList.contains('drop-zone')) {
+            e.currentTarget.classList.add('hover');
+        }
+    }
+
+    function handleDragLeave(e) {
+        e.currentTarget.classList.remove('hover');
+    }
+
+    function handleDrop(e) {
+        e.preventDefault();
+        const zone = e.currentTarget;
+        zone.classList.remove('hover');
+        
+        if (draggedElement) {
+            if (!zone.dataset.multi) {
+                const existingCard = zone.querySelector('.card');
+                if (existingCard) document.getElementById('bank').appendChild(existingCard);
+            }
+            zone.appendChild(draggedElement);
+        }
+    }
+
+    function handleTouchStart(e) {
+        draggedElement = e.target;
+        e.target.classList.add('dragging');
+    }
+
+    function handleTouchMove(e) {
+        e.preventDefault();
+        const touch = e.touches[0];
+        const target = document.elementFromPoint(touch.clientX, touch.clientY);
+        document.querySelectorAll('.drop-zone').forEach(z => z.classList.remove('hover'));
+        if (target && target.closest('.drop-zone')) target.closest('.drop-zone').classList.add('hover');
+    }
+
+    function handleTouchEnd(e) {
+        const touch = e.changedTouches[0];
+        const target = document.elementFromPoint(touch.clientX, touch.clientY);
+        const zone = target ? target.closest('.drop-zone') : null;
+        if (draggedElement) {
+            draggedElement.classList.remove('dragging');
+            if (zone) {
+                zone.classList.remove('hover');
+                if (!zone.dataset.multi) {
+                    const existingCard = zone.querySelector('.card');
+                    if (existingCard) document.getElementById('bank').appendChild(existingCard);
+                }
+                zone.appendChild(draggedElement);
+            }
+        }
+        draggedElement = null;
+    }
+
+    checkBtn.onclick = () => {
+        const activity = activities[currentActivityIndex];
+        const zones = document.querySelectorAll('.drop-zone');
+        let allCorrect = true;
+        let anyEmpty = false;
+
+        // Clear previous highlights
+        zones.forEach(z => z.classList.remove('correct', 'incorrect'));
+        document.querySelectorAll('.card').forEach(c => c.classList.remove('correct', 'incorrect'));
+
+        zones.forEach(zone => {
+            const cards = zone.querySelectorAll('.card');
+            if (cards.length === 0) {
+                if (activity.type !== 'sorting') anyEmpty = true;
+                return;
+            }
+
+            cards.forEach(card => {
+                if (activity.type === 'matching' || activity.type === 'sorting') {
+                    if (card.dataset.match === zone.dataset.match) {
+                        card.classList.add('correct');
+                    } else {
+                        card.classList.add('incorrect');
+                        allCorrect = false;
+                    }
+                } else if (activity.type === 'ordering') {
+                    if (card.dataset.order === zone.dataset.order) {
+                        card.classList.add('correct');
+                        zone.classList.add('correct');
+                    } else {
+                        card.classList.add('incorrect');
+                        zone.classList.add('incorrect');
+                        allCorrect = false;
+                    }
+                }
+            });
+        });
+
+        const bankCards = document.getElementById('bank').querySelectorAll('.card');
+        if (bankCards.length > 0) anyEmpty = true;
+
+        if (allCorrect && !anyEmpty) {
+            showRationale(activity.rationale);
+        } else if (anyEmpty) {
+            alert("Please place all items before checking.");
+            document.querySelectorAll('.card').forEach(c => c.classList.remove('correct', 'incorrect'));
+            zones.forEach(z => z.classList.remove('correct', 'incorrect'));
+        }
+    };
+
+    function showRationale(text) {
+        feedbackText.innerHTML = `<p>${text}</p>`;
+        feedbackArea.style.display = 'block';
+        const bank = document.getElementById('bank');
+        if (bank) bank.classList.add('hide-bank');
+        gameArea.classList.add('full-width-game');
+        checkBtn.style.display = 'none';
+        nextBtn.style.display = 'block';
+        if (currentActivityIndex === activities.length - 1) nextBtn.innerText = "Finish Review";
+    }
+
+    nextBtn.onclick = () => {
+        if (currentActivityIndex < activities.length - 1) {
+            currentActivityIndex++;
+            initActivity();
+        } else {
+            alert("Congratulations! You've completed the NREMT Trauma Emergencies Review.");
+            currentActivityIndex = 0;
+            initActivity();
+        }
+    };
+
+    resetBtn.onclick = () => initActivity();
+    initActivity();
+</script>
+
+</body>
+</html>
