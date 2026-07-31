@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NREMT Documentation Errors Quiz</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        .fade-in { animation: fadeIn 0.3s ease-in; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body class="bg-slate-50 min-h-screen flex flex-col items-center py-8 px-4">
+
+    <div class="max-w-2xl w-full bg-white rounded-xl shadow-lg overflow-hidden border border-slate-200">
+        <!-- Header -->
+        <div class="bg-indigo-700 p-6 text-white text-center">
+            <h1 class="text-2xl font-bold">Documentation Errors Practice</h1>
+            <p class="text-indigo-100 text-sm mt-1">NREMT Cognitive Exam (EMS Operations — PCRs)</p>
+        </div>
+
+        <!-- Progress Bar -->
+        <div class="w-full bg-slate-200 h-2">
+            <div id="progress" class="bg-indigo-500 h-2 transition-all duration-500" style="width: 0%"></div>
+        </div>
+
+        <div id="quiz-container" class="p-6">
+            <!-- Question Section -->
+            <div id="question-box" class="fade-in">
+                <div class="flex justify-between items-center mb-4">
+                    <span id="question-number" class="text-xs font-bold text-slate-500 uppercase tracking-wider">Question 1 of 10</span>
+                    <span id="score-display" class="text-xs font-bold text-indigo-600 bg-indigo-50 px-2 py-1 rounded">Score: 0</span>
+                </div>
+                
+                <h2 id="question-text" class="text-lg font-semibold text-slate-800 mb-6 leading-snug">
+                    Loading question...
+                </h2>
+
+                <div id="options" class="space-y-3">
+                    <!-- Options injected here -->
+                </div>
+
+                <!-- Feedback Section (Hidden by default) -->
+                <div id="feedback" class="mt-6 p-4 rounded-lg hidden border">
+                    <div class="flex items-center mb-2">
+                        <span id="feedback-icon" class="mr-2 font-bold"></span>
+                        <span id="feedback-status" class="font-bold text-sm uppercase"></span>
+                    </div>
+                    <p id="feedback-text" class="text-sm text-slate-600 italic"></p>
+                </div>
+
+                <!-- Navigation -->
+                <button id="next-btn" class="mt-8 w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-6 rounded-lg transition-colors hidden shadow-md">
+                    Next Question
+                </button>
+            </div>
+
+            <!-- Results Section (Hidden by default) -->
+            <div id="results-box" class="hidden text-center py-10 fade-in">
+                <div class="text-6xl mb-4">📋</div>
+                <h2 class="text-3xl font-bold text-slate-800 mb-2">Quiz Complete!</h2>
+                <p class="text-slate-500 mb-6">You've finished the NREMT Documentation Errors assessment.</p>
+                
+                <div class="inline-block p-8 bg-indigo-50 rounded-2xl mb-8 border border-indigo-100">
+                    <div id="final-score" class="text-5xl font-bold text-indigo-700 mb-2">0/10</div>
+                    <div id="percentage" class="text-xl font-semibold text-indigo-500">0%</div>
+                </div>
+
+                <div id="result-message" class="mb-8 px-4 text-slate-700 italic"></div>
+                
+                <!-- Error Rules Review Card -->
+                <div class="bg-slate-100 p-6 rounded-xl border border-slate-200 text-left mb-8 shadow-sm">
+                    <h3 class="text-base font-bold text-slate-800 mb-3 flex items-center">
+                        <span class="mr-2 text-indigo-600">⭐</span> NREMT Documentation Error Rules to Remember:
+                    </h3>
+                    <ul class="space-y-2 text-sm text-slate-700">
+                        <li class="flex items-start"><span class="mr-2 text-indigo-600">•</span> Document facts, not opinions</li>
+                        <li class="flex items-start"><span class="mr-2 text-indigo-600">•</span> Never document care you did not provide</li>
+                        <li class="flex items-start"><span class="mr-2 text-indigo-600">•</span> Never falsify or delete records</li>
+                        <li class="flex items-start"><span class="mr-2 text-indigo-600">•</span> Include reassessment findings</li>
+                        <li class="flex items-start"><span class="mr-2 text-indigo-600">•</span> Document patient refusal carefully</li>
+                        <li class="flex items-start"><span class="mr-2 text-indigo-600">•</span> Protect patient confidentiality</li>
+                        <li class="flex items-start"><span class="mr-2 text-indigo-600">•</span> PCRs are legal documents</li>
+                    </ul>
+                </div>
+                
+                <button onclick="location.reload()" class="bg-slate-800 hover:bg-slate-900 text-white font-bold py-3 px-8 rounded-lg transition-colors shadow-md">
+                    Try Again
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const questions = [
+            {
+                q: "Question 1 — Objective Documentation<br><br>An EMT documents the following statement in a patient care report:<br>\"Patient was drunk and acting stupid when we arrived.\"<br><br>Which correction would make this documentation more appropriate?",
+                options: [
+                    "Patient appeared intoxicated and was uncooperative",
+                    "Patient had slurred speech, smelled of alcohol, and was unable to answer questions appropriately",
+                    "Patient was obviously abusing alcohol",
+                    "Patient was intoxicated and refused to cooperate with EMS"
+                ],
+                answer: 1,
+                explanation: "Documentation should be objective and based on observations, not opinions or judgments. Avoid subjective labels like 'drunk' or 'stupid'; document specific behaviors, physical findings, and patient statements."
+            },
+            {
+                q: "Question 2 — Documenting Care Not Performed<br><br>An EMT completes a PCR after transporting a patient with chest pain. The EMT accidentally documents that aspirin was administered, but aspirin was never given.<br><br>What should the EMT do?",
+                options: [
+                    "Leave the report unchanged because the error was accidental",
+                    "Delete the entire report and start over",
+                    "Correct the documentation according to agency policy",
+                    "Ask another EMT to change the report"
+                ],
+                answer: 2,
+                explanation: "PCRs are legal documents. Never alter information improperly, hide mistakes, or document treatment that was not performed. Errors should be corrected according to approved procedures."
+            },
+            {
+                q: "Question 3 — Opinion vs Fact<br><br>Which statement is MOST appropriate for an EMT to document?",
+                options: [
+                    "Patient was having a panic attack",
+                    "Patient was exaggerating pain",
+                    "Patient stated, \"My chest feels like pressure.\"",
+                    "Patient was emotionally unstable"
+                ],
+                answer: 2,
+                explanation: "Document patient quotes, assessment findings, and objective observations. Do not document diagnoses you cannot confirm or personal opinions."
+            },
+            {
+                q: "Question 4 — Missing Documentation<br><br>An EMT completes a PCR but forgets to document the patient's vital signs after treatment.<br><br>Why is this a significant documentation error?",
+                options: [
+                    "Vital signs are optional if treatment was successful",
+                    "The PCR does not show the patient's response to care",
+                    "Only the hospital needs vital signs",
+                    "EMTs only need to document medications"
+                ],
+                answer: 1,
+                explanation: "Reassessment findings are critical because they demonstrate patient condition over time, response to treatment, and medical necessity."
+            },
+            {
+                q: "Question 5 — Confidentiality Error<br><br>An EMT posts on social media:<br>\"Crazy trauma call today! 25-year-old male hit by a truck near downtown. You wouldn't believe what I saw!\"<br>No name is included.<br><br>Which statement is correct?",
+                options: [
+                    "This is acceptable because the patient's name was not included",
+                    "This violates patient confidentiality",
+                    "This is allowed if the EMT deletes it later",
+                    "This is acceptable if coworkers cannot identify the patient"
+                ],
+                answer: 1,
+                explanation: "Protected information may include location, age, circumstances, and any details that could identify a patient. Social media posts about calls violate confidentiality."
+            },
+            {
+                q: "Question 6 — Late Documentation<br><br>An EMT completes a PCR several hours after the call because the ambulance was busy.<br><br>Which statement is correct?",
+                options: [
+                    "Late documentation is acceptable if information is accurate",
+                    "PCRs should only be completed before leaving the scene",
+                    "Documentation is unnecessary for non-transport calls",
+                    "Another EMT should complete the PCR"
+                ],
+                answer: 0,
+                explanation: "Documentation should be completed as soon as possible, but accuracy is more important than speed. Never guess information, create false times, or leave information incomplete."
+            },
+            {
+                q: "Question 7 — Refusal Documentation<br><br>A competent adult patient refuses transport after evaluation.<br><br>Which documentation is MOST important?",
+                options: [
+                    "The EMT's opinion that the patient made a bad decision",
+                    "The patient's refusal, risks explained, and signatures obtained",
+                    "A statement that the patient was difficult",
+                    "The patient's insurance information"
+                ],
+                answer: 1,
+                explanation: "Refusal documentation should include patient decision-making capacity, risks explained, alternatives offered, patient understanding, and signatures/witnesses."
+            },
+            {
+                q: "Question 8 — Changing a PCR<br><br>An EMT realizes after submitting a PCR that the patient's blood pressure was entered incorrectly.<br><br>What should the EMT do?",
+                options: [
+                    "Ignore the error because the call is complete",
+                    "Correct the error using the approved amendment process",
+                    "Delete the PCR",
+                    "Ask the receiving nurse to correct it"
+                ],
+                answer: 1,
+                explanation: "Never erase or falsify a legal record. Corrections must follow agency procedures and maintain original documentation integrity."
+            },
+            {
+                q: "Question 9 — Documentation of Mechanism<br><br>Which documentation is MOST appropriate after a motor vehicle collision?",
+                options: [
+                    "Patient was in a bad accident",
+                    "Patient had a severe crash",
+                    "Patient was the restrained driver of a vehicle with front-end damage after a 40 mph collision",
+                    "Patient was lucky to survive"
+                ],
+                answer: 2,
+                explanation: "Good documentation includes specific mechanism, observed damage, patient position, and safety equipment."
+            },
+            {
+                q: "Question 10 — Legal Importance of PCR<br><br>Why is the patient care report considered a legal document?",
+                options: [
+                    "It determines insurance payments only",
+                    "It records patient care and may be used in legal proceedings",
+                    "It replaces verbal communication",
+                    "It allows EMTs to avoid speaking with physicians"
+                ],
+                answer: 1,
+                explanation: "PCRs may be reviewed by medical directors, hospitals, attorneys, courts, and quality improvement committees."
+            }
+        ];
+
+        let currentQuestion = 0;
+        let score = 0;
+        let answered = false;
+
+        const questionText = document.getElementById('question-text');
+        const optionsContainer = document.getElementById('options');
+        const questionNumber = document.getElementById('question-number');
+        const scoreDisplay = document.getElementById('score-display');
+        const feedback = document.getElementById('feedback');
+        const feedbackText = document.getElementById('feedback-text');
+        const feedbackStatus = document.getElementById('feedback-status');
+        const feedbackIcon = document.getElementById('feedback-icon');
+        const nextBtn = document.getElementById('next-btn');
+        const progressBar = document.getElementById('progress');
+
+        function loadQuestion() {
+            answered = false;
+            const q = questions[currentQuestion];
+            
+            feedback.classList.add('hidden');
+            nextBtn.classList.add('hidden');
+            optionsContainer.innerHTML = '';
+            
+            questionNumber.innerText = `Question ${currentQuestion + 1} of ${questions.length}`;
+            questionText.innerHTML = q.q;
+            progressBar.style.width = `${((currentQuestion) / questions.length) * 100}%`;
+
+            q.options.forEach((opt, index) => {
+                const btn = document.createElement('button');
+                btn.className = "w-full text-left p-4 rounded-lg border-2 border-slate-200 hover:border-indigo-300 hover:bg-indigo-50 transition-all font-medium text-slate-700 flex items-start";
+                btn.innerHTML = `<span class="bg-slate-100 text-slate-500 w-6 h-6 rounded-full inline-flex items-center justify-center mr-3 flex-shrink-0 text-xs">${String.fromCharCode(65 + index)}</span> <span>${opt}</span>`;
+                btn.onclick = () => checkAnswer(index, btn);
+                optionsContainer.appendChild(btn);
+            });
+        }
+
+        function checkAnswer(selectedIndex, clickedBtn) {
+            if (answered) return;
+            answered = true;
+
+            const correct = questions[currentQuestion].answer;
+            const allBtns = optionsContainer.querySelectorAll('button');
+
+            if (selectedIndex === correct) {
+                score++;
+                scoreDisplay.innerText = `Score: ${score}`;
+                clickedBtn.classList.replace('border-slate-200', 'border-green-500');
+                clickedBtn.classList.add('bg-green-50');
+                showFeedback(true);
+            } else {
+                clickedBtn.classList.replace('border-slate-200', 'border-red-500');
+                clickedBtn.classList.add('bg-red-50');
+                allBtns[correct].classList.replace('border-slate-200', 'border-green-500');
+                allBtns[correct].classList.add('bg-green-50');
+                showFeedback(false);
+            }
+
+            allBtns.forEach(btn => btn.disabled = true);
+            nextBtn.classList.remove('hidden');
+            
+            if (currentQuestion === questions.length - 1) {
+                nextBtn.innerText = "See Results & Error Rules";
+            }
+        }
+
+        function showFeedback(isCorrect) {
+            feedback.classList.remove('hidden');
+            if (isCorrect) {
+                feedback.classList.add('bg-green-50', 'border-green-100');
+                feedback.classList.remove('bg-red-50', 'border-red-100');
+                feedbackStatus.innerText = "Correct";
+                feedbackStatus.className = "font-bold text-sm uppercase text-green-700";
+                feedbackIcon.innerText = "✓";
+                feedbackIcon.className = "mr-2 font-bold text-green-700";
+            } else {
+                feedback.classList.add('bg-red-50', 'border-red-100');
+                feedback.classList.remove('bg-green-50', 'border-green-100');
+                feedbackStatus.innerText = "Incorrect";
+                feedbackStatus.className = "font-bold text-sm uppercase text-red-700";
+                feedbackIcon.innerText = "✗";
+                feedbackIcon.className = "mr-2 font-bold text-red-700";
+            }
+            feedbackText.innerText = questions[currentQuestion].explanation;
+        }
+
+        nextBtn.onclick = () => {
+            currentQuestion++;
+            if (currentQuestion < questions.length) {
+                loadQuestion();
+            } else {
+                showResults();
+            }
+        };
+
+        function showResults() {
+            document.getElementById('question-box').classList.add('hidden');
+            const resultsBox = document.getElementById('results-box');
+            resultsBox.classList.remove('hidden');
+            progressBar.style.width = '100%';
+
+            const finalScore = document.getElementById('final-score');
+            const percentage = document.getElementById('percentage');
+            const message = document.getElementById('result-message');
+
+            const percent = Math.round((score / questions.length) * 100);
+            finalScore.innerText = `${score}/${questions.length}`;
+            percentage.innerText = `${percent}%`;
+
+            if (percent >= 85) {
+                message.innerText = "Outstanding job! You have demonstrated a strong legal and clinical understanding of proper EMS documentation and PCR standards.";
+            } else if (percent >= 70) {
+                message.innerText = "Good effort! Review the rules regarding objective wording, patient confidentiality, and proper record amendment procedures.";
+            } else {
+                message.innerText = "Keep practicing! Revisit the NREMT documentation rules below to ensure compliance with legal and objective charting standards.";
+            }
+        }
+
+        loadQuestion();
+    </script>
+</body>
+</html>
