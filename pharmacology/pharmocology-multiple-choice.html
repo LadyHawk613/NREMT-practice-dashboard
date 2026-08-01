@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NREMT Pharmacology Quiz - Lesson 6</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        .fade-in { animation: fadeIn 0.3s ease-in; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body class="bg-slate-50 min-h-screen flex flex-col items-center py-8 px-4">
+
+    <div class="max-w-2xl w-full bg-white rounded-xl shadow-lg overflow-hidden border border-slate-200">
+        <!-- Header -->
+        <div class="bg-blue-700 p-6 text-white text-center">
+            <h1 class="text-2xl font-bold">Pharmacology Practice</h1>
+            <p class="text-blue-100 text-sm mt-1">NREMT EMT National Education Standards</p>
+        </div>
+
+        <!-- Progress Bar -->
+        <div class="w-full bg-slate-200 h-2">
+            <div id="progress" class="bg-blue-500 h-2 transition-all duration-500" style="width: 0%"></div>
+        </div>
+
+        <div id="quiz-container" class="p-6">
+            <!-- Question Section -->
+            <div id="question-box" class="fade-in">
+                <div class="flex justify-between items-center mb-4">
+                    <span id="question-number" class="text-xs font-bold text-slate-500 uppercase tracking-wider">Question 1 of 20</span>
+                    <span id="score-display" class="text-xs font-bold text-blue-600 bg-blue-50 px-2 py-1 rounded">Score: 0</span>
+                </div>
+                
+                <h2 id="question-text" class="text-lg font-semibold text-slate-800 mb-6 leading-snug">
+                    Loading question...
+                </h2>
+
+                <div id="options" class="space-y-3">
+                    <!-- Options injected here -->
+                </div>
+
+                <!-- Feedback Section (Hidden by default) -->
+                <div id="feedback" class="mt-6 p-4 rounded-lg hidden border">
+                    <div class="flex items-center mb-2">
+                        <span id="feedback-icon" class="mr-2 font-bold"></span>
+                        <span id="feedback-status" class="font-bold text-sm uppercase"></span>
+                    </div>
+                    <p id="feedback-text" class="text-sm text-slate-600 italic"></p>
+                </div>
+
+                <!-- Navigation -->
+                <button id="next-btn" class="mt-8 w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg transition-colors hidden shadow-md">
+                    Next Question
+                </button>
+            </div>
+
+            <!-- Results Section (Hidden by default) -->
+            <div id="results-box" class="hidden text-center py-10 fade-in">
+                <div class="text-6xl mb-4">🚑</div>
+                <h2 class="text-3xl font-bold text-slate-800 mb-2">Quiz Complete!</h2>
+                <p class="text-slate-500 mb-6">You've finished the NREMT Pharmacology assessment.</p>
+                
+                <div class="inline-block p-8 bg-blue-50 rounded-2xl mb-8 border border-blue-100">
+                    <div id="final-score" class="text-5xl font-bold text-blue-700 mb-2">0/20</div>
+                    <div id="percentage" class="text-xl font-semibold text-blue-500">0%</div>
+                </div>
+
+                <div id="result-message" class="mb-8 px-4 text-slate-700 italic"></div>
+                
+                <button onclick="location.reload()" class="bg-slate-800 hover:bg-slate-900 text-white font-bold py-3 px-8 rounded-lg transition-colors shadow-md">
+                    Try Again
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const questions = [
+            {
+                q: "A 67-year-old male complains of crushing substernal chest pain. BP is 88/56 mmHg. He has prescribed nitroglycerin. What should the EMT do?",
+                options: ["Assist with nitroglycerin immediately", "Administer aspirin only", "Withhold nitroglycerin and continue assessment", "Give oxygen and transport before reassessing"],
+                answer: 2,
+                explanation: "Nitroglycerin is contraindicated when systolic BP is below 90–100 mmHg (follow local protocol). Assisting with nitroglycerin could worsen hypotension."
+            },
+            {
+                q: "Which patient should NOT receive aspirin?",
+                options: ["Chest pain with no allergy", "Chest pain with history of hypertension", "Chest pain and active gastrointestinal bleeding", "Chest pain with diabetes"],
+                answer: 2,
+                explanation: "Active bleeding is a contraindication because aspirin inhibits platelet aggregation and increases bleeding."
+            },
+            {
+                q: "A patient has facial swelling, wheezing, and difficulty breathing after a bee sting. The EMT should FIRST:",
+                options: ["Assist with epinephrine administration", "Administer aspirin", "Give oral glucose", "Obtain a 12-lead ECG"],
+                answer: 0,
+                explanation: "This patient has anaphylaxis. Epinephrine is the priority medication because it reverses airway swelling and bronchoconstriction."
+            },
+            {
+                q: "A diabetic patient is awake but confused. Blood glucose is 52 mg/dL. Which medication is appropriate?",
+                options: ["Aspirin", "Nitroglycerin", "Oral glucose", "Albuterol"],
+                answer: 2,
+                explanation: "An awake patient who can swallow safely should receive oral glucose for symptomatic hypoglycemia."
+            },
+            {
+                q: "Which patient should NOT receive oral glucose?",
+                options: ["Alert diabetic", "Patient able to swallow", "Unresponsive diabetic", "Awake diabetic with blood glucose of 55 mg/dL"],
+                answer: 2,
+                explanation: "Oral glucose is contraindicated in patients unable to protect their airway."
+            },
+            {
+                q: "A patient with asthma has wheezing and shortness of breath. Which medication may the EMT assist with?",
+                options: ["Aspirin", "Nitroglycerin", "Albuterol inhaler", "Oral glucose"],
+                answer: 2,
+                explanation: "Albuterol is a bronchodilator used for bronchospasm associated with asthma."
+            },
+            {
+                q: "Before assisting with any medication, the EMT should verify all EXCEPT:",
+                options: ["Right patient", "Right medication", "Right route", "Patient's insurance provider"],
+                answer: 3,
+                explanation: "Medication administration requires verification of the medication rights, not insurance information."
+            },
+            {
+                q: "Nitroglycerin tablets are administered by which route?",
+                options: ["Oral", "Intramuscular", "Sublingual", "Intravenous"],
+                answer: 2,
+                explanation: "Nitroglycerin tablets dissolve under the tongue for rapid absorption."
+            },
+            {
+                q: "Why should the patient hold their breath after using an inhaler?",
+                options: ["Prevent coughing", "Improve medication absorption into the lungs", "Increase blood pressure", "Reduce heart rate"],
+                answer: 1,
+                explanation: "Holding the breath allows medication to settle deeper into the lower airways."
+            },
+            {
+                q: "Activated charcoal works primarily by:",
+                options: ["Neutralizing acid", "Binding certain poisons within the gastrointestinal tract", "Increasing blood sugar", "Slowing heart rate"],
+                answer: 1,
+                explanation: "Activated charcoal adsorbs many toxins in the GI tract before absorption."
+            },
+            {
+                q: "A patient has pinpoint pupils and slow respirations. Which medication is indicated?",
+                options: ["Aspirin", "Naloxone", "Nitroglycerin", "Oral glucose"],
+                answer: 1,
+                explanation: "Naloxone reverses opioid-induced respiratory depression."
+            },
+            {
+                q: "Which patient most clearly requires high-concentration oxygen?",
+                options: ["Stable ankle injury", "Chest pain with SpO₂ 98%", "Respiratory distress with SpO₂ 84%", "Headache after eating"],
+                answer: 2,
+                explanation: "Patients with hypoxia require supplemental oxygen titrated according to local protocols."
+            },
+            {
+                q: "Before assisting with a patient's prescribed medication, the EMT should follow:",
+                options: ["Family instructions", "Internet recommendations", "Local protocol and medical direction", "Hospital billing policy"],
+                answer: 2,
+                explanation: "Medication administration follows local protocols and physician medical direction."
+            },
+            {
+                q: "Which is an expected side effect of epinephrine?",
+                options: ["Bradycardia", "Increased heart rate", "Hypoglycemia", "Respiratory depression"],
+                answer: 1,
+                explanation: "Epinephrine stimulates alpha and beta receptors, increasing heart rate and blood pressure."
+            },
+            {
+                q: "Before assisting with another dose of nitroglycerin, the EMT must reassess:",
+                options: ["Blood pressure", "Blood glucose", "Temperature", "Skin color only"],
+                answer: 0,
+                explanation: "Nitroglycerin may significantly lower blood pressure. Reassessment is required before each dose."
+            },
+            {
+                q: "The BEST way to prevent medication errors is to:",
+                options: ["Ask another EMT to administer all medications", "Verify the medication rights every time", "Only administer medications in the ambulance", "Skip reassessment"],
+                answer: 1,
+                explanation: "Following the medication rights greatly reduces medication errors."
+            },
+            {
+                q: "The standard EMT aspirin dose for suspected acute coronary syndrome is:",
+                options: ["81 mg", "162–324 mg", "650 mg", "1000 mg"],
+                answer: 1,
+                explanation: "Current EMT practice typically administers 162–324 mg of chewable aspirin, depending on local protocol."
+            },
+            {
+                q: "Which medication should NOT be combined with nitroglycerin because of the risk of severe hypotension?",
+                options: ["Acetaminophen", "Sildenafil (Viagra)", "Albuterol", "Oral glucose"],
+                answer: 1,
+                explanation: "Nitroglycerin is contraindicated in patients who have recently taken phosphodiesterase-5 inhibitors (ED drugs)."
+            },
+            {
+                q: "After assisting with medication administration, the EMT should document:",
+                options: ["Medication, dose, route, time, and patient response", "Patient's favorite pharmacy", "Insurance information", "Hospital room number"],
+                answer: 0,
+                explanation: "Complete documentation includes the medication administered, dose, route, time, and the patient's response."
+            },
+            {
+                q: "After administering any medication, the EMT's NEXT priority is to:",
+                options: ["Complete the PCR after arriving at the hospital", "Continue reassessing the patient's condition and vital signs", "Clean the ambulance", "Contact the patient's family"],
+                answer: 1,
+                explanation: "The NREMT emphasizes continuous reassessment after any intervention."
+            }
+        ];
+
+        let currentQuestion = 0;
+        let score = 0;
+        let answered = false;
+
+        const questionText = document.getElementById('question-text');
+        const optionsContainer = document.getElementById('options');
+        const questionNumber = document.getElementById('question-number');
+        const scoreDisplay = document.getElementById('score-display');
+        const feedback = document.getElementById('feedback');
+        const feedbackText = document.getElementById('feedback-text');
+        const feedbackStatus = document.getElementById('feedback-status');
+        const feedbackIcon = document.getElementById('feedback-icon');
+        const nextBtn = document.getElementById('next-btn');
+        const progressBar = document.getElementById('progress');
+
+        function loadQuestion() {
+            answered = false;
+            const q = questions[currentQuestion];
+            
+            // Reset UI
+            feedback.classList.add('hidden');
+            nextBtn.classList.add('hidden');
+            optionsContainer.innerHTML = '';
+            
+            // Set Text
+            questionNumber.innerText = `Question ${currentQuestion + 1} of ${questions.length}`;
+            questionText.innerText = q.q;
+            progressBar.style.width = `${((currentQuestion) / questions.length) * 100}%`;
+
+            // Create Options
+            q.options.forEach((opt, index) => {
+                const btn = document.createElement('button');
+                btn.className = "w-full text-left p-4 rounded-lg border-2 border-slate-200 hover:border-blue-300 hover:bg-blue-50 transition-all font-medium text-slate-700 flex items-start";
+                btn.innerHTML = `<span class="bg-slate-100 text-slate-500 w-6 h-6 rounded-full inline-flex items-center justify-center mr-3 flex-shrink-0 text-xs">${String.fromCharCode(65 + index)}</span> <span>${opt}</span>`;
+                btn.onclick = () => checkAnswer(index, btn);
+                optionsContainer.appendChild(btn);
+            });
+        }
+
+        function checkAnswer(selectedIndex, clickedBtn) {
+            if (answered) return;
+            answered = true;
+
+            const correct = questions[currentQuestion].answer;
+            const allBtns = optionsContainer.querySelectorAll('button');
+
+            if (selectedIndex === correct) {
+                score++;
+                scoreDisplay.innerText = `Score: ${score}`;
+                clickedBtn.classList.replace('border-slate-200', 'border-green-500');
+                clickedBtn.classList.add('bg-green-50');
+                showFeedback(true);
+            } else {
+                clickedBtn.classList.replace('border-slate-200', 'border-red-500');
+                clickedBtn.classList.add('bg-red-50');
+                allBtns[correct].classList.replace('border-slate-200', 'border-green-500');
+                allBtns[correct].classList.add('bg-green-50');
+                showFeedback(false);
+            }
+
+            allBtns.forEach(btn => btn.disabled = true);
+            nextBtn.classList.remove('hidden');
+            
+            if (currentQuestion === questions.length - 1) {
+                nextBtn.innerText = "See Results";
+            }
+        }
+
+        function showFeedback(isCorrect) {
+            feedback.classList.remove('hidden');
+            if (isCorrect) {
+                feedback.classList.add('bg-green-50', 'border-green-100');
+                feedback.classList.remove('bg-red-50', 'border-red-100');
+                feedbackStatus.innerText = "Correct";
+                feedbackStatus.className = "font-bold text-sm uppercase text-green-700";
+                feedbackIcon.innerText = "✓";
+                feedbackIcon.className = "mr-2 font-bold text-green-700";
+            } else {
+                feedback.classList.add('bg-red-50', 'border-red-100');
+                feedback.classList.remove('bg-green-50', 'border-green-100');
+                feedbackStatus.innerText = "Incorrect";
+                feedbackStatus.className = "font-bold text-sm uppercase text-red-700";
+                feedbackIcon.innerText = "✗";
+                feedbackIcon.className = "mr-2 font-bold text-red-700";
+            }
+            feedbackText.innerText = questions[currentQuestion].explanation;
+        }
+
+        nextBtn.onclick = () => {
+            currentQuestion++;
+            if (currentQuestion < questions.length) {
+                loadQuestion();
+            } else {
+                showResults();
+            }
+        };
+
+        function showResults() {
+            document.getElementById('question-box').classList.add('hidden');
+            const resultsBox = document.getElementById('results-box');
+            resultsBox.classList.remove('hidden');
+            progressBar.style.width = '100%';
+
+            const finalScore = document.getElementById('final-score');
+            const percentage = document.getElementById('percentage');
+            const message = document.getElementById('result-message');
+
+            const percent = Math.round((score / questions.length) * 100);
+            finalScore.innerText = `${score}/${questions.length}`;
+            percentage.innerText = `${percent}%`;
+
+            if (percent >= 85) {
+                message.innerText = "Excellent! You have a strong grasp of EMT pharmacology. You're ready for the NREMT exam!";
+            } else if (percent >= 70) {
+                message.innerText = "Good job! Review the questions you missed, especially contraindications and medication rights.";
+            } else {
+                message.innerText = "Keep studying! Focus on Lesson 6: Pharmacology and pay close attention to patient assessment and indicators.";
+            }
+        }
+
+        // Initialize
+        loadQuestion();
+    </script>
+</body>
+</html>
