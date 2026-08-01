@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NREMT Review: Cardiac Emergencies (Level 3+)</title>
+    <style>
+        :root {
+            --primary: #1e3a8a;
+            --primary-light: #3b82f6;
+            --success: #15803d;
+            --error: #b91c1c;
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --border: #cbd5e1;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            background: var(--card-bg);
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+        }
+
+        header h1 {
+            color: var(--primary);
+            margin-bottom: 8px;
+            font-size: 1.8rem;
+        }
+
+        header p {
+            color: var(--text-muted);
+            margin: 0;
+            font-size: 0.95rem;
+        }
+
+        .quiz-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            background: var(--card-bg);
+            padding: 15px 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgb(0 0 0 / 0.05);
+            font-weight: 600;
+        }
+
+        .question-card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+            display: none;
+            border: 1px solid var(--border);
+        }
+
+        .question-card.active {
+            display: block;
+        }
+
+        .question-number {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--primary-light);
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .question-text {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: var(--text-main);
+        }
+
+        .options-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .option-btn {
+            background: #f1f5f9;
+            border: 2px solid var(--border);
+            padding: 14px 18px;
+            border-radius: 8px;
+            text-align: left;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            color: var(--text-main);
+            font-weight: 500;
+        }
+
+        .option-btn:hover:not(:disabled) {
+            background: #e2e8f0;
+            border-color: var(--primary-light);
+        }
+
+        .option-btn.correct {
+            background: #dcfce7;
+            border-color: var(--success);
+            color: var(--success);
+            font-weight: 600;
+        }
+
+        .option-btn.incorrect {
+            background: #fee2e2;
+            border-color: var(--error);
+            color: var(--error);
+        }
+
+        .option-btn:disabled {
+            cursor: default;
+        }
+
+        .feedback-box {
+            display: none;
+            margin-top: 15px;
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            background: #f8fafc;
+            border-left: 4px solid var(--primary-light);
+        }
+
+        .feedback-box.show {
+            display: block;
+        }
+
+        .feedback-box strong {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .nav-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 25px;
+        }
+
+        .btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-size: 1rem;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background 0.2s;
+        }
+
+        .btn:hover {
+            background: #1d4ed8;
+        }
+
+        .btn:disabled {
+            background: var(--text-muted);
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+
+        .summary-card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 30px;
+            text-align: center;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+            display: none;
+        }
+
+        .summary-card h2 {
+            color: var(--primary);
+            margin-bottom: 15px;
+        }
+
+        .score-display {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary-light);
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>NREMT Review: Cardiac Emergencies</h1>
+        <p>Level 3+ (Application/Analysis) | Clinical Judgment & Treatment Decisions</p>
+    </header>
+
+    <div class="quiz-controls" id="quiz-controls">
+        <span id="progress-indicator">Question 1 of 20</span>
+        <span id="score-tracker">Score: 0</span>
+    </div>
+
+    <div id="quiz-container">
+        <!-- Questions will be injected dynamically via script -->
+    </div>
+
+    <div class="summary-card" id="summary-card">
+        <h2>Assessment Complete!</h2>
+        <p>You have finished the NREMT cardiac emergency review set.</p>
+        <div class="score-display" id="final-score">0 / 20</div>
+        <button class="btn" onclick="restartQuiz()">Retake Quiz</button>
+    </div>
+</div>
+
+<script>
+    const quizData = [
+        {
+            question: "A 64-year-old male complains of crushing chest pressure that began 30 minutes ago while mowing the lawn. He is pale and diaphoretic. Vital signs are BP 92/58, HR 48, RR 20, SpO₂ 96%. What should the EMT do FIRST?",
+            options: [
+                "Administer aspirin",
+                "Apply oxygen at a high concentration",
+                "Place the patient in a supine position and transport rapidly",
+                "Obtain a detailed SAMPLE history"
+            ],
+            answer: 0,
+            rationale: "Suspected acute coronary syndrome (ACS) patients should receive aspirin if there are no contraindications because it reduces platelet aggregation and mortality risk."
+        },
+        {
+            question: "A patient with chest pain has a prescription for nitroglycerin. Which finding would require the EMT to withhold the medication?",
+            options: [
+                "Pain rated 8/10",
+                "History of hypertension",
+                "Systolic blood pressure of 86 mmHg",
+                "Age greater than 60 years"
+            ],
+            answer: 2,
+            rationale: "Nitroglycerin causes vasodilation and may significantly worsen hypotension."
+        },
+        {
+            question: "A 58-year-old female presents with chest discomfort, nausea, and fatigue. She denies feeling \"pain.\" Which statement is most accurate?",
+            options: [
+                "Women rarely experience myocardial infarction",
+                "Her symptoms are inconsistent with cardiac disease",
+                "Atypical symptoms may represent acute coronary syndrome",
+                "She should be treated only if ECG changes are present"
+            ],
+            answer: 2,
+            rationale: "ACS may present atypically, especially in women, older adults, and diabetic patients."
+        },
+        {
+            question: "A patient suddenly becomes unresponsive. The monitor shows ventricular fibrillation. What is the EMT's priority?",
+            options: [
+                "Obtain a 12-lead ECG",
+                "Begin CPR and apply the AED",
+                "Administer aspirin",
+                "Check blood glucose"
+            ],
+            answer: 1,
+            rationale: "VF is a lethal rhythm requiring immediate defibrillation and high-quality CPR."
+        },
+        {
+            question: "A patient experiencing chest pain becomes confused and has cool, clammy skin. Which condition should the EMT suspect?",
+            options: [
+                "Cardiogenic shock",
+                "Hypoglycemia",
+                "Stroke",
+                "Seizure disorder"
+            ],
+            answer: 0,
+            rationale: "Poor cardiac output after myocardial infarction can lead to cardiogenic shock."
+        },
+        {
+            question: "A patient with suspected myocardial infarction asks why aspirin is being given. The EMT should explain that aspirin:",
+            options: [
+                "Decreases heart rate",
+                "Dilates coronary arteries",
+                "Prevents platelet aggregation",
+                "Increases oxygen levels in the blood"
+            ],
+            answer: 2,
+            rationale: "Aspirin inhibits platelet clumping and helps prevent progression of coronary artery blockage."
+        },
+        {
+            question: "A 70-year-old patient complains of sudden shortness of breath and has crackles in both lungs. He has a history of congestive heart failure. What is the most likely cause?",
+            options: [
+                "Pulmonary edema",
+                "Pulmonary embolism",
+                "Pneumothorax",
+                "Asthma exacerbation"
+            ],
+            answer: 0,
+            rationale: "Left-sided heart failure can cause fluid accumulation in the lungs."
+        },
+        {
+            question: "A patient with congestive heart failure is sitting upright, struggling to breathe. What position is most appropriate?",
+            options: [
+                "Supine",
+                "Trendelenburg",
+                "Position of comfort",
+                "Recovery position"
+            ],
+            answer: 2,
+            rationale: "Patients with pulmonary edema often breathe better sitting upright."
+        },
+        {
+            question: "A 55-year-old male with chest pain has a blood pressure of 118/76 and a heart rate of 110. He has prescribed nitroglycerin. Before assisting with medication, the EMT should:",
+            options: [
+                "Administer oxygen regardless of saturation",
+                "Verify the medication belongs to the patient and check BP",
+                "Give aspirin first only",
+                "Have the patient walk to the ambulance"
+            ],
+            answer: 1,
+            rationale: "EMTs must verify prescription medication, indication, expiration, and blood pressure before assisting."
+        },
+        {
+            question: "A patient suddenly complains of palpitations and dizziness. The pulse is irregularly irregular at 140 beats/min. Which rhythm is most likely?",
+            options: [
+                "Sinus bradycardia",
+                "Atrial fibrillation",
+                "Ventricular fibrillation",
+                "Asystole"
+            ],
+            answer: 1,
+            rationale: "Atrial fibrillation commonly presents with an irregularly irregular rhythm."
+        },
+        {
+            question: "A patient in cardiac arrest has no pulse and the AED advises \"shock.\" After delivering the shock, the EMT should:",
+            options: [
+                "Check the pulse immediately",
+                "Resume CPR immediately",
+                "Administer oxygen",
+                "Obtain a blood pressure reading"
+            ],
+            answer: 1,
+            rationale: "CPR should resume immediately after shock delivery to maintain circulation."
+        },
+        {
+            question: "Which finding is most concerning in a patient with chest pain?",
+            options: [
+                "Pain lasting 2 minutes after exercise",
+                "Pain reproducible with palpation",
+                "Chest pressure with diaphoresis and nausea",
+                "Sharp pain worsened by movement"
+            ],
+            answer: 2,
+            rationale: "Classic ACS symptoms include pressure, sweating, nausea, and possible radiation."
+        },
+        {
+            question: "A patient with heart failure takes furosemide (Lasix). The EMT should recognize this medication is used to:",
+            options: [
+                "Increase blood clotting",
+                "Remove excess fluid",
+                "Increase heart rate",
+                "Prevent allergic reactions"
+            ],
+            answer: 1,
+            rationale: "Furosemide is a diuretic used to reduce fluid overload."
+        },
+        {
+            question: "A patient with chest pain becomes pulseless. The EMT begins CPR. What compression rate is recommended?",
+            options: [
+                "60–80/min",
+                "80–100/min",
+                "100–120/min",
+                "140–160/min"
+            ],
+            answer: 2,
+            rationale: "Current CPR guidelines recommend compressions at 100–120/min."
+        },
+        {
+            question: "A patient complains of chest pressure radiating to the jaw. He took sildenafil (Viagra) earlier today. Which medication should the EMT avoid?",
+            options: [
+                "Aspirin",
+                "Oxygen",
+                "Nitroglycerin",
+                "Oral glucose"
+            ],
+            answer: 2,
+            rationale: "Nitroglycerin combined with PDE-5 inhibitors can cause dangerous hypotension."
+        },
+        {
+            question: "A patient with suspected ACS has an SpO₂ of 98%. Which oxygen statement is correct?",
+            options: [
+                "High-flow oxygen should always be given",
+                "Oxygen is not routinely required unless hypoxic or respiratory distress is present",
+                "Oxygen should be withheld in all cardiac patients",
+                "Oxygen replaces aspirin therapy"
+            ],
+            answer: 1,
+            rationale: "Oxygen is indicated for hypoxia or respiratory distress, not routinely for all ACS patients."
+        },
+        {
+            question: "A patient collapses after complaining of chest pain. He is unresponsive, apneic, and pulseless. Which action should occur FIRST?",
+            options: [
+                "Apply oxygen",
+                "Begin CPR",
+                "Obtain medical history",
+                "Check blood glucose"
+            ],
+            answer: 1,
+            rationale: "Cardiac arrest requires immediate CPR."
+        },
+        {
+            question: "A patient with a history of myocardial infarction develops severe difficulty breathing, pink frothy sputum, and crackles. The EMT should suspect:",
+            options: [
+                "Pulmonary edema secondary to heart failure",
+                "COPD exacerbation",
+                "Pneumonia",
+                "Hyperventilation syndrome"
+            ],
+            answer: 0,
+            rationale: "Pink frothy sputum and crackles are classic findings of acute pulmonary edema."
+        },
+        {
+            question: "A patient reports chest discomfort but denies having a heart problem because \"my blood pressure is normal.\" The EMT should explain:",
+            options: [
+                "Normal blood pressure rules out cardiac problems",
+                "Heart attacks only occur with high blood pressure",
+                "Cardiac emergencies may occur with normal vital signs",
+                "Only elderly patients experience heart attacks"
+            ],
+            answer: 2,
+            rationale: "Normal vital signs do not exclude ACS."
+        },
+        {
+            question: "A 62-year-old male has chest pain, diaphoresis, and a weak radial pulse. His skin is cool and pale. What is the EMT's greatest concern?",
+            options: [
+                "Mild anxiety",
+                "Poor perfusion",
+                "Dehydration only",
+                "Hypertension"
+            ],
+            answer: 1,
+            rationale: "Cool, pale skin and weak pulses indicate inadequate perfusion and possible shock."
+        }
+    ];
+
+    let currentQuestion = 0;
+    let score = 0;
+    let answered = new Array(quizData.length).fill(false);
+    let userAnswers = new Array(quizData.length).fill(null);
+
+    const quizContainer = document.getElementById("quiz-container");
+    const progressIndicator = document.getElementById("progress-indicator");
+    const scoreTracker = document.getElementById("score-tracker");
+    const summaryCard = document.getElementById("summary-card");
+    const quizControls = document.getElementById("quiz-controls");
+
+    function loadQuiz() {
+        quizContainer.innerHTML = "";
+        quizData.forEach((q, index) => {
+            const card = document.createElement("div");
+            card.className = `question-card ${index === 0 ? 'active' : ''}`;
+            card.id = `question-${index}`;
+
+            let optionsHtml = '';
+            q.options.forEach((opt, optIndex) => {
+                optionsHtml += `<button class="option-btn" onclick="selectOption(${index}, ${optIndex})">${String.fromCharCode(65 + optIndex)}. ${opt}</button>`;
+            });
+
+            card.innerHTML = `
+                <div class="question-number">Question ${index + 1} of ${quizData.length}</div>
+                <div class="question-text">${q.question}</div>
+                <div class="options-list" id="options-${index}">
+                    ${optionsHtml}
+                </div>
+                <div class="feedback-box" id="feedback-${index}">
+                    <strong id="feedback-title-${index}"></strong>
+                    <span id="feedback-text-${index}">${q.rationale}</span>
+                </div>
+                <div class="nav-buttons">
+                    <button class="btn" onclick="prevQuestion()" ${index === 0 ? 'disabled' : ''}>Previous</button>
+                    <button class="btn" id="next-btn-${index}" onclick="nextQuestion()" ${index === quizData.length - 1 ? 'disabled' : ''}>Next</button>
+                </div>
+            `;
+            quizContainer.appendChild(card);
+        });
+        updateControls();
+    }
+
+    function selectOption(qIndex, optIndex) {
+        if (answered[qIndex]) return;
+        answered[qIndex] = true;
+        userAnswers[qIndex] = optIndex;
+
+        const correctOpt = quizData[qIndex].answer;
+        const optionsContainer = document.getElementById(`options-${qIndex}`);
+        const buttons = optionsContainer.getElementsByClassName("option-btn");
+        const feedbackBox = document.getElementById(`feedback-${qIndex}`);
+        const feedbackTitle = document.getElementById(`feedback-title-${qIndex}`);
+
+        for (let i = 0; i < buttons.length; i++) {
+            buttons[i].disabled = true;
+            if (i === correctOpt) {
+                buttons[i].classList.add("correct");
+            } else if (i === optIndex) {
+                buttons[i].classList.add("incorrect");
+            }
+        }
+
+        if (optIndex === correctOpt) {
+            score++;
+            feedbackTitle.textContent = "Correct!";
+            feedbackTitle.style.color = "var(--success)";
+        } else {
+            feedbackTitle.textContent = "Incorrect.";
+            feedbackTitle.style.color = "var(--error)";
+        }
+
+        feedbackBox.classList.add("show");
+        scoreTracker.textContent = `Score: ${score}`;
+
+        // Enable next button specifically if user was blocked by it being the last question or just navigation flow
+        const nextBtn = document.getElementById(`next-btn-${qIndex}`);
+        if(nextBtn && currentQuestion === quizData.length - 1) {
+            // If it's the last question, reveal summary button or handle transition
+            showSummaryIfNeeded();
+        }
+    }
+
+    function nextQuestion() {
+        if (currentQuestion < quizData.length - 1) {
+            document.getElementById(`question-${currentQuestion}`).classList.remove("active");
+            currentQuestion++;
+            document.getElementById(`question-${currentQuestion}`).classList.add("active");
+            updateControls();
+        } else {
+            showSummary();
+        }
+    }
+
+    function prevQuestion() {
+        if (currentQuestion > 0) {
+            document.getElementById(`question-${currentQuestion}`).classList.remove("active");
+            currentQuestion--;
+            document.getElementById(`question-${currentQuestion}`).classList.add("active");
+            updateControls();
+        }
+    }
+
+    function updateControls() {
+        progressIndicator.textContent = `Question ${currentQuestion + 1} of ${quizData.length}`;
+        scoreTracker.textContent = `Score: ${score}`;
+        
+        // If we are on the last question and it has been answered, allow transition to summary
+        if (currentQuestion === quizData.length - 1 && answered[currentQuestion]) {
+            const nextBtn = document.getElementById(`next-btn-${currentQuestion}`);
+            nextBtn.textContent = "Finish Review";
+            nextBtn.disabled = false;
+            nextBtn.onclick = showSummary;
+        }
+    }
+
+    function showSummaryIfNeeded() {
+        if (currentQuestion === quizData.length - 1) {
+            const nextBtn = document.getElementById(`next-btn-${currentQuestion}`);
+            nextBtn.textContent = "Finish Review";
+            nextBtn.disabled = false;
+            nextBtn.onclick = showSummary;
+        }
+    }
+
+    function showSummary() {
+        document.getElementById(`question-${currentQuestion}`).classList.remove("active");
+        quizControls.style.display = "none";
+        summaryCard.style.display = "block";
+        document.getElementById("final-score").textContent = `${score} / ${quizData.length}`;
+    }
+
+    function restartQuiz() {
+        currentQuestion = 0;
+        score = 0;
+        answered.fill(false);
+        userAnswers.fill(null);
+        summaryCard.style.display = "none";
+        quizControls.style.display = "flex";
+        loadQuiz();
+    }
+
+    // Initialize the quiz on load
+    loadQuiz();
+</script>
+
+</body>
+</html>
