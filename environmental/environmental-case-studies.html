@@ -1,0 +1,854 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full bg-slate-100">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NREMT Environmental Emergencies Progressive Case Studies</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .font-mono {
+            font-family: 'JetBrains Mono', monospace;
+        }
+        .fade-enter {
+            animation: fadeIn 0.3s ease-in-out forwards;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .pulse-subtle {
+            animation: pulseSubtle 2s infinite;
+        }
+        @keyframes pulseSubtle {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.85; }
+        }
+        /* Custom scrollbars */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+    </style>
+</head>
+<body class="h-full text-slate-800 flex flex-col antialiased">
+
+    <header class="bg-slate-900 text-white shadow-md sticky top-0 z-50 border-b border-slate-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5 flex flex-wrap justify-between items-center gap-4">
+            <div class="flex items-center gap-3">
+                <div class="bg-emerald-500/20 text-emerald-400 p-2 rounded-xl border border-emerald-500/30">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path>
+                    </svg>
+                </div>
+                <div>
+                    <div class="flex items-center gap-2">
+                        <span class="text-xs font-bold uppercase tracking-wider bg-emerald-500/20 text-emerald-300 px-2 py-0.5 rounded border border-emerald-500/30">NREMT Clinical Simulation</span>
+                        <span class="text-xs text-slate-400 font-medium">EMT / Next-Gen Standard</span>
+                    </div>
+                    <h1 class="text-lg sm:text-xl font-bold text-white tracking-tight">Environmental Emergencies Case Studies</h1>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-3">
+                <button id="view-mode-btn" onclick="toggleViewMode()" class="flex items-center gap-2 px-3 py-1.5 text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-lg border border-slate-700 transition">
+                    <svg class="w-4 h-4 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+                    </svg>
+                    <span id="view-mode-text">Switch to Full Reader View</span>
+                </button>
+                <button onclick="resetAllCases()" class="p-1.5 text-slate-400 hover:text-white bg-slate-800 hover:bg-slate-700 rounded-lg border border-slate-700 transition" title="Reset Progress">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 flex flex-col lg:flex-row gap-6">
+
+        <aside class="w-full lg:w-80 flex-shrink-0 flex flex-col gap-4">
+            
+            <!-- Progress Overview Card -->
+            <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200">
+                <div class="flex justify-between items-center mb-3">
+                    <h2 class="text-xs font-bold uppercase tracking-wider text-slate-500">Overall Completion</h2>
+                    <span id="overall-progress-pct" class="text-sm font-extrabold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-100">0%</span>
+                </div>
+                <div class="w-full bg-slate-100 rounded-full h-2.5 overflow-hidden">
+                    <div id="overall-progress-bar" class="bg-emerald-500 h-2.5 transition-all duration-500 rounded-full" style="width: 0%"></div>
+                </div>
+                <p class="text-xs text-slate-500 mt-2 flex justify-between">
+                    <span>Clinical Stages Cleared:</span>
+                    <strong id="stages-cleared-count" class="text-slate-700">0 / 9</strong>
+                </p>
+            </div>
+
+            <!-- Case Selection Navigation -->
+            <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-200 flex flex-col gap-2">
+                <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 px-2 py-1">Case Studies</h3>
+                
+                <button onclick="selectCase(0)" id="case-nav-0" class="w-full text-left p-3.5 rounded-xl border transition flex items-start gap-3 bg-emerald-50 border-emerald-200 text-slate-900">
+                    <div class="p-2 rounded-lg bg-orange-100 text-orange-600 font-bold text-xs mt-0.5">01</div>
+                    <div class="flex-1 min-w-0">
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs font-bold text-orange-600 uppercase tracking-wide">Heat Emergency</span>
+                            <span id="case-status-0" class="text-[10px] bg-slate-200 text-slate-600 font-semibold px-1.5 py-0.5 rounded">0/3</span>
+                        </div>
+                        <h4 class="font-bold text-sm text-slate-800 truncate mt-0.5">Unfolding Heat Emergency</h4>
+                        <p class="text-xs text-slate-500 line-clamp-1 mt-0.5">Construction worker with AMS & altered sweating</p>
+                    </div>
+                </button>
+
+                <button onclick="selectCase(1)" id="case-nav-1" class="w-full text-left p-3.5 rounded-xl border border-slate-200 hover:border-slate-300 transition flex items-start gap-3 bg-white text-slate-700">
+                    <div class="p-2 rounded-lg bg-sky-100 text-sky-600 font-bold text-xs mt-0.5">02</div>
+                    <div class="flex-1 min-w-0">
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs font-bold text-sky-600 uppercase tracking-wide">Cold Injury</span>
+                            <span id="case-status-1" class="text-[10px] bg-slate-200 text-slate-600 font-semibold px-1.5 py-0.5 rounded">0/3</span>
+                        </div>
+                        <h4 class="font-bold text-sm text-slate-800 truncate mt-0.5">Hypothermia & Frostbite</h4>
+                        <p class="text-xs text-slate-500 line-clamp-1 mt-0.5">Severe accidental exposure & localized injury</p>
+                    </div>
+                </button>
+
+                <button onclick="selectCase(2)" id="case-nav-2" class="w-full text-left p-3.5 rounded-xl border border-slate-200 hover:border-slate-300 transition flex items-start gap-3 bg-white text-slate-700">
+                    <div class="p-2 rounded-lg bg-teal-100 text-teal-600 font-bold text-xs mt-0.5">03</div>
+                    <div class="flex-1 min-w-0">
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs font-bold text-teal-600 uppercase tracking-wide">Water Trauma</span>
+                            <span id="case-status-2" class="text-[10px] bg-slate-200 text-slate-600 font-semibold px-1.5 py-0.5 rounded">0/3</span>
+                        </div>
+                        <h4 class="font-bold text-sm text-slate-800 truncate mt-0.5">Submersion & Respiratory</h4>
+                        <p class="text-xs text-slate-500 line-clamp-1 mt-0.5">Near-drowning, spinal risk & ARDS pattern</p>
+                    </div>
+                </button>
+
+                <div class="pt-2 border-t border-slate-100 mt-1">
+                    <button onclick="selectCase(3)" id="case-nav-3" class="w-full text-left p-3.5 rounded-xl border border-slate-200 hover:border-slate-300 transition flex items-center gap-3 bg-slate-50 text-slate-700">
+                        <div class="p-2 rounded-lg bg-emerald-100 text-emerald-700 font-bold text-xs">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                            </svg>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-sm text-slate-800">Quick Reference Matrix</h4>
+                            <p class="text-xs text-slate-500">Core EMT rules & guidelines table</p>
+                        </div>
+                    </button>
+                </div>
+            </div>
+
+            <!-- NREMT Testing Guardrail Reminder -->
+            <div class="bg-amber-50 rounded-2xl p-4 border border-amber-200 text-amber-900 text-xs leading-relaxed shadow-sm">
+                <div class="flex items-center gap-1.5 font-bold text-amber-800 mb-1">
+                    <svg class="w-4 h-4 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+                    </svg>
+                    NREMT Exam Tip
+                </div>
+                Focus on the <em>immediate clinical priority</em>. Always consider Scene Safety, ABCs, and preventing severe secondary complications (e.g., V-Fib in hypothermia, aspiration in heat stroke).
+            </div>
+        </aside>
+
+        <section class="flex-1 flex flex-col gap-6 min-w-0">
+
+            <!-- Interactive Stage View -->
+            <div id="interactive-view" class="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden flex flex-col min-h-[600px]">
+                
+                <!-- Stage Header / Stepper -->
+                <div class="bg-slate-900 text-white p-5 border-b border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                    <div>
+                        <div class="flex items-center gap-2 text-xs font-semibold text-emerald-400 uppercase tracking-wider mb-1">
+                            <span id="stage-badge-case">Case Study 1</span>
+                            <span>•</span>
+                            <span id="stage-badge-tag">Heat Emergency</span>
+                        </div>
+                        <h2 id="stage-title" class="text-lg sm:text-xl font-bold text-white">Unfolding Heat Emergency</h2>
+                    </div>
+
+                    <!-- Stage Progress Pills -->
+                    <div id="stage-stepper" class="flex items-center gap-2">
+                        <button onclick="goToStage(0)" id="step-btn-0" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition bg-emerald-600 text-white">
+                            <span>Stage 1</span>
+                        </button>
+                        <div class="w-3 h-0.5 bg-slate-700"></div>
+                        <button onclick="goToStage(1)" id="step-btn-1" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition bg-slate-800 text-slate-400">
+                            <span>Stage 2</span>
+                        </button>
+                        <div class="w-3 h-0.5 bg-slate-700"></div>
+                        <button onclick="goToStage(2)" id="step-btn-2" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition bg-slate-800 text-slate-400">
+                            <span>Stage 3</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Stage Narrative Content -->
+                <div class="p-6 flex-1 flex flex-col gap-6 fade-enter" id="stage-body">
+                    
+                    <!-- Background / Context Box -->
+                    <div class="bg-slate-50 rounded-xl p-4 border border-slate-200">
+                        <h3 class="text-xs font-bold uppercase tracking-wider text-slate-500 mb-1 flex items-center gap-1.5">
+                            <svg class="w-4 h-4 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                            Scenario Background & Initial Findings
+                        </h3>
+                        <p id="scenario-text" class="text-slate-700 text-sm sm:text-base leading-relaxed font-normal mt-2">
+                            Loading scenario background...
+                        </p>
+                    </div>
+
+                    <!-- Clinical Findings / Vitals Dashboard Grid (Dynamic) -->
+                    <div id="vitals-container" class="grid grid-cols-2 sm:grid-cols-4 gap-3 hidden">
+                        <!-- Injected via JavaScript -->
+                    </div>
+
+                    <!-- Clinical Question Section -->
+                    <div class="mt-2 border-t border-slate-100 pt-5">
+                        <div class="flex items-center justify-between mb-3">
+                            <span class="text-xs font-bold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-md border border-emerald-100 uppercase tracking-wider">
+                                Clinical Decision Challenge
+                            </span>
+                            <span id="question-status-pill" class="text-xs font-medium text-slate-400">Select an answer below</span>
+                        </div>
+
+                        <h3 id="question-text" class="text-base sm:text-lg font-bold text-slate-900 leading-snug mb-4">
+                            Loading clinical decision question...
+                        </h3>
+
+                        <!-- Answer Options Container -->
+                        <div id="options-container" class="space-y-3">
+                            <!-- Injected dynamically -->
+                        </div>
+
+                        <!-- Rationale Feedback Display -->
+                        <div id="rationale-box" class="mt-6 p-4 sm:p-5 rounded-xl border hidden fade-enter">
+                            <div class="flex items-center gap-2 mb-2">
+                                <span id="rationale-icon" class="font-bold text-lg"></span>
+                                <h4 id="rationale-status" class="font-bold text-sm uppercase tracking-wide"></h4>
+                            </div>
+                            <p id="rationale-text" class="text-sm text-slate-700 leading-relaxed font-normal"></p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Footer Navigation Buttons -->
+                <div class="bg-slate-50 p-4 border-t border-slate-200 flex items-center justify-between gap-4">
+                    <button id="prev-stage-btn" onclick="navigateStage(-1)" class="px-4 py-2 text-xs font-bold text-slate-600 bg-white border border-slate-300 rounded-lg hover:bg-slate-100 transition disabled:opacity-50 disabled:cursor-not-allowed">
+                        ← Previous Stage
+                    </button>
+                    <div id="case-completion-indicator" class="hidden text-xs font-bold text-emerald-600 flex items-center gap-1.5">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                        </svg>
+                        Case Study Complete!
+                    </div>
+                    <button id="next-stage-btn" onclick="navigateStage(1)" class="px-5 py-2 text-xs font-bold text-white bg-emerald-600 rounded-lg hover:bg-emerald-700 transition shadow-sm disabled:opacity-50">
+                        Next Stage →
+                    </button>
+                </div>
+            </div>
+
+            <div id="matrix-view" class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 hidden fade-enter">
+                <div class="border-b border-slate-200 pb-4 mb-6">
+                    <div class="inline-block bg-emerald-100 text-emerald-800 text-xs font-bold px-2.5 py-1 rounded-md mb-2">
+                        NREMT National Education Standards Summary
+                    </div>
+                    <h2 class="text-xl font-extrabold text-slate-900">Environmental Emergencies Core Rules</h2>
+                    <p class="text-sm text-slate-500 mt-1">Key clinical indicators, priority interventions, and major contraindications for high-yield exam scenarios.</p>
+                </div>
+
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-sm border-collapse">
+                        <thead>
+                            <tr class="bg-slate-900 text-white font-semibold text-xs uppercase tracking-wider">
+                                <th class="p-3.5 rounded-tl-lg">Condition</th>
+                                <th class="p-3.5">Key Clinical Indicators</th>
+                                <th class="p-3.5">Priority Interventions</th>
+                                <th class="p-3.5 rounded-tr-lg">Major Contraindications</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-200 text-slate-700">
+                            <tr class="hover:bg-slate-50 transition">
+                                <td class="p-3.5 font-bold text-slate-900 bg-orange-50/50">Heat Stroke</td>
+                                <td class="p-3.5">Altered Mental Status + Hot/Dry or Sweating skin</td>
+                                <td class="p-3.5 font-medium text-emerald-800">Rapid active cooling (ice to neck/axilla/groin, mist & fan), transport</td>
+                                <td class="p-3.5 text-rose-700">Oral fluids (aspiration risk), delay in cooling</td>
+                            </tr>
+                            <tr class="hover:bg-slate-50 transition">
+                                <td class="p-3.5 font-bold text-slate-900 bg-sky-50/50">Severe Hypothermia</td>
+                                <td class="p-3.5">Core Temp &lt; 90°F (32°C), Loss of shivering, Bradycardia</td>
+                                <td class="p-3.5 font-medium text-emerald-800">Gentle handling, passive & active trunk rewarming, warm O₂</td>
+                                <td class="p-3.5 text-rose-700">Rough handling (risk of V-Fib), rubbing frostbite, rewarming feet/hands first</td>
+                            </tr>
+                            <tr class="hover:bg-slate-50 transition">
+                                <td class="p-3.5 font-bold text-slate-900 bg-teal-50/50">Submersion / Near-Drowning</td>
+                                <td class="p-3.5">Dyspnea, hypoxia, pink frothy sputum, atelectasis</td>
+                                <td class="p-3.5 font-medium text-emerald-800">Airway suctioning, high-flow O₂ / CPAP / BVM, spinal SMR if dive involved</td>
+                                <td class="p-3.5 text-rose-700">Abdominal thrusts to remove water, delaying transport</td>
+                            </tr>
+                            <tr class="hover:bg-slate-50 transition">
+                                <td class="p-3.5 font-bold text-slate-900 bg-amber-50/50">Snake Bite / Envenomation</td>
+                                <td class="p-3.5">Puncture marks, progressive edema, systemic signs</td>
+                                <td class="p-3.5 font-medium text-emerald-800">Keep patient calm, immobilize limb at heart level, rapid transport</td>
+                                <td class="p-3.5 text-rose-700">Tourniquets, ice, cutting, or suctioning venom</td>
+                            </tr>
+                            <tr class="hover:bg-slate-50 transition">
+                                <td class="p-3.5 font-bold text-slate-900 bg-purple-50/50">Lightning Strike</td>
+                                <td class="p-3.5">Unconscious, respiratory/cardiac arrest, cutaneous burns</td>
+                                <td class="p-3.5 font-medium text-emerald-800"><strong class="text-purple-800">Reverse Triage</strong> (treat cardiac/respiratory arrest patients FIRST)</td>
+                                <td class="p-3.5 text-rose-700">Leaving crew in unsafe open locations</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div id="full-reader-view" class="bg-white rounded-2xl border border-slate-200 shadow-sm p-6 sm:p-8 hidden fade-enter space-y-10">
+                <!-- Injected via JavaScript for seamless reading -->
+            </div>
+
+        </section>
+    </main>
+
+    <script>
+        const caseData = [
+            {
+                id: 1,
+                category: "Heat Emergency",
+                title: "Case 1: Unfolding Heat Emergency",
+                shortTitle: "Unfolding Heat Emergency",
+                bgTheme: "orange",
+                stages: [
+                    {
+                        stageNumber: 1,
+                        stageTitle: "Stage 1: Scene Arrival & Initial Impression",
+                        scenario: "It is a 98°F (36.6°C) afternoon with 85% humidity. You and your partner are dispatched to a commercial construction site for an 'ill worker.' Upon arrival, you are directed to a 42-year-old male construction worker sitting under a shade tarp. His coworkers state he has been working strenuous 10-hour shifts in the sun for three consecutive days. Initially, he complained of muscle cramps and dizziness, but over the last 15 minutes, he became confused, irritable, and started slurring his words.",
+                        vitals: [
+                            { label: "Appearance", value: "Confused, disoriented to time/place, flushed face" },
+                            { label: "Skin", value: "Hot to touch, noticeably dry, no active sweating" },
+                            { label: "Breathing", value: "Rapid and shallow" },
+                            { label: "Mental Status", value: "Altered (GCS 12)" }
+                        ],
+                        question: "What is the EMT’s immediate diagnostic priority and first action?",
+                        options: [
+                            "Assume heat exhaustion, administer cold oral electrolyte solutions, and rest.",
+                            "Recognize high risk for heat stroke, move the patient to a cool environment, and initiate rapid active cooling.",
+                            "Administer 324 mg chewable aspirin for suspected heat-induced cardiovascular event.",
+                            "Obtain a 12-lead ECG on scene before initiating cooling protocols."
+                        ],
+                        answer: 1,
+                        explanation: "Altered mental status combined with hot, dry skin in a high-temperature environment indicates Heat Stroke, a true life-threatening medical emergency. Active cooling must begin immediately. Oral fluids are strictly contraindicated in patients with altered mental status due to the high risk of aspiration."
+                    },
+                    {
+                        stageNumber: 2,
+                        stageTitle: "Stage 2: Vital Signs & Primary Interventions",
+                        scenario: "You move the patient into the air-conditioned ambulance and begin your assessment. The patient is increasingly lethargic and responds only to verbal commands.",
+                        vitals: [
+                            { label: "Blood Pressure", value: "92/58 mmHg" },
+                            { label: "Heart Rate", value: "138 bpm (Sinus tach, weak)" },
+                            { label: "Respirations", value: "28 bpm (Shallow)" },
+                            { label: "SpO2", value: "94% on room air" },
+                            { label: "Core Temp", value: "105.2°F (40.7°C)" }
+                        ],
+                        question: "Which combination of active cooling techniques is most appropriate for this patient at the EMT level?",
+                        options: [
+                            "Apply cold ice packs directly to the forehead and cheeks; cover with a blanket to prevent shivers.",
+                            "Apply ice packs to the axillae, groin, and neck; mist the skin with water and fan vigorously.",
+                            "Immerse the patient's hands and feet in cold water while administering oral fluids.",
+                            "Wrap the patient tightly in alcohol-soaked sheets to promote rapid evaporation."
+                        ],
+                        answer: 1,
+                        explanation: "Heat stroke management requires aggressive, rapid cooling. Ice packs placed over major superficial arteries (axillae, groin, neck) combined with evaporative cooling (spraying water and fanning) effectively lower core temperature. Alcohol rubs are toxic/contraindicated, and oral fluids remain unsafe."
+                    },
+                    {
+                        stageNumber: 3,
+                        stageTitle: "Stage 3: Reassessment & Transport Decision",
+                        scenario: "During transport, the patient suddenly exhibits generalized tonic-clonic muscle activity lasting 45 seconds. Following the seizure, he remains unresponsive with a GCS of 6 (E1V1M4).",
+                        vitals: [
+                            { label: "Mental Status", value: "Unresponsive (GCS 6)" },
+                            { label: "Airway", value: "Snoring, foam at lips" },
+                            { label: "Heart Rate", value: "142 bpm" },
+                            { label: "SpO2", value: "89% on room air" }
+                        ],
+                        question: "What is the priority intervention during this deterioration?",
+                        options: [
+                            "Place a bite block in the patient's mouth to protect the tongue.",
+                            "Protect the patient from injury, manage the airway with suctioning/OPA as needed, and deliver high-flow O₂ via BVM.",
+                            "Stop the ambulance immediately and perform a full secondary physical exam.",
+                            "Administer high-dose oral glucose."
+                        ],
+                        answer: 1,
+                        explanation: "Seizures are a known complication of severe hyperthermia due to cerebral edema. Post-seizure priorities focus on airway protection, suctioning secretions, and supporting oxygenation/ventilation with high-flow oxygen or BVM as indicated. Never insert anything into a seizing patient's mouth."
+                    }
+                ]
+            },
+            {
+                id: 2,
+                category: "Cold Injury",
+                title: "Case 2: Accidental Hypothermia & Localized Cold Injury",
+                shortTitle: "Hypothermia & Frostbite",
+                bgTheme: "sky",
+                stages: [
+                    {
+                        stageNumber: 1,
+                        stageTitle: "Stage 1: Primary Assessment & Environmental Control",
+                        scenario: "At 06:00 AM on a winter morning (ambient temperature 18°F / -7.7°C), EMS is dispatched to an alleyway for an unresponsive male. You locate a 68-year-old male lying on wet pavement. He is wearing damp clothing.",
+                        vitals: [
+                            { label: "LOC", value: "Responds only to painful stimuli (moaning)" },
+                            { label: "Airway", value: "Open, clear" },
+                            { label: "Breathing", value: "Extremely slow & shallow (6 bpm)" },
+                            { label: "Circulation", value: "Carotid present but slow/faint (36 bpm)" },
+                            { label: "Skin", value: "Pale, cold, cyanotic, NO shivering" }
+                        ],
+                        question: "What critical principle must guide the EMT’s handling and transport of this patient?",
+                        options: [
+                            "Encourage vigorous active exercise to generate internal metabolic heat.",
+                            "Handle the patient extremely gently to avoid precipitating ventricular fibrillation.",
+                            "Rub the icy extremities vigorously to restore peripheral circulation.",
+                            "Apply direct high-heat packs directly against cold skin to rapidly increase core temperature."
+                        ],
+                        answer: 1,
+                        explanation: "Severe hypothermia renders the myocardium extremely irritable. Rough handling, sudden posture changes, or aggressive movement can easily trigger fatal cardiac dysrhythmias, specifically Ventricular Fibrillation (V-Fib). Shivering stops when core temperature falls below ~90°F (32°C)."
+                    },
+                    {
+                        stageNumber: 2,
+                        stageTitle: "Stage 2: Resuscitation & Rewarming Strategy",
+                        scenario: "The patient is moved gently into the warm ambulance. You remove all wet clothing and cover him with dry warm blankets.",
+                        vitals: [
+                            { label: "Blood Pressure", value: "82/50 mmHg" },
+                            { label: "Heart Rate", value: "38 bpm (Bradycardia)" },
+                            { label: "Respirations", value: "6 bpm" },
+                            { label: "SpO2", value: "Unavailable (poor peripheral perfusion)" },
+                            { label: "Est. Core Temp", value: "85°F (29.4°C) — Severe Hypothermia" }
+                        ],
+                        question: "Which intervention is most appropriate for managing this patient's core temperature and ventilation?",
+                        options: [
+                            "Provide passive rewarming (warm blankets/environment) and active external rewarming to the trunk, with warm humidified O₂ and BVM support.",
+                            "Rapidly rewarm extremities first using hot water immersion.",
+                            "Hyperventilate the patient at 30 breaths/min with room air.",
+                            "Delay all oxygenation until the core temperature exceeds 95°F."
+                        ],
+                        answer: 0,
+                        explanation: "For severe hypothermia, focus active external rewarming on the TRUNK (chest, neck, groin) to prevent 'afterdrop' (cold, acidotic blood from extremities rushing back to the heart). Ventilatory support with warm, humidified oxygen (if available) and gentle BVM assistance is indicated due to hypoventilation."
+                    },
+                    {
+                        stageNumber: 3,
+                        stageTitle: "Stage 3: Assessment of Localized Injury",
+                        scenario: "While assessing the patient's feet, you observe that his toes are hard, cold, waxy white, and mottled. They do not blanch when pressed.",
+                        vitals: [
+                            { label: "Tissue Appearance", value: "Waxy white, mottled, hard to touch" },
+                            { label: "Sensation", value: "Numb / absent sensation" },
+                            { label: "Capillary Refill", value: "Absent in distal toes" }
+                        ],
+                        question: "How should the EMT manage this localized cold injury (frostbite) during transport?",
+                        options: [
+                            "Rub the toes with snow to slowly reintroduce temperature changes.",
+                            "Attempt field thawing using hot water bottles pressed directly against the feet.",
+                            "Protect the frozen tissue with dry, sterile dressings, avoid rubbing, and prevent refreezing.",
+                            "Pop any blisters that form to relieve pressure in the tissue."
+                        ],
+                        answer: 2,
+                        explanation: "Frostbitten tissue contains ice crystals that cause cellular damage; rubbing or applying direct high heat causes further severe mechanical trauma. The field management standard is protection with sterile dressings, elevation if possible, and preventing any chance of refreezing during or after thaw."
+                    }
+                ]
+            },
+            {
+                id: 3,
+                category: "Water Trauma",
+                title: "Case 3: Submersion Emergency & Respiratory Compromise",
+                shortTitle: "Submersion & Respiratory",
+                bgTheme: "teal",
+                stages: [
+                    {
+                        stageNumber: 1,
+                        stageTitle: "Stage 1: Scene Safety & Airway Management",
+                        scenario: "You are dispatched to a public lake for an 'unresponsive swimmer pulled from the water.' Bystanders pull a 22-year-old female onto the dock as you arrive. They report she was under freshwater for approximately 2 to 3 minutes following a diving attempt. The patient is conscious but lethargic, coughing uncontrollably, and in severe respiratory distress with copious pink frothy sputum.",
+                        vitals: [
+                            { label: "Respirations", value: "34 bpm, labored, intercostal retractions" },
+                            { label: "Auscultation", value: "Diffuse crackles bilaterally" },
+                            { label: "Airway", value: "Copious pink frothy sputum" },
+                            { label: "Mental Status", value: "Lethargic, anxious" }
+                        ],
+                        question: "What is the immediate priority for managing this patient's airway and breathing?",
+                        options: [
+                            "Perform abdominal thrusts (Heimlich maneuver) to drain water from the lungs before oxygenation.",
+                            "Suction the upper airway, administer high-flow oxygen, and prepare for ventilatory support/CPAP if indicated.",
+                            "Roll the patient onto her stomach and compress her back to expel inhaled water.",
+                            "Apply a non-rebreather mask at 2 L/min to prevent sudden hyperoxia."
+                        ],
+                        answer: 1,
+                        explanation: "Abdominal thrusts or postural drainage methods to 'clear water from lungs' are dangerous, ineffective, and increase vomiting risk. Airway management (suctioning foam/vomitus) and rapid correction of hypoxia using high-flow O₂ (or CPAP/BVM for severe distress) are the absolute priorities."
+                    },
+                    {
+                        stageNumber: 2,
+                        stageTitle: "Stage 2: Spinal Precaution Decision",
+                        scenario: "A bystander mentions that right before going under, the patient dove headfirst off a high wooden railing into shallow water.",
+                        vitals: [
+                            { label: "Mechanism of Injury", value: "High dive into shallow freshwater" },
+                            { label: "C-Spine Assessment", value: "Tender mid-cervical spine on palpation" }
+                        ],
+                        question: "How does this information alter your management strategy?",
+                        options: [
+                            "It does not change management because drowning takes full priority over all mechanical trauma.",
+                            "Immediately apply spinal motion restriction (SMR) principles while maintaining airway management.",
+                            "Perform rapid log-rolls every 2 minutes to assess the cervical spine.",
+                            "Place the patient in a High Fowler's sitting position immediately to maximize lung expansion."
+                        ],
+                        answer: 1,
+                        explanation: "Submersion events involving diving, water skiing, or unknown mechanisms carry a high index of suspicion for spinal trauma. Spinal motion restriction must be maintained simultaneously with airway and breathing management."
+                    },
+                    {
+                        stageNumber: 3,
+                        stageTitle: "Stage 3: Pathophysiology & Reassessment",
+                        scenario: "During transport, the patient remains hypoxia-prone despite high-flow oxygen (SpO2 remains 88%). Crackles remain prominent throughout both lung fields.",
+                        vitals: [
+                            { label: "SpO2", value: "88% on high-flow NRB" },
+                            { label: "Lungs", value: "Widespread bilateral crackles" },
+                            { label: "Sputum", value: "Persistent pink, frothy secretions" }
+                        ],
+                        question: "What underlying pathophysiology explains her persistent hypoxia despite high-concentration oxygen delivery?",
+                        options: [
+                            "High atmospheric pressure underwater caused alveolar collapse.",
+                            "Inhaled water washed out alveolar surfactant, leading to atelectasis and pulmonary edema.",
+                            "Carbon monoxide poisoning from freshwater organisms.",
+                            "Sudden systemic arterial dilation leading to hyperperfusion."
+                        ],
+                        answer: 1,
+                        explanation: "Submersion leads to surfactant disruption, alveolar collapse (atelectasis), fluid shift into the alveoli, and non-cardiogenic pulmonary edema (Acute Respiratory Distress Syndrome / ARDS pattern). This creates a significant ventilation-perfusion mismatch, requiring continuous positive airway pressure (CPAP) or positive pressure ventilation (BVM)."
+                    }
+                ]
+            }
+        ];
+
+        let currentCaseIndex = 0;
+        let currentStageIndex = 0;
+        let userAnswers = {
+            0: [null, null, null],
+            1: [null, null, null],
+            2: [null, null, null]
+        };
+        let isFullReaderMode = false;
+
+        document.addEventListener('DOMContentLoaded', () => {
+            renderCaseStage();
+            updateOverallProgress();
+            buildFullReaderContent();
+        });
+
+        function renderCaseStage() {
+            if (currentCaseIndex === 3) {
+                // Show Matrix View
+                document.getElementById('interactive-view').classList.add('hidden');
+                document.getElementById('matrix-view').classList.remove('hidden');
+                document.getElementById('full-reader-view').classList.add('hidden');
+                updateCaseNavPills();
+                return;
+            }
+
+            document.getElementById('interactive-view').classList.remove('hidden');
+            document.getElementById('matrix-view').classList.add('hidden');
+            document.getElementById('full-reader-view').classList.add('hidden');
+
+            const currentCase = caseData[currentCaseIndex];
+            const currentStage = currentCase.stages[currentStageIndex];
+
+            // Header info
+            document.getElementById('stage-badge-case').innerText = `Case Study ${currentCase.id}`;
+            document.getElementById('stage-badge-tag').innerText = currentCase.category;
+            document.getElementById('stage-title').innerText = currentCase.title;
+
+            // Update Stepper Buttons
+            for (let i = 0; i < 3; i++) {
+                const btn = document.getElementById(`step-btn-${i}`);
+                if (i === currentStageIndex) {
+                    btn.className = "flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition bg-emerald-600 text-white shadow-sm";
+                } else if (userAnswers[currentCaseIndex][i] !== null) {
+                    btn.className = "flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition bg-emerald-950 text-emerald-400 border border-emerald-800";
+                } else {
+                    btn.className = "flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition bg-slate-800 text-slate-400 hover:bg-slate-700";
+                }
+            }
+
+            // Scenario narrative
+            const stageBody = document.getElementById('stage-body');
+            stageBody.classList.remove('fade-enter');
+            void stageBody.offsetWidth; // Trigger reflow
+            stageBody.classList.add('fade-enter');
+
+            document.getElementById('scenario-text').innerText = currentStage.scenario;
+
+            // Vitals grid
+            const vitalsContainer = document.getElementById('vitals-container');
+            if (currentStage.vitals && currentStage.vitals.length > 0) {
+                vitalsContainer.classList.remove('hidden');
+                vitalsContainer.innerHTML = currentStage.vitals.map(v => `
+                    <div class="bg-white p-3 rounded-xl border border-slate-200 shadow-2xs flex flex-col">
+                        <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">${v.label}</span>
+                        <span class="text-xs sm:text-sm font-bold text-slate-800 mt-0.5">${v.value}</span>
+                    </div>
+                `).join('');
+            } else {
+                vitalsContainer.classList.add('hidden');
+            }
+
+            // Question
+            document.getElementById('question-text').innerText = currentStage.question;
+
+            // Options
+            const optionsContainer = document.getElementById('options-container');
+            optionsContainer.innerHTML = '';
+
+            const selectedAnswer = userAnswers[currentCaseIndex][currentStageIndex];
+
+            currentStage.options.forEach((optText, optIdx) => {
+                const letter = String.fromCharCode(65 + optIdx);
+                const btn = document.createElement('button');
+                
+                let btnStyle = "w-full text-left p-4 rounded-xl border-2 transition font-medium text-xs sm:text-sm flex items-start gap-3 bg-white border-slate-200 hover:border-emerald-400 hover:bg-emerald-50/50 text-slate-800";
+                
+                if (selectedAnswer !== null) {
+                    btn.disabled = true;
+                    if (optIdx === currentStage.answer) {
+                        btnStyle = "w-full text-left p-4 rounded-xl border-2 font-semibold text-xs sm:text-sm flex items-start gap-3 bg-emerald-50 border-emerald-500 text-emerald-900";
+                    } else if (optIdx === selectedAnswer) {
+                        btnStyle = "w-full text-left p-4 rounded-xl border-2 font-medium text-xs sm:text-sm flex items-start gap-3 bg-rose-50 border-rose-400 text-rose-900";
+                    } else {
+                        btnStyle = "w-full text-left p-4 rounded-xl border border-slate-200 text-xs sm:text-sm flex items-start gap-3 bg-slate-50 text-slate-400 opacity-60";
+                    }
+                }
+
+                btn.className = btnStyle;
+                btn.innerHTML = `
+                    <span class="w-6 h-6 rounded-lg bg-slate-100 text-slate-600 flex items-center justify-center font-bold text-xs flex-shrink-0 mt-0.5">${letter}</span>
+                    <span class="flex-1 leading-relaxed">${optText}</span>
+                `;
+
+                btn.onclick = () => handleOptionSelect(optIdx);
+                optionsContainer.appendChild(btn);
+            });
+
+            // Rationale feedback box
+            const rationaleBox = document.getElementById('rationale-box');
+            if (selectedAnswer !== null) {
+                rationaleBox.classList.remove('hidden');
+                const isCorrect = selectedAnswer === currentStage.answer;
+                
+                if (isCorrect) {
+                    rationaleBox.className = "mt-6 p-4 sm:p-5 rounded-xl border bg-emerald-50 border-emerald-200 fade-enter";
+                    document.getElementById('rationale-icon').innerText = "✓";
+                    document.getElementById('rationale-icon').className = "text-emerald-700 font-bold text-lg";
+                    document.getElementById('rationale-status').innerText = "Correct Decision";
+                    document.getElementById('rationale-status').className = "font-bold text-xs uppercase tracking-wider text-emerald-800";
+                } else {
+                    rationaleBox.className = "mt-6 p-4 sm:p-5 rounded-xl border bg-rose-50 border-rose-200 fade-enter";
+                    document.getElementById('rationale-icon').innerText = "✗";
+                    document.getElementById('rationale-icon').className = "text-rose-700 font-bold text-lg";
+                    document.getElementById('rationale-status').innerText = "Incorrect Option Selected";
+                    document.getElementById('rationale-status').className = "font-bold text-xs uppercase tracking-wider text-rose-800";
+                }
+
+                document.getElementById('rationale-text').innerText = currentStage.explanation;
+                document.getElementById('question-status-pill').innerText = "Completed Stage";
+                document.getElementById('question-status-pill').className = "text-xs font-bold text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded";
+            } else {
+                rationaleBox.classList.add('hidden');
+                document.getElementById('question-status-pill').innerText = "Select an option";
+                document.getElementById('question-status-pill').className = "text-xs font-medium text-slate-400";
+            }
+
+            // Navigation Controls state
+            document.getElementById('prev-stage-btn').disabled = currentStageIndex === 0;
+            
+            const isCaseCompleted = userAnswers[currentCaseIndex].every(ans => ans !== null);
+            if (isCaseCompleted) {
+                document.getElementById('case-completion-indicator').classList.remove('hidden');
+            } else {
+                document.getElementById('case-completion-indicator').classList.add('hidden');
+            }
+
+            updateCaseNavPills();
+        }
+
+        function handleOptionSelect(optionIdx) {
+            userAnswers[currentCaseIndex][currentStageIndex] = optionIdx;
+            renderCaseStage();
+            updateOverallProgress();
+        }
+
+        function navigateStage(delta) {
+            const nextIndex = currentStageIndex + delta;
+            if (nextIndex >= 0 && nextIndex < 3) {
+                currentStageIndex = nextIndex;
+                renderCaseStage();
+            } else if (nextIndex === 3) {
+                // Move to next case study if available
+                if (currentCaseIndex < 2) {
+                    currentCaseIndex++;
+                    currentStageIndex = 0;
+                    renderCaseStage();
+                } else {
+                    // Open Matrix View
+                    selectCase(3);
+                }
+            }
+        }
+
+        function goToStage(stageIdx) {
+            currentStageIndex = stageIdx;
+            renderCaseStage();
+        }
+
+        function selectCase(caseIdx) {
+            currentCaseIndex = caseIdx;
+            currentStageIndex = 0;
+            renderCaseStage();
+        }
+
+        function updateCaseNavPills() {
+            for (let i = 0; i < 4; i++) {
+                const navBtn = document.getElementById(`case-nav-${i}`);
+                if (!navBtn) continue;
+
+                if (i === currentCaseIndex) {
+                    navBtn.classList.remove('bg-white', 'bg-slate-50', 'border-slate-200');
+                    navBtn.classList.add('bg-emerald-50/80', 'border-emerald-300', 'shadow-2xs');
+                } else {
+                    navBtn.classList.remove('bg-emerald-50/80', 'border-emerald-300', 'shadow-2xs');
+                    navBtn.classList.add('bg-white', 'border-slate-200');
+                }
+
+                // Update cleared status badges
+                if (i < 3) {
+                    const cleared = userAnswers[i].filter(a => a !== null).length;
+                    const statusSpan = document.getElementById(`case-status-${i}`);
+                    if (statusSpan) {
+                        statusSpan.innerText = `${cleared}/3`;
+                        if (cleared === 3) {
+                            statusSpan.className = "text-[10px] bg-emerald-100 text-emerald-800 font-bold px-1.5 py-0.5 rounded";
+                        } else {
+                            statusSpan.className = "text-[10px] bg-slate-200 text-slate-600 font-semibold px-1.5 py-0.5 rounded";
+                        }
+                    }
+                }
+            }
+        }
+
+        function updateOverallProgress() {
+            let totalCleared = 0;
+            for (let c = 0; c < 3; c++) {
+                totalCleared += userAnswers[c].filter(a => a !== null).length;
+            }
+
+            const pct = Math.round((totalCleared / 9) * 100);
+            document.getElementById('overall-progress-pct').innerText = `${pct}%`;
+            document.getElementById('overall-progress-bar').style.width = `${pct}%`;
+            document.getElementById('stages-cleared-count').innerText = `${totalCleared} / 9`;
+        }
+
+        function resetAllCases() {
+            userAnswers = {
+                0: [null, null, null],
+                1: [null, null, null],
+                2: [null, null, null]
+            };
+            currentCaseIndex = 0;
+            currentStageIndex = 0;
+            renderCaseStage();
+            updateOverallProgress();
+        }
+
+        function toggleViewMode() {
+            isFullReaderMode = !isFullReaderMode;
+            const btnText = document.getElementById('view-mode-text');
+
+            if (isFullReaderMode) {
+                btnText.innerText = "Switch to Interactive Simulation Mode";
+                document.getElementById('interactive-view').classList.add('hidden');
+                document.getElementById('matrix-view').classList.add('hidden');
+                document.getElementById('full-reader-view').classList.remove('hidden');
+            } else {
+                btnText.innerText = "Switch to Full Reader View";
+                renderCaseStage();
+            }
+        }
+
+        function buildFullReaderContent() {
+            const container = document.getElementById('full-reader-view');
+            
+            let html = `
+                <div class="border-b border-slate-200 pb-6">
+                    <span class="text-xs font-bold text-emerald-600 uppercase tracking-widest bg-emerald-50 px-2.5 py-1 rounded border border-emerald-100">Study Guide Reader</span>
+                    <h2 class="text-2xl font-extrabold text-slate-900 mt-2">NREMT Practice Case Studies: Environmental Emergencies</h2>
+                    <p class="text-slate-500 text-sm mt-1">Full clinical narrative, decision questions, and rationale walkthrough.</p>
+                </div>
+            `;
+
+            caseData.forEach(c => {
+                html += `
+                    <div class="space-y-6 pt-4 border-t border-slate-100">
+                        <div class="flex items-center gap-3">
+                            <span class="px-2.5 py-1 rounded-md text-xs font-bold text-slate-700 bg-slate-100">${c.category}</span>
+                            <h3 class="text-xl font-bold text-slate-900">${c.title}</h3>
+                        </div>
+                `;
+
+                c.stages.forEach(st => {
+                    html += `
+                        <div class="bg-slate-50 p-5 rounded-2xl border border-slate-200 space-y-4">
+                            <h4 class="font-bold text-base text-slate-800">${st.stageTitle}</h4>
+                            <p class="text-sm text-slate-700 leading-relaxed">${st.scenario}</p>
+                            
+                            ${st.vitals ? `
+                                <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 py-2">
+                                    ${st.vitals.map(v => `
+                                        <div class="bg-white p-2.5 rounded-lg border border-slate-200 text-xs">
+                                            <span class="text-slate-400 block font-semibold">${v.label}</span>
+                                            <span class="font-bold text-slate-800">${v.value}</span>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            ` : ''}
+
+                            <div class="bg-white p-4 rounded-xl border border-slate-200 space-y-3">
+                                <p class="font-bold text-sm text-slate-900">${st.question}</p>
+                                <div class="space-y-1.5 text-xs text-slate-700">
+                                    ${st.options.map((opt, idx) => `
+                                        <div class="p-2 rounded ${idx === st.answer ? 'bg-emerald-100 font-bold text-emerald-900 border border-emerald-300' : 'bg-slate-50'}">
+                                            ${String.fromCharCode(65 + idx)}. ${opt}
+                                        </div>
+                                    `).join('')}
+                                </div>
+                                <div class="bg-emerald-50 p-3 rounded-lg border border-emerald-200 text-xs text-emerald-900 mt-2">
+                                    <strong>Correct Rationale:</strong> ${st.explanation}
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+
+                html += `</div>`;
+            });
+
+            container.innerHTML = html;
+        }
+    </script>
+</body>
+</html>

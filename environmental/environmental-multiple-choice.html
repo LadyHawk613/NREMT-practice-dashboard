@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NREMT Environmental Emergencies Quiz</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        .fade-in { animation: fadeIn 0.3s ease-in; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body class="bg-slate-50 min-h-screen flex flex-col items-center py-8 px-4">
+
+    <div class="max-w-2xl w-full bg-white rounded-xl shadow-lg overflow-hidden border border-slate-200">
+        <!-- Header -->
+        <div class="bg-emerald-700 p-6 text-white text-center">
+            <h1 class="text-2xl font-bold">Environmental Emergencies Practice</h1>
+            <p class="text-emerald-100 text-sm mt-1">NREMT EMT National Education Standards</p>
+        </div>
+
+        <!-- Progress Bar -->
+        <div class="w-full bg-slate-200 h-2">
+            <div id="progress" class="bg-emerald-500 h-2 transition-all duration-500" style="width: 0%"></div>
+        </div>
+
+        <div id="quiz-container" class="p-6">
+            <!-- Question Section -->
+            <div id="question-box" class="fade-in">
+                <div class="flex justify-between items-center mb-4">
+                    <span id="question-number" class="text-xs font-bold text-slate-500 uppercase tracking-wider">Question 1 of 20</span>
+                    <span id="score-display" class="text-xs font-bold text-emerald-600 bg-emerald-50 px-2 py-1 rounded">Score: 0</span>
+                </div>
+                
+                <h2 id="question-text" class="text-lg font-semibold text-slate-800 mb-6 leading-snug">
+                    Loading question...
+                </h2>
+
+                <div id="options" class="space-y-3">
+                    <!-- Options injected here -->
+                </div>
+
+                <!-- Feedback Section (Hidden by default) -->
+                <div id="feedback" class="mt-6 p-4 rounded-lg hidden border">
+                    <div class="flex items-center mb-2">
+                        <span id="feedback-icon" class="mr-2 font-bold"></span>
+                        <span id="feedback-status" class="font-bold text-sm uppercase"></span>
+                    </div>
+                    <p id="feedback-text" class="text-sm text-slate-600 italic"></p>
+                </div>
+
+                <!-- Navigation -->
+                <button id="next-btn" class="mt-8 w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 px-6 rounded-lg transition-colors hidden shadow-md">
+                    Next Question
+                </button>
+            </div>
+
+            <!-- Results Section (Hidden by default) -->
+            <div id="results-box" class="hidden text-center py-10 fade-in">
+                <div class="text-6xl mb-4">🌡️</div>
+                <h2 class="text-3xl font-bold text-slate-800 mb-2">Quiz Complete!</h2>
+                <p class="text-slate-500 mb-6">You've finished the NREMT Environmental Emergencies assessment.</p>
+                
+                <div class="inline-block p-8 bg-emerald-50 rounded-2xl mb-8 border border-emerald-100">
+                    <div id="final-score" class="text-5xl font-bold text-emerald-700 mb-2">0/20</div>
+                    <div id="percentage" class="text-xl font-semibold text-emerald-500">0%</div>
+                </div>
+
+                <div id="result-message" class="mb-8 px-4 text-slate-700 italic"></div>
+                
+                <button onclick="location.reload()" class="bg-slate-800 hover:bg-slate-900 text-white font-bold py-3 px-8 rounded-lg transition-colors shadow-md">
+                    Try Again
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const questions = [
+            {
+                q: "A 34-year-old male was working outside in high temperatures for several hours. He is confused, has hot dry skin, and his body temperature is 105°F (40.5°C). His blood pressure is 98/60 mmHg. Which intervention should the EMT perform first?",
+                options: [
+                    "Provide oral fluids",
+                    "Apply cold packs to the groin and axilla while cooling the patient",
+                    "Cover the patient with blankets to prevent shock",
+                    "Transport immediately without delaying treatment"
+                ],
+                answer: 1,
+                explanation: "Heat stroke is a life-threatening emergency. Rapid cooling is the priority. Oral fluids are contraindicated due to altered mental status and aspiration risk."
+            },
+            {
+                q: "A patient who has been exercising outdoors complains of weakness, dizziness, and nausea. He is sweating heavily and has normal mental status. His skin is cool and clammy. Which finding would indicate progression to heat stroke?",
+                options: [
+                    "Muscle cramps",
+                    "Heavy sweating",
+                    "Altered mental status",
+                    "Fatigue after exercise"
+                ],
+                answer: 2,
+                explanation: "Altered mental status is a key sign differentiating heat stroke from heat exhaustion."
+            },
+            {
+                q: "A patient with suspected heat stroke is lying outside after collapsing during a marathon. EMS arrives with cooling equipment available. Which action is most appropriate?",
+                options: [
+                    "Place ice packs only on the patient's forehead",
+                    "Begin active cooling immediately while preparing transport",
+                    "Wait until arrival at the hospital to begin cooling",
+                    "Give small amounts of electrolyte fluid"
+                ],
+                answer: 1,
+                explanation: "Cooling should begin immediately. Heat stroke causes cellular damage that worsens with time."
+            },
+            {
+                q: "A 67-year-old homeless patient is found outside in freezing temperatures. He is confused, shivering, and has a slow pulse. Which action is most appropriate?",
+                options: [
+                    "Remove wet clothing and gently warm the patient",
+                    "Massage the patient's arms and legs to increase circulation",
+                    "Encourage the patient to walk to generate heat",
+                    "Apply direct heat packs to the extremities"
+                ],
+                answer: 0,
+                explanation: "Hypothermic patients must be handled gently. Aggressive movement can trigger dangerous cardiac rhythms."
+            },
+            {
+                q: "A patient exposed to cold weather is no longer shivering, has decreased responsiveness, and has a slow respiratory rate. Which finding indicates severe hypothermia?",
+                options: [
+                    "Increased anxiety",
+                    "Loss of shivering",
+                    "Increased heart rate",
+                    "Warm flushed skin"
+                ],
+                answer: 1,
+                explanation: "Shivering stops as hypothermia worsens, indicating the body can no longer generate heat effectively."
+            },
+            {
+                q: "A skier presents with pale, numb fingers after prolonged cold exposure. Which action should the EMT take?",
+                options: [
+                    "Rub the fingers to restore circulation",
+                    "Break any blisters present",
+                    "Protect the area and prevent refreezing",
+                    "Apply ice to reduce swelling"
+                ],
+                answer: 2,
+                explanation: "Frostbite tissue is fragile. Rubbing and refreezing can cause further damage."
+            },
+            {
+                q: "A group of hikers is struck by lightning. One patient is unconscious, while another patient is walking around with minor burns. Which patient should be treated first?",
+                options: [
+                    "The patient with severe burns",
+                    "The patient complaining of pain",
+                    "The unconscious patient without breathing",
+                    "The patient who appears frightened"
+                ],
+                answer: 2,
+                explanation: "Lightning strikes require reverse triage. Patients in cardiac or respiratory arrest may survive with immediate intervention."
+            },
+            {
+                q: "During a lightning storm, an EMT crew is treating a patient outdoors. Which action is safest?",
+                options: [
+                    "Stand under a tree for protection",
+                    "Continue treatment near tall objects",
+                    "Move the patient and crew to a safer location if possible",
+                    "Delay treatment until the storm completely stops"
+                ],
+                answer: 2,
+                explanation: "Scene safety comes first. Avoid open areas and isolated tall objects."
+            },
+            {
+                q: "A patient presents after being bitten by an unknown snake. The bite area is swollen and painful. Which action should the EMT take?",
+                options: [
+                    "Apply a tourniquet above the bite",
+                    "Attempt to suction venom from the wound",
+                    "Keep the patient calm and limit movement",
+                    "Apply ice directly to the bite area"
+                ],
+                answer: 2,
+                explanation: "Movement increases venom circulation. Tourniquets, cutting, and suction are harmful."
+            },
+            {
+                q: "A patient bitten by a venomous snake has increasing swelling extending up the arm. Which finding is most concerning?",
+                options: [
+                    "Mild pain at the bite site",
+                    "Progressive swelling and systemic symptoms",
+                    "Anxiety about the injury",
+                    "Small puncture marks"
+                ],
+                answer: 1,
+                explanation: "Progressive swelling suggests venom spread and potential systemic toxicity."
+            },
+            {
+                q: "A patient reports removing a tick after camping. The EMT should be most concerned about:",
+                options: [
+                    "Immediate airway obstruction",
+                    "Possible transmission of infectious diseases",
+                    "Severe bleeding from the bite",
+                    "Allergic reaction in all patients"
+                ],
+                answer: 1,
+                explanation: "Ticks can transmit diseases such as Lyme disease and Rocky Mountain spotted fever."
+            },
+            {
+                q: "A 25-year-old female is stung by a bee. Five minutes later she has difficulty breathing, wheezing, and swelling of her lips. What should the EMT do first?",
+                options: [
+                    "Apply a cold pack",
+                    "Assist with epinephrine if available and indicated",
+                    "Give oral antihistamines",
+                    "Transport without treatment"
+                ],
+                answer: 1,
+                explanation: "Epinephrine is the first-line treatment for severe allergic reactions."
+            },
+            {
+                q: "A swimmer is pulled from the ocean after being stung by an unknown marine animal. He complains of severe pain and has difficulty breathing. What is the EMT’s priority?",
+                options: [
+                    "Identify the animal",
+                    "Treat airway and breathing problems",
+                    "Apply a tourniquet",
+                    "Remove all remaining tentacles immediately"
+                ],
+                answer: 1,
+                explanation: "ABCs take priority over identifying the organism."
+            },
+            {
+                q: "A patient is rescued from a lake after being submerged briefly. He is awake but coughing and breathing rapidly. What is the EMT’s priority?",
+                options: [
+                    "Determine how long he was underwater",
+                    "Assess airway and breathing",
+                    "Give food and fluids",
+                    "Allow him to rest alone"
+                ],
+                answer: 1,
+                explanation: "Respiratory compromise is the primary concern after submersion."
+            },
+            {
+                q: "Several family members are found confused inside a home with a running generator nearby. Which action should the EMT perform first?",
+                options: [
+                    "Enter immediately to remove patients",
+                    "Ensure scene safety and remove the source if possible",
+                    "Give oral glucose",
+                    "Check for traumatic injuries first"
+                ],
+                answer: 1,
+                explanation: "Carbon monoxide scenes are hazardous. EMT safety comes first."
+            },
+            {
+                q: "A patient exposed to carbon monoxide complains of headache, dizziness, and nausea. His pulse oximeter reads 99%. What should the EMT recognize?",
+                options: [
+                    "Carbon monoxide exposure is unlikely",
+                    "Pulse oximetry may appear normal despite poisoning",
+                    "The patient does not need oxygen",
+                    "The patient is experiencing hypoglycemia"
+                ],
+                answer: 1,
+                explanation: "Standard pulse oximeters cannot reliably detect carbon monoxide poisoning."
+            },
+            {
+                q: "A hiker develops headache, nausea, and dizziness after rapidly ascending to high elevation. What should the EMT recommend?",
+                options: [
+                    "Continue climbing slowly",
+                    "Descend to a lower altitude",
+                    "Drink alcohol to relax",
+                    "Exercise harder to adapt"
+                ],
+                answer: 1,
+                explanation: "Descent is the most effective treatment for altitude-related illness."
+            },
+            {
+                q: "A patient with heat exhaustion asks for aspirin because of a headache. Which response is most appropriate?",
+                options: [
+                    "Give aspirin immediately",
+                    "Avoid medications and focus on cooling and hydration",
+                    "Give aspirin with water",
+                    "Give acetaminophen only"
+                ],
+                answer: 1,
+                explanation: "Heat illness treatment focuses on cooling and fluids. NSAIDs may worsen kidney stress and dehydration effects."
+            },
+            {
+                q: "A firefighter reports several workers collapsed inside a warehouse. Two patients are confused, and one is unconscious. Which action should occur first?",
+                options: [
+                    "Begin treating the closest patient",
+                    "Determine the environmental hazard and ensure scene safety",
+                    "Obtain a medical history from each patient",
+                    "Start CPR immediately on the unconscious patient"
+                ],
+                answer: 1,
+                explanation: "Hazardous environments require scene safety before patient care."
+            },
+            {
+                q: "A 45-year-old male is found unconscious after spending the afternoon hiking in extreme heat. His skin is hot, he has rapid respirations, and his pulse is weak. Which combination of actions is most appropriate?",
+                options: [
+                    "Place him in a cool environment, begin rapid cooling, provide oxygen, and transport",
+                    "Give oral fluids and allow him to rest",
+                    "Cover him with blankets and monitor temperature",
+                    "Delay treatment until a physician gives instructions"
+                ],
+                answer: 0,
+                explanation: "This patient has heat stroke. Immediate cooling, oxygen support, and rapid transport are required."
+            }
+        ];
+
+        let currentQuestion = 0;
+        let score = 0;
+        let answered = false;
+
+        const questionText = document.getElementById('question-text');
+        const optionsContainer = document.getElementById('options');
+        const questionNumber = document.getElementById('question-number');
+        const scoreDisplay = document.getElementById('score-display');
+        const feedback = document.getElementById('feedback');
+        const feedbackText = document.getElementById('feedback-text');
+        const feedbackStatus = document.getElementById('feedback-status');
+        const feedbackIcon = document.getElementById('feedback-icon');
+        const nextBtn = document.getElementById('next-btn');
+        const progressBar = document.getElementById('progress');
+
+        function loadQuestion() {
+            answered = false;
+            const q = questions[currentQuestion];
+            
+            // Reset UI
+            feedback.classList.add('hidden');
+            nextBtn.classList.add('hidden');
+            optionsContainer.innerHTML = '';
+            
+            // Set Text
+            questionNumber.innerText = `Question ${currentQuestion + 1} of ${questions.length}`;
+            questionText.innerText = q.q;
+            progressBar.style.width = `${((currentQuestion) / questions.length) * 100}%`;
+
+            // Create Options
+            q.options.forEach((opt, index) => {
+                const btn = document.createElement('button');
+                btn.className = "w-full text-left p-4 rounded-lg border-2 border-slate-200 hover:border-emerald-300 hover:bg-emerald-50 transition-all font-medium text-slate-700 flex items-start";
+                btn.innerHTML = `<span class="bg-slate-100 text-slate-500 w-6 h-6 rounded-full inline-flex items-center justify-center mr-3 flex-shrink-0 text-xs">${String.fromCharCode(65 + index)}</span> <span>${opt}</span>`;
+                btn.onclick = () => checkAnswer(index, btn);
+                optionsContainer.appendChild(btn);
+            });
+        }
+
+        function checkAnswer(selectedIndex, clickedBtn) {
+            if (answered) return;
+            answered = true;
+
+            const correct = questions[currentQuestion].answer;
+            const allBtns = optionsContainer.querySelectorAll('button');
+
+            if (selectedIndex === correct) {
+                score++;
+                scoreDisplay.innerText = `Score: ${score}`;
+                clickedBtn.classList.replace('border-slate-200', 'border-green-500');
+                clickedBtn.classList.add('bg-green-50');
+                showFeedback(true);
+            } else {
+                clickedBtn.classList.replace('border-slate-200', 'border-red-500');
+                clickedBtn.classList.add('bg-red-50');
+                allBtns[correct].classList.replace('border-slate-200', 'border-green-500');
+                allBtns[correct].classList.add('bg-green-50');
+                showFeedback(false);
+            }
+
+            allBtns.forEach(btn => btn.disabled = true);
+            nextBtn.classList.remove('hidden');
+            
+            if (currentQuestion === questions.length - 1) {
+                nextBtn.innerText = "See Results";
+            }
+        }
+
+        function showFeedback(isCorrect) {
+            feedback.classList.remove('hidden');
+            if (isCorrect) {
+                feedback.classList.add('bg-green-50', 'border-green-100');
+                feedback.classList.remove('bg-red-50', 'border-red-100');
+                feedbackStatus.innerText = "Correct";
+                feedbackStatus.className = "font-bold text-sm uppercase text-green-700";
+                feedbackIcon.innerText = "✓";
+                feedbackIcon.className = "mr-2 font-bold text-green-700";
+            } else {
+                feedback.classList.add('bg-red-50', 'border-red-100');
+                feedback.classList.remove('bg-green-50', 'border-green-100');
+                feedbackStatus.innerText = "Incorrect";
+                feedbackStatus.className = "font-bold text-sm uppercase text-red-700";
+                feedbackIcon.innerText = "✗";
+                feedbackIcon.className = "mr-2 font-bold text-red-700";
+            }
+            feedbackText.innerText = questions[currentQuestion].explanation;
+        }
+
+        nextBtn.onclick = () => {
+            currentQuestion++;
+            if (currentQuestion < questions.length) {
+                loadQuestion();
+            } else {
+                showResults();
+            }
+        };
+
+        function showResults() {
+            document.getElementById('question-box').classList.add('hidden');
+            const resultsBox = document.getElementById('results-box');
+            resultsBox.classList.remove('hidden');
+            progressBar.style.width = '100%';
+
+            const finalScore = document.getElementById('final-score');
+            const percentage = document.getElementById('percentage');
+            const message = document.getElementById('result-message');
+
+            const percent = Math.round((score / questions.length) * 100);
+            finalScore.innerText = `${score}/${questions.length}`;
+            percentage.innerText = `${percent}%`;
+
+            if (percent >= 85) {
+                message.innerText = "Excellent! You have a strong grasp of NREMT Environmental Emergencies. You're well-prepared for these exam topics!";
+            } else if (percent >= 70) {
+                message.innerText = "Good job! Review the questions you missed, especially environmental scene safety and cooling/warming priorities.";
+            } else {
+                message.innerText = "Keep studying! Focus on Environmental Emergencies, paying close attention to triage, cooling protocols, and scene safety.";
+            }
+        }
+
+        // Initialize quiz
+        loadQuestion();
+    </script>
+</body>
+</html>
