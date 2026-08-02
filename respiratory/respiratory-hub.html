@@ -25,7 +25,7 @@
   }
   .dashboard {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    grid-template-columns: repeat(3, minmax(220px, 1fr));
     gap: 20px;
     max-width: 900px;
     margin: auto;
@@ -35,6 +35,9 @@
     border-radius: 15px;
     padding: 10px 12px;
     box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+  }
+  .slides-card {
+    grid-column: 3;
   }
   button {
     width: 100%;
@@ -90,17 +93,24 @@
       </button>
     </div>
 
-   <!-- Drag and Drop -->
+    <!-- Drag and Drop -->
     <div class="card">
       <button onclick="location.href='respiratory-dnd.html'">
         Drag-and-Drop
       </button>
     </div>
 
-   <!-- Hot Spot -->
+    <!-- Hot Spot -->
     <div class="card">
       <button onclick="location.href='respiratory-hot-spot.html'">
         Hot Spot Practice
+      </button>
+    </div>
+
+    <!-- Slides -->
+    <div class="card slides-card">
+    <button onclick="location.href='respiratory-hot-spot.html'">
+        Slides
       </button>
     </div>
    
