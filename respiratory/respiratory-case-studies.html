@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NREMT Progressive Case Studies - Lesson 11</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        .fade-in { animation: fadeIn 0.3s ease-in; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body class="bg-slate-50 min-h-screen flex flex-col items-center py-8 px-4">
+
+    <div class="max-w-2xl w-full bg-white rounded-xl shadow-lg overflow-hidden border border-slate-200">
+        <!-- Header -->
+        <div class="bg-teal-700 p-6 text-white text-center">
+            <h1 class="text-2xl font-bold">Progressive Scenario Practice</h1>
+            <p class="text-teal-100 text-sm mt-1">Lesson 11: NREMT Case Studies (5-Phase Clinical Judgment)</p>
+        </div>
+
+        <!-- Progress Bar -->
+        <div class="w-full bg-slate-200 h-2">
+            <div id="progress" class="bg-teal-500 h-2 transition-all duration-500" style="width: 0%"></div>
+        </div>
+
+        <div id="quiz-container" class="p-6">
+            <!-- Question Section -->
+            <div id="question-box" class="fade-in">
+                
+                <!-- Metadata Header -->
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4">
+                    <span id="scenario-title" class="text-xs font-bold text-teal-800 bg-teal-50 px-2 py-1 rounded border border-teal-200">
+                        Scenario 1
+                    </span>
+                    <div class="flex items-center gap-3">
+                        <span id="phase-badge" class="text-xs font-bold text-slate-600 bg-slate-100 px-2 py-1 rounded border border-slate-200">
+                            Phase 1
+                        </span>
+                        <span id="question-number" class="text-xs font-bold text-slate-500 uppercase tracking-wider">
+                            Question 1 of 22
+                        </span>
+                        <span id="score-display" class="text-xs font-bold text-teal-700 bg-teal-50 px-2 py-1 rounded border border-teal-200">
+                            Score: 0
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Scenario Info Card -->
+                <div id="info-card" class="mb-5 p-4 bg-slate-50 rounded-lg border border-slate-200 text-sm text-slate-700 space-y-2">
+                    <!-- Context injected here -->
+                </div>
+
+                <!-- Question Prompt -->
+                <h2 id="question-text" class="text-lg font-semibold text-slate-800 mb-6 leading-snug">
+                    Loading question...
+                </h2>
+
+                <!-- Options -->
+                <div id="options" class="space-y-3">
+                    <!-- Options injected here -->
+                </div>
+
+                <!-- Submit Button for Select All That Apply -->
+                <button id="submit-multi-btn" class="mt-4 w-full bg-teal-600 hover:bg-teal-700 text-white font-bold py-3 px-6 rounded-lg transition-colors hidden shadow-md">
+                    Submit Answer
+                </button>
+
+                <!-- Feedback Section -->
+                <div id="feedback" class="mt-6 p-4 rounded-lg hidden border">
+                    <div class="flex items-center mb-2">
+                        <span id="feedback-icon" class="mr-2 font-bold"></span>
+                        <span id="feedback-status" class="font-bold text-sm uppercase"></span>
+                    </div>
+                    <p id="feedback-text" class="text-sm text-slate-600 italic"></p>
+                </div>
+
+                <!-- Navigation -->
+                <button id="next-btn" class="mt-8 w-full bg-teal-600 hover:bg-teal-700 text-white font-bold py-3 px-6 rounded-lg transition-colors hidden shadow-md">
+                    Next Question
+                </button>
+            </div>
+
+            <!-- Results Section (Hidden by default) -->
+            <div id="results-box" class="hidden text-center py-10 fade-in">
+                <div class="text-6xl mb-4">🚑</div>
+                <h2 class="text-3xl font-bold text-slate-800 mb-2">Scenarios Complete!</h2>
+                <p class="text-slate-500 mb-6">You've completed both NREMT Progressive Case Studies.</p>
+                
+                <div class="inline-block p-8 bg-teal-50 rounded-2xl mb-8 border border-teal-100">
+                    <div id="final-score" class="text-5xl font-bold text-teal-700 mb-2">0/22</div>
+                    <div id="percentage" class="text-xl font-semibold text-teal-600">0%</div>
+                </div>
+
+                <div id="result-message" class="mb-8 px-4 text-slate-700 italic"></div>
+
+                <!-- Debrief Review Box -->
+                <div class="text-left bg-slate-50 border border-slate-200 rounded-xl p-5 mb-8">
+                    <h3 class="font-bold text-slate-800 text-base mb-3 border-b pb-2">Instructor Debrief Checklist</h3>
+                    <p class="text-xs text-slate-600 mb-3">Reflect on your clinical decision-making during these scenarios:</p>
+                    <ul class="list-disc list-inside text-xs text-slate-700 space-y-2">
+                        <li>What was the first life threat in each case?</li>
+                        <li>Was the problem primarily <strong>oxygenation</strong> or <strong>ventilation</strong>?</li>
+                        <li>Why was CPAP chosen vs. BVM ventilation?</li>
+                        <li>What findings signaled that the patient was transitioning from distress to failure?</li>
+                        <li>What findings made the patient a rapid transport priority?</li>
+                    </ul>
+                </div>
+                
+                <button onclick="location.reload()" class="bg-slate-800 hover:bg-slate-900 text-white font-bold py-3 px-8 rounded-lg transition-colors shadow-md">
+                    Try Case Studies Again
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const questions = [
+            // SCENARIO 1 - PHASE 1
+            {
+                scenario: "Scenario 1: Acute Respiratory Distress → Respiratory Failure",
+                patientContext: "<strong>Patient:</strong> 68-year-old male with history of COPD<br><strong>Dispatch:</strong> Difficulty breathing.<br><strong>Scene Info:</strong> You arrive at a private residence. Patient sits upright on edge of bed. Spouse states: 'He has been getting worse all morning. His inhaler is not helping.' Oxygen tank nearby, prescription meds on table, no hazards. Patient is alert but anxious.",
+                phase: "Phase 1: Scene Size-Up",
+                q: "1. What should be included in your scene size-up?",
+                type: "multi",
+                options: [
+                    "Ensure scene safety",
+                    "Determine mechanism of injury",
+                    "Identify nature of illness",
+                    "Determine number of patients",
+                    "Obtain a complete SAMPLE history"
+                ],
+                answer: [0, 2, 3], // A, C, D
+                explanation: "The scene size-up includes scene safety, PPE, MOI/NOI, number of patients, and need for additional resources. SAMPLE history occurs later during the secondary assessment."
+            },
+            {
+                scenario: "Scenario 1: Acute Respiratory Distress → Respiratory Failure",
+                patientContext: "<strong>Patient:</strong> 68-year-old male with history of COPD<br><strong>Dispatch:</strong> Difficulty breathing.<br><strong>Scene Info:</strong> Private residence, patient upright on bed, anxious, oxygen tank present.",
+                phase: "Phase 1: Scene Size-Up",
+                q: "2. Based on the information provided, this is primarily a:",
+                type: "single",
+                options: [
+                    "Trauma call",
+                    "Medical call",
+                    "Hazmat incident",
+                    "Cardiac arrest"
+                ],
+                answer: 1, // B
+                explanation: "This call presents with a medical nature of illness (COPD exacerbation / respiratory difficulty) without trauma mechanisms."
+            },
+
+            // SCENARIO 1 - PHASE 2
+            {
+                scenario: "Scenario 1: Acute Respiratory Distress → Respiratory Failure",
+                patientContext: "<strong>New Information:</strong> Patient says: 'I can't catch my breath.'<br><strong>Assessment:</strong> RR: 32/min | SpO₂: 84% | Skin: Pale and sweaty | Speaking in short sentences | Lung Sounds: Wheezing | Mental Status: Alert",
+                phase: "Phase 2: Primary Assessment",
+                q: "3. What is your first priority?",
+                type: "single",
+                options: [
+                    "Obtain medication history",
+                    "Assess airway and breathing",
+                    "Ask about previous COPD episodes",
+                    "Complete a secondary assessment"
+                ],
+                answer: 1, // B
+                explanation: "Airway and breathing are immediate life threats and take priority over history gathering or secondary assessments."
+            },
+            {
+                scenario: "Scenario 1: Acute Respiratory Distress → Respiratory Failure",
+                patientContext: "<strong>Assessment:</strong> RR: 32/min | SpO₂: 84% | Skin: Pale and sweaty | Speaking in short sentences | Lung Sounds: Wheezing | Mental Status: Alert",
+                phase: "Phase 2: Primary Assessment",
+                q: "4. Which finding indicates respiratory distress?",
+                type: "multi",
+                options: [
+                    "Increased respiratory rate",
+                    "Accessory muscle use",
+                    "Difficulty speaking",
+                    "Normal mental status",
+                    "Tripod positioning"
+                ],
+                answer: [0, 1, 2, 4], // A, B, C, E
+                explanation: "Tachypnea, accessory muscle use, speech difficulty, and tripod positioning are classic indicators of increased work of breathing (distress). Normal mental status shows he is still compensating."
+            },
+            {
+                scenario: "Scenario 1: Acute Respiratory Distress → Respiratory Failure",
+                patientContext: "<strong>Assessment:</strong> RR: 32/min | SpO₂: 84% | Skin: Pale and sweaty | Speaking in short sentences | Lung Sounds: Wheezing | Mental Status: Alert",
+                phase: "Phase 2: Primary Assessment",
+                q: "5. Is this patient experiencing respiratory distress or respiratory failure?",
+                type: "single",
+                options: [
+                    "Respiratory failure",
+                    "Respiratory distress"
+                ],
+                answer: 1, // B
+                explanation: "The patient is struggling (distress), but he is still alert, maintaining his own airway, and generating adequate respiratory effort without altered mental status."
+            },
+
+            // SCENARIO 1 - PHASE 3
+            {
+                scenario: "Scenario 1: Acute Respiratory Distress → Respiratory Failure",
+                patientContext: "<strong>New Information:</strong> You apply oxygen. After several minutes: SpO₂ improves to 88%, patient remains short of breath, RR remains 34/min, patient is still alert and cooperative.",
+                phase: "Phase 3: Treatment",
+                q: "6. What intervention should be considered?",
+                type: "single",
+                options: [
+                    "BVM ventilation",
+                    "CPAP",
+                    "Oral airway insertion",
+                    "Place patient supine"
+                ],
+                answer: 1, // B
+                explanation: "CPAP is appropriate because the patient is awake, can follow commands, has spontaneous breathing, and remains in severe respiratory distress despite standard oxygen."
+            },
+            {
+                scenario: "Scenario 1: Acute Respiratory Distress → Respiratory Failure",
+                patientContext: "<strong>Treatment Context:</strong> Evaluating candidate criteria for CPAP therapy.",
+                phase: "Phase 3: Treatment",
+                q: "7. Which finding would make CPAP inappropriate?",
+                type: "single",
+                options: [
+                    "Patient is anxious",
+                    "Patient has COPD",
+                    "Patient cannot follow commands",
+                    "Patient has difficulty breathing"
+                ],
+                answer: 2, // C
+                explanation: "An inability to follow commands (altered mental status) or maintain an airway is an absolute contraindication for CPAP."
+            },
+            {
+                scenario: "Scenario 1: Acute Respiratory Distress → Respiratory Failure",
+                patientContext: "<strong>New Information:</strong> The patient receives CPAP. After several minutes: RR decreases to 24/min, SpO₂ improves to 94%, patient reports breathing easier.",
+                phase: "Phase 3: Treatment",
+                q: "8. What should occur next?",
+                type: "single",
+                options: [
+                    "Stop monitoring because patient improved",
+                    "Perform reassessment",
+                    "Cancel transport",
+                    "Remove CPAP"
+                ],
+                answer: 1, // B
+                explanation: "Continuous reassessment is mandatory for any patient receiving critical respiratory interventions to ensure continued stability."
+            },
+
+            // SCENARIO 1 - PHASE 4
+            {
+                scenario: "Scenario 1: Acute Respiratory Distress → Respiratory Failure",
+                patientContext: "<strong>New Information:</strong> During transport, the patient becomes tired.<br><strong>Reassessment:</strong> RR: 10/min | Respirations: Shallow | Mental Status: Increasing confusion",
+                phase: "Phase 4: Transport Decision",
+                q: "9. What does this change indicate?",
+                type: "single",
+                options: [
+                    "Patient is improving",
+                    "Patient is experiencing respiratory failure",
+                    "Patient has anxiety",
+                    "Patient no longer needs oxygen"
+                ],
+                answer: 1, // B
+                explanation: "A drop in respiratory rate paired with shallow breathing and altered mental status in an exhausted patient signals a transition into respiratory failure."
+            },
+            {
+                scenario: "Scenario 1: Acute Respiratory Distress → Respiratory Failure",
+                patientContext: "<strong>Reassessment:</strong> RR: 10/min | Respirations: Shallow | Mental Status: Increasing confusion",
+                phase: "Phase 4: Transport Decision",
+                q: "10. What intervention is now most appropriate?",
+                type: "single",
+                options: [
+                    "Continue CPAP only",
+                    "Obtain SAMPLE history",
+                    "Prepare for BVM ventilation",
+                    "Remove oxygen"
+                ],
+                answer: 2, // C
+                explanation: "The patient is failing to ventilationaly compensate and can no longer protect their airway or benefit from CPAP; assisted positive pressure ventilation (BVM) is required."
+            },
+
+            // SCENARIO 1 - PHASE 5
+            {
+                scenario: "Scenario 1: Acute Respiratory Distress → Respiratory Failure",
+                patientContext: "<strong>Operations Focus:</strong> Completing the Patient Care Report (PCR) and operational handoff.",
+                phase: "Phase 5: Operations / Documentation",
+                q: "11. Which information should be documented?",
+                type: "multi",
+                options: [
+                    "Initial respiratory assessment",
+                    "Oxygen therapy provided",
+                    "CPAP settings if used",
+                    "Patient response to treatment",
+                    "EMT opinion about why patient became ill"
+                ],
+                answer: [0, 1, 2, 3], // A, B, C, D
+                explanation: "Objective findings, interventions, settings, and patient responses must be documented. Subjective EMT opinions or non-clinical assumptions should never be included."
+            },
+            {
+                scenario: "Scenario 1: Acute Respiratory Distress → Respiratory Failure",
+                patientContext: "<strong>Operations Focus:</strong> Documentation principles.",
+                phase: "Phase 5: Operations / Documentation",
+                q: "12. Why is documenting patient response important?",
+                type: "single",
+                options: [
+                    "It replaces reassessment",
+                    "It shows effectiveness of treatment",
+                    "It prevents transport",
+                    "It eliminates the need for vital signs"
+                ],
+                answer: 1, // B
+                explanation: "Documenting patient responses demonstrates treatment efficacy and establishes clinical trends for receiving hospital staff."
+            },
+
+            // SCENARIO 2 - PHASE 1
+            {
+                scenario: "Scenario 2: Opioid Overdose → Ventilation Failure",
+                patientContext: "<strong>Patient:</strong> 34-year-old female found unconscious<br><strong>Dispatch:</strong> Unresponsive person.<br><strong>Scene Info:</strong> Apartment scene, medication bottles on table, friend present, no immediate hazards identified. Friend states: 'She took something and then became sleepy.'",
+                phase: "Phase 1: Scene Size-Up",
+                q: "13. What is the first priority?",
+                type: "single",
+                options: [
+                    "Ask the friend what medication she took",
+                    "Ensure scene safety",
+                    "Search the apartment",
+                    "Obtain past medical history"
+                ],
+                answer: 1, // B
+                explanation: "Scene safety is always the paramount first step before approaching any patient or conducting assessments."
+            },
+            {
+                scenario: "Scenario 2: Opioid Overdose → Ventilation Failure",
+                patientContext: "<strong>Patient:</strong> 34-year-old female found unconscious.<br><strong>Environment:</strong> Medication bottles nearby, friend reports patient took something.",
+                phase: "Phase 1: Scene Size-Up",
+                q: "14. The nature of illness is most likely:",
+                type: "single",
+                options: [
+                    "Trauma",
+                    "Respiratory infection",
+                    "Possible overdose",
+                    "Cardiac arrest"
+                ],
+                answer: 2, // C
+                explanation: "Physical evidence (medication bottles) and witness statements point directly to a toxicological mechanism / possible overdose."
+            },
+
+            // SCENARIO 2 - PHASE 2
+            {
+                scenario: "Scenario 2: Opioid Overdose → Ventilation Failure",
+                patientContext: "<strong>Assessment:</strong> Mental Status: Responds only to painful stimulus | RR: 5/min | Chest Rise: Shallow | SpO₂: 82% | Airway: Partially obstructed",
+                phase: "Phase 2: Primary Assessment",
+                q: "15. What is the greatest immediate threat?",
+                type: "single",
+                options: [
+                    "Medication history",
+                    "Inadequate ventilation",
+                    "Long-term substance use",
+                    "Mild hypoxia"
+                ],
+                answer: 1, // B
+                explanation: "A respiratory rate of 5/min with shallow depth constitutes severe ventilation failure, leading directly to life-threatening hypoxia."
+            },
+            {
+                scenario: "Scenario 2: Opioid Overdose → Ventilation Failure",
+                patientContext: "<strong>Assessment:</strong> Unconscious patient with upper airway noise.",
+                phase: "Phase 2: Primary Assessment",
+                q: "16. What airway sound may indicate tongue obstruction?",
+                type: "single",
+                options: [
+                    "Wheezing",
+                    "Snoring",
+                    "Crackles",
+                    "Stridor"
+                ],
+                answer: 1, // B
+                explanation: "Snoring sounds are characteristic of a upper airway obstruction, most commonly caused by relaxation of the tongue into the pharynx."
+            },
+
+            // SCENARIO 2 - PHASE 3
+            {
+                scenario: "Scenario 2: Opioid Overdose → Ventilation Failure",
+                patientContext: "<strong>Assessment:</strong> Unconscious, RR: 5/min, shallow breathing, SpO₂: 82%.",
+                phase: "Phase 3: Treatment",
+                q: "17. What is the appropriate intervention?",
+                type: "single",
+                options: [
+                    "Nasal cannula oxygen",
+                    "CPAP",
+                    "BVM ventilation",
+                    "Wait for more information"
+                ],
+                answer: 2, // C
+                explanation: "Hypoventilation (5 breaths/min) requires positive pressure ventilatory support with a Bag-Valve-Mask."
+            },
+            {
+                scenario: "Scenario 2: Opioid Overdose → Ventilation Failure",
+                patientContext: "<strong>Treatment Context:</strong> Comparing oxygen delivery vs. ventilation assistance.",
+                phase: "Phase 3: Treatment",
+                q: "18. Why is BVM preferred over oxygen alone?",
+                type: "single",
+                options: [
+                    "Oxygen does not treat inadequate ventilation",
+                    "BVM treats infection",
+                    "BVM lowers heart rate",
+                    "Oxygen is dangerous"
+                ],
+                answer: 0, // A
+                explanation: "Passive oxygen delivery (e.g., NRB or cannula) relies on the patient moving adequate tidal volume. When ventilation rate/depth fails, positive pressure support (BVM) is required."
+            },
+            {
+                scenario: "Scenario 2: Opioid Overdose → Ventilation Failure",
+                patientContext: "<strong>New Information:</strong> After ventilation, SpO₂ improves, patient begins breathing faster, and mental status improves slightly.",
+                phase: "Phase 3: Treatment",
+                q: "19. What action is required?",
+                type: "single",
+                options: [
+                    "Continue monitoring and reassess",
+                    "Stop ventilation immediately",
+                    "Cancel transport",
+                    "Leave patient with family"
+                ],
+                answer: 0, // A
+                explanation: "Continued monitoring and frequent reassessment are essential, as overdose effects and respiratory depression can recur."
+            },
+
+            // SCENARIO 2 - PHASE 4
+            {
+                scenario: "Scenario 2: Opioid Overdose → Ventilation Failure",
+                patientContext: "<strong>Transport Phase:</strong> Patient becomes more responsive but remains confused.<br><strong>Vital Signs:</strong> RR: 12/min | SpO₂: 96% | HR: 110 bpm",
+                phase: "Phase 4: Transport Decision",
+                q: "20. Should this patient be transported?",
+                type: "single",
+                options: [
+                    "No, because oxygen improved",
+                    "Yes, because overdose and altered mental status require evaluation",
+                    "No, because the patient woke up",
+                    "Only if family requests"
+                ],
+                answer: 1, // B
+                explanation: "Patients with altered mental status following a suspected overdose require formal hospital evaluation due to the risk of re-sedation and metabolic complications."
+            },
+
+            // SCENARIO 2 - PHASE 5
+            {
+                scenario: "Scenario 2: Opioid Overdose → Ventilation Failure",
+                patientContext: "<strong>Operations Focus:</strong> Documentation accuracy.",
+                phase: "Phase 5: Operations",
+                q: "21. Which documentation is most important?",
+                type: "single",
+                options: [
+                    "\"Patient looked better later\"",
+                    "Exact assessment findings and interventions performed",
+                    "Personal opinion about drug use",
+                    "Information unrelated to care"
+                ],
+                answer: 1, // B
+                explanation: "Clear, factual, and chronological documentation of exact findings and interventions provides a legal and clinical record of care."
+            },
+            {
+                scenario: "Scenario 2: Opioid Overdose → Ventilation Failure",
+                patientContext: "<strong>Operations Focus:</strong> Operational & legal responsibilities.",
+                phase: "Phase 5: Operations",
+                q: "22. Which operational concern applies to this call?",
+                type: "single",
+                options: [
+                    "Maintaining patient confidentiality",
+                    "Sharing patient details publicly",
+                    "Leaving medications behind",
+                    "Ignoring scene safety"
+                ],
+                answer: 0, // A
+                explanation: "Protecting patient privacy and maintaining HIPAA compliance is a primary legal and operational duty during and after all emergency responses."
+            }
+        ];
+
+        let currentQuestion = 0;
+        let score = 0;
+        let selectedOptions = [];
+
+        const scenarioTitle = document.getElementById('scenario-title');
+        const phaseBadge = document.getElementById('phase-badge');
+        const infoCard = document.getElementById('info-card');
+        const questionText = document.getElementById('question-text');
+        const optionsContainer = document.getElementById('options');
+        const questionNumber = document.getElementById('question-number');
+        const scoreDisplay = document.getElementById('score-display');
+        const feedback = document.getElementById('feedback');
+        const feedbackText = document.getElementById('feedback-text');
+        const feedbackStatus = document.getElementById('feedback-status');
+        const feedbackIcon = document.getElementById('feedback-icon');
+        const nextBtn = document.getElementById('next-btn');
+        const submitMultiBtn = document.getElementById('submit-multi-btn');
+        const progressBar = document.getElementById('progress');
+
+        function loadQuestion() {
+            selectedOptions = [];
+            const q = questions[currentQuestion];
+            
+            // Reset UI
+            feedback.classList.add('hidden');
+            nextBtn.classList.add('hidden');
+            submitMultiBtn.classList.add('hidden');
+            optionsContainer.innerHTML = '';
+            
+            // Set Headers & Context
+            scenarioTitle.innerText = q.scenario.split(':')[0];
+            phaseBadge.innerText = q.phase;
+            questionNumber.innerText = `Question ${currentQuestion + 1} of ${questions.length}`;
+            infoCard.innerHTML = q.patientContext;
+            
+            let typeLabel = q.type === 'multi' ? ' <span class="text-xs font-bold text-teal-600 uppercase block mt-1">(Select all that apply)</span>' : '';
+            questionText.innerHTML = q.q + typeLabel;
+            
+            progressBar.style.width = `${((currentQuestion) / questions.length) * 100}%`;
+
+            // Create Options
+            if (q.type === 'single') {
+                q.options.forEach((opt, index) => {
+                    const btn = document.createElement('button');
+                    btn.className = "w-full text-left p-4 rounded-lg border-2 border-slate-200 hover:border-teal-300 hover:bg-teal-50 transition-all font-medium text-slate-700 flex items-start";
+                    btn.innerHTML = `<span class="bg-slate-100 text-slate-500 w-6 h-6 rounded-full inline-flex items-center justify-center mr-3 flex-shrink-0 text-xs font-bold">${String.fromCharCode(65 + index)}</span> <span>${opt}</span>`;
+                    btn.onclick = () => checkSingleAnswer(index, btn);
+                    optionsContainer.appendChild(btn);
+                });
+            } else {
+                // Multi-select
+                q.options.forEach((opt, index) => {
+                    const btn = document.createElement('button');
+                    btn.className = "w-full text-left p-4 rounded-lg border-2 border-slate-200 hover:border-teal-300 hover:bg-teal-50 transition-all font-medium text-slate-700 flex items-start";
+                    btn.innerHTML = `<span class="opt-checkbox bg-slate-100 text-slate-500 w-6 h-6 rounded inline-flex items-center justify-center mr-3 flex-shrink-0 text-xs font-bold border">${String.fromCharCode(65 + index)}</span> <span>${opt}</span>`;
+                    btn.onclick = () => toggleMultiSelect(index, btn);
+                    optionsContainer.appendChild(btn);
+                });
+                submitMultiBtn.classList.remove('hidden');
+            }
+        }
+
+        function checkSingleAnswer(selectedIndex, clickedBtn) {
+            const q = questions[currentQuestion];
+            const correct = q.answer;
+            const allBtns = optionsContainer.querySelectorAll('button');
+
+            allBtns.forEach(btn => btn.disabled = true);
+
+            if (selectedIndex === correct) {
+                score++;
+                scoreDisplay.innerText = `Score: ${score}`;
+                clickedBtn.classList.replace('border-slate-200', 'border-green-500');
+                clickedBtn.classList.add('bg-green-50');
+                showFeedback(true, q.explanation);
+            } else {
+                clickedBtn.classList.replace('border-slate-200', 'border-red-500');
+                clickedBtn.classList.add('bg-red-50');
+                allBtns[correct].classList.replace('border-slate-200', 'border-green-500');
+                allBtns[correct].classList.add('bg-green-50');
+                showFeedback(false, q.explanation);
+            }
+
+            nextBtn.classList.remove('hidden');
+            if (currentQuestion === questions.length - 1) {
+                nextBtn.innerText = "See Results";
+            }
+        }
+
+        function toggleMultiSelect(index, btn) {
+            const checkSpan = btn.querySelector('.opt-checkbox');
+            if (selectedOptions.includes(index)) {
+                selectedOptions = selectedOptions.filter(i => i !== index);
+                btn.classList.remove('border-teal-500', 'bg-teal-50');
+                btn.classList.add('border-slate-200');
+                checkSpan.classList.remove('bg-teal-600', 'text-white');
+                checkSpan.classList.add('bg-slate-100', 'text-slate-500');
+            } else {
+                selectedOptions.push(index);
+                btn.classList.remove('border-slate-200');
+                btn.classList.add('border-teal-500', 'bg-teal-50');
+                checkSpan.classList.remove('bg-slate-100', 'text-slate-500');
+                checkSpan.classList.add('bg-teal-600', 'text-white');
+            }
+        }
+
+        submitMultiBtn.onclick = () => {
+            const q = questions[currentQuestion];
+            const correctArr = q.answer.sort();
+            const selectedArr = selectedOptions.sort();
+
+            const allBtns = optionsContainer.querySelectorAll('button');
+            allBtns.forEach(btn => btn.disabled = true);
+            submitMultiBtn.classList.add('hidden');
+
+            const isCorrect = correctArr.length === selectedArr.length && correctArr.every((val, index) => val === selectedArr[index]);
+
+            allBtns.forEach((btn, idx) => {
+                if (correctArr.includes(idx)) {
+                    btn.classList.remove('border-slate-200', 'border-teal-500', 'bg-teal-50');
+                    btn.classList.add('border-green-500', 'bg-green-50');
+                } else if (selectedArr.includes(idx)) {
+                    btn.classList.remove('border-slate-200', 'border-teal-500', 'bg-teal-50');
+                    btn.classList.add('border-red-500', 'bg-red-50');
+                }
+            });
+
+            if (isCorrect) {
+                score++;
+                scoreDisplay.innerText = `Score: ${score}`;
+                showFeedback(true, q.explanation);
+            } else {
+                showFeedback(false, q.explanation);
+            }
+
+            nextBtn.classList.remove('hidden');
+            if (currentQuestion === questions.length - 1) {
+                nextBtn.innerText = "See Results";
+            }
+        };
+
+        function showFeedback(isCorrect, explanation) {
+            feedback.classList.remove('hidden');
+            if (isCorrect) {
+                feedback.classList.add('bg-green-50', 'border-green-100');
+                feedback.classList.remove('bg-red-50', 'border-red-100');
+                feedbackStatus.innerText = "Correct";
+                feedbackStatus.className = "font-bold text-sm uppercase text-green-700";
+                feedbackIcon.innerText = "✓";
+                feedbackIcon.className = "mr-2 font-bold text-green-700";
+            } else {
+                feedback.classList.add('bg-red-50', 'border-red-100');
+                feedback.classList.remove('bg-green-50', 'border-green-100');
+                feedbackStatus.innerText = "Incorrect";
+                feedbackStatus.className = "font-bold text-sm uppercase text-red-700";
+                feedbackIcon.innerText = "✗";
+                feedbackIcon.className = "mr-2 font-bold text-red-700";
+            }
+            feedbackText.innerText = explanation;
+        }
+
+        nextBtn.onclick = () => {
+            currentQuestion++;
+            if (currentQuestion < questions.length) {
+                loadQuestion();
+            } else {
+                showResults();
+            }
+        };
+
+        function showResults() {
+            document.getElementById('question-box').classList.add('hidden');
+            const resultsBox = document.getElementById('results-box');
+            resultsBox.classList.remove('hidden');
+            progressBar.style.width = '100%';
+
+            const finalScore = document.getElementById('final-score');
+            const percentage = document.getElementById('percentage');
+            const message = document.getElementById('result-message');
+
+            const percent = Math.round((score / questions.length) * 100);
+            finalScore.innerText = `${score}/${questions.length}`;
+            percentage.innerText = `${percent}%`;
+
+            if (percent >= 85) {
+                message.innerText = "Outstanding clinical judgment! You successfully navigated both changing scenarios and prioritized life threats accurately.";
+            } else if (percent >= 70) {
+                message.innerText = "Good performance! Review the key transitional signs where patients progress from respiratory distress to failure.";
+            } else {
+                message.innerText = "Keep practicing! Focus on identifying when positive pressure ventilation (BVM) is required over oxygenation alone.";
+            }
+        }
+
+        // Initialize
+        loadQuestion();
+    </script>
+</body>
+</html>
