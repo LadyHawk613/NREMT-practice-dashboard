@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Respiratory Emergencies | NREMT Practice</title>
+<style>
+  * {
+    box-sizing: border-box;
+  }
+  body {
+    font-family: Arial, Helvetica, sans-serif;
+    background: linear-gradient(135deg, #e0f7fa, #80deea);
+    min-height: 100vh;
+    margin: 0;
+    padding: 40px 20px;
+    text-align: center;
+  }
+  h1 {
+    color: #083344;
+    margin-bottom: 10px;
+  }
+  .subtitle {
+    color: #164e63;
+    margin-bottom: 30px;
+  }
+  .dashboard {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(220px, 1fr));
+    gap: 20px;
+    max-width: 900px;
+    margin: auto;
+  }
+  .card {
+    background: white;
+    border-radius: 15px;
+    padding: 10px 12px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+  }
+  .slides-card {
+    grid-column: 3;
+  }
+  button {
+    width: 100%;
+    padding: 15px;
+    border: none;
+    border-radius: 12px;
+    background: #0284c7;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+  }
+  button:hover {
+    background: #0369a1;
+    transform: translateY(-2px);
+  }
+  .back-btn {
+    background: #475569;
+    max-width: 200px;
+    margin: 0 auto 25px auto;
+  }
+  .back-btn:hover {
+    background: #334155;
+  }
+  .description {
+    margin-top: 12px;
+    color: #475569;
+    font-size: 14px;
+  }
+</style>
+</head>
+<body>
+
+  <!-- Back Button -->
+  <button class="back-btn" onclick="location.href='../index.html'">← Main Dashboard</button>
+
+  <h1>Respiratory Emergencies</h1>
+  <div class="subtitle">Select a practice activity to begin</div>
+
+  <div class="dashboard">
+
+    <!-- Multiple Choice -->
+    <div class="card">
+      <button onclick="/* Coming soon */">
+      <!-- <button onclick="location.href='respiratory-multiple-choice.html'"> -->
+        20 Questions
+      </button>
+    </div>
+
+    <!-- Case Studies -->
+    <div class="card">
+      <button onclick="location.href='respiratory-case-study.html'">
+        Case Studies
+      </button>
+    </div>
+
+    <!-- Drag and Drop -->
+    <div class="card">
+      <button onclick="location.href='respiratory-dnd.html'">
+        Drag-and-Drop
+      </button>
+    </div>
+
+    <!-- Hot Spot -->
+    <div class="card">
+      <button onclick="location.href='respiratory-hot-spot.html'">
+        Hot Spot Practice
+      </button>
+    </div>
+
+    <!-- Slides -->
+    <div class="card slides-card">
+    <button onclick="location.href='respiratory-hot-spot.html'">
+        Slides
+      </button>
+    </div>
+   
+  </div>
+</body>
+</html>
