@@ -1,0 +1,206 @@
+<!-- ============================================================
+  Respiratory Vocabulary Flashcards — standalone component
+  Drop this whole block into any page. All styles are scoped
+  with a .vocab-flashcards wrapper so it won't collide with
+  your dashboard's existing CSS (rename the wrapper class if
+  you already use "vocab-flashcards" elsewhere).
+============================================================= -->
+
+<div class="vocab-flashcards">
+  <style>
+    .vocab-flashcards {
+      --vf-bg: #0A1F33;
+      --vf-card: #12263A;
+      --vf-teal: #02C39A;
+      --vf-teal-deep: #028090;
+      --vf-orange: #E67E22;
+      --vf-text: #FFFFFF;
+      --vf-text-dim: #D1E5EC;
+      --vf-border: rgba(255,255,255,0.08);
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: var(--vf-bg);
+      color: var(--vf-text);
+      padding: 24px;
+      border-radius: 12px;
+    }
+    .vocab-flashcards h2 {
+      margin: 0 0 4px;
+      font-size: 20px;
+    }
+    .vocab-flashcards .vf-lead {
+      color: var(--vf-text-dim);
+      margin: 0 0 16px;
+      font-size: 14px;
+    }
+    .vocab-flashcards .vf-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 14px;
+    }
+    @media (max-width: 640px) {
+      .vocab-flashcards .vf-grid { grid-template-columns: 1fr; }
+    }
+    .vocab-flashcards .vf-card {
+      perspective: 1000px;
+      height: 110px;
+      cursor: pointer;
+    }
+    .vocab-flashcards .vf-card-inner {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      transition: transform 0.5s;
+      transform-style: preserve-3d;
+    }
+    .vocab-flashcards .vf-card.flipped .vf-card-inner {
+      transform: rotateY(180deg);
+    }
+    .vocab-flashcards .vf-face {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 14px;
+      border-radius: 10px;
+      backface-visibility: hidden;
+      font-size: 14px;
+    }
+    .vocab-flashcards .vf-face.vf-front {
+      background: var(--vf-card);
+      border: 1px solid var(--vf-border);
+      color: var(--vf-text);
+      font-weight: 700;
+      font-size: 16px;
+    }
+    .vocab-flashcards .vf-face.vf-back {
+      background: var(--vf-teal-deep);
+      color: #fff;
+      transform: rotateY(180deg);
+    }
+    .vocab-flashcards .vf-callout {
+      margin-top: 16px;
+      padding: 14px 16px;
+      border-radius: 8px;
+      background: rgba(230,126,34,0.12);
+      border: 1px solid rgba(230,126,34,0.35);
+      color: var(--vf-text-dim);
+      font-size: 14px;
+    }
+    .vocab-flashcards .vf-callout b {
+      color: var(--vf-orange);
+    }
+    .vocab-flashcards .vf-section + .vf-section {
+      margin-top: 28px;
+    }
+  </style>
+
+  <div class="vf-section">
+    <h2>Vocabulary Review — Set 1</h2>
+    <p class="vf-lead">Click a card to flip it. Try to recall the definition before you flip.</p>
+    <div class="vf-grid">
+      <div class="vf-card"><div class="vf-card-inner">
+        <div class="vf-face vf-front">Airway</div>
+        <div class="vf-face vf-back">Passage that allows air movement into and out of the lungs</div>
+      </div></div>
+      <div class="vf-card"><div class="vf-card-inner">
+        <div class="vf-face vf-front">Patent airway</div>
+        <div class="vf-face vf-back">An open airway free of obstruction</div>
+      </div></div>
+      <div class="vf-card"><div class="vf-card-inner">
+        <div class="vf-face vf-front">Respiration</div>
+        <div class="vf-face vf-back">Exchange of oxygen and carbon dioxide at the alveoli and tissues</div>
+      </div></div>
+      <div class="vf-card"><div class="vf-card-inner">
+        <div class="vf-face vf-front">Ventilation</div>
+        <div class="vf-face vf-back">Mechanical movement of air into and out of the lungs</div>
+      </div></div>
+      <div class="vf-card"><div class="vf-card-inner">
+        <div class="vf-face vf-front">Oxygenation</div>
+        <div class="vf-face vf-back">Delivery of oxygen to the blood and tissues</div>
+      </div></div>
+      <div class="vf-card"><div class="vf-card-inner">
+        <div class="vf-face vf-front">Respiratory distress</div>
+        <div class="vf-face vf-back">Increased effort of breathing that is still adequate</div>
+      </div></div>
+      <div class="vf-card"><div class="vf-card-inner">
+        <div class="vf-face vf-front">Respiratory failure</div>
+        <div class="vf-face vf-back">Inadequate breathing causing oxygen and/or CO₂ derangement</div>
+      </div></div>
+      <div class="vf-card"><div class="vf-card-inner">
+        <div class="vf-face vf-front">Hypoxia</div>
+        <div class="vf-face vf-back">Insufficient oxygen available to the tissues</div>
+      </div></div>
+      <div class="vf-card"><div class="vf-card-inner">
+        <div class="vf-face vf-front">Hypercapnia</div>
+        <div class="vf-face vf-back">Excess carbon dioxide retained in the blood</div>
+      </div></div>
+      <div class="vf-card"><div class="vf-card-inner">
+        <div class="vf-face vf-front">Apnea</div>
+        <div class="vf-face vf-back">Absence of breathing</div>
+      </div></div>
+    </div>
+    <div class="vf-callout"><b>Note</b> — Distress versus failure and oxygenation versus ventilation are the pairs most often confused on the exam.</div>
+  </div>
+
+  <div class="vf-section">
+    <h2>Vocabulary Review — Set 2</h2>
+    <p class="vf-lead">Click a card to flip it. Try to recall the definition before you flip.</p>
+    <div class="vf-grid">
+      <div class="vf-card"><div class="vf-card-inner">
+        <div class="vf-face vf-front">Dyspnea</div>
+        <div class="vf-face vf-back">Difficulty breathing</div>
+      </div></div>
+      <div class="vf-card"><div class="vf-card-inner">
+        <div class="vf-face vf-front">Tachypnea</div>
+        <div class="vf-face vf-back">Rapid breathing rate</div>
+      </div></div>
+      <div class="vf-card"><div class="vf-card-inner">
+        <div class="vf-face vf-front">Bradypnea</div>
+        <div class="vf-face vf-back">Slow breathing rate</div>
+      </div></div>
+      <div class="vf-card"><div class="vf-card-inner">
+        <div class="vf-face vf-front">Cyanosis</div>
+        <div class="vf-face vf-back">Bluish skin/mucosa from poor oxygenation</div>
+      </div></div>
+      <div class="vf-card"><div class="vf-card-inner">
+        <div class="vf-face vf-front">Accessory muscles</div>
+        <div class="vf-face vf-back">Neck/chest/abdominal muscles used with labored breathing</div>
+      </div></div>
+      <div class="vf-card"><div class="vf-card-inner">
+        <div class="vf-face vf-front">Tripod position</div>
+        <div class="vf-face vf-back">Leaning forward on arms to improve breathing</div>
+      </div></div>
+      <div class="vf-card"><div class="vf-card-inner">
+        <div class="vf-face vf-front">Wheezing</div>
+        <div class="vf-face vf-back">High-pitched sound from narrowed bronchioles</div>
+      </div></div>
+      <div class="vf-card"><div class="vf-card-inner">
+        <div class="vf-face vf-front">Stridor</div>
+        <div class="vf-face vf-back">Harsh high-pitched sound from upper airway obstruction</div>
+      </div></div>
+      <div class="vf-card"><div class="vf-card-inner">
+        <div class="vf-face vf-front">BVM</div>
+        <div class="vf-face vf-back">Bag-valve-mask for positive-pressure ventilation</div>
+      </div></div>
+      <div class="vf-card"><div class="vf-card-inner">
+        <div class="vf-face vf-front">CPAP</div>
+        <div class="vf-face vf-back">Continuous positive airway pressure to keep alveoli open</div>
+      </div></div>
+    </div>
+    <div class="vf-callout"><b>EXAM NOTE</b> — Stridor points upward to the airway; wheezing points downward to the bronchioles. The location of the sound decides your intervention.</div>
+  </div>
+
+  <script>
+    // Scope the flip handler to just this component's cards
+    (function(){
+      var root = document.currentScript.closest('.vocab-flashcards');
+      root.querySelectorAll('.vf-card').forEach(function(card){
+        card.addEventListener('click', function(){
+          card.classList.toggle('flipped');
+        });
+      });
+    })();
+  </script>
+</div>
