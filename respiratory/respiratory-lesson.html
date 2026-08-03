@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NREMT Prep: Airway, Respiration, and Ventilation</title>
+    <style>
+        :root {
+            --primary: #0284c7;
+            --primary-dark: #0369a1;
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --success: #16a34a;
+            --error: #dc2626;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        header h1 {
+            color: var(--primary-dark);
+            margin-bottom: 5px;
+        }
+
+        header p {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 24px;
+            margin-bottom: 20px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+
+        h2 {
+            color: var(--primary-dark);
+            border-bottom: 2px solid var(--border);
+            padding-bottom: 8px;
+            margin-top: 0;
+        }
+
+        ul {
+            padding-left: 20px;
+        }
+
+        li {
+            margin-bottom: 10px;
+        }
+
+        .highlight-box {
+            background-color: #e0f2fe;
+            border-left: 4px solid var(--primary);
+            padding: 15px;
+            border-radius: 0 8px 8px 0;
+            margin: 15px 0;
+        }
+
+        /* Quiz Styles */
+        .quiz-question {
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+
+        .options-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .options-list li {
+            margin-bottom: 8px;
+        }
+
+        .option-btn {
+            width: 100%;
+            text-align: left;
+            padding: 10px 15px;
+            border: 1px solid var(--border);
+            background: white;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 1rem;
+        }
+
+        .option-btn:hover {
+            background-color: #f1f5f9;
+            border-color: var(--primary);
+        }
+
+        .option-btn.correct {
+            background-color: #dcfce7;
+            border-color: var(--success);
+            color: #14532d;
+            font-weight: 600;
+        }
+
+        .option-btn.incorrect {
+            background-color: #fee2e2;
+            border-color: var(--error);
+            color: #7f1d1d;
+        }
+
+        .feedback {
+            margin-top: 10px;
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .feedback.correct { color: var(--success); }
+        .feedback.incorrect { color: var(--error); }
+
+        .nav-links {
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .nav-links a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .nav-links a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>NREMT Study Module</h1>
+        <p>Airway, Respiration, and Ventilation</p>
+    </header>
+
+    <!-- Core Concepts Section -->
+    <section class="card">
+        <h2>Key Concepts</h2>
+        <p>Distinguishing between airway management, respiration, and ventilation is a high-yield concept for the NREMT cognitive exam.</p>
+        
+        <ul>
+            <li><strong>Airway:</strong> Ensuring the passage from the nose/mouth down to the lungs is patent and clear of obstructions (blood, vomitus, structural collapse).</li>
+            <li><strong>Ventilation:</strong> The mechanical process of moving air in and out of the lungs (inspiration and expiration).</li>
+            <li><strong>Respiration:</strong> The actual exchange of oxygen and carbon dioxide at the cellular and alveolar levels.</li>
+        </ul>
+
+        <div class="highlight-box">
+            <strong>NREMT Exam Tip:</strong> Remember that a patient can be ventilating (moving chest wall) but not respiring effectively (e.g., carbon monoxide poisoning or severe pulmonary edema blocking gas exchange). Always treat hypoxia promptly with appropriate oxygen therapy.
+        </div>
+    </section>
+
+    <!-- Quick Review Numbers Section -->
+    <section class="card">
+        <h2>Vitals & Oxygen Delivery Benchmarks</h2>
+        <ul>
+            <li><strong>Normal Adult Respiratory Rate:</strong> 12–20 breaths/minute.</li>
+            <li><strong>Nasal Cannula Flow Rate:</strong> 1–6 Liters per minute (LPM), delivering roughly 24%–44% $O_2$.</li>
+            <li><strong>Non-Rebreather Mask (NRM) Flow Rate:</strong> 10–15 LPM, delivering up to 90%+ $O_2$.</li>
+            <li><strong>BVM (Bag-Valve Mask) with Reservoir:</strong> 15 LPM, delivering nearly 100% $O_2$.</li>
+        </ul>
+    </section>
+
+    <!-- Interactive Quiz Section -->
+    <section class="card">
+        <h2>Knowledge Check</h2>
+        
+        <div id="quiz-container">
+            <p class="quiz-question">1. Which of the following best defines the process of <em>respiration</em>?</p>
+            <ul class="options-list">
+                <li><button class="option-btn" onclick="checkAnswer(this, false)">The mechanical movement of air into and out of the lungs.</button></li>
+                <li><button class="option-btn" onclick="checkAnswer(this, true)">The exchange of oxygen and carbon dioxide across the alveolar and cellular membranes.</button></li>
+                <li><button class="option-btn" onclick="checkAnswer(this, false)">The physical clearance of foreign objects from the upper airway.</button></li>
+                <li><button class="option-btn" onclick="checkAnswer(this, false)">The regulation of respiratory rate by the medulla oblongata.</button></li>
+            </ul>
+            <div id="feedback-1" class="feedback"></div>
+        </div>
+    </section>
+
+    <div class="nav-links">
+        <a href="index.html">← Back to Main Dashboard</a>
+    </div>
+</div>
+
+<script>
+    function checkAnswer(button, isCorrect) {
+        const container = button.closest('#quiz-container');
+        const buttons = container.querySelectorAll('.option-btn');
+        const feedback = container.querySelector('#feedback-1');
+
+        // Disable all buttons after choice is made
+        buttons.forEach(btn => {
+            btn.disabled = true;
+            if (btn === button) {
+                btn.classList.add(isCorrect ? 'correct' : 'incorrect');
+            } else if (isCorrect === false && btn.getAttribute('onclick').includes('true')) {
+                // Highlight the correct one if user got it wrong
+                btn.classList.add('correct');
+            }
+        });
+
+        if (isCorrect) {
+            feedback.textContent = "Correct! Respiration is the cellular/alveolar exchange of gases.";
+            feedback.className = "feedback correct";
+        } else {
+            feedback.textContent = "Incorrect. Review the distinction between mechanical ventilation and gas exchange respiration.";
+            feedback.className = "feedback incorrect";
+        }
+    }
+</script>
+
+</body>
+</html>
