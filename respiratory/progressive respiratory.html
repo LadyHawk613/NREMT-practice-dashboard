@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NREMT Progressive Case Studies</title>
+    <style>
+        :root {
+            --primary-blue: #1e3a8a;
+            --accent-blue: #2563eb;
+            --light-blue: #eff6ff;
+            --border-blue: #bfdbfe;
+            --dark-navy: #0f172a;
+            --success-green: #166534;
+            --success-bg: #f0fdf4;
+            --error-red: #991b1b;
+            --error-bg: #fef2f2;
+            --gray-100: #f8fafc;
+            --gray-200: #e2e8f0;
+            --gray-600: #475569;
+            --gray-800: #1e293b;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: #f1f5f9;
+            color: var(--gray-800);
+            line-height: 1.5;
+            padding: 20px 10px;
+        }
+
+        .container {
+            max-width: 850px;
+            margin: 0 auto;
+        }
+
+        header {
+            background: var(--primary-blue);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        header h1 {
+            font-size: 1.6rem;
+            margin-bottom: 5px;
+        }
+
+        header p {
+            font-size: 0.95rem;
+            opacity: 0.9;
+        }
+
+        .case-nav {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .case-tab {
+            flex: 1;
+            padding: 12px;
+            background: white;
+            border: 2px solid var(--border-blue);
+            border-radius: 8px;
+            text-align: center;
+            font-weight: 600;
+            color: var(--primary-blue);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .case-tab.active {
+            background: var(--accent-blue);
+            color: white;
+            border-color: var(--accent-blue);
+        }
+
+        .case-card {
+            background: white;
+            border-radius: 10px;
+            padding: 24px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            display: none;
+        }
+
+        .case-card.active {
+            display: block;
+        }
+
+        .phase-block {
+            background: var(--light-blue);
+            border-left: 4px solid var(--accent-blue);
+            padding: 16px;
+            border-radius: 0 8px 8px 0;
+            margin-bottom: 20px;
+            animation: fadeIn 0.4s ease-in-out;
+        }
+
+        .phase-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--primary-blue);
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .findings-list {
+            list-style: none;
+            margin-top: 8px;
+        }
+
+        .findings-list li {
+            position: relative;
+            padding-left: 20px;
+            margin-bottom: 4px;
+            font-size: 0.95rem;
+        }
+
+        .findings-list li::before {
+            content: "•";
+            position: absolute;
+            left: 5px;
+            color: var(--accent-blue);
+            font-weight: bold;
+        }
+
+        blockquote {
+            background: rgba(255, 255, 255, 0.7);
+            border-left: 3px solid var(--primary-blue);
+            padding: 8px 12px;
+            margin: 8px 0;
+            font-style: italic;
+            color: var(--gray-800);
+            border-radius: 0 4px 4px 0;
+        }
+
+        .question-block {
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 1px solid var(--gray-200);
+        }
+
+        .question-text {
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: var(--dark-navy);
+            font-size: 1.05rem;
+        }
+
+        .options-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .option-btn {
+            background: white;
+            border: 1px solid var(--gray-200);
+            padding: 12px 16px;
+            border-radius: 6px;
+            text-align: left;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+        }
+
+        .option-btn:hover:not(:disabled) {
+            background: var(--light-blue);
+            border-color: var(--border-blue);
+        }
+
+        .option-btn:disabled {
+            cursor: default;
+        }
+
+        .option-btn.correct {
+            background: var(--success-bg);
+            border-color: var(--success-green);
+            color: var(--success-green);
+            font-weight: 600;
+        }
+
+        .option-btn.incorrect {
+            background: var(--error-bg);
+            border-color: var(--error-red);
+            color: var(--error-red);
+            opacity: 0.7;
+        }
+
+        .feedback-box {
+            margin-top: 12px;
+            padding: 12px 16px;
+            border-radius: 6px;
+            font-size: 0.95rem;
+            display: none;
+        }
+
+        .feedback-box.correct {
+            display: block;
+            background: var(--success-bg);
+            color: var(--success-green);
+            border: 1px solid #bbf7d0;
+        }
+
+        .feedback-box.incorrect {
+            display: block;
+            background: var(--error-bg);
+            color: var(--error-red);
+            border: 1px solid #fecaca;
+        }
+
+        .next-btn {
+            margin-top: 15px;
+            background: var(--accent-blue);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            display: none;
+            margin-left: auto;
+        }
+
+        .next-btn:hover {
+            background: var(--primary-blue);
+        }
+
+        .reflection-section {
+            display: none;
+            background: var(--gray-100);
+            border: 1px solid var(--gray-200);
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 25px;
+        }
+
+        .reflection-title {
+            color: var(--primary-blue);
+            font-weight: 700;
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+            border-bottom: 2px solid var(--border-blue);
+            padding-bottom: 5px;
+        }
+
+        .discussion-item {
+            margin-bottom: 12px;
+            background: white;
+            padding: 12px;
+            border-radius: 6px;
+            border: 1px solid var(--gray-200);
+        }
+
+        .discussion-q {
+            font-weight: 600;
+            color: var(--dark-navy);
+            margin-bottom: 4px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .discussion-a {
+            display: none;
+            margin-top: 8px;
+            font-size: 0.9rem;
+            color: var(--gray-600);
+            border-top: 1px dashed var(--gray-200);
+            padding-top: 8px;
+        }
+
+        .toggle-icon {
+            font-size: 0.8rem;
+            color: var(--accent-blue);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>NREMT Interactive Progressive Cases</h1>
+        <p>Adaptive Clinical Decision-Making &amp; Patient Reassessment</p>
+    </header>
+
+    <div class="case-nav">
+        <div class="case-tab active" onclick="switchCase(3)">Case #3: The Silent Asthmatic</div>
+        <div class="case-tab" onclick="switchCase(4)">Case #4: Breathing Fast Isn't Anxiety</div>
+    </div>
+
+    <!-- CASE 3 -->
+    <div id="case-3" class="case-card active">
+        <h2>Case #3: "The Silent Asthmatic"</h2>
+        <p style="color: var(--gray-600); margin-bottom: 20px; font-size: 0.9rem;">
+            Assess the patient and answer correctly to progress through the encounter.
+        </p>
+
+        <div id="c3-step-1" class="step-container">
+            <div class="phase-block">
+                <div class="phase-title">Phase 1 – Dispatch &amp; Initial Findings</div>
+                <p><strong>Dispatch:</strong> "17-year-old female having trouble breathing."</p>
+                <blockquote> Mother: "She has asthma. Her inhaler isn't working."</blockquote>
+                <p><strong>Initial Assessment:</strong></p>
+                <ul class="findings-list">
+                    <li>Sitting forward, tripod position (hands on knees)</li>
+                    <li>One-word answers, cyanotic lips</li>
+                    <li>Audible wheezing from doorway</li>
+                    <li>RR: 38 | Pulse: 132 | SpO₂: 84% on room air</li>
+                    <li>Skin: Cool, pale, diaphoretic</li>
+                </ul>
+            </div>
+
+            <div class="question-block">
+                <div class="question-text">1. What is your immediate priority?</div>
+                <div class="options-group" id="c3-q1-options">
+                    <button class="option-btn" onclick="checkAnswer(3, 1, 'A', false)">A. Obtain SAMPLE history</button>
+                    <button class="option-btn" onclick="checkAnswer(3, 1, 'B', false)">B. Assist with the patient's inhaler</button>
+                    <button class="option-btn" onclick="checkAnswer(3, 1, 'C', true)">C. Administer high-flow oxygen while rapidly assessing airway and breathing</button>
+                    <button class="option-btn" onclick="checkAnswer(3, 1, 'D', false)">D. Obtain lung sounds first</button>
+                </div>
+                <div id="c3-q1-fb" class="feedback-box"></div>
+                <button id="c3-q1-next" class="next-btn" onclick="revealStep(3, 2)">Proceed to Reassessment &rarr;</button>
+            </div>
+        </div>
+
+        <div id="c3-step-2" class="step-container" style="display:none;">
+            <div class="phase-block">
+                <div class="phase-title">Phase 2 – Reassessment</div>
+                <p>The patient becomes more fatigued and is now barely speaking.</p>
+                <ul class="findings-list">
+                    <li>Chest movement becoming smaller</li>
+                    <li>Wheezing becoming much quieter</li>
+                    <li>SpO₂ remains 84%</li>
+                    <li>RR falls from 38 to 18</li>
+                </ul>
+                <blockquote> Mother: "I think she's getting better because she's breathing slower."</blockquote>
+            </div>
+
+            <div class="question-block">
+                <div class="question-text">2. What does the quieter wheezing most likely indicate?</div>
+                <div class="options-group" id="c3-q2-options">
+                    <button class="option-btn" onclick="checkAnswer(3, 2, 'A', false)">A. Bronchospasm is resolving</button>
+                    <button class="option-btn" onclick="checkAnswer(3, 2, 'B', false)">B. Improved oxygenation</button>
+                    <button class="option-btn" onclick="checkAnswer(3, 2, 'C', true)">C. Severe airway obstruction with minimal airflow ("silent chest")</button>
+                    <button class="option-btn" onclick="checkAnswer(3, 2, 'D', false)">D. Anxiety has improved</button>
+                </div>
+                <div id="c3-q2-fb" class="feedback-box"></div>
+                <button id="c3-q2-next" class="next-btn" onclick="revealStep(3, 3)">Proceed to Treatment Decision &rarr;</button>
+            </div>
+        </div>
+
+        <div id="c3-step-3" class="step-container" style="display:none;">
+            <div class="phase-block">
+                <div class="phase-title">Phase 3 – Treatment Decision</div>
+                <p>The patient has her prescribed albuterol MDI. Medical control authorizes assisting with administration.</p>
+                <p><strong>Reassessment after 2 assisted puffs:</strong></p>
+                <ul class="findings-list">
+                    <li>No clinical improvement</li>
+                    <li>Mental status worsening</li>
+                    <li>RR now 12 and shallow</li>
+                    <li>SpO₂ 82%</li>
+                </ul>
+            </div>
+
+            <div class="question-block">
+                <div class="question-text">3. What is your next priority?</div>
+                <div class="options-group" id="c3-q3-options">
+                    <button class="option-btn" onclick="checkAnswer(3, 3, 'A', false)">A. Continue repeated inhaler treatments</button>
+                    <button class="option-btn" onclick="checkAnswer(3, 3, 'B', true)">B. Begin BVM ventilation with high-concentration oxygen</button>
+                    <button class="option-btn" onclick="checkAnswer(3, 3, 'C', false)">C. Place patient supine</button>
+                    <button class="option-btn" onclick="checkAnswer(3, 3, 'D', false)">D. Encourage slower breathing</button>
+                </div>
+                <div id="c3-q3-fb" class="feedback-box"></div>
+                <button id="c3-q3-next" class="next-btn" onclick="revealStep(3, 4)">Proceed to Final Reassessment &rarr;</button>
+            </div>
+        </div>
+
+        <div id="c3-step-4" class="step-container" style="display:none;">
+            <div class="phase-block">
+                <div class="phase-title">Phase 4 – Deterioration</div>
+                <p>The patient becomes unresponsive.</p>
+                <ul class="findings-list">
+                    <li>Weak carotid pulse</li>
+                    <li>Shallow gasping respirations</li>
+                    <li>Minimal chest rise</li>
+                </ul>
+            </div>
+
+            <div class="question-block">
+                <div class="question-text">4. What should occur next?</div>
+                <div class="options-group" id="c3-q4-options">
+                    <button class="option-btn" onclick="checkAnswer(3, 4, 'A', true)">A. Insert an OPA if no gag reflex and ventilate with BVM</button>
+                    <button class="option-btn" onclick="checkAnswer(3, 4, 'B', false)">B. Continue inhaler therapy</button>
+                    <button class="option-btn" onclick="checkAnswer(3, 4, 'C', false)">C. Begin chest compressions</button>
+                    <button class="option-btn" onclick="checkAnswer(3, 4, 'D', false)">D. Apply CPAP</button>
+                </div>
+                <div id="c3-q4-fb" class="feedback-box"></div>
+                <button id="c3-q4-next" class="next-btn" onclick="showReflection(3)">View Reflection &amp; Teaching Points &rarr;</button>
+            </div>
+        </div>
+
+        <div id="c3-reflection" class="reflection-section">
+            <div class="reflection-title">Phase 5 – Debrief &amp; Discussion Questions</div>
+            <p style="margin-bottom: 12px; font-size: 0.9rem;">Click a question below to view the clinical discussion points:</p>
+            
+            <div class="discussion-item">
+                <div class="discussion-q" onclick="toggleDiscussion(this)">
+                    1. Why can decreasing wheezing represent worsening asthma?
+                    <span class="toggle-icon">+</span>
+                </div>
+                <div class="discussion-a">
+                    Wheezing requires moving air through narrowed airways. When smooth muscle constriction and mucus plugging become severe enough to reduce air movement to near zero ("silent chest"), wheezing stops because there is insufficient airflow to produce sound.
+                </div>
+            </div>
+
+            <div class="discussion-item">
+                <div class="discussion-q" onclick="toggleDiscussion(this)">
+                    2. Why is exhaustion a dangerous sign in severe asthma?
+                    <span class="toggle-icon">+</span>
+                </div>
+                <div class="discussion-a">
+                    Breathing through constricted airways exponentially increases the work of breathing. When respiratory muscles fatigue, respiratory rate and tidal volume drop sharply, leading rapidly to respiratory failure and arrest.
+                </div>
+            </div>
+
+            <div class="discussion-item">
+                <div class="discussion-q" onclick="toggleDiscussion(this)">
+                    3. At what point does oxygen therapy become ventilation?
+                    <span class="toggle-icon">+</span>
+                </div>
+                <div class="discussion-a">
+                    Supplemental oxygen is insufficient when the patient cannot adequately move volume (inadequate tidal volume, bradypnea, or severe fatigue). Once ventilation fails to maintain air movement, positive-pressure ventilation (BVM) is required.
+                </div>
+            </div>
+
+            <div class="discussion-item">
+                <div class="discussion-q" onclick="toggleDiscussion(this)">
+                    4. Why is asthma primarily a ventilation problem?
+                    <span class="toggle-icon">+</span>
+                </div>
+                <div class="discussion-a">
+                    Asthma involves mechanical bronchospasm, edema, and mucus plugging that physically impede air moving in and out of the alveoli. Supplying oxygen alone does not solve the physical restriction to air movement; volume movement (ventilation) must be supported.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- CASE 4 -->
+    <div id="case-4" class="case-card">
+        <h2>Case #4: "Breathing Fast Isn't Always Anxiety"</h2>
+        <p style="color: var(--gray-600); margin-bottom: 20px; font-size: 0.9rem;">
+            Assess the patient and answer correctly to progress through the encounter.
+        </p>
+
+        <div id="c4-step-1" class="step-container">
+            <div class="phase-block">
+                <div class="phase-title">Phase 1 – Dispatch &amp; Initial Findings</div>
+                <p><strong>Dispatch:</strong> "Difficulty breathing."</p>
+                <p>You find a 24-year-old woman sitting on the floor crying. Rapid breathing is immediately visible.</p>
+                <blockquote> Family: "She's having a panic attack."</blockquote>
+                <p><strong>Initial Assessment:</strong></p>
+                <ul class="findings-list">
+                    <li>Alert, speaking full sentences</li>
+                    <li>RR: 34 | Pulse: 118 | SpO₂: 99% | Skin: Warm</li>
+                    <li>Lung sounds: Clear bilaterally | No trauma noted</li>
+                </ul>
+                <blockquote> Patient: "My chest hurts when I breathe."</blockquote>
+            </div>
+
+            <div class="question-block">
+                <div class="question-text">1. Which finding should make you question the assumption that this is only anxiety?</div>
+                <div class="options-group" id="c4-q1-options">
+                    <button class="option-btn" onclick="checkAnswer(4, 1, 'A', false)">A. Crying</button>
+                    <button class="option-btn" onclick="checkAnswer(4, 1, 'B', false)">B. Rapid respirations</button>
+                    <button class="option-btn" onclick="checkAnswer(4, 1, 'C', true)">C. Pleuritic chest pain</button>
+                    <button class="option-btn" onclick="checkAnswer(4, 1, 'D', false)">D. Young age</button>
+                </div>
+                <div id="c4-q1-fb" class="feedback-box"></div>
+                <button id="c4-q1-next" class="next-btn" onclick="revealStep(4, 2)">Proceed to History &rarr;</button>
+            </div>
+        </div>
+
+        <div id="c4-step-2" class="step-container" style="display:none;">
+            <div class="phase-block">
+                <div class="phase-title">Phase 2 – History &amp; Focused Findings</div>
+                <p>You continue your targeted history taking.</p>
+                <blockquote> Patient: "I flew back from Europe yesterday."</blockquote>
+                <p><strong>Physical Inspection:</strong> You observe mild swelling in her left calf.</p>
+            </div>
+
+            <div class="question-block">
+                <div class="question-text">2. What condition is now most concerning?</div>
+                <div class="options-group" id="c4-q2-options">
+                    <button class="option-btn" onclick="checkAnswer(4, 2, 'A', false)">A. Asthma</button>
+                    <button class="option-btn" onclick="checkAnswer(4, 2, 'B', true)">B. Pulmonary embolism</button>
+                    <button class="option-btn" onclick="checkAnswer(4, 2, 'C', false)">C. Hyperventilation syndrome</button>
+                    <button class="option-btn" onclick="checkAnswer(4, 2, 'D', false)">D. Pneumonia</button>
+                </div>
+                <div id="c4-q2-fb" class="feedback-box"></div>
+                <button id="c4-q2-next" class="next-btn" onclick="revealStep(4, 3)">Proceed to Assessment &rarr;</button>
+            </div>
+        </div>
+
+        <div id="c4-step-3" class="step-container" style="display:none;">
+            <div class="phase-block">
+                <div class="phase-title">Phase 3 – Ongoing Assessment</div>
+                <p><strong>Updated Vitals:</strong></p>
+                <ul class="findings-list">
+                    <li>RR: 36 | HR: 126 | BP: 102/68</li>
+                    <li>SpO₂ falls to 92%</li>
+                    <li>Lung sounds: Remain clear bilaterally</li>
+                </ul>
+            </div>
+
+            <div class="question-block">
+                <div class="question-text">3. Which intervention is most appropriate?</div>
+                <div class="options-group" id="c4-q3-options">
+                    <button class="option-btn" onclick="checkAnswer(4, 3, 'A', false)">A. Coach slower breathing</button>
+                    <button class="option-btn" onclick="checkAnswer(4, 3, 'B', true)">B. Apply high-concentration oxygen and expedite transport</button>
+                    <button class="option-btn" onclick="checkAnswer(4, 3, 'C', false)">C. Assist with albuterol</button>
+                    <button class="option-btn" onclick="checkAnswer(4, 3, 'D', false)">D. Apply CPAP</button>
+                </div>
+                <div id="c4-q3-fb" class="feedback-box"></div>
+                <button id="c4-q3-next" class="next-btn" onclick="revealStep(4, 4)">Proceed to Deterioration Phase &rarr;</button>
+            </div>
+        </div>
+
+        <div id="c4-step-4" class="step-container" style="display:none;">
+            <div class="phase-block">
+                <div class="phase-title">Phase 4 – Acute Deterioration</div>
+                <p>Five minutes later en route / during prep:</p>
+                <ul class="findings-list">
+                    <li>Increasing shortness of breath</li>
+                    <li>Patient becomes confused</li>
+                    <li>SpO₂ drops to 86%</li>
+                    <li>HR increases to 138</li>
+                </ul>
+            </div>
+
+            <div class="question-block">
+                <div class="question-text">4. What is your highest priority?</div>
+                <div class="options-group" id="c4-q4-options">
+                    <button class="option-btn" onclick="checkAnswer(4, 4, 'A', false)">A. Continue detailed history</button>
+                    <button class="option-btn" onclick="checkAnswer(4, 4, 'B', true)">B. Rapid transport while supporting oxygenation and reassessing frequently</button>
+                    <button class="option-btn" onclick="checkAnswer(4, 4, 'C', false)">C. Encourage deep breathing exercises</button>
+                    <button class="option-btn" onclick="checkAnswer(4, 4, 'D', false)">D. Obtain another SAMPLE history before moving</button>
+                </div>
+                <div id="c4-q4-fb" class="feedback-box"></div>
+                <button id="c4-q4-next" class="next-btn" onclick="showReflection(4)">View Reflection &amp; Teaching Points &rarr;</button>
+            </div>
+        </div>
+
+        <div id="c4-reflection" class="reflection-section">
+            <div class="reflection-title">Phase 5 – Debrief &amp; Discussion Questions</div>
+            <p style="margin-bottom: 12px; font-size: 0.9rem;">Click a question below to view the clinical discussion points:</p>
+            
+            <div class="discussion-item">
+                <div class="discussion-q" onclick="toggleDiscussion(this)">
+                    1. Why can pulmonary embolism present with clear lung sounds?
+                    <span class="toggle-icon">+</span>
+                </div>
+                <div class="discussion-a">
+                    Pulmonary embolism is a vascular occlusion (perfusion problem) in the pulmonary arteries, not an airway or alveolar fluid problem. Because the bronchial airways and alveoli remain clear of fluid or spasm, breath sounds usually remain clear.
+                </div>
+            </div>
+
+            <div class="discussion-item">
+                <div class="discussion-q" onclick="toggleDiscussion(this)">
+                    2. Why does a normal early SpO₂ not rule out severe pathology?
+                    <span class="toggle-icon">+</span>
+                </div>
+                <div class="discussion-a">
+                    A patient can maintain near-normal arterial saturation initially by hyperventilating (increasing RR and minute volume). As compensatory mechanisms fail or the clot burden impacts hemodynamic stability, SpO₂ drops rapidly.
+                </div>
+            </div>
+
+            <div class="discussion-item">
+                <div class="discussion-q" onclick="toggleDiscussion(this)">
+                    3. What historical clues strongly suggest pulmonary embolism?
+                    <span class="toggle-icon">+</span>
+                </div>
+                <div class="discussion-a">
+                    Recent prolonged immobilization (long air travel), unilateral leg swelling/tenderness (indicative of a Deep Vein Thrombosis), sudden onset dyspnea, and pleuritic (sharp, inhalation-dependent) chest pain.
+                </div>
+            </div>
+
+            <div class="discussion-item">
+                <div class="discussion-q" onclick="toggleDiscussion(this)">
+                    4. Why is anchoring on an "anxiety" diagnosis dangerous?
+                    <span class="toggle-icon">+</span>
+                </div>
+                <div class="discussion-a">
+                    Anchoring bias leads clinicians to ignore critical red flags (pleuritic pain, hypoxia, tachycardia, DVT signs). Treating a physical emergency as psychological delays life-saving oxygenation, transport, and definitive care.
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const explanations = {
+        c3: {
+            q1: {
+                correct: "Correct! The patient presents with severe respiratory distress, cyanosis, and hypoxia (SpO2 84%). Primary assessment priorities (Airway, Breathing, High-Flow O2) take immediate precedence.",
+                incorrect: "Incorrect. With an SpO2 of 84%, tripod positioning, and cyanosis, your immediate priority is stabilizing ABCs with high-flow oxygen."
+            },
+            q2: {
+                correct: "Correct! Decreasing sound with persistent severe distress and falling SpO2 signifies 'silent chest'—a life-threatening reduction in air movement.",
+                incorrect: "Incorrect. The patient is deteriorating (fatigued, barely speaking, SpO2 84%). Decreasing wheeze here indicates severe loss of air movement."
+            },
+            q3: {
+                correct: "Correct! The patient is progressing into respiratory failure (bradypnea, shallow breathing, altered state). Assisted positive pressure ventilation via BVM is required.",
+                incorrect: "Incorrect. Inhalers require adequate tidal volume to work. With shallow respirations (RR 12) and worsening mental status, the patient needs positive-pressure ventilation."
+            },
+            q4: {
+                correct: "Correct! An unresponsive patient with shallow/gasping breathing needs airway maintenance (OPA if no gag reflex) and immediate BVM ventilation.",
+                incorrect: "Incorrect. The patient is unresponsive with ineffective gasping respirations. An airway adjunct (OPA) and BVM ventilations are indicated."
+            }
+        },
+        c4: {
+            q1: {
+                correct: "Correct! Pleuritic chest pain (pain on inspiration) suggests organic cardiorespiratory pathology (e.g., PE, pneumothorax), not simple anxiety.",
+                incorrect: "Incorrect. While crying and rapid breathing are common in hyperventilation, pleuritic chest pain strongly points toward organic physical disease."
+            },
+            q2: {
+                correct: "Correct! Recent long-distance travel combined with unilateral calf swelling (DVT sign) and pleuritic pain makes Pulmonary Embolism the primary suspicion.",
+                incorrect: "Incorrect. Long-distance air travel (prolonged sitting) and unilateral calf swelling are classic risk factors for deep vein thrombosis progressing to a pulmonary embolism."
+            },
+            q3: {
+                correct: "Correct! With a dropping SpO2 (92%) and high clinical suspicion of PE, immediate oxygen administration and rapid transport are indicated.",
+                incorrect: "Incorrect. The patient has a perfusion defect from a suspected PE and falling oxygen saturation; high-concentration oxygen and rapid transport are needed."
+            },
+            q4: {
+                correct: "Correct! Acute deterioration with hypoxia and confusion in suspected PE requires immediate transport while managing ABCs.",
+                incorrect: "Incorrect. Delays for history or non-essential actions are dangerous. Rapid transport with ongoing oxygenation support is the priority."
+            }
+        }
+    };
+
+    function switchCase(caseNum) {
+        document.querySelectorAll('.case-tab').forEach(tab => tab.classList.remove('active'));
+        document.querySelectorAll('.case-card').forEach(card => card.classList.remove('active'));
+        
+        if (caseNum === 3) {
+            document.querySelectorAll('.case-tab')[0].classList.add('active');
+            document.getElementById('case-3').classList.add('active');
+        } else {
+            document.querySelectorAll('.case-tab')[1].classList.add('active');
+            document.getElementById('case-4').classList.add('active');
+        }
+    }
+
+    function checkAnswer(caseNum, qNum, letter, isCorrect) {
+        const caseKey = 'c' + caseNum;
+        const qKey = 'q' + qNum;
+        const optionsContainer = document.getElementById(`${caseKey}-${qKey}-options`);
+        const buttons = optionsContainer.querySelectorAll('.option-btn');
+        const feedbackBox = document.getElementById(`${caseKey}-${qKey}-fb`);
+        const nextBtn = document.getElementById(`${caseKey}-${qKey}-next`);
+
+        buttons.forEach(btn => {
+            btn.disabled = true;
+            if (btn.innerText.startsWith(letter)) {
+                btn.classList.add(isCorrect ? 'correct' : 'incorrect');
+            }
+            if (!isCorrect && btn.innerText.startsWith(getCorrectLetter(caseNum, qNum))) {
+                btn.classList.add('correct');
+            }
+        });
+
+        if (isCorrect) {
+            feedbackBox.className = "feedback-box correct";
+            feedbackBox.innerText = explanations[caseKey][qKey].correct;
+        } else {
+            feedbackBox.className = "feedback-box incorrect";
+            feedbackBox.innerText = explanations[caseKey][qKey].incorrect;
+        }
+
+        nextBtn.style.display = "block";
+    }
+
+    function getCorrectLetter(caseNum, qNum) {
+        const keyMap = {
+            '3-1': 'C', '3-2': 'C', '3-3': 'B', '3-4': 'A',
+            '4-1': 'C', '4-2': 'B', '4-3': 'B', '4-4': 'B'
+        };
+        return keyMap[`${caseNum}-${qNum}`];
+    }
+
+    function revealStep(caseNum, stepNum) {
+        const nextStep = document.getElementById(`c${caseNum}-step-${stepNum}`);
+        if (nextStep) {
+            nextStep.style.display = "block";
+            nextStep.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+    }
+
+    function showReflection(caseNum) {
+        const refBlock = document.getElementById(`c${caseNum}-reflection`);
+        if (refBlock) {
+            refBlock.style.display = "block";
+            refBlock.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+    }
+
+    function toggleDiscussion(element) {
+        const answer = element.nextElementSibling;
+        const icon = element.querySelector('.toggle-icon');
+        if (answer.style.display === "block") {
+            answer.style.display = "none";
+            icon.innerText = "+";
+        } else {
+            answer.style.display = "block";
+            icon.innerText = "−";
+        }
+    }
+</script>
+
+</body>
+</html>
