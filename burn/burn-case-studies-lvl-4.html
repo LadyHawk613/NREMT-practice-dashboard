@@ -1,0 +1,671 @@
+html_content = """<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NREMT Interactive Burn Case Studies</title>
+    <style>
+        :root {
+            --purple-dark: #3b0764;
+            --purple-main: #6b21a8;
+            --purple-light: #9333ea;
+            --purple-bg: #f3e8ff;
+            --purple-border: #d8b4fe;
+            --gray-50: #f8fafc;
+            --gray-100: #f1f5f9;
+            --gray-200: #e2e8f0;
+            --gray-700: #334155;
+            --gray-900: #0f172a;
+            --success-bg: #f0fdf4;
+            --success-border: #86efac;
+            --success-text: #166534;
+            --error-bg: #fef2f2;
+            --error-border: #fca5a5;
+            --error-text: #991b1b;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: #f8fafc;
+            color: var(--gray-900);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            max-height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Purple Header Section */
+        header {
+            background: linear-gradient(135deg, var(--purple-dark), var(--purple-main));
+            color: white;
+            padding: 10px 20px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+            flex-shrink: 0;
+        }
+
+        .header-content {
+            max-width: 900px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .header-title h1 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            letter-spacing: -0.01em;
+        }
+
+        .header-title p {
+            font-size: 0.8rem;
+            color: #e9d5ff;
+        }
+
+        .case-tabs {
+            display: flex;
+            gap: 8px;
+        }
+
+        .tab-btn {
+            background: rgba(255, 255, 255, 0.15);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            padding: 6px 14px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .tab-btn:hover {
+            background: rgba(255, 255, 255, 0.25);
+        }
+
+        .tab-btn.active {
+            background: white;
+            color: var(--purple-dark);
+            border-color: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        /* Main Viewport Container */
+        main {
+            flex: 1;
+            max-width: 900px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 12px 16px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            overflow-y: auto;
+        }
+
+        .card {
+            background: white;
+            border-radius: 10px;
+            border: 1px solid var(--gray-200);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            padding: 16px 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            max-height: 100%;
+        }
+
+        /* Progress Header inside Card */
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid var(--purple-bg);
+            padding-bottom: 8px;
+        }
+
+        .phase-badge {
+            background: var(--purple-bg);
+            color: var(--purple-main);
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            padding: 3px 10px;
+            border-radius: 12px;
+            border: 1px solid var(--purple-border);
+        }
+
+        .progress-text {
+            font-size: 0.8rem;
+            color: var(--gray-700);
+            font-weight: 600;
+        }
+
+        /* Scenario Presentation Box */
+        .scenario-box {
+            background: var(--purple-bg);
+            border-left: 4px solid var(--purple-main);
+            padding: 10px 14px;
+            border-radius: 0 8px 8px 0;
+            font-size: 0.88rem;
+            color: var(--gray-900);
+            line-height: 1.4;
+        }
+
+        .scenario-box p {
+            margin-bottom: 4px;
+        }
+
+        .scenario-box p:last-child {
+            margin-bottom: 0;
+        }
+
+        .findings-list {
+            margin-top: 4px;
+            margin-left: 18px;
+        }
+
+        .findings-list li {
+            margin-bottom: 2px;
+            font-size: 0.85rem;
+        }
+
+        /* Question and Options */
+        .question-title {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: var(--gray-900);
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+        }
+
+        @media (max-width: 640px) {
+            .options-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .option-btn {
+            background: var(--gray-50);
+            border: 1px solid var(--gray-200);
+            border-radius: 6px;
+            padding: 10px 12px;
+            text-align: left;
+            font-size: 0.85rem;
+            color: var(--gray-700);
+            cursor: pointer;
+            transition: all 0.15s ease;
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            line-height: 1.35;
+        }
+
+        .option-btn:hover:not(:disabled) {
+            background: var(--purple-bg);
+            border-color: var(--purple-border);
+            color: var(--purple-dark);
+        }
+
+        .option-btn.selected-correct {
+            background: var(--success-bg);
+            border-color: var(--success-border);
+            color: var(--success-text);
+            font-weight: 600;
+        }
+
+        .option-btn.selected-incorrect {
+            background: var(--error-bg);
+            border-color: var(--error-border);
+            color: var(--error-text);
+        }
+
+        .option-btn.show-correct {
+            border-color: var(--success-border);
+            background: var(--success-bg);
+            color: var(--success-text);
+            font-weight: 600;
+        }
+
+        .option-btn:disabled {
+            cursor: default;
+        }
+
+        /* Rationale & Feedback Area */
+        .rationale-box {
+            display: none;
+            padding: 10px 14px;
+            border-radius: 6px;
+            font-size: 0.83rem;
+            line-height: 1.4;
+            animation: fadeIn 0.2s ease-in;
+        }
+
+        .rationale-box.correct {
+            background: var(--success-bg);
+            border: 1px solid var(--success-border);
+            color: var(--success-text);
+        }
+
+        .rationale-box.incorrect {
+            background: var(--error-bg);
+            border: 1px solid var(--error-border);
+            color: var(--error-text);
+        }
+
+        .rationale-box strong {
+            display: block;
+            margin-bottom: 2px;
+            font-size: 0.85rem;
+        }
+
+        .nremt-principle {
+            margin-top: 4px;
+            font-style: italic;
+            font-weight: 600;
+            opacity: 0.9;
+        }
+
+        /* Footer Controls */
+        .card-footer {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            padding-top: 4px;
+        }
+
+        .nav-btn {
+            background: var(--purple-main);
+            color: white;
+            border: none;
+            padding: 8px 18px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s ease;
+            display: none;
+        }
+
+        .nav-btn:hover {
+            background: var(--purple-dark);
+        }
+
+        .completion-screen {
+            text-align: center;
+            padding: 20px 10px;
+        }
+
+        .completion-screen h2 {
+            color: var(--purple-main);
+            font-size: 1.4rem;
+            margin-bottom: 10px;
+        }
+
+        .completion-screen p {
+            color: var(--gray-700);
+            font-size: 0.95rem;
+            margin-bottom: 20px;
+        }
+
+        .restart-btn {
+            background: var(--purple-main);
+            color: white;
+            border: none;
+            padding: 10px 22px;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .restart-btn:hover {
+            background: var(--purple-dark);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(4px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="header-content">
+            <div class="header-title">
+                <h1>NREMT Interactive Case Studies</h1>
+                <p>Burn &amp; Airway Management Scenarios</p>
+            </div>
+            <div class="case-tabs">
+                <button class="tab-btn active" id="tab-case1" onclick="switchCase(1)">Case 1: Thermal Burn</button>
+                <button class="tab-btn" id="tab-case2" onclick="switchCase(2)">Case 2: Electrical Burn</button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="card" id="interactive-card">
+            <!-- Dynamic Content Injected Here -->
+        </div>
+    </main>
+
+    <script>
+        const cases = {
+            1: {
+                title: "Case Study 1: Thermal Burn With Airway Threat",
+                phases: [
+                    {
+                        phaseTitle: "Phase 1: Dispatch / Scene Size-Up",
+                        scenario: `<p><strong>Dispatch:</strong> House fire for a 45-year-old male rescued from a bedroom.</p>
+                                   <p><strong>Fire Department Report:</strong> Patient found unconscious inside the room, exposed to smoke for ~10 minutes. Has burns to face, chest, and arms. Scene is now declared safe.</p>
+                                   <p><strong>Initial Position:</strong> Patient is sitting upright outside the home.</p>`,
+                        question: "1. During the scene size-up, which finding should raise the greatest concern?",
+                        options: [
+                            "A. Burns involving the patient's arms",
+                            "B. The patient was exposed to smoke in an enclosed space",
+                            "C. The patient is complaining of pain",
+                            "D. The patient has burns covering the chest"
+                        ],
+                        correctIndex: 1,
+                        rationale: "An enclosed-space fire exposure suggests possible inhalation injury. Airway compromise may develop rapidly due to swelling.",
+                        nremtPrinciple: "NREMT Principle: Identify hidden life threats based on mechanism."
+                    },
+                    {
+                        phaseTitle: "Phase 2: Primary Assessment",
+                        scenario: `<p><strong>Patient Assessment Findings:</strong></p>
+                                   <ul class="findings-list">
+                                       <li>Alert but anxious | Hoarse voice | Singed facial hair</li>
+                                       <li>Respirations: 28/min | Pulse: 118/min | SpO₂: 92%</li>
+                                       <li>Skin: Burned and painful</li>
+                                   </ul>`,
+                        question: "2. What is the EMT's priority action?",
+                        options: [
+                            "A. Estimate total body surface area burned",
+                            "B. Apply dry sterile dressings to the burns",
+                            "C. Assess and manage the airway while providing appropriate care",
+                            "D. Obtain a detailed SAMPLE history"
+                        ],
+                        correctIndex: 2,
+                        rationale: "The patient has multiple indicators of possible airway injury: enclosed-space exposure, hoarse voice, and singed facial hair. Airway problems take priority over burn size estimation or history.",
+                        nremtPrinciple: "NREMT Principle: Airway always comes before secondary concerns."
+                    },
+                    {
+                        phaseTitle: "Phase 3: Treatment Decision",
+                        scenario: `<p>The patient becomes increasingly anxious.</p>
+                                   <p><strong>New Assessment Findings:</strong></p>
+                                   <ul class="findings-list">
+                                       <li>Increasing hoarseness</li>
+                                       <li>Increased work of breathing</li>
+                                       <li>Facial swelling beginning</li>
+                                   </ul>`,
+                        question: "3. Why is this patient considered high priority?",
+                        options: [
+                            "A. Burns are always considered critical regardless of location",
+                            "B. Airway swelling may progress and become difficult to manage",
+                            "C. Pain medications are unavailable",
+                            "D. The patient requires a complete burn measurement before treatment"
+                        ],
+                        correctIndex: 1,
+                        rationale: "Airway edema after inhalation injury can worsen quickly. Early recognition and immediate transport priority are critical.",
+                        nremtPrinciple: null
+                    },
+                    {
+                        phaseTitle: "Phase 4: Transport Decision",
+                        scenario: `<p><strong>Patient Status:</strong></p>
+                                   <ul class="findings-list">
+                                       <li>Partial-thickness burns to the chest and arms</li>
+                                       <li>Suspected inhalation injury</li>
+                                       <li>Increasing respiratory difficulty</li>
+                                   </ul>`,
+                        question: "4. Which transport decision is most appropriate?",
+                        options: [
+                            "A. Delay transport until all burn measurements are completed",
+                            "B. Transport rapidly to an appropriate facility while continuing care",
+                            "C. Allow the patient to walk to the ambulance",
+                            "D. Treat only the burns before considering transport"
+                        ],
+                        correctIndex: 1,
+                        rationale: "Patients with airway concerns require rapid transport. Definitive burn care occurs at the hospital.",
+                        nremtPrinciple: null
+                    },
+                    {
+                        phaseTitle: "Phase 5: Reassessment",
+                        scenario: `<p><strong>En Route Reassessment:</strong></p>
+                                   <ul class="findings-list">
+                                       <li>The patient's voice becomes weaker</li>
+                                       <li>Respirations: 34/min, Labored</li>
+                                   </ul>`,
+                        question: "5. What should the EMT recognize?",
+                        options: [
+                            "A. The patient is improving because they remain conscious",
+                            "B. The patient is developing worsening respiratory compromise",
+                            "C. The burn severity is decreasing",
+                            "D. The patient only requires additional pain management"
+                        ],
+                        correctIndex: 1,
+                        rationale: "A weakening voice and increasing respiratory effort indicate worsening airway/respiratory status requiring continuous support.",
+                        nremtPrinciple: null
+                    }
+                ]
+            },
+            2: {
+                title: "Case Study 2: Electrical Burn With Hidden Injury",
+                phases: [
+                    {
+                        phaseTitle: "Phase 1: Scene Size-Up",
+                        scenario: `<p><strong>Dispatch:</strong> Construction site for a worker injured by electrical exposure.</p>
+                                   <p><strong>Supervisor Statement:</strong> "He grabbed a damaged electrical cable and collapsed."</p>
+                                   <p><strong>Status:</strong> The power has been disconnected. The patient is lying on the ground.</p>`,
+                        question: "1. Before approaching the patient, what should the EMT confirm?",
+                        options: [
+                            "A. The patient's medical history",
+                            "B. That the electrical source is no longer a hazard",
+                            "C. The patient's insurance information",
+                            "D. The patient's pain severity"
+                        ],
+                        correctIndex: 1,
+                        rationale: "Electrical hazards can injure rescuers. Scene safety comes first before any assessment or care.",
+                        nremtPrinciple: null
+                    },
+                    {
+                        phaseTitle: "Phase 2: Primary Assessment",
+                        scenario: `<p><strong>Patient Assessment Findings:</strong></p>
+                                   <ul class="findings-list">
+                                       <li>Awake but confused</li>
+                                       <li>Entry wound on right hand | Exit wound on left foot</li>
+                                       <li>Pulse: Irregular | Skin: Cool and pale</li>
+                                   </ul>`,
+                        question: "2. Which finding is most concerning?",
+                        options: [
+                            "A. Visible burn wounds",
+                            "B. Patient confusion and irregular pulse",
+                            "C. The location of the entry wound",
+                            "D. Patient complaints of pain"
+                        ],
+                        correctIndex: 1,
+                        rationale: "Electrical injuries can cause significant internal damage, systemic disruption, and cardiac dysrhythmias.",
+                        nremtPrinciple: null
+                    },
+                    {
+                        phaseTitle: "Phase 3: Treatment Decision",
+                        scenario: `<p><strong>Patient Report:</strong> "My chest feels strange."</p>
+                                   <p><strong>Reassessment Findings:</strong> Chest discomfort, Irregular pulse, Weak radial pulse.</p>`,
+                        question: "3. What should the EMT do first?",
+                        options: [
+                            "A. Measure the burn surface area",
+                            "B. Perform a detailed extremity assessment",
+                            "C. Continue cardiac monitoring and treat life threats",
+                            "D. Ask about the patient's tetanus vaccination"
+                        ],
+                        correctIndex: 2,
+                        rationale: "Cardiac complications take immediate priority over burn documentation or non-urgent history.",
+                        nremtPrinciple: null
+                    },
+                    {
+                        phaseTitle: "Phase 4: Transport Decision",
+                        scenario: `<p><strong>Patient Status:</strong> Electrical injury, Altered mental status, Abnormal pulse, Possible internal injury.</p>`,
+                        question: "4. Which statement best describes the transport priority?",
+                        options: [
+                            "A. The patient can refuse transport because burns are small",
+                            "B. The patient requires evaluation due to possible internal injury",
+                            "C. Transport is unnecessary unless burns cover more than 50% of the body",
+                            "D. Only patients with visible burns require transport"
+                        ],
+                        correctIndex: 1,
+                        rationale: "Electrical injuries may appear minor externally while causing severe, life-threatening internal structural and cardiac damage.",
+                        nremtPrinciple: null
+                    },
+                    {
+                        phaseTitle: "Phase 5: Operations / Reassessment",
+                        scenario: `<p><strong>En Route Reassessment:</strong> Patient becomes less responsive.</p>
+                                   <ul class="findings-list">
+                                       <li>Respirations: 8/min</li>
+                                       <li>Pulse: Irregular</li>
+                                       <li>Blood Pressure: Decreasing</li>
+                                   </ul>`,
+                        question: "5. What should guide the EMT's next action?",
+                        options: [
+                            "A. Complete the burn assessment before intervening",
+                            "B. Reassess airway, breathing, and circulation immediately",
+                            "C. Wait until arrival at the hospital",
+                            "D. Focus only on the visible burns"
+                        ],
+                        correctIndex: 1,
+                        rationale: "A changing or deteriorating patient requires immediate reassessment and management of the ABCs.",
+                        nremtPrinciple: null
+                    }
+                ]
+            }
+        };
+
+        let currentCase = 1;
+        let currentPhase = 0;
+        let answered = false;
+
+        function switchCase(caseNum) {
+            currentCase = caseNum;
+            currentPhase = 0;
+            answered = false;
+
+            document.querySelectorAll('.tab-btn').forEach((btn, idx) => {
+                btn.classList.toggle('active', idx + 1 === caseNum);
+            });
+
+            renderPhase();
+        }
+
+        function renderPhase() {
+            const card = document.getElementById('interactive-card');
+            const caseData = cases[currentCase];
+
+            if (currentPhase >= caseData.phases.length) {
+                // Render completion screen
+                card.innerHTML = `
+                    <div class="completion-screen">
+                        <h2>${caseData.title} Complete!</h2>
+                        <p>You have successfully completed all 5 phases of this progressive case study.</p>
+                        <button class="restart-btn" onclick="switchCase(${currentCase})">Restart Case</button>
+                    </div>
+                `;
+                return;
+            }
+
+            const phase = caseData.phases[currentPhase];
+            answered = false;
+
+            card.innerHTML = `
+                <div class="card-header">
+                    <span class="phase-badge">${phase.phaseTitle}</span>
+                    <span class="progress-text">Question ${currentPhase + 1} of ${caseData.phases.length}</span>
+                </div>
+
+                <div class="scenario-box">
+                    ${phase.scenario}
+                </div>
+
+                <div class="question-title">${phase.question}</div>
+
+                <div class="options-grid">
+                    ${phase.options.map((opt, i) => `
+                        <button class="option-btn" id="opt-${i}" onclick="selectOption(${i})">
+                            ${opt}
+                        </button>
+                    `).join('')}
+                </div>
+
+                <div class="rationale-box" id="rationale-box">
+                    <strong id="feedback-heading"></strong>
+                    <span id="rationale-text">${phase.rationale}</span>
+                    ${phase.nremtPrinciple ? `<div class="nremt-principle">${phase.nremtPrinciple}</div>` : ''}
+                </div>
+
+                <div class="card-footer">
+                    <button class="nav-btn" id="next-btn" onclick="nextPhase()">
+                        ${currentPhase === caseData.phases.length - 1 ? 'Finish Case' : 'Next Phase &rarr;'}
+                    </button>
+                </div>
+            `;
+        }
+
+        function selectOption(selectedIndex) {
+            if (answered) return;
+            answered = true;
+
+            const phase = cases[currentCase].phases[currentPhase];
+            const isCorrect = selectedIndex === phase.correctIndex;
+            const rationaleBox = document.getElementById('rationale-box');
+            const feedbackHeading = document.getElementById('feedback-heading');
+            const nextBtn = document.getElementById('next-btn');
+
+            phase.options.forEach((_, i) => {
+                const btn = document.getElementById(`opt-${i}`);
+                btn.disabled = true;
+
+                if (i === phase.correctIndex) {
+                    btn.classList.add('show-correct');
+                } else if (i === selectedIndex && !isCorrect) {
+                    btn.classList.add('selected-incorrect');
+                }
+            });
+
+            if (isCorrect) {
+                rationaleBox.className = 'rationale-box correct';
+                feedbackHeading.innerText = 'Correct!';
+            } else {
+                rationaleBox.className = 'rationale-box incorrect';
+                feedbackHeading.innerText = 'Incorrect';
+            }
+
+            rationaleBox.style.display = 'block';
+            nextBtn.style.display = 'inline-block';
+        }
+
+        function nextPhase() {
+            currentPhase++;
+            renderPhase();
+        }
+
+        // Initial Load
+        renderPhase();
+    </script>
+</body>
+</html>
+"""
+
+with open("nremt_burn_cases_interactive.html", "w", encoding="utf-8") as f:
+    f.write(html_content)
+
+print("HTML file successfully generated.")
