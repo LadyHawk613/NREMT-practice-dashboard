@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NREMT Level 4+ Practice Quiz</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; background-color: #f3f4f6; }
+        .transition-all { transition: all 0.3s ease; }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+    <!-- Header -->
+    <header class="bg-green-700 text-white py-6 px-4 shadow-lg">
+        <div class="max-w-3xl mx-auto text-center">
+            <h1 class="text-2xl md:text-3xl font-bold uppercase tracking-wide">NREMT Level 4+</h1>
+            <p class="text-green-100 mt-1 opacity-90">Clinical Judgment & Decision-Making Practice</p>
+        </div>
+    </header>
+
+    <main id="app" class="flex-grow container mx-auto px-4 py-8 max-w-3xl">
+        <!-- Progress Bar -->
+        <div class="mb-8" id="progress-container">
+            <div class="flex justify-between text-sm font-semibold text-gray-600 mb-2">
+                <span id="progress-text">Question 1 of 20</span>
+                <span id="score-text">Score: 0%</span>
+            </div>
+            <div class="w-full bg-gray-300 rounded-full h-2.5">
+                <div id="progress-bar" class="bg-green-600 h-2.5 rounded-full transition-all" style="width: 5%"></div>
+            </div>
+        </div>
+
+        <!-- Question Card -->
+        <div id="quiz-card" class="bg-white rounded-xl shadow-md p-6 md:p-8 transition-all">
+            <div id="question-text" class="text-lg md:text-xl font-semibold text-gray-800 mb-6 leading-relaxed">
+                Loading question...
+            </div>
+            
+            <div id="options-container" class="space-y-3">
+                <!-- Options will be injected here -->
+            </div>
+
+            <!-- Feedback Section -->
+            <div id="feedback" class="hidden mt-6 p-4 rounded-lg border">
+                <p id="feedback-result" class="font-bold mb-2"></p>
+                <p id="feedback-rationale" class="text-gray-700 text-sm italic"></p>
+                <button id="next-btn" class="mt-4 bg-green-700 hover:bg-green-800 text-white font-bold py-2 px-6 rounded transition-all">
+                    Next Question
+                </button>
+            </div>
+        </div>
+
+        <!-- Results Screen -->
+        <div id="results-screen" class="hidden text-center bg-white rounded-xl shadow-md p-10">
+            <h2 class="text-3xl font-bold text-gray-800 mb-4">Quiz Complete!</h2>
+            <div class="text-6xl font-bold text-green-700 mb-6" id="final-score">0%</div>
+            <p class="text-gray-600 mb-8" id="results-summary"></p>
+            <button onclick="location.reload()" class="bg-green-700 hover:bg-green-800 text-white font-bold py-3 px-8 rounded-lg transition-all shadow-md">
+                Restart Quiz
+            </button>
+        </div>
+    </main>
+
+    <footer class="py-6 text-center text-gray-500 text-sm">
+        Level 4+ Emergency Medical Technician Practice Tool
+    </footer>
+
+    <script>
+        const quizData = [
+            {
+                question: "A 68-year-old male with COPD is sitting upright, using accessory muscles, and speaking only one-word sentences. His respiratory rate is 32/min, pulse oximetry is 82% on room air, and lung sounds reveal diminished bases with scattered wheezing. What should the EMT do first?",
+                options: [
+                    "Apply a nonrebreather mask at 15 L/min and reassess oxygen saturation",
+                    "Assist ventilations with a bag-valve mask because oxygen therapy is ineffective",
+                    "Apply CPAP because the patient is conscious and showing respiratory distress",
+                    "Administer the patient's prescribed bronchodilator medication"
+                ],
+                correct: 2,
+                rationale: "CPAP is indicated for conscious patients with severe respiratory distress and adequate mental status. While oxygen (NRB) helps, CPAP is the priority for a COPD patient in such distress to improve gas exchange."
+            },
+            {
+                question: "A patient involved in a motor vehicle collision is unconscious. Respirations are shallow at 6/min. His pulse is 110/min and oxygen saturation is 78%. Which intervention is most appropriate?",
+                options: [
+                    "Apply CPAP with supplemental oxygen",
+                    "Insert an airway adjunct and begin BVM ventilations",
+                    "Place the patient on a nonrebreather mask",
+                    "Perform suctioning before providing oxygen"
+                ],
+                correct: 1,
+                rationale: "The patient is not ventilating adequately (RR 6). Assisted ventilations (BVM) are required because high-flow oxygen alone cannot correct hypoventilation in an unconscious patient."
+            },
+            {
+                question: "An EMT is preparing to apply CPAP to a patient with severe shortness of breath. Which finding requires the EMT to choose another treatment?",
+                options: [
+                    "Respiratory rate of 28/min",
+                    "Oxygen saturation of 88%",
+                    "Blood pressure of 84/52 mmHg",
+                    "Bilateral crackles in the lungs"
+                ],
+                correct: 2,
+                rationale: "Hypotension is a major contraindication for CPAP. Positive pressure ventilation increases intrathoracic pressure, which can decrease venous return to the heart and further drop the blood pressure."
+            },
+            {
+                question: "A patient with facial trauma has blood pooling in his mouth. He is unconscious and breathing irregularly. What should the EMT do first?",
+                options: [
+                    "Insert an oropharyngeal airway",
+                    "Suction the airway",
+                    "Apply oxygen via nonrebreather mask",
+                    "Begin chest compressions"
+                ],
+                correct: 1,
+                rationale: "The airway must be cleared of blood/secretions before placing adjuncts or delivering oxygen. Suctioning is the priority to prevent aspiration and ensure a clear passage."
+            },
+            {
+                question: "A patient with opioid overdose has a respiratory rate of 4/min and shallow breathing. His oxygen saturation is 94%. Which statement is most accurate?",
+                options: [
+                    "The patient does not require intervention because oxygen saturation is normal",
+                    "High-flow oxygen should correct the underlying problem",
+                    "Assisted ventilations are required because ventilation is inadequate",
+                    "CPAP should be used because oxygen saturation is borderline"
+                ],
+                correct: 2,
+                rationale: "Oximetry measures oxygenation, not ventilation. At a rate of 4/min, the patient is not effectively removing CO2. Assisted ventilations are vital regardless of the oxygen saturation."
+            },
+            {
+                question: "A patient with internal bleeding after a fall has HR 124, BP 92/60, cool pale skin, anxiety, and delayed capillary refill. What is the EMT’s highest priority?",
+                options: [
+                    "Apply oxygen and rapidly transport",
+                    "Obtain a complete secondary assessment",
+                    "Administer oral fluids",
+                    "Place the patient in Trendelenburg position"
+                ],
+                correct: 0,
+                rationale: "This patient is in shock (likely decompensated given the low BP). Priority management includes airway, oxygen, and rapid transport for definitive surgical care."
+            },
+            {
+                question: "A 59-year-old female reports crushing chest pressure radiating to her jaw. She is pale and diaphoretic. Which question is most important before assisting with aspirin?",
+                options: [
+                    "\"Have you eaten today?\"",
+                    "\"Are you allergic to aspirin or have a history of bleeding problems?\"",
+                    "\"Have you taken nitroglycerin before?\"",
+                    "\"Does the pain improve when you lie down?\""
+                ],
+                correct: 1,
+                rationale: "Before administering any medication, contraindications must be ruled out. Allergies and bleeding risks (like GI bleeds or ulcers) are primary contraindications for aspirin."
+            },
+            {
+                question: "A patient suddenly develops facial droop, slurred speech, and weakness on the right side. Which action is most important?",
+                options: [
+                    "Determine the patient's blood glucose level",
+                    "Obtain a detailed SAMPLE history",
+                    "Give oral glucose",
+                    "Place the patient in Trendelenburg position"
+                ],
+                correct: 0,
+                rationale: "Hypoglycemia is a 'stroke mimic.' Assessing blood glucose is essential to differentiate between a metabolic emergency and a neurological event."
+            },
+            {
+                question: "A patient is actively seizing on the floor. Which action should the EMT take?",
+                options: [
+                    "Restrain the patient's arms and legs",
+                    "Insert an oral airway immediately",
+                    "Protect the patient from injury and maintain airway monitoring",
+                    "Give oxygen only after the seizure stops"
+                ],
+                correct: 2,
+                rationale: "Never restrain a seizing patient or place items in their mouth. Focus on clearing the immediate area of hazards and monitoring the airway until the seizure ends."
+            },
+            {
+                question: "A confused diabetic patient has a blood glucose of 38 mg/dL, the ability to swallow, and no airway compromise. The EMT should:",
+                options: [
+                    "Administer oral glucose",
+                    "Begin ventilations",
+                    "Transport without treatment",
+                    "Administer insulin"
+                ],
+                correct: 0,
+                rationale: "If a hypoglycemic patient is conscious and can protect their airway/swallow, oral glucose is the standard prehospital treatment."
+            },
+            {
+                question: "A trauma patient has suspected spinal injury and vomits. The EMT should:",
+                options: [
+                    "Maintain spinal precautions while log rolling and suctioning",
+                    "Remove spinal precautions immediately",
+                    "Delay suctioning until arrival at hospital",
+                    "Insert an OPA before suctioning"
+                ],
+                correct: 0,
+                rationale: "The airway takes priority, but spinal integrity must be maintained. Log rolling the patient as a unit allows for suctioning while protecting the cord."
+            },
+            {
+                question: "A 4-year-old child has a respiratory rate of 42, retractions, stridor, and anxiety. The EMT should suspect:",
+                options: [
+                    "Respiratory distress requiring rapid airway evaluation",
+                    "Normal pediatric breathing pattern",
+                    "Primary cardiac arrest",
+                    "Hyperventilation caused by anxiety"
+                ],
+                correct: 0,
+                rationale: "Stridor and retractions in a pediatric patient are critical signs of upper airway obstruction or severe distress requiring immediate assessment and care."
+            },
+            {
+                question: "A patient develops hives, wheezing, and facial swelling after eating peanuts. Which finding indicates progression toward anaphylaxis?",
+                options: [
+                    "Itching",
+                    "Localized rash",
+                    "Difficulty breathing",
+                    "Anxiety"
+                ],
+                correct: 2,
+                rationale: "Difficulty breathing (respiratory distress) or signs of hypoperfusion (shock) differentiate a simple allergic reaction from life-threatening anaphylaxis."
+            },
+            {
+                question: "An EMT arrives at a chemical spill involving multiple patients. The first action should be:",
+                options: [
+                    "Begin triage immediately",
+                    "Remove patients from the hazard zone",
+                    "Treat the most critical patient",
+                    "Request ALS transport"
+                ],
+                correct: 1,
+                rationale: "Scene safety is paramount. Patients must be moved to a 'Cold Zone' before triage and treatment can safely begin to avoid exposing providers."
+            },
+            {
+                question: "A patient with chest pain initially has stable vital signs. Ten minutes later, BP decreases, skin becomes pale, and mental status worsens. The EMT should:",
+                options: [
+                    "Continue obtaining history",
+                    "Repeat primary assessment and reassess treatment priorities",
+                    "Complete documentation first",
+                    "Delay transport until ALS arrives"
+                ],
+                correct: 1,
+                rationale: "A significant change in patient condition requires a re-evaluation of the primary assessment to address new life threats and potentially speed up transport."
+            },
+            {
+                question: "A patient is breathing 24/min, has severe dyspnea, is alert, and has oxygen saturation of 86%. Which device is most appropriate?",
+                options: [
+                    "Nasal cannula",
+                    "Nonrebreather mask",
+                    "Bag-valve mask",
+                    "CPAP"
+                ],
+                correct: 3,
+                rationale: "CPAP is appropriate for an alert patient with severe dyspnea and failing oxygenation who is still maintaining a consistent spontaneous respiratory rate."
+            },
+            {
+                question: "A patient has altered mental status. Vital signs are RR 8, Pulse 96, BP 130/80. What should the EMT suspect?",
+                options: [
+                    "Adequate ventilation because oxygen saturation is normal",
+                    "Possible respiratory failure despite normal blood pressure",
+                    "Hypertension crisis",
+                    "Stroke only"
+                ],
+                correct: 1,
+                rationale: "A respiratory rate of 8 is inadequate for most adults. Despite other stable vitals, this patient is in respiratory failure/insufficiency and requires ventilation support."
+            },
+            {
+                question: "A patient has circumferential burns around the chest. The EMT should recognize this may:",
+                options: [
+                    "Restrict chest expansion and impair ventilation",
+                    "Cause only superficial pain",
+                    "Require immediate cooling with ice",
+                    "Be treated only after other injuries"
+                ],
+                correct: 0,
+                rationale: "As burned skin (eschar) loses elasticity, circumferential chest burns can act like a vise, physically preventing the chest from expanding during breathing."
+            },
+            {
+                question: "A patient with abdominal pain has severe pain, rigid abdomen, rapid pulse, and pale skin. The EMT should:",
+                options: [
+                    "Encourage walking to the ambulance",
+                    "Delay transport for complete history",
+                    "Treat as potentially life-threatening and transport rapidly",
+                    "Provide food and water"
+                ],
+                correct: 2,
+                rationale: "A rigid abdomen coupled with signs of shock (tachycardia, pale skin) suggests internal hemorrhage or peritonitis, requiring immediate transport."
+            },
+            {
+                question: "A patient is unconscious after a suspected overdose. He has a pulse present, respirations 6/min, and cyanosis. What is the priority intervention?",
+                options: [
+                    "Obtain a complete medication history",
+                    "Provide assisted ventilations with oxygen",
+                    "Search the patient’s belongings",
+                    "Wait for naloxone before treatment"
+                ],
+                correct: 1,
+                rationale: "ABCs come first. A patient breathing 6/min is hypoventilating. Assisting their breathing is the immediate priority to correct hypoxia before Naloxone or further assessment."
+            }
+        ];
+
+        let currentQuestion = 0;
+        let score = 0;
+        let answered = false;
+
+        const questionEl = document.getElementById('question-text');
+        const optionsEl = document.getElementById('options-container');
+        const feedbackEl = document.getElementById('feedback');
+        const feedbackResultEl = document.getElementById('feedback-result');
+        const feedbackRationaleEl = document.getElementById('feedback-rationale');
+        const nextBtn = document.getElementById('next-btn');
+        const progressText = document.getElementById('progress-text');
+        const progressBar = document.getElementById('progress-bar');
+        const scoreText = document.getElementById('score-text');
+        const quizCard = document.getElementById('quiz-card');
+        const resultsScreen = document.getElementById('results-screen');
+        const progressContainer = document.getElementById('progress-container');
+
+        function loadQuestion() {
+            answered = false;
+            const data = quizData[currentQuestion];
+            questionEl.innerText = data.question;
+            optionsEl.innerHTML = '';
+            feedbackEl.classList.add('hidden');
+            
+            // Progress Update
+            const progPercent = ((currentQuestion + 1) / quizData.length) * 100;
+            progressText.innerText = `Question ${currentQuestion + 1} of ${quizData.length}`;
+            progressBar.style.width = `${progPercent}%`;
+
+            data.options.forEach((option, index) => {
+                const btn = document.createElement('button');
+                btn.className = "w-full text-left p-4 rounded-lg border border-gray-300 hover:bg-gray-50 transition-all font-medium text-gray-700 focus:outline-none";
+                btn.innerText = option;
+                btn.onclick = () => checkAnswer(index);
+                optionsEl.appendChild(btn);
+            });
+        }
+
+        function checkAnswer(index) {
+            if (answered) return;
+            answered = true;
+            
+            const data = quizData[currentQuestion];
+            const buttons = optionsEl.getElementsByTagName('button');
+            
+            if (index === data.correct) {
+                score++;
+                buttons[index].classList.add('bg-green-100', 'border-green-500', 'text-green-800');
+                feedbackResultEl.innerText = "Correct!";
+                feedbackResultEl.className = "font-bold text-green-700 mb-2";
+                feedbackEl.classList.add('bg-green-50', 'border-green-200');
+            } else {
+                buttons[index].classList.add('bg-red-100', 'border-red-500', 'text-red-800');
+                buttons[data.correct].classList.add('bg-green-100', 'border-green-500', 'text-green-800');
+                feedbackResultEl.innerText = "Incorrect";
+                feedbackResultEl.className = "font-bold text-red-700 mb-2";
+                feedbackEl.classList.add('bg-red-50', 'border-red-200');
+            }
+
+            feedbackRationaleEl.innerText = data.rationale;
+            feedbackEl.classList.remove('hidden');
+            
+            // Update running score display
+            const currentScorePercent = Math.round((score / (currentQuestion + 1)) * 100);
+            scoreText.innerText = `Score: ${currentScorePercent}%`;
+        }
+
+        nextBtn.onclick = () => {
+            currentQuestion++;
+            if (currentQuestion < quizData.length) {
+                loadQuestion();
+            } else {
+                showResults();
+            }
+        };
+
+        function showResults() {
+            quizCard.classList.add('hidden');
+            progressContainer.classList.add('hidden');
+            resultsScreen.classList.remove('hidden');
+            
+            const finalPercent = Math.round((score / quizData.length) * 100);
+            document.getElementById('final-score').innerText = `${finalPercent}%`;
+            
+            let msg = "";
+            if (finalPercent >= 80) msg = "Excellent! You have a strong grasp of clinical judgment.";
+            else if (finalPercent >= 70) msg = "Good job! You are meeting the standard but keep practicing.";
+            else msg = "Review these concepts. Focus on airway management and shock recognition.";
+            
+            document.getElementById('results-summary').innerText = `You answered ${score} out of ${quizData.length} questions correctly. ${msg}`;
+        }
+
+        // Initialize
+        loadQuestion();
+    </script>
+</body>
+</html>

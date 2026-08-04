@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NREMT EMT Clinical Assessment Quiz</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; background-color: #f3f4f6; }
+        .transition-all { transition: all 0.3s ease; }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+    <!-- Header -->
+    <header class="bg-green-700 text-white py-6 px-4 shadow-lg">
+        <div class="max-w-3xl mx-auto text-center">
+            <h1 class="text-2xl md:text-3xl font-bold uppercase tracking-wide">NREMT Clinical Assessment</h1>
+            <p class="text-green-100 mt-1 opacity-90">Level 4+ Patient Assessment & Decision Making</p>
+        </div>
+    </header>
+
+    <main id="app" class="flex-grow container mx-auto px-4 py-8 max-w-3xl">
+        <!-- Progress Bar -->
+        <div class="mb-8" id="progress-container">
+            <div class="flex justify-between text-sm font-semibold text-gray-600 mb-2">
+                <span id="progress-text">Question 1 of 20</span>
+                <span id="score-text">Score: 0%</span>
+            </div>
+            <div class="w-full bg-gray-300 rounded-full h-2.5">
+                <div id="progress-bar" class="bg-green-600 h-2.5 rounded-full transition-all" style="width: 5%"></div>
+            </div>
+        </div>
+
+        <!-- Question Card -->
+        <div id="quiz-card" class="bg-white rounded-xl shadow-md p-6 md:p-8 transition-all">
+            <div id="question-text" class="text-lg md:text-xl font-semibold text-gray-800 mb-6 leading-relaxed whitespace-pre-line">
+                Loading question...
+            </div>
+            
+            <div id="options-container" class="space-y-3">
+                <!-- Options will be injected here -->
+            </div>
+
+            <!-- Feedback Section -->
+            <div id="feedback" class="hidden mt-6 p-4 rounded-lg border">
+                <p id="feedback-result" class="font-bold mb-2"></p>
+                <p id="feedback-rationale" class="text-gray-700 text-sm italic whitespace-pre-line"></p>
+                <button id="next-btn" class="mt-4 bg-green-700 hover:bg-green-800 text-white font-bold py-2 px-6 rounded transition-all">
+                    Next Question
+                </button>
+            </div>
+        </div>
+
+        <!-- Results Screen -->
+        <div id="results-screen" class="hidden text-center bg-white rounded-xl shadow-md p-10">
+            <h2 class="text-3xl font-bold text-gray-800 mb-4">Quiz Complete!</h2>
+            <div class="text-6xl font-bold text-green-700 mb-6" id="final-score">0%</div>
+            <p class="text-gray-600 mb-8" id="results-summary"></p>
+            <button onclick="location.reload()" class="bg-green-700 hover:bg-green-800 text-white font-bold py-3 px-8 rounded-lg transition-all shadow-md">
+                Restart Quiz
+            </button>
+        </div>
+    </main>
+
+    <footer class="py-6 text-center text-gray-500 text-sm">
+        NREMT EMT Clinical Assessment Practice Tool
+    </footer>
+
+    <script>
+        const quizData = [
+            {
+                question: "You arrive at a residence for a 72-year-old male complaining of weakness. The patient is sitting upright, pale, and anxious. He says, \"I can't catch my breath.\"\n\nAssessment reveals:\n• Respirations: 34/min\n• Pulse: 118/min\n• BP: 156/92\n• SpO₂: 84%\n\nWhat should the EMT do first?",
+                options: [
+                    "Obtain a complete SAMPLE history",
+                    "Apply oxygen and assess the patient's response",
+                    "Perform a detailed lung sound assessment",
+                    "Determine whether the patient has cardiac history"
+                ],
+                correct: 1,
+                rationale: "The primary assessment identifies an immediate respiratory problem. Oxygenation support takes priority over history gathering.\n\nA/D: Important but secondary.\nC: Assessment continues, but oxygen support is the priority."
+            },
+            {
+                question: "A patient involved in a motorcycle crash is breathing 8 times/min. His oxygen saturation is 97% on room air, but he is becoming increasingly confused.\n\nWhich finding is most concerning?",
+                options: [
+                    "Normal oxygen saturation",
+                    "Slow respiratory rate indicating inadequate ventilation",
+                    "Mild confusion caused by stress",
+                    "Stable pulse rate"
+                ],
+                correct: 1,
+                rationale: "A patient can have normal oxygen saturation while failing to ventilate. Slow respirations may lead to carbon dioxide retention and altered mental status."
+            },
+            {
+                question: "A patient is unconscious after a fall. He has snoring respirations and no signs of spinal injury.\n\nWhich intervention is most appropriate?",
+                options: [
+                    "Apply a nonrebreather mask",
+                    "Insert an oropharyngeal airway",
+                    "Insert a nasopharyngeal airway",
+                    "Begin chest compressions"
+                ],
+                correct: 1,
+                rationale: "Snoring indicates upper airway obstruction caused by the tongue. An OPA is appropriate in an unconscious patient without a gag reflex."
+            },
+            {
+                question: "A patient with abdominal pain is alert and stable. Vital signs are within normal limits.\n\nWhen should the EMT perform the secondary assessment?",
+                options: [
+                    "Before assessing airway and breathing",
+                    "After immediate life threats are addressed",
+                    "Only after hospital arrival",
+                    "Before obtaining vital signs"
+                ],
+                correct: 1,
+                rationale: "Immediate life threats in the primary assessment must always be addressed before moving on to the secondary assessment."
+            },
+            {
+                question: "A patient involved in a fall has:\n• HR: 126\n• BP: 104/70\n• Respirations: 24\n• Cool, clammy skin\n• Increasing anxiety\n\nWhich interpretation is most appropriate?",
+                options: [
+                    "The patient is stable because blood pressure is normal",
+                    "The patient may be developing compensated shock",
+                    "The patient is experiencing a hypertensive emergency",
+                    "The patient requires oral fluids"
+                ],
+                correct: 1,
+                rationale: "Early shock may present with tachycardia, anxiety, and cool skin before hypotension develops."
+            },
+            {
+                question: "A confused patient is found sitting on the floor. The EMT notes:\n• Blood glucose: 42 mg/dL\n• Patient can follow commands\n• Patient can swallow\n\nWhat is the most appropriate treatment?",
+                options: [
+                    "Administer oral glucose",
+                    "Give oxygen only",
+                    "Place the patient supine and transport",
+                    "Administer activated charcoal"
+                ],
+                correct: 0,
+                rationale: "Hypoglycemia in a cooperative patient who can swallow is treated safely with oral glucose."
+            },
+            {
+                question: "Which finding indicates a patient has progressed from respiratory distress to respiratory failure?",
+                options: [
+                    "Increased respiratory effort",
+                    "Anxiety and restlessness",
+                    "Decreasing mental status",
+                    "Rapid breathing"
+                ],
+                correct: 2,
+                rationale: "Altered mental status indicates inadequate oxygenation or ventilation and is a sign of respiratory failure."
+            },
+            {
+                question: "A patient with asthma initially improves after treatment. During reassessment, the EMT finds:\n• Respirations decreased from 30 to 10/min\n• Wheezing is no longer heard\n• Patient is drowsy\n\nWhat is the most concerning interpretation?",
+                options: [
+                    "The asthma attack has resolved",
+                    "The patient is developing respiratory failure",
+                    "The oxygen therapy is working",
+                    "The patient is becoming relaxed"
+                ],
+                correct: 1,
+                rationale: "A silent chest with decreasing respiratory effort may indicate worsening airway obstruction and fatigue."
+            },
+            {
+                question: "A 65-year-old patient has sudden weakness and difficulty speaking. Symptoms began 45 minutes ago.\n\nWhich information is most important to obtain?",
+                options: [
+                    "Last oral intake",
+                    "Time symptoms started",
+                    "Previous injuries",
+                    "Family medical history"
+                ],
+                correct: 1,
+                rationale: "Stroke treatment decisions depend heavily on the time of symptom onset."
+            },
+            {
+                question: "A patient reports chest pressure. He has prescribed nitroglycerin.\n\nBefore assisting with medication, the EMT should first:",
+                options: [
+                    "Ask whether the patient ate recently",
+                    "Verify blood pressure and contraindications",
+                    "Give oxygen regardless of saturation",
+                    "Place the patient standing"
+                ],
+                correct: 1,
+                rationale: "Nitroglycerin lowers blood pressure; verifying vital signs and contraindications is crucial before assistance."
+            },
+            {
+                question: "A patient struck by a vehicle has:\n• Severe leg deformity\n• Difficulty breathing\n• Pale skin\n• Altered mental status\n\nWhich finding should receive priority?",
+                options: [
+                    "Leg deformity",
+                    "Pain level",
+                    "Breathing difficulty",
+                    "Mechanism of injury"
+                ],
+                correct: 2,
+                rationale: "Life threats (airway and breathing) are addressed before significant but non-life-threatening extremity injuries."
+            },
+            {
+                question: "A patient describes chest pain as \"pressure that started while climbing stairs.\"\n\nWhich question provides the most important additional information?",
+                options: [
+                    "\"What medications do you take?\"",
+                    "\"Does anything make the pain better or worse?\"",
+                    "\"Have you had this pain before?\"",
+                    "\"What did you eat today?\""
+                ],
+                correct: 1,
+                rationale: "The question addresses provocation and palliation, helping differentiate causes."
+            },
+            {
+                question: "A patient with an allergic reaction has:\n• Hives\n• Wheezing\n• Swollen tongue\n• Difficulty speaking\n\nWhat is the EMT's priority?",
+                options: [
+                    "Complete a medication history",
+                    "Manage airway and support breathing",
+                    "Obtain a detailed allergy history",
+                    "Apply a cold compress"
+                ],
+                correct: 1,
+                rationale: "Airway compromise and breathing issues in an allergic reaction demand immediate airway and respiratory support."
+            },
+            {
+                question: "You arrive at a warehouse where a worker collapsed. Several employees report \"strong fumes.\"\n\nWhat should the EMT do first?",
+                options: [
+                    "Enter and begin assessment",
+                    "Remove the patient immediately",
+                    "Ensure scene safety and identify hazards",
+                    "Begin triage"
+                ],
+                correct: 2,
+                rationale: "Scene safety is always the first priority. Rescuers must not enter a hazardous atmosphere without proper safety precautions."
+            },
+            {
+                question: "A 2-year-old child has:\n• Respirations: 50/min\n• Nasal flaring\n• Retractions\n• Poor feeding\n• Lethargy\n\nWhat does this presentation suggest?",
+                options: [
+                    "Normal toddler behavior",
+                    "Respiratory distress with possible deterioration",
+                    "Anxiety reaction",
+                    "Mild dehydration only"
+                ],
+                correct: 1,
+                rationale: "Tachypnea, retractions, nasal flaring, and lethargy are classic indicators of pediatric respiratory distress/failure."
+            },
+            {
+                question: "A patient has burns covering the entire chest and both arms.\n\nWhat is the EMT's greatest concern?",
+                options: [
+                    "Infection prevention",
+                    "Airway compromise and shock",
+                    "Cosmetic damage",
+                    "Pain rating only"
+                ],
+                correct: 1,
+                rationale: "Chest and arm burns of this scale present massive fluid loss risks (shock) and potential airway issues if facial/neck involvement is present."
+            },
+            {
+                question: "A patient fell from a roof. He denies pain but has:\n• Confusion\n• Unequal pupils\n• Vomiting\n\nWhat should the EMT do?",
+                options: [
+                    "Allow the patient to walk to the ambulance",
+                    "Treat as a possible serious head injury and transport rapidly",
+                    "Wait until symptoms worsen",
+                    "Focus only on extremity injuries"
+                ],
+                correct: 1,
+                rationale: "Altered mental status, unequal pupils, and vomiting indicate a potential severe traumatic brain injury requiring rapid transport."
+            },
+            {
+                question: "A patient is unresponsive and not breathing normally. The EMT cannot immediately locate a pulse.\n\nWhat should happen next?",
+                options: [
+                    "Obtain a detailed history",
+                    "Begin CPR according to protocol",
+                    "Apply oxygen by nasal cannula",
+                    "Wait for ALS arrival"
+                ],
+                correct: 1,
+                rationale: "In sudden cardiac arrest, immediate high-quality CPR is vital if breathing is abnormal or absent."
+            },
+            {
+                question: "During transport, a patient's condition worsens.\n\nWhich action should occur first?",
+                options: [
+                    "Complete documentation",
+                    "Notify medical control and reassess the patient",
+                    "Obtain insurance information",
+                    "Finish the original patient interview"
+                ],
+                correct: 1,
+                rationale: "Reassessing a deteriorating patient and communicating updates to medical control/receiving facility takes precedence."
+            },
+            {
+                question: "A patient complains of shortness of breath. Assessment reveals:\n• RR: 6/min\n• SpO₂: 92%\n• Pulse: 110\n• Increasing drowsiness\n\nWhat is the most appropriate treatment?",
+                options: [
+                    "Apply a nonrebreather mask",
+                    "Assist ventilations with a bag-valve mask",
+                    "Apply CPAP",
+                    "Obtain a detailed history first"
+                ],
+                correct: 1,
+                rationale: "A respiratory rate of 6/min indicates severe hypoventilation. Bag-valve-mask ventilations are required regardless of oxygen saturation."
+            }
+        ];
+
+        let currentQuestion = 0;
+        let score = 0;
+        let answered = false;
+
+        const questionEl = document.getElementById('question-text');
+        const optionsEl = document.getElementById('options-container');
+        const feedbackEl = document.getElementById('feedback');
+        const feedbackResultEl = document.getElementById('feedback-result');
+        const feedbackRationaleEl = document.getElementById('feedback-rationale');
+        const nextBtn = document.getElementById('next-btn');
+        const progressText = document.getElementById('progress-text');
+        const progressBar = document.getElementById('progress-bar');
+        const scoreText = document.getElementById('score-text');
+        const quizCard = document.getElementById('quiz-card');
+        const resultsScreen = document.getElementById('results-screen');
+        const progressContainer = document.getElementById('progress-container');
+
+        function loadQuestion() {
+            answered = false;
+            const data = quizData[currentQuestion];
+            questionEl.innerText = data.question;
+            optionsEl.innerHTML = '';
+            feedbackEl.classList.add('hidden');
+            
+            const progPercent = ((currentQuestion + 1) / quizData.length) * 100;
+            progressText.innerText = `Question ${currentQuestion + 1} of ${quizData.length}`;
+            progressBar.style.width = `${progPercent}%`;
+
+            data.options.forEach((option, index) => {
+                const btn = document.createElement('button');
+                btn.className = "w-full text-left p-4 rounded-lg border border-gray-300 hover:bg-gray-50 transition-all font-medium text-gray-700 focus:outline-none";
+                btn.innerText = option;
+                btn.onclick = () => checkAnswer(index);
+                optionsEl.appendChild(btn);
+            });
+        }
+
+        function checkAnswer(index) {
+            if (answered) return;
+            answered = true;
+            
+            const data = quizData[currentQuestion];
+            const buttons = optionsEl.getElementsByTagName('button');
+            
+            if (index === data.correct) {
+                score++;
+                buttons[index].classList.add('bg-green-100', 'border-green-500', 'text-green-800');
+                feedbackResultEl.innerText = "Correct!";
+                feedbackResultEl.className = "font-bold text-green-700 mb-2";
+                feedbackEl.classList.add('bg-green-50', 'border-green-200');
+            } else {
+                buttons[index].classList.add('bg-red-100', 'border-red-500', 'text-red-800');
+                buttons[data.correct].classList.add('bg-green-100', 'border-green-500', 'text-green-800');
+                feedbackResultEl.innerText = "Incorrect";
+                feedbackResultEl.className = "font-bold text-red-700 mb-2";
+                feedbackEl.classList.add('bg-red-50', 'border-red-200');
+            }
+
+            feedbackRationaleEl.innerText = data.rationale;
+            feedbackEl.classList.remove('hidden');
+            
+            const currentScorePercent = Math.round((score / (currentQuestion + 1)) * 100);
+            scoreText.innerText = `Score: ${currentScorePercent}%`;
+        }
+
+        nextBtn.onclick = () => {
+            currentQuestion++;
+            if (currentQuestion < quizData.length) {
+                loadQuestion();
+            } else {
+                showResults();
+            }
+        };
+
+        function showResults() {
+            quizCard.classList.add('hidden');
+            progressContainer.classList.add('hidden');
+            resultsScreen.classList.remove('hidden');
+            
+            const finalPercent = Math.round((score / quizData.length) * 100);
+            document.getElementById('final-score').innerText = `${finalPercent}%`;
+            
+            let msg = "";
+            if (finalPercent >= 80) msg = "Outstanding! You have a solid grasp of EMT patient assessment.";
+            else if (finalPercent >= 70) msg = "Good job! You meet the standard, but keep sharpening your clinical judgment.";
+            else msg = "Review these concepts, focusing on primary assessment priorities, shock recognition, and ventilation management.";
+            
+            document.getElementById('results-summary').innerText = `You answered ${score} out of ${quizData.length} questions correctly. ${msg}`;
+        }
+
+        loadQuestion();
+    </script>
+</body>
+</html>
