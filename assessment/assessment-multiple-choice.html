@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NREMT Review: Respiratory Emergencies</title>
+    <style>
+        :root {
+            --primary: #1e3a8a;
+            --primary-light: #3b82f6;
+            --success: #15803d;
+            --error: #b91c1c;
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --border: #cbd5e1;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            background: var(--card-bg);
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+        }
+
+        header h1 {
+            color: var(--primary);
+            margin-bottom: 8px;
+            font-size: 1.8rem;
+        }
+
+        header p {
+            color: var(--text-muted);
+            margin: 0;
+            font-size: 0.95rem;
+        }
+
+        .quiz-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            background: var(--card-bg);
+            padding: 15px 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgb(0 0 0 / 0.05);
+            font-weight: 600;
+        }
+
+        .question-card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+            display: none;
+            border: 1px solid var(--border);
+        }
+
+        .question-card.active {
+            display: block;
+        }
+
+        .question-number {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--primary-light);
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .question-text {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: var(--text-main);
+        }
+
+        .options-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .option-btn {
+            background: #f1f5f9;
+            border: 2px solid var(--border);
+            padding: 14px 18px;
+            border-radius: 8px;
+            text-align: left;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            color: var(--text-main);
+            font-weight: 500;
+        }
+
+        .option-btn:hover:not(:disabled) {
+            background: #e2e8f0;
+            border-color: var(--primary-light);
+        }
+
+        .option-btn.correct {
+            background: #dcfce7;
+            border-color: var(--success);
+            color: var(--success);
+            font-weight: 600;
+        }
+
+        .option-btn.incorrect {
+            background: #fee2e2;
+            border-color: var(--error);
+            color: var(--error);
+        }
+
+        .option-btn:disabled {
+            cursor: default;
+        }
+
+        .feedback-box {
+            display: none;
+            margin-top: 15px;
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            background: #f8fafc;
+            border-left: 4px solid var(--primary-light);
+        }
+
+        .feedback-box.show {
+            display: block;
+        }
+
+        .feedback-box strong {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .nav-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 25px;
+        }
+
+        .btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-size: 1rem;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background 0.2s;
+        }
+
+        .btn:hover {
+            background: #1d4ed8;
+        }
+
+        .btn:disabled {
+            background: var(--text-muted);
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+
+        .summary-card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 30px;
+            text-align: center;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+            display: none;
+        }
+
+        .summary-card h2 {
+            color: var(--primary);
+            margin-bottom: 15px;
+        }
+
+        .score-display {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary-light);
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>NREMT Review: Respiratory Emergencies</h1>
+        <p>Balanced Answer Distribution Version | Clinical Judgment & Treatment Decisions</p>
+    </header>
+
+    <div class="quiz-controls" id="quiz-controls">
+        <span id="progress-indicator">Question 1 of 20</span>
+        <span id="score-tracker">Score: 0</span>
+    </div>
+
+    <div id="quiz-container">
+        <!-- Questions will be injected dynamically via script -->
+    </div>
+
+    <div class="summary-card" id="summary-card">
+        <h2>Assessment Complete!</h2>
+        <p>You have finished the NREMT respiratory emergency review set.</p>
+        <div class="score-display" id="final-score">0 / 20</div>
+        <button class="btn" onclick="restartQuiz()">Retake Quiz</button>
+    </div>
+</div>
+
+<script>
+    const quizData = [
+        {
+            question: "A 68-year-old male with a history of COPD is sitting upright and using accessory muscles to breathe. He is anxious and can only speak in two-word sentences. His SpO₂ is 86% on room air. What should the EMT do FIRST?",
+            options: [
+                "Apply oxygen and reassess the patient's respiratory effort",
+                "Place the patient supine for a complete assessment",
+                "Obtain a detailed medical history",
+                "Assist the patient with his prescribed inhaler"
+            ],
+            answer: 0,
+            rationale: "Hypoxic COPD patients in acute distress require immediate oxygen therapy to correct low oxygen saturation while monitoring respiratory effort."
+        },
+        {
+            question: "A patient with asthma suddenly becomes quiet, has minimal air movement, and is no longer wheezing. Which finding is MOST concerning?",
+            options: [
+                "Anxiety and restlessness",
+                "Absence of wheezing with severe distress",
+                "Increased respiratory rate",
+                "Decreased ability to speak"
+            ],
+            answer: 1,
+            rationale: "A silent chest in a severe asthma attack indicates that air movement has drastically reduced, signaling an imminent respiratory arrest."
+        },
+        {
+            question: "A patient with suspected pulmonary edema is sitting upright, coughing pink frothy sputum, and struggling to breathe. Which intervention is MOST appropriate?",
+            options: [
+                "Give oral fluids to thin secretions",
+                "Assist ventilations with a bag-mask device immediately",
+                "Administer oxygen and place the patient in a position of comfort",
+                "Encourage the patient to lie flat"
+            ],
+            answer: 2,
+            rationale: "Patients with acute pulmonary edema benefit from supplemental oxygen and remaining upright in a position of comfort to ease breathing."
+        },
+        {
+            question: "A 55-year-old patient complains of sudden sharp chest pain and difficulty breathing after a long flight. The patient is tachycardic and anxious. Which condition should the EMT suspect?",
+            options: [
+                "Bronchitis",
+                "Pneumonia",
+                "Hyperventilation syndrome",
+                "Pulmonary embolism"
+            ],
+            answer: 3,
+            rationale: "Prolonged immobilization combined with sudden pleuritic chest pain, dyspnea, and tachycardia strongly suggests a pulmonary embolism."
+        },
+        {
+            question: "A patient is breathing 8 times per minute with shallow respirations after taking opioids. His oxygen saturation is 82%. What is the EMT's priority?",
+            options: [
+                "Obtain a medication history",
+                "Assist ventilations with a bag-mask device",
+                "Administer oral glucose",
+                "Place the patient in a recovery position"
+            ],
+            answer: 1,
+            rationale: "Inadequate ventilation and severe hypoxia require immediate positive pressure ventilation using a bag-mask device."
+        },
+        {
+            question: "A patient with COPD asks why the EMT is administering oxygen when they have been told not to receive \"too much oxygen.\" Which response is MOST appropriate?",
+            options: [
+                "\"Oxygen will worsen your COPD immediately.\"",
+                "\"We will provide oxygen based on your current condition and oxygen level.\"",
+                "\"Oxygen should never be given to COPD patients.\"",
+                "\"COPD patients do not require oxygen unless unconscious.\""
+            ],
+            answer: 1,
+            rationale: "Oxygen should be titrated and provided based on objective vital signs and patient distress rather than withheld out of fear."
+        },
+        {
+            question: "A patient with asthma has used their prescribed inhaler without relief. Which finding indicates the patient is experiencing respiratory failure?",
+            options: [
+                "Increasing fatigue and altered mental status",
+                "Respiratory rate of 22/min with clear speech",
+                "Ability to speak full sentences",
+                "Mild wheezing after exercise"
+            ],
+            answer: 0,
+            rationale: "Fatigue, exhaustion, and altered mental status reflect failing respiratory muscles and inadequate gas exchange."
+        },
+        {
+            question: "A 4-year-old child has a barking cough, inspiratory stridor, and a low-grade fever. Which condition is MOST likely?",
+            options: [
+                "Foreign body airway obstruction",
+                "Bronchiolitis",
+                "Croup",
+                "Asthma"
+            ],
+            answer: 2,
+            rationale: "Classic signs of croup (laryngotracheobronchitis) include a seal-like barking cough and inspiratory stridor in young children."
+        },
+        {
+            question: "A child is sitting upright, drooling, and leaning forward with difficulty breathing. You should suspect:",
+            options: [
+                "Epiglottitis",
+                "Asthma exacerbation",
+                "Bronchiolitis",
+                "Pneumonia"
+            ],
+            answer: 0,
+            rationale: "Epiglottitis typically presents with drooling, tripod positioning, stridor, and severe dysphagia in pediatric patients."
+        },
+        {
+            question: "A patient has a partial airway obstruction caused by food. The patient is coughing forcefully and can still speak. What should the EMT do?",
+            options: [
+                "Begin CPR",
+                "Encourage the patient to continue coughing",
+                "Perform a blind finger sweep",
+                "Perform abdominal thrusts immediately"
+            ],
+            answer: 1,
+            rationale: "A patient with a mild/partial airway obstruction who is coughing effectively should be encouraged to keep coughing to clear the object."
+        },
+        {
+            question: "A patient with pneumonia is experiencing increased work of breathing. Which assessment finding indicates deterioration?",
+            options: [
+                "Respiratory rate of 18/min",
+                "Mild fever",
+                "Increasing confusion and fatigue",
+                "Productive cough"
+            ],
+            answer: 2,
+            rationale: "Worsening hypoxia and hypercarbia often manifest as confusion, lethargy, and mental status changes."
+        },
+        {
+            question: "A patient is hyperventilating after a stressful event. Before assuming anxiety, the EMT should:",
+            options: [
+                "Ignore the patient's symptoms",
+                "Restrict oxygen administration",
+                "Tell the patient to breathe into a paper bag",
+                "Determine if a medical cause is present"
+            ],
+            answer: 3,
+            rationale: "Hyperventilation can be secondary to serious medical conditions like DKA, hypoxia, or sepsis; organic causes must be ruled out first."
+        },
+        {
+            question: "A patient with suspected tension pneumothorax is rapidly deteriorating. Which finding is MOST concerning?",
+            options: [
+                "Severe respiratory distress with absent breath sounds on one side",
+                "Productive cough with fever",
+                "Equal breath sounds bilaterally",
+                "Slow pulse and hypertension"
+            ],
+            answer: 0,
+            rationale: "A tension pneumothorax compromises venous return and ventilation, marked by unilateral absent breath sounds and severe distress."
+        },
+        {
+            question: "A patient with a tracheostomy is having difficulty breathing. Which action should the EMT consider FIRST?",
+            options: [
+                "Give the patient food or water",
+                "Remove the tracheostomy tube",
+                "Assess the airway and check for obstruction",
+                "Place the patient flat on their back"
+            ],
+            answer: 2,
+            rationale: "Checking the tube for mucus plugs or foreign bodies and ensuring patent airflow is the immediate priority."
+        },
+        {
+            question: "A patient is breathing rapidly and deeply with fruity-smelling breath and altered mental status. Which condition should be suspected?",
+            options: [
+                "Opioid overdose",
+                "Diabetic ketoacidosis",
+                "Pulmonary edema",
+                "Asthma attack"
+            ],
+            answer: 1,
+            rationale: "Kussmaul respirations and fruity acetone breath are classic indicators of diabetic ketoacidosis."
+        },
+        {
+            question: "A patient with severe respiratory distress has a respiratory rate of 36/min, weak chest movement, and decreasing consciousness. Which intervention is indicated?",
+            options: [
+                "Assist ventilations with a bag-mask device",
+                "Obtain a complete SAMPLE history",
+                "Allow the patient to rest",
+                "Encourage slow breathing"
+            ],
+            answer: 0,
+            rationale: "Inadequate minute volume and declining consciousness require immediate positive-pressure ventilation assistance."
+        },
+        {
+            question: "A patient with a history of asthma has wheezing and difficulty breathing. Which medication may the EMT assist with if allowed by protocol?",
+            options: [
+                "Nitroglycerin",
+                "Aspirin",
+                "Albuterol inhaler",
+                "Epinephrine auto-injector only"
+            ],
+            answer: 2,
+            rationale: "Albuterol is a beta-agonist bronchodilator commonly prescribed for bronchospasm in asthma."
+        },
+        {
+            question: "A patient is found unconscious after suspected opioid use. The patient has slow, shallow breathing and pinpoint pupils. What is the priority treatment?",
+            options: [
+                "Perform abdominal thrusts",
+                "Administer naloxone if authorized and support ventilation",
+                "Give oxygen only and wait",
+                "Place the patient in a seated position"
+            ],
+            answer: 1,
+            rationale: "Reversing central nervous system depression with naloxone while supporting ventilation is critical in opioid overdoses."
+        },
+        {
+            question: "A patient with chest trauma has severe shortness of breath and one side of the chest is not moving normally. What should the EMT suspect?",
+            options: [
+                "Bronchitis",
+                "Hyperventilation syndrome",
+                "Pneumothorax",
+                "Asthma"
+            ],
+            answer: 2,
+            rationale: "Trauma leading to unequal chest wall movement and severe dyspnea strongly points toward a pneumothorax or flail segment."
+        },
+        {
+            question: "During assessment of a respiratory patient, which finding indicates the patient is progressing from respiratory distress to respiratory failure?",
+            options: [
+                "Mild anxiety",
+                "Increased respiratory effort",
+                "Ability to answer questions clearly",
+                "Decreasing level of consciousness"
+            ],
+            answer: 3,
+            rationale: "As respiratory failure sets in, the brain becomes starved of oxygen or overloaded with carbon dioxide, leading to a decreasing level of consciousness."
+        }
+    ];
+
+    let currentQuestion = 0;
+    let score = 0;
+    let answered = new Array(quizData.length).fill(false);
+    let userAnswers = new Array(quizData.length).fill(null);
+
+    const quizContainer = document.getElementById("quiz-container");
+    const progressIndicator = document.getElementById("progress-indicator");
+    const scoreTracker = document.getElementById("score-tracker");
+    const summaryCard = document.getElementById("summary-card");
+    const quizControls = document.getElementById("quiz-controls");
+
+    function loadQuiz() {
+        quizContainer.innerHTML = "";
+        quizData.forEach((q, index) => {
+            const card = document.createElement("div");
+            card.className = `question-card ${index === 0 ? 'active' : ''}`;
+            card.id = `question-${index}`;
+
+            let optionsHtml = '';
+            q.options.forEach((opt, optIndex) => {
+                optionsHtml += `<button class="option-btn" onclick="selectOption(${index}, ${optIndex})">${String.fromCharCode(65 + optIndex)}. ${opt}</button>`;
+            });
+
+            card.innerHTML = `
+                <div class="question-number">Question ${index + 1} of ${quizData.length}</div>
+                <div class="question-text">${q.question}</div>
+                <div class="options-list" id="options-${index}">
+                    ${optionsHtml}
+                </div>
+                <div class="feedback-box" id="feedback-${index}">
+                    <strong id="feedback-title-${index}"></strong>
+                    <span id="feedback-text-${index}">${q.rationale}</span>
+                </div>
+                <div class="nav-buttons">
+                    <button class="btn" onclick="prevQuestion()" ${index === 0 ? 'disabled' : ''}>Previous</button>
+                    <button class="btn" id="next-btn-${index}" onclick="nextQuestion()" ${index === quizData.length - 1 ? 'disabled' : ''}>Next</button>
+                </div>
+            `;
+            quizContainer.appendChild(card);
+        });
+        updateControls();
+    }
+
+    function selectOption(qIndex, optIndex) {
+        if (answered[qIndex]) return;
+        answered[qIndex] = true;
+        userAnswers[qIndex] = optIndex;
+
+        const correctOpt = quizData[qIndex].answer;
+        const optionsContainer = document.getElementById(`options-${qIndex}`);
+        const buttons = optionsContainer.getElementsByClassName("option-btn");
+        const feedbackBox = document.getElementById(`feedback-${qIndex}`);
+        const feedbackTitle = document.getElementById(`feedback-title-${qIndex}`);
+
+        for (let i = 0; i < buttons.length; i++) {
+            buttons[i].disabled = true;
+            if (i === correctOpt) {
+                buttons[i].classList.add("correct");
+            } else if (i === optIndex) {
+                buttons[i].classList.add("incorrect");
+            }
+        }
+
+        if (optIndex === correctOpt) {
+            score++;
+            feedbackTitle.textContent = "Correct!";
+            feedbackTitle.style.color = "var(--success)";
+        } else {
+            feedbackTitle.textContent = "Incorrect.";
+            feedbackTitle.style.color = "var(--error)";
+        }
+
+        feedbackBox.classList.add("show");
+        scoreTracker.textContent = `Score: ${score}`;
+
+        const nextBtn = document.getElementById(`next-btn-${qIndex}`);
+        if(nextBtn && currentQuestion === quizData.length - 1) {
+            showSummaryIfNeeded();
+        }
+    }
+
+    function nextQuestion() {
+        if (currentQuestion < quizData.length - 1) {
+            document.getElementById(`question-${currentQuestion}`).classList.remove("active");
+            currentQuestion++;
+            document.getElementById(`question-${currentQuestion}`).classList.add("active");
+            updateControls();
+        } else {
+            showSummary();
+        }
+    }
+
+    function prevQuestion() {
+        if (currentQuestion > 0) {
+            document.getElementById(`question-${currentQuestion}`).classList.remove("active");
+            currentQuestion--;
+            document.getElementById(`question-${currentQuestion}`).classList.add("active");
+            updateControls();
+        }
+    }
+
+    function updateControls() {
+        progressIndicator.textContent = `Question ${currentQuestion + 1} of ${quizData.length}`;
+        scoreTracker.textContent = `Score: ${score}`;
+        
+        if (currentQuestion === quizData.length - 1 && answered[currentQuestion]) {
+            const nextBtn = document.getElementById(`next-btn-${currentQuestion}`);
+            nextBtn.textContent = "Finish Review";
+            nextBtn.disabled = false;
+            nextBtn.onclick = showSummary;
+        }
+    }
+
+    function showSummaryIfNeeded() {
+        if (currentQuestion === quizData.length - 1) {
+            const nextBtn = document.getElementById(`next-btn-${currentQuestion}`);
+            nextBtn.textContent = "Finish Review";
+            nextBtn.disabled = false;
+            nextBtn.onclick = showSummary;
+        }
+    }
+
+    function showSummary() {
+        document.getElementById(`question-${currentQuestion}`).classList.remove("active");
+        quizControls.style.display = "none";
+        summaryCard.style.display = "block";
+        document.getElementById("final-score").textContent = `${score} / ${quizData.length}`;
+    }
+
+    function restartQuiz() {
+        currentQuestion = 0;
+        score = 0;
+        answered.fill(false);
+        userAnswers.fill(null);
+        summaryCard.style.display = "none";
+        quizControls.style.display = "flex";
+        loadQuiz();
+    }
+
+    loadQuiz();
+</script>
+
+</body>
+</html>
