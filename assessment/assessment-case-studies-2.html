@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NREMT Progressive Case Studies</title>
+    <style>
+        :root {
+            --primary: #15803d;
+            --primary-light: #22c55e;
+            --success: #15803d;
+            --error: #b91c1c;
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --border: #cbd5e1;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            background: var(--card-bg);
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+        }
+
+        header h1 {
+            color: var(--primary);
+            margin-bottom: 8px;
+            font-size: 1.8rem;
+        }
+
+        header p {
+            color: var(--text-muted);
+            margin: 0;
+            font-size: 0.95rem;
+        }
+
+        .quiz-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            background: var(--card-bg);
+            padding: 15px 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgb(0 0 0 / 0.05);
+            font-weight: 600;
+        }
+
+        .question-card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+            display: none;
+            border: 1px solid var(--border);
+        }
+
+        .question-card.active {
+            display: block;
+        }
+
+        .question-number {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--primary-light);
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .question-text {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: var(--text-main);
+        }
+
+        .scenario-box {
+            background: #f0fdf4;
+            border-left: 4px solid var(--primary);
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            font-size: 0.95rem;
+        }
+
+        .scenario-box h3 {
+            margin-top: 0;
+            color: var(--primary);
+            font-size: 1rem;
+        }
+
+        .options-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .option-btn {
+            background: #f1f5f9;
+            border: 2px solid var(--border);
+            padding: 14px 18px;
+            border-radius: 8px;
+            text-align: left;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            color: var(--text-main);
+            font-weight: 500;
+        }
+
+        .option-btn:hover:not(:disabled) {
+            background: #e2e8f0;
+            border-color: var(--primary-light);
+        }
+
+        .option-btn.correct {
+            background: #dcfce7;
+            border-color: var(--success);
+            color: var(--success);
+            font-weight: 600;
+        }
+
+        .option-btn.incorrect {
+            background: #fee2e2;
+            border-color: var(--error);
+            color: var(--error);
+        }
+
+        .option-btn:disabled {
+            cursor: default;
+        }
+
+        .feedback-box {
+            display: none;
+            margin-top: 15px;
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            background: #f8fafc;
+            border-left: 4px solid var(--primary-light);
+        }
+
+        .feedback-box.show {
+            display: block;
+        }
+
+        .feedback-box strong {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .nav-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 25px;
+        }
+
+        .btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-size: 1rem;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background 0.2s;
+        }
+
+        .btn:hover {
+            background: #166534;
+        }
+
+        .btn:disabled {
+            background: var(--text-muted);
+            cursor: not-allowed;
+            opacity: 0.6;
+        }
+
+        .summary-card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 30px;
+            text-align: center;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+            display: none;
+        }
+
+        .summary-card h2 {
+            color: var(--primary);
+            margin-bottom: 15px;
+        }
+
+        .score-display {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary-light);
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>NREMT EMT Progressive Case Studies</h1>
+        <p>Level 4+ Clinical Judgment / Assessment-Based Scenarios</p>
+    </header>
+
+    <div class="quiz-controls" id="quiz-controls">
+        <span id="progress-indicator">Question 1 of 13</span>
+        <span id="score-tracker">Score: 0</span>
+    </div>
+
+    <div id="quiz-container">
+        <!-- Questions will be injected dynamically via script -->
+    </div>
+
+    <div class="summary-card" id="summary-card">
+        <h2>Assessment Complete!</h2>
+        <p>You have finished the progressive case study review set.</p>
+        <div class="score-display" id="final-score">0 / 13</div>
+        <button class="btn" onclick="restartQuiz()">Retake Case Studies</button>
+    </div>
+</div>
+
+<script>
+    const quizData = [
+        {
+            caseTitle: "Case Study 3: Neurological Emergency — Stroke vs Hypoglycemia",
+            scenario: "<strong>Introduction & Phase 1: Scene Size-Up</strong><br>Dispatch: 62-year-old female with sudden weakness and confusion.<br>Husband: \"She was completely normal 30 minutes ago. She was making breakfast, then suddenly dropped the coffee cup and started talking strangely.\"<br>Upon arrival: Patient seated at kitchen table, husband anxious, prescription meds on counter, no hazards. Husband reports Type 2 diabetes, high blood pressure, and a previous mini-stroke 5 years ago.",
+            question: "During the scene size-up, which action is MOST appropriate?",
+            options: [
+                "Immediately administer oral glucose because the patient is diabetic",
+                "Determine scene safety, number of patients, and need for additional resources",
+                "Ask the husband for the patient's complete medical history",
+                "Perform a stroke assessment before approaching the patient"
+            ],
+            answer: 1,
+            rationale: "Scene size-up occurs before patient assessment. The EMT must ensure safety and identify resources before treatment decisions."
+        },
+        {
+            caseTitle: "Case Study 3: Neurological Emergency — Stroke vs Hypoglycemia",
+            scenario: "<strong>Phase 2: Primary Assessment</strong><br>Patient is awake but confused.<br>Airway: Patent | Breathing: RR 18/min, Regular, SpO₂ 97%<br>Circulation: Pulse 92/min, BP 168/94, Skin warm and dry<br>Neurological findings: Left facial droop, slurred speech, left arm drift, unable to correctly identify the month.",
+            question: "Which finding is MOST concerning?",
+            options: [
+                "Elevated blood pressure",
+                "History of diabetes",
+                "Sudden onset neurological deficits",
+                "Confusion about the date"
+            ],
+            answer: 2,
+            rationale: "Sudden focal neurological deficits strongly suggest acute stroke."
+        },
+        {
+            caseTitle: "Case Study 3: Neurological Emergency — Stroke vs Hypoglycemia",
+            scenario: "<strong>Phase 2: Primary Assessment (Continued)</strong><br>Neurological deficits remain present. Determining critical time-sensitive metrics.",
+            question: "What information is MOST important to determine immediately?",
+            options: [
+                "The patient's last meal",
+                "The exact time symptoms began",
+                "The patient's insurance information",
+                "The patient's normal blood pressure"
+            ],
+            answer: 1,
+            rationale: "Stroke treatment decisions are time dependent. The EMT must determine the last known well time."
+        },
+        {
+            caseTitle: "Case Study 3: Neurological Emergency — Stroke vs Hypoglycemia",
+            scenario: "<strong>Phase 3: Assessment and Treatment</strong><br>Husband states: \"She was fine at 9:15. I noticed the problem at 9:45.\"<br>Blood glucose: 42 mg/dL<br>The patient is awake and can follow commands.",
+            question: "What should the EMT do next?",
+            options: [
+                "Administer oral glucose and reassess mental status",
+                "Delay treatment because stroke is suspected",
+                "Give aspirin for possible stroke",
+                "Place the patient in Trendelenburg position"
+            ],
+            answer: 0,
+            rationale: "Hypoglycemia can mimic stroke. Since the patient can protect her airway and swallow, oral glucose is appropriate."
+        },
+        {
+            caseTitle: "Case Study 3: Neurological Emergency — Stroke vs Hypoglycemia",
+            scenario: "<strong>Phase 4: Reassessment</strong><br>Five minutes after oral glucose:<br>Patient is more alert, speech improves, facial droop resolves, blood glucose increases to 78 mg/dL.",
+            question: "What is the MOST likely explanation for the patient's symptoms?",
+            options: [
+                "Acute ischemic stroke",
+                "Hypoglycemia causing stroke-like symptoms",
+                "Hypertensive emergency",
+                "Seizure disorder"
+            ],
+            answer: 1,
+            rationale: "Reversal of neurological symptoms following the administration of oral glucose points directly to hypoglycemia as the underlying cause."
+        },
+        {
+            caseTitle: "Case Study 3: Neurological Emergency — Stroke vs Hypoglycemia",
+            scenario: "<strong>Phase 5: Transport Decision</strong><br>During transport, the patient becomes confused again.<br>Repeat assessment: Blood glucose 58 mg/dL. Patient is unable to swallow safely.",
+            question: "What is the EMT's priority action?",
+            options: [
+                "Give additional oral glucose",
+                "Protect the airway and provide appropriate supportive care",
+                "Allow the patient to sleep during transport",
+                "Perform a detailed neurological exam"
+            ],
+            answer: 1,
+            rationale: "The patient's swallowing ability has changed. Oral glucose is no longer safe due to aspiration risk."
+        },
+        {
+            caseTitle: "Case Study 4: Cardiac Emergency — Acute Coronary Syndrome Progressing to Cardiac Arrest",
+            scenario: "<strong>Introduction & Phase 1: Scene Size-Up</strong><br>Dispatch: 54-year-old male complaining of chest pressure at a shopping center.<br>Bystander: \"He was walking into the store when he suddenly grabbed his chest and sat down.\"<br>Arrival: Patient seated against a wall. Scene is safe. Patient states: \"It feels like someone is sitting on my chest.\"",
+            question: "What is the EMT's initial priority?",
+            options: [
+                "Obtain a detailed cardiac history",
+                "Perform a primary assessment and identify immediate threats",
+                "Ask about previous heart attacks",
+                "Determine whether the patient has insurance"
+            ],
+            answer: 1,
+            rationale: "The EMT must identify immediate threats before obtaining detailed history."
+        },
+        {
+            caseTitle: "Case Study 4: Cardiac Emergency — Acute Coronary Syndrome Progressing to Cardiac Arrest",
+            scenario: "<strong>Phase 2: Primary Assessment</strong><br>Airway: Patent | Breathing: RR 22/min, SpO₂ 95%<br>Circulation: Pulse 104/min, BP 142/88, Skin pale and sweaty<br>Reports: Chest pressure lasting 20 minutes, pain radiating to left arm, nausea.",
+            question: "Which finding MOST strongly suggests acute coronary syndrome?",
+            options: [
+                "Nausea after eating",
+                "Chest pressure with radiation and diaphoresis",
+                "Mildly elevated heart rate",
+                "Normal oxygen saturation"
+            ],
+            answer: 1,
+            rationale: "Classic presentation of acute coronary syndrome includes sub-sternal pressure radiating to the arms or jaw accompanied by diaphoresis."
+        },
+        {
+            caseTitle: "Case Study 4: Cardiac Emergency — Acute Coronary Syndrome Progressing to Cardiac Arrest",
+            scenario: "<strong>Phase 2: Primary Assessment (Continued)</strong><br>Preparing to administer aspirin per protocol.",
+            question: "Which question is MOST important before assisting with aspirin?",
+            options: [
+                "\"Have you taken your blood pressure medication today?\"",
+                "\"Are you allergic to aspirin or have you had significant bleeding?\"",
+                "\"Have you eaten recently?\"",
+                "\"Do you prefer chewable medication?\""
+            ],
+            answer: 1,
+            rationale: "Checking for active bleeding disorders and hypersensitivity/allergies prevents catastrophic complications when administering antiplatelet medication."
+        },
+        {
+            caseTitle: "Case Study 4: Cardiac Emergency — Acute Coronary Syndrome Progressing to Cardiac Arrest",
+            scenario: "<strong>Phase 3: Treatment</strong><br>Patient denies aspirin allergy and bleeding problems. Aspirin administered.<br>Patient states: \"The pain is getting worse.\"<br>New findings: Respirations 28/min, Pulse 118/min, BP 98/64.",
+            question: "What does this change suggest?",
+            options: [
+                "The patient is improving",
+                "The patient may be developing shock or worsening cardiac compromise",
+                "The patient is experiencing anxiety only",
+                "The aspirin caused deterioration"
+            ],
+            answer: 1,
+            rationale: "Worsening pain, tachypnea, tachycardia, and a dropping blood pressure indicate deteriorating cardiac output and potential cardiogenic shock."
+        },
+        {
+            caseTitle: "Case Study 4: Cardiac Emergency — Acute Coronary Syndrome Progressing to Cardiac Arrest",
+            scenario: "<strong>Phase 4: Reassessment</strong><br>While preparing for transport, the patient suddenly becomes unresponsive.<br>Assessment: No response to verbal stimuli, abnormal gasping respirations, no definite pulse detected.",
+            question: "What should occur immediately?",
+            options: [
+                "Obtain a full medical history",
+                "Begin CPR and activate the cardiac arrest response",
+                "Apply oxygen by nonrebreather mask",
+                "Wait for ALS before starting treatment"
+            ],
+            answer: 1,
+            rationale: "Sudden cardiac arrest requires immediate high-quality chest compressions and activation of emergency response protocols."
+        },
+        {
+            caseTitle: "Case Study 4: Cardiac Emergency — Acute Coronary Syndrome Progressing to Cardiac Arrest",
+            scenario: "<strong>Phase 5: Cardiac Arrest Management</strong><br>CPR is started.<br>The AED analyzes the rhythm and advises: \"Shock advised.\"",
+            question: "What should the EMT do next?",
+            options: [
+                "Deliver the shock and immediately resume CPR",
+                "Continue CPR until ALS arrives",
+                "Remove AED pads and reassess manually",
+                "Give oxygen through a nasal cannula"
+            ],
+            answer: 0,
+            rationale: "Immediately following shock delivery, high-quality CPR must resume without delay to maximize perfusion."
+        },
+        {
+            caseTitle: "Case Study 4: Cardiac Emergency — Acute Coronary Syndrome Progressing to Cardiac Arrest",
+            scenario: "<strong>Phase 6: Post-ROSC Reassessment</strong><br>After treatment, the patient regains a pulse.<br>Findings: Respirations 8/min, SpO₂ 84%, patient remains unconscious.",
+            question: "What is the priority intervention?",
+            options: [
+                "Obtain a detailed SAMPLE history",
+                "Assist ventilations with a BVM and supplemental oxygen",
+                "Place the patient upright",
+                "Wait for the patient to awaken"
+            ],
+            answer: 1,
+            rationale: "Post-arrest hypoventilation and hypoxia must be aggressively managed with assisted bag-valve-mask ventilations and supplemental oxygen."
+        }
+    ];
+
+    let currentQuestion = 0;
+    let score = 0;
+    let answered = new Array(quizData.length).fill(false);
+    let userAnswers = new Array(quizData.length).fill(null);
+
+    const quizContainer = document.getElementById("quiz-container");
+    const progressIndicator = document.getElementById("progress-indicator");
+    const scoreTracker = document.getElementById("score-tracker");
+    const summaryCard = document.getElementById("summary-card");
+    const quizControls = document.getElementById("quiz-controls");
+
+    function loadQuiz() {
+        quizContainer.innerHTML = "";
+        quizData.forEach((q, index) => {
+            const card = document.createElement("div");
+            card.className = `question-card ${index === 0 ? 'active' : ''}`;
+            card.id = `question-${index}`;
+
+            let optionsHtml = '';
+            q.options.forEach((opt, optIndex) => {
+                optionsHtml += `<button class="option-btn" onclick="selectOption(${index}, ${optIndex})">${String.fromCharCode(65 + optIndex)}. ${opt}</button>`;
+            });
+
+            card.innerHTML = `
+                <div class="question-number">${q.caseTitle} — Question ${index + 1} of ${quizData.length}</div>
+                <div class="scenario-box">
+                    <h3>Scenario Details</h3>
+                    <div>${q.scenario}</div>
+                </div>
+                <div class="question-text">${q.question}</div>
+                <div class="options-list" id="options-${index}">
+                    ${optionsHtml}
+                </div>
+                <div class="feedback-box" id="feedback-${index}">
+                    <strong id="feedback-title-${index}"></strong>
+                    <span id="feedback-text-${index}">${q.rationale}</span>
+                </div>
+                <div class="nav-buttons">
+                    <button class="btn" onclick="prevQuestion()" ${index === 0 ? 'disabled' : ''}>Previous</button>
+                    <button class="btn" id="next-btn-${index}" onclick="nextQuestion()" ${index === quizData.length - 1 ? 'disabled' : ''}>Next</button>
+                </div>
+            `;
+            quizContainer.appendChild(card);
+        });
+        updateControls();
+    }
+
+    function selectOption(qIndex, optIndex) {
+        if (answered[qIndex]) return;
+        answered[qIndex] = true;
+        userAnswers[qIndex] = optIndex;
+
+        const correctOpt = quizData[qIndex].answer;
+        const optionsContainer = document.getElementById(`options-${qIndex}`);
+        const buttons = optionsContainer.getElementsByClassName("option-btn");
+        const feedbackBox = document.getElementById(`feedback-${qIndex}`);
+        const feedbackTitle = document.getElementById(`feedback-title-${qIndex}`);
+
+        for (let i = 0; i < buttons.length; i++) {
+            buttons[i].disabled = true;
+            if (i === correctOpt) {
+                buttons[i].classList.add("correct");
+            } else if (i === optIndex) {
+                buttons[i].classList.add("incorrect");
+            }
+        }
+
+        if (optIndex === correctOpt) {
+            score++;
+            feedbackTitle.textContent = "Correct!";
+            feedbackTitle.style.color = "var(--success)";
+        } else {
+            feedbackTitle.textContent = "Incorrect.";
+            feedbackTitle.style.color = "var(--error)";
+        }
+
+        feedbackBox.classList.add("show");
+        scoreTracker.textContent = `Score: ${score}`;
+
+        const nextBtn = document.getElementById(`next-btn-${qIndex}`);
+        if(nextBtn && currentQuestion === quizData.length - 1) {
+            showSummaryIfNeeded();
+        }
+    }
+
+    function nextQuestion() {
+        if (currentQuestion < quizData.length - 1) {
+            document.getElementById(`question-${currentQuestion}`).classList.remove("active");
+            currentQuestion++;
+            document.getElementById(`question-${currentQuestion}`).classList.add("active");
+            updateControls();
+        } else {
+            showSummary();
+        }
+    }
+
+    function prevQuestion() {
+        if (currentQuestion > 0) {
+            document.getElementById(`question-${currentQuestion}`).classList.remove("active");
+            currentQuestion--;
+            document.getElementById(`question-${currentQuestion}`).classList.add("active");
+            updateControls();
+        }
+    }
+
+    function updateControls() {
+        progressIndicator.textContent = `Question ${currentQuestion + 1} of ${quizData.length}`;
+        scoreTracker.textContent = `Score: ${score}`;
+        
+        if (currentQuestion === quizData.length - 1 && answered[currentQuestion]) {
+            const nextBtn = document.getElementById(`next-btn-${currentQuestion}`);
+            nextBtn.textContent = "Finish Review";
+            nextBtn.disabled = false;
+            nextBtn.onclick = showSummary;
+        }
+    }
+
+    function showSummaryIfNeeded() {
+        if (currentQuestion === quizData.length - 1) {
+            const nextBtn = document.getElementById(`next-btn-${currentQuestion}`);
+            nextBtn.textContent = "Finish Review";
+            nextBtn.disabled = false;
+            nextBtn.onclick = showSummary;
+        }
+    }
+
+    function showSummary() {
+        document.getElementById(`question-${currentQuestion}`).classList.remove("active");
+        quizControls.style.display = "none";
+        summaryCard.style.display = "block";
+        document.getElementById("final-score").textContent = `${score} / ${quizData.length}`;
+    }
+
+    function restartQuiz() {
+        currentQuestion = 0;
+        score = 0;
+        answered.fill(false);
+        userAnswers.fill(null);
+        summaryCard.style.display = "none";
+        quizControls.style.display = "flex";
+        loadQuiz();
+    }
+
+    loadQuiz();
+</script>
+
+</body>
+</html>
