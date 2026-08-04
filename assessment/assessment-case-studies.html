@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Progressive Case Study Quiz</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; background-color: #f3f4f6; }
+        .transition-all { transition: all 0.3s ease; }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+    <!-- Header -->
+    <header class="bg-green-700 text-white py-5 px-4 shadow-lg">
+        <div class="max-w-3xl mx-auto text-center">
+            <h1 class="text-xl md:text-2xl font-bold uppercase tracking-wide">Progressive Clinical Case Studies</h1>
+            <p class="text-green-100 text-xs md:text-sm mt-1 opacity-90">Real-Time Scenario Navigation & Decision-Making</p>
+        </div>
+    </header>
+
+    <main id="app" class="flex-grow container mx-auto px-4 py-6 max-w-2xl">
+        <!-- Progress Bar -->
+        <div class="mb-5" id="progress-container">
+            <div class="flex justify-between text-xs font-semibold text-gray-600 mb-1.5">
+                <span id="progress-text">Question 1 of 13</span>
+                <span id="score-text">Score: 0%</span>
+            </div>
+            <div class="w-full bg-gray-300 rounded-full h-2">
+                <div id="progress-bar" class="bg-green-600 h-2 rounded-full transition-all" style="width: 7.69%"></div>
+            </div>
+        </div>
+
+        <!-- Question Card -->
+        <div id="quiz-card" class="bg-white rounded-xl shadow-md p-5 md:p-6 transition-all">
+            <div id="phase-badge" class="inline-block bg-green-100 text-green-800 text-xs font-semibold px-2.5 py-1 rounded-md mb-3"></div>
+            <div id="scenario-box" class="bg-gray-50 border-l-4 border-green-600 p-3 rounded-r-md text-xs md:text-sm text-gray-700 mb-4 whitespace-pre-line"></div>
+            <div id="question-text" class="text-base md:text-lg font-semibold text-gray-900 mb-4 leading-snug whitespace-pre-line"></div>
+            
+            <div id="options-container" class="space-y-2.5">
+                <!-- Options injected here -->
+            </div>
+
+            <!-- Feedback Section -->
+            <div id="feedback" class="hidden mt-4 p-3.5 rounded-lg border text-sm">
+                <p id="feedback-result" class="font-bold mb-1"></p>
+                <p id="feedback-rationale" class="text-gray-700 text-xs md:text-sm italic whitespace-pre-line"></p>
+                <button id="next-btn" class="mt-3 bg-green-700 hover:bg-green-800 text-white font-bold py-2 px-5 rounded text-sm transition-all">
+                    Next Question
+                </button>
+            </div>
+        </div>
+
+        <!-- Results Screen -->
+        <div id="results-screen" class="hidden text-center bg-white rounded-xl shadow-md p-8">
+            <h2 class="text-2xl font-bold text-gray-800 mb-3">Case Studies Completed!</h2>
+            <div class="text-5xl font-bold text-green-700 mb-5" id="final-score">0%</div>
+            <p class="text-gray-600 text-sm mb-6" id="results-summary"></p>
+            <button onclick="location.reload()" class="bg-green-700 hover:bg-green-800 text-white font-bold py-2.5 px-6 rounded-lg text-sm transition-all shadow-md">
+                Restart Quiz
+            </button>
+        </div>
+    </main>
+
+    <footer class="py-4 text-center text-gray-500 text-xs">
+        Progressive Case Study Practice Tool
+    </footer>
+
+    <script>
+        const quizData = [
+            // Case 1
+            {
+                phase: "Case 1 — Phase 1: Scene Size-Up",
+                scenario: "Dispatch: 67-year-old male with history of COPD and heart failure, increasing short of breath over 2 hours. Unable to walk from bedroom to living room.\nScene: Safe, patient sitting upright in tripod position. Home oxygen & meds nearby. Wife: 'He used his inhaler repeatedly, but it's not helping.'",
+                question: "During the scene size-up, which action is MOST appropriate?",
+                options: [
+                    "Immediately administer oxygen because the patient appears short of breath",
+                    "Determine if there are any environmental hazards and assess the need for additional resources",
+                    "Ask the wife what medications the patient has taken today",
+                    "Perform a detailed respiratory assessment before approaching"
+                ],
+                correct: 1,
+                rationale: "Scene safety comes before patient contact. The EMT must ensure hazards are absent and determine resource needs before beginning assessment."
+            },
+            {
+                phase: "Case 1 — Phase 2: Primary Assessment",
+                scenario: "Alert but anxious.\n• Airway: Patent | Breathing: RR 34/min, labored, accessory use, short phrases, crackles in lower lobes with wheezing\n• Circulation: Pulse 118/min, pale/cool skin, BP 164/96, SpO₂ 82% room air",
+                question: "Which finding is the MOST concerning?",
+                options: [
+                    "Elevated blood pressure",
+                    "History of COPD",
+                    "Inability to speak full sentences with low oxygen saturation",
+                    "Presence of wheezing"
+                ],
+                correct: 2,
+                rationale: "The inability to speak full sentences and severe hypoxia indicate significant respiratory compromise."
+            },
+            {
+                phase: "Case 1 — Phase 2: Primary Assessment (Continued)",
+                scenario: "Patient is conscious, breathing spontaneously, with severe respiratory distress and SpO₂ of 82%.",
+                question: "What intervention should be performed FIRST?",
+                options: [
+                    "Obtain a complete SAMPLE history",
+                    "Apply CPAP with supplemental oxygen if not contraindicated",
+                    "Assist the patient with his prescribed inhaler",
+                    "Place the patient supine for assessment"
+                ],
+                correct: 1,
+                rationale: "The patient is conscious, breathing spontaneously, and showing severe respiratory distress. CPAP may improve oxygenation and reduce work of breathing."
+            },
+            {
+                phase: "Case 1 — Phase 3: Treatment & History",
+                scenario: "Post-CPAP application:\n• SpO₂ improves to 91% | RR: 26/min | Says breathing is 'a little easier'\n• History: Furosemide, albuterol, lisinopril; COPD, CHF; symptoms worsened after lying down.",
+                question: "Based on the history and assessment, which condition is MOST likely contributing to the patient's symptoms?",
+                options: [
+                    "Isolated asthma exacerbation",
+                    "Pulmonary edema related to heart failure",
+                    "Anxiety-related hyperventilation",
+                    "Pulmonary embolism"
+                ],
+                correct: 1,
+                rationale: "Crackles, orthopnea, CHF history, and improvement with positive pressure suggest pulmonary edema."
+            },
+            {
+                phase: "Case 1 — Phase 4: Reassessment & Deterioration",
+                scenario: "During transport, patient suddenly becomes confused.\n• SpO₂: 86% despite CPAP | RR: 8/min | Pulse: 124/min | Difficult to awaken",
+                question: "What is the MOST appropriate next action?",
+                options: [
+                    "Continue CPAP because oxygen saturation is improving slowly",
+                    "Remove CPAP and begin assisted ventilations with a BVM",
+                    "Increase oxygen flow rate only",
+                    "Obtain a detailed neurological assessment"
+                ],
+                correct: 1,
+                rationale: "The patient is now showing signs of respiratory failure. Decreased respiratory effort and altered mental status require assisted ventilation."
+            },
+            {
+                phase: "Case 1 — Phase 4: Reassessment (Continued)",
+                scenario: "The patient's respiratory rate has dropped to 8/min with altered mental status and dropping SpO₂.",
+                question: "The EMT's primary concern at this point is:",
+                options: [
+                    "Correcting the patient's blood pressure",
+                    "Improving ventilation and oxygen delivery",
+                    "Determining the exact cause of respiratory distress",
+                    "Completing the secondary assessment"
+                ],
+                correct: 1,
+                rationale: "Restoring adequate ventilation and oxygenation takes absolute priority over all other secondary considerations during acute respiratory failure."
+            },
+            // Case 2
+            {
+                phase: "Case 2 — Phase 1: Scene Size-Up",
+                scenario: "Dispatch: Construction site worker fell approx. 20 feet from scaffolding.\nScene: Collapsed scaffolding section, workers nearby, patient lying ~15 ft away. Supervisor: 'He landed on his back and hasn't moved much since.'",
+                question: "What should the EMT do FIRST?",
+                options: [
+                    "Begin a rapid trauma assessment",
+                    "Ensure scene safety and identify hazards",
+                    "Move the patient immediately",
+                    "Ask witnesses what happened"
+                ],
+                correct: 1,
+                rationale: "The EMT must ensure the scene is safe before entering or treating."
+            },
+            {
+                phase: "Case 2 — Phase 2: Primary Assessment",
+                scenario: "Found supine. Confused (responds to voice), airway open.\n• Breathing: RR 24, unequal chest rise, decreased breath sounds on left\n• Circulation: Pulse 132, cool/clammy, BP 88/54\n• Large open wound to left thigh with heavy bleeding.",
+                question: "Which finding requires immediate intervention?",
+                options: [
+                    "Confusion",
+                    "Decreased breath sounds",
+                    "Open femur injury with uncontrolled bleeding",
+                    "Unequal chest rise"
+                ],
+                correct: 2,
+                rationale: "Massive external hemorrhage is an immediate life threat and should be controlled immediately."
+            },
+            {
+                phase: "Case 2 — Phase 2: Primary Assessment (Continued)",
+                scenario: "Severe arterial bleeding is present from an open left thigh wound. The patient is tachycardic and hypotensive.",
+                question: "What intervention should occur FIRST?",
+                options: [
+                    "Apply a cervical collar",
+                    "Apply direct pressure and control bleeding",
+                    "Obtain a complete SAMPLE history",
+                    "Assess distal pulses in the injured leg"
+                ],
+                correct: 1,
+                rationale: "Controlling massive life-threatening hemorrhage takes precedence over spinal motion restriction or secondary exam steps."
+            },
+            {
+                phase: "Case 2 — Phase 3: Secondary Assessment",
+                scenario: "Bleeding controlled with tourniquet. Vitals: HR 128, BP 92/60, RR 28, increasingly confused. Complains: 'My chest hurts when I breathe.'",
+                question: "Which finding suggests the patient may be developing shock?",
+                options: [
+                    "Chest pain with breathing",
+                    "Tachycardia with cool skin and altered mental status",
+                    "Femur deformity",
+                    "Patient complaint of pain"
+                ],
+                correct: 1,
+                rationale: "Tachycardia, altered mental status, and cool skin are classic systemic signs of hemorrhagic shock."
+            },
+            {
+                phase: "Case 2 — Phase 3: Secondary Assessment (Continued)",
+                scenario: "Trauma patient with unstable vital signs, unequal breath sounds, and suspected internal/external hemorrhage.",
+                question: "The EMT should recognize that:",
+                options: [
+                    "Normalizing blood pressure is the primary goal before transport",
+                    "The patient requires rapid transport due to possible internal bleeding",
+                    "The patient can remain on scene for a complete physical exam",
+                    "Pain control is the highest priority"
+                ],
+                correct: 1,
+                rationale: "Patients with signs of critical trauma and hemorrhagic shock require rapid packaging and transport to a trauma center."
+            },
+            {
+                phase: "Case 2 — Phase 4: Transport Deterioration",
+                scenario: "During transport, patient becomes more restless. New vitals: BP 78/46, HR 140, RR 32, skin gray and diaphoretic.",
+                question: "Which action is MOST appropriate?",
+                options: [
+                    "Continue monitoring because the patient has already been treated",
+                    "Notify receiving facility of deterioration and continue aggressive supportive care",
+                    "Stop transport and repeat the entire assessment",
+                    "Provide oral fluids for suspected dehydration"
+                ],
+                correct: 1,
+                rationale: "Communicating downward trends to the receiving facility while maintaining high-flow support is essential for trauma activation."
+            },
+            {
+                phase: "Case 2 — Phase 5: Clinical Judgment",
+                scenario: "Patient suddenly becomes unresponsive.\n• Airway: Open | Breathing: 4 shallow breaths/min | Pulse: Present but weak",
+                question: "What is the EMT's priority intervention?",
+                options: [
+                    "Perform a detailed neurological examination",
+                    "Begin assisted ventilations with a BVM",
+                    "Obtain another blood pressure reading",
+                    "Complete trauma documentation"
+                ],
+                correct: 1,
+                rationale: "Agonal or extremely slow breathing (4/min) requires immediate assisted ventilation with a bag-valve mask to prevent cardiac arrest."
+            }
+        ];
+
+        let currentQuestion = 0;
+        let score = 0;
+        let answered = false;
+
+        const phaseBadge = document.getElementById('phase-badge');
+        const scenarioBox = document.getElementById('scenario-box');
+        const questionEl = document.getElementById('question-text');
+        const optionsEl = document.getElementById('options-container');
+        const feedbackEl = document.getElementById('feedback');
+        const feedbackResultEl = document.getElementById('feedback-result');
+        const feedbackRationaleEl = document.getElementById('feedback-rationale');
+        const nextBtn = document.getElementById('next-btn');
+        const progressText = document.getElementById('progress-text');
+        const progressBar = document.getElementById('progress-bar');
+        const scoreText = document.getElementById('score-text');
+        const quizCard = document.getElementById('quiz-card');
+        const resultsScreen = document.getElementById('results-screen');
+        const progressContainer = document.getElementById('progress-container');
+
+        function loadQuestion() {
+            answered = false;
+            const data = quizData[currentQuestion];
+            
+            phaseBadge.innerText = data.phase;
+            scenarioBox.innerText = data.scenario;
+            questionEl.innerText = data.question;
+            optionsEl.innerHTML = '';
+            feedbackEl.classList.add('hidden');
+            
+            const progPercent = ((currentQuestion + 1) / quizData.length) * 100;
+            progressText.innerText = `Question ${currentQuestion + 1} of ${quizData.length}`;
+            progressBar.style.width = `${progPercent}%`;
+
+            data.options.forEach((option, index) => {
+                const btn = document.createElement('button');
+                btn.className = "w-full text-left p-3 rounded-lg border border-gray-300 hover:bg-gray-50 transition-all text-xs md:text-sm font-medium text-gray-700 focus:outline-none";
+                btn.innerText = option;
+                btn.onclick = () => checkAnswer(index);
+                optionsEl.appendChild(btn);
+            });
+        }
+
+        function checkAnswer(index) {
+            if (answered) return;
+            answered = true;
+            
+            const data = quizData[currentQuestion];
+            const buttons = optionsEl.getElementsByTagName('button');
+            
+            if (index === data.correct) {
+                score++;
+                buttons[index].classList.add('bg-green-100', 'border-green-500', 'text-green-800');
+                feedbackResultEl.innerText = "Correct!";
+                feedbackResultEl.className = "font-bold text-green-700 mb-1";
+                feedbackEl.classList.add('bg-green-50', 'border-green-200');
+            } else {
+                buttons[index].classList.add('bg-red-100', 'border-red-500', 'text-red-800');
+                buttons[data.correct].classList.add('bg-green-100', 'border-green-500', 'text-green-800');
+                feedbackResultEl.innerText = "Incorrect";
+                feedbackResultEl.className = "font-bold text-red-700 mb-1";
+                feedbackEl.classList.add('bg-red-50', 'border-red-200');
+            }
+
+            feedbackRationaleEl.innerText = data.rationale;
+            feedbackEl.classList.remove('hidden');
+            
+            const currentScorePercent = Math.round((score / (currentQuestion + 1)) * 100);
+            scoreText.innerText = `Score: ${currentScorePercent}%`;
+        }
+
+        nextBtn.onclick = () => {
+            currentQuestion++;
+            if (currentQuestion < quizData.length) {
+                loadQuestion();
+            } else {
+                showResults();
+            }
+        };
+
+        function showResults() {
+            quizCard.classList.add('hidden');
+            progressContainer.classList.add('hidden');
+            resultsScreen.classList.remove('hidden');
+            
+            const finalPercent = Math.round((score / quizData.length) * 100);
+            document.getElementById('final-score').innerText = `${finalPercent}%`;
+            
+            let msg = "";
+            if (finalPercent >= 80) msg = "Outstanding clinical judgment through both progressive scenarios!";
+            else if (finalPercent >= 70) msg = "Good performance! You met the core standards of patient assessment.";
+            else msg = "Review these case studies, focusing on primary assessment priorities, shock recognition, and ventilation management.";
+            
+            document.getElementById('results-summary').innerText = `You answered ${score} out of ${quizData.length} questions correctly. ${msg}`;
+        }
+
+        loadQuestion();
+    </script>
+</body>
+</html>
