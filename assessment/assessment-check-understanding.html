@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<title>Lesson 12 Review Questions Flash Cards</title>
+
+<style>
+
+body {
+    font-family: Arial, sans-serif;
+    background:#0b1f3a;
+    color:white;
+    padding:30px;
+}
+
+h1 {
+    text-align:center;
+}
+
+.subtitle {
+    text-align:center;
+    margin-bottom:30px;
+}
+
+.container {
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+    gap:25px;
+}
+
+.card {
+    height:220px;
+    perspective:1000px;
+    cursor:pointer;
+}
+
+.card-inner {
+    position:relative;
+    width:100%;
+    height:100%;
+    transition:transform .6s;
+    transform-style:preserve-3d;
+}
+
+.card.flipped .card-inner {
+    transform:rotateY(180deg);
+}
+
+.card-front,
+.card-back {
+
+    position:absolute;
+    width:100%;
+    height:100%;
+    backface-visibility:hidden;
+    border-radius:15px;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    text-align:center;
+    padding:20px;
+    box-sizing:border-box;
+
+}
+
+.card-front {
+
+    background:#164a7b;
+    border:3px solid white;
+    font-size:21px;
+    font-weight:bold;
+
+}
+
+
+.card-back {
+
+    background:white;
+    color:#111;
+    transform:rotateY(180deg);
+    font-size:16px;
+    line-height:1.5;
+
+}
+
+.footer {
+
+text-align:center;
+margin-top:30px;
+
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<h1>Lesson 12 Review Questions</h1>
+
+<div class="subtitle">
+NREMT Patient Assessment & Clinical Decision Making Review<br>
+Click each card to reveal the answer
+</div>
+
+
+<div class="container">
+
+
+<div class="card">
+<div class="card-inner">
+
+<div class="card-front">
+What is the purpose of the primary assessment?
+</div>
+
+<div class="card-back">
+The purpose of the primary assessment is to quickly identify and treat immediate life threats.<br><br>
+
+<strong>NREMT Focus:</strong><br>
+Airway → Breathing → Circulation
+</div>
+
+</div>
+</div>
+
+
+
+<div class="card">
+<div class="card-inner">
+
+<div class="card-front">
+When should an EMT perform a rapid trauma assessment?
+</div>
+
+<div class="card-back">
+
+A rapid trauma assessment is performed when the patient has a significant mechanism of injury or suspected serious trauma.<br><br>
+
+<strong>Purpose:</strong><br>
+Quickly identify hidden life-threatening injuries.
+
+</div>
+
+</div>
+</div>
+
+
+
+
+<div class="card">
+<div class="card-inner">
+
+<div class="card-front">
+What does the "E" in SAMPLE represent?
+</div>
+
+<div class="card-back">
+
+<strong>E = Events</strong><br><br>
+
+The events leading up to the illness or injury.<br><br>
+
+Example:<br>
+"What happened before you called 911?"
+
+</div>
+
+</div>
+</div>
+
+
+
+
+
+<div class="card">
+<div class="card-inner">
+
+<div class="card-front">
+How often should an unstable patient be reassessed?
+</div>
+
+<div class="card-back">
+
+An unstable patient should generally be reassessed every <strong>5 minutes</strong>.<br><br>
+
+Reassess:<br>
+• Airway<br>
+• Breathing<br>
+• Circulation<br>
+• Vital signs<br>
+• Treatment effectiveness
+
+</div>
+
+</div>
+</div>
+
+
+
+
+
+<div class="card">
+<div class="card-inner">
+
+<div class="card-front">
+What comes before obtaining a detailed history?
+</div>
+
+<div class="card-back">
+
+The EMT must first complete the scene size-up and primary assessment.<br><br>
+
+<strong>NREMT Priority:</strong><br>
+Identify and treat life threats before collecting detailed information.
+
+</div>
+
+</div>
+</div>
+
+
+
+</div>
+
+
+<div class="footer">
+NREMT Lesson 12 | Patient Assessment Review
+</div>
+
+
+
+<script>
+
+const cards=document.querySelectorAll(".card");
+
+cards.forEach(card=>{
+    card.addEventListener("click",()=>{
+        card.classList.toggle("flipped");
+    });
+});
+
+</script>
+
+
+</body>
+
+</html>
