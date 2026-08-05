@@ -61,7 +61,7 @@
             <div id="results-box" class="hidden text-center py-10 fade-in">
                 <div class="text-6xl mb-4">🚑</div>
                 <h2 class="text-3xl font-bold text-slate-800 mb-2">Quiz Complete!</h2>
-                <p class="text-slate-500 mb-6">You've finished the NREMT Practice Assessment.</p>
+                <p class="text-slate-500 mb-6">You've finished the NREMT Challenge Assessment.</p>
                 
                 <div class="inline-block p-8 bg-indigo-50 rounded-2xl mb-8 border border-indigo-100">
                     <div id="final-score" class="text-5xl font-bold text-indigo-700 mb-2">0/8</div>
@@ -80,92 +80,92 @@
     <script>
         const questions = [
             {
-                q: "1. You arrive at a residence for a 54-year-old male complaining of difficulty breathing. The patient is sitting upright, anxious, and using accessory muscles. He can only speak in two-word sentences. His airway is open, and he has a respiratory rate of 34/min. What should you do first?",
+                q: "1. A 72-year-old male with a history of congestive heart failure is sitting upright on the edge of his bed. He is anxious, pale, and breathing rapidly. He can only speak in short phrases. His oxygen saturation is 82% on room air. What should you do FIRST?",
                 options: [
-                    "Obtain a detailed SAMPLE history",
-                    "Apply oxygen via nonrebreather mask",
-                    "Auscultate lung sounds",
-                    "Obtain a complete set of vital signs"
+                    "Obtain a detailed SAMPLE history to determine the cause of his condition",
+                    "Apply a nonrebreather mask and reassess his oxygen saturation",
+                    "Listen to lung sounds to determine whether fluid is present",
+                    "Prepare the patient for rapid transport to a hospital"
                 ],
                 answer: 1,
-                explanation: "<strong>Explanation:</strong> The patient is showing severe respiratory distress. The EMT should address the immediate breathing problem.<br><br><strong>Why not the others?</strong><br>• SAMPLE is important but comes later.<br>• Lung sounds help identify the problem but do not treat the immediate threat.<br>• Vital signs are needed, but treatment of a life threat takes priority.<br><br><em>NREMT thinking: Treat life threats during the primary assessment.</em>"
+                explanation: "<strong>Why this is difficult:</strong> All four choices are appropriate actions.<br><br><strong>Why B is best:</strong> The patient has a life-threatening oxygenation problem. Oxygen administration addresses the immediate threat.<br><br><strong>Why the others are wrong:</strong><br>• <strong>A (Almost right):</strong> SAMPLE is important, but history does not correct hypoxia.<br>• <strong>C (Almost right):</strong> Lung sounds help identify CHF, but assessment should not delay treatment of a clear breathing emergency.<br>• <strong>D (Almost right):</strong> Transport is necessary, but the patient needs stabilization before movement."
             },
             {
-                q: "2. You arrive at a motorcycle crash. A 22-year-old male is lying on the ground. He has a large open wound on his leg with heavy bleeding. He is alert and talking but pale and anxious. What should you do first?",
+                q: "2. You arrive at a construction accident involving a 35-year-old male who fell approximately 20 feet. The patient is alert and complaining of severe lower leg pain. You notice the leg is deformed and bleeding moderately.\n\nYour primary assessment reveals:\n• Airway open\n• Respirations adequate\n• Skin cool and pale\n• Pulse rapid and weak\n\nWhat should you do FIRST?",
                 options: [
-                    "Apply a cervical collar",
-                    "Control the bleeding",
-                    "Perform a rapid trauma assessment",
-                    "Obtain a blood pressure"
+                    "Apply a traction splint to stabilize the leg injury",
+                    "Control the bleeding and treat for shock",
+                    "Perform a detailed neurologic assessment",
+                    "Apply a cervical collar due to the mechanism of injury"
                 ],
                 answer: 1,
-                explanation: "<strong>Explanation:</strong> Massive bleeding is an immediate threat.<br><br><strong>Why not the others?</strong><br>• C-spine protection matters, but uncontrolled hemorrhage kills faster.<br>• Assessment is important, but the life threat is obvious.<br>• Vital signs do not come before controlling severe bleeding.<br><br><em>NREMT thinking: Fix immediate life threats as soon as identified.</em>"
+                explanation: "<strong>Why this is difficult:</strong> The leg injury is dramatic and distracts the student.<br><br><strong>Why B is best:</strong> The patient is showing signs of poor circulation and possible shock.<br><br><strong>Why the others are wrong:</strong><br>• <strong>A (Almost right):</strong> The fracture may require splinting, but splinting is not the priority if shock is developing.<br>• <strong>C (Almost right):</strong> Neurologic assessment is important, but circulation problems take priority.<br>• <strong>D (Almost right):</strong> The mechanism suggests spinal injury, but the patient currently shows signs of circulatory compromise."
             },
             {
-                q: "3. You are assessing a patient complaining of chest pain. The patient is alert and answering questions appropriately. His airway is open, breathing is adequate, and circulation is stable. What should you do next?",
+                q: "3. A 58-year-old male complains of chest pressure that began 30 minutes ago. He is alert and speaking clearly.\n\nAssessment:\n• Airway clear\n• Breathing adequate\n• Skin warm and dry\n• Blood pressure normal\n\nWhat should you do next?",
                 options: [
-                    "Administer aspirin if indicated",
-                    "Perform a secondary assessment",
-                    "Begin transport immediately",
-                    "Apply an AED"
+                    "Administer aspirin if allowed by protocol",
+                    "Apply the AED because the patient may have a heart attack",
+                    "Immediately begin transport without further assessment",
+                    "Obtain a complete SAMPLE history before providing treatment"
                 ],
                 answer: 0,
-                explanation: "<strong>Explanation:</strong> The patient is stable after the primary assessment. Now you move into focused treatment.<br><br><strong>Why not the others?</strong><br>• Secondary assessment is needed, but treatment for suspected cardiac issues should not be delayed.<br>• Transport is important but not the only next step.<br>• AED is for cardiac arrest, not a stable chest pain patient."
+                explanation: "<strong>Why this is difficult:</strong> Several answers sound reasonable.<br><br><strong>Why A is best:</strong> The patient is stable and may benefit from aspirin for suspected cardiac ischemia.<br><br><strong>Why the others are wrong:</strong><br>• <strong>B (Almost right):</strong> Heart attacks can cause cardiac arrest, but AEDs are not used on conscious patients with pulses.<br>• <strong>C (Almost right):</strong> Transport is important, but appropriate treatment should not be delayed.<br>• <strong>D (Almost right):</strong> SAMPLE is needed, but treatment should not always wait for history."
             },
             {
-                q: "4. You find a 67-year-old female sitting in a chair. She is confused and unable to answer questions appropriately. Her airway is open, and she is breathing normally. What should you do next?",
+                q: "4. A 45-year-old male was rescued from a house fire. He has facial burns, soot around his mouth, singed nasal hairs, and a hoarse voice. He is alert and breathing adequately. What is your priority?",
                 options: [
-                    "Ask family members about her medical history",
-                    "Perform a rapid physical exam",
-                    "Determine her blood glucose level if allowed by protocol",
-                    "Obtain a complete SAMPLE history"
-                ],
-                answer: 2,
-                explanation: "<strong>Explanation:</strong> Altered mental status has many causes. Hypoglycemia is a reversible cause that must be considered.<br><br><strong>Why not the others?</strong><br>• Helpful, but not the priority.<br>• Needed, but glucose evaluation may reveal an immediately treatable problem.<br>• History comes after identifying immediate threats."
-            },
-            {
-                q: "5. A 70-year-old male fell down six stairs. He complains of mild hip pain. He is alert, has normal vital signs, and denies loss of consciousness. During your assessment, you notice he is taking blood thinners. What is the most appropriate action?",
-                options: [
-                    "Allow him to refuse care because his symptoms are mild",
-                    "Perform a detailed assessment and consider rapid transport",
-                    "Focus only on the hip injury",
-                    "Wait to see if symptoms worsen"
-                ],
-                answer: 1,
-                explanation: "<strong>Explanation:</strong> Blood thinners increase risk of serious internal bleeding, especially after trauma.<br><br><strong>Why not the others?</strong><br>• Mild symptoms do not rule out serious injury.<br>• Tunnel vision is dangerous.<br>• EMTs do not wait for deterioration."
-            },
-            {
-                q: "6. A patient involved in a house fire has facial burns, soot around the mouth, and a hoarse voice. The patient is breathing adequately. What is your priority?",
-                options: [
-                    "Apply a nonrebreather mask",
-                    "Obtain a detailed burn history",
+                    "Apply high-flow oxygen by nonrebreather mask",
+                    "Determine the percentage of burns using the rule of nines",
                     "Prepare for airway management and rapid transport",
-                    "Determine the percentage of body surface area burned"
+                    "Obtain a complete medical history from the patient"
                 ],
                 answer: 2,
-                explanation: "<strong>Explanation:</strong> Signs of inhalation injury can indicate worsening airway swelling.<br><br><strong>Why not the others?</strong><br>• Oxygen is appropriate but does not address possible airway compromise.<br>• History is secondary.<br>• Burn percentage matters but not before airway concerns."
+                explanation: "<strong>Why this is difficult:</strong> Oxygen is correct, but not the best answer.<br><br><strong>Why C is best:</strong> Signs of inhalation injury may indicate impending airway swelling.<br><br><strong>Why the others are wrong:</strong><br>• <strong>A (Almost right):</strong> Oxygen is needed, but oxygen alone does not solve possible airway obstruction.<br>• <strong>B (Almost right):</strong> Burn size matters, but airway takes priority.<br>• <strong>D (Almost right):</strong> History matters, but not before airway concerns."
             },
             {
-                q: "7. You treated a patient with CPAP for severe respiratory distress. The patient's breathing improves, and oxygen saturation increases. What should you do next?",
+                q: "5. You arrive for a 64-year-old female who is confused and unable to answer questions appropriately.\n\nAssessment:\n• Airway open\n• Respirations normal\n• Skin cool and sweaty\n• Patient has diabetes\n\nWhat should you do FIRST?",
                 options: [
-                    "Stop reassessing because the patient improved",
-                    "Continue monitoring and reassess frequently",
-                    "Remove CPAP before transport",
-                    "Obtain a complete medical history"
+                    "Ask family members what medications the patient takes",
+                    "Check the patient's blood glucose level if permitted by protocol",
+                    "Perform a complete secondary assessment",
+                    "Transport immediately because altered mental status is present"
                 ],
                 answer: 1,
-                explanation: "<strong>Explanation:</strong> Improvement does not mean the emergency is over.<br><br><em>NREMT expects: continuous reassessment, monitoring, and recognizing deterioration.</em>"
+                explanation: "<strong>Why this is difficult:</strong> Several choices are appropriate.<br><br><strong>Why B is best:</strong> Hypoglycemia is a reversible cause of altered mental status and should be evaluated early.<br><br><strong>Why the others are wrong:</strong><br>• <strong>A (Almost right):</strong> Medication history helps, but glucose may identify a treatable emergency.<br>• <strong>C (Almost right):</strong> A secondary assessment is needed, but not before evaluating a possible immediate cause.<br>• <strong>D (Almost right):</strong> Transport is necessary, but assessment and treatment begin first."
             },
             {
-                q: "8. You arrive at a home and find an unconscious patient with respirations of 8/min and shallow, a large bruise on the head, and bleeding from the arm. What should you do first?",
+                q: "6. You respond to a 3-year-old child with difficulty breathing.\n\nFindings:\n• Respiratory rate 42/min\n• Retractions present\n• Child is sitting quietly with poor eye contact\n• Parent says, 'He has been getting worse all day.'\n\nWhat concerns you MOST?",
                 options: [
-                    "Control the arm bleeding",
-                    "Apply oxygen",
-                    "Open and maintain the airway",
-                    "Obtain a trauma history"
+                    "The child's respiratory rate is higher than normal",
+                    "The child may be tiring and developing respiratory failure",
+                    "The child probably has a respiratory infection",
+                    "The parent may not be describing the symptoms accurately"
                 ],
-                answer: 2,
-                explanation: "<strong>Explanation:</strong> Airway comes first. Even though severe bleeding exists elsewhere, securing oxygenation and airway management takes precedence when breathing is compromised."
+                answer: 1,
+                explanation: "<strong>Why this is difficult:</strong> Option A is true, but Option B shows deeper understanding.<br><br><strong>Why B is best:</strong> Children can compensate until they suddenly deteriorate. A quiet child with increased work of breathing may indicate fatigue and imminent respiratory failure."
+            },
+            {
+                q: "7. A 42-year-old patient fell while intoxicated. He refuses transport and says he feels fine. You determine he understands the risks, can explain the consequences, and is alert and oriented. What should you do?",
+                options: [
+                    "Transport him because intoxicated patients cannot refuse care",
+                    "Allow the refusal after completing appropriate documentation",
+                    "Treat him for possible head injury despite his refusal",
+                    "Ask police to force him to go to the hospital"
+                ],
+                answer: 1,
+                explanation: "<strong>Why this is difficult:</strong> Many students believe alcohol automatically removes decision-making ability.<br><br><strong>Why B is best:</strong> A competent adult who understands risks and consequences has the right to refuse care."
+            },
+            {
+                q: "8. You arrive for a patient complaining of shortness of breath.\n\nInitial findings:\n• Alert, sitting upright\n• Respiratory rate 30/min, wheezing\n• Speaking in full sentences\nYou administer oxygen.\n\nFive minutes later:\n• Patient becomes exhausted\n• Speech becomes limited\n• Respiratory effort decreases\n\nWhat should you do?",
+                options: [
+                    "Continue oxygen because it was already helping",
+                    "Begin ventilatory support because respiratory failure is developing",
+                    "Obtain a complete set of vital signs before changing treatment",
+                    "Ask more questions about the patient's medical history"
+                ],
+                answer: 1,
+                explanation: "<strong>Why this is difficult:</strong> The first treatment was appropriate, but the patient's condition changed.<br><br><strong>Why B is best:</strong> A patient who is tiring and losing respiratory effort needs ventilatory support."
             }
         ];
 
