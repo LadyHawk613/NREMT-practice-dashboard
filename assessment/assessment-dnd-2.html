@@ -1,0 +1,834 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NREMT Assessment Challenge — Lesson 12</title>
+<style>
+  :root{
+    --bg-top:#ffe08a;
+    --bg-bottom:#f5a623;
+    --panel:#fff5da;
+    --panel-border:#f0c860;
+    --slot-bg:#fbe6a8;
+    --slot-border:#d9a83f;
+    --text-dark:#5a3d00;
+    --pink:#ec4899;
+    --pink2:#db2777;
+    --red:#ef4444;
+    --red2:#dc2626;
+    --blue:#3b82f6;
+    --blue2:#2563eb;
+    --teal:#14b8a6;
+    --teal2:#0d9488;
+    --purple:#8b5cf6;
+    --purple2:#7c3aed;
+    --green:#22c55e;
+    --green2:#16a34a;
+    --orange-cta:#f97316;
+    --orange-cta2:#ea580c;
+    --white:#ffffff;
+  }
+
+  *{box-sizing:border-box;}
+
+  body{
+    margin:0;
+    font-family:'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    background:linear-gradient(160deg, var(--bg-top), var(--bg-bottom));
+    min-height:100vh;
+    padding:24px 16px 60px;
+    color:var(--text-dark);
+  }
+
+  .app{
+    max-width:980px;
+    margin:0 auto;
+  }
+
+  header.title-bar{
+    text-align:center;
+    margin-bottom:18px;
+  }
+
+  header.title-bar h1{
+    font-size:1.9rem;
+    margin:0 0 8px;
+    color:#7a3c00;
+    text-shadow:0 1px 0 rgba(255,255,255,0.5);
+  }
+
+  .dots{
+    display:flex;
+    justify-content:center;
+    gap:8px;
+  }
+  .dots span{
+    width:11px;height:11px;border-radius:50%;
+    background:rgba(122,60,0,0.25);
+    transition:background .2s, transform .2s;
+  }
+  .dots span.active{
+    background:#7a3c00;
+    transform:scale(1.15);
+  }
+  .dots span.done{
+    background:#2f9e44;
+  }
+
+  .scenario-panel{
+    background:var(--panel);
+    border:2px solid var(--panel-border);
+    border-radius:16px;
+    padding:18px 22px;
+    margin-bottom:22px;
+    box-shadow:0 4px 14px rgba(122,60,0,0.15);
+  }
+
+  .scenario-panel .activity-label{
+    font-weight:700;
+    color:#c2410c;
+    margin-bottom:6px;
+    font-size:0.95rem;
+    letter-spacing:.3px;
+  }
+
+  .scenario-panel p{
+    margin:4px 0;
+    line-height:1.5;
+    font-size:0.98rem;
+  }
+
+  .board{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:24px;
+    align-items:start;
+  }
+
+  @media (max-width:720px){
+    .board{grid-template-columns:1fr;}
+  }
+
+  .slots-col{
+    display:flex;
+    flex-direction:column;
+    gap:14px;
+  }
+
+  .slot{
+    min-height:52px;
+    border:2px dashed var(--slot-border);
+    border-radius:12px;
+    background:var(--slot-bg);
+    display:flex;
+    align-items:center;
+    padding:0 16px;
+    font-weight:600;
+    color:#8a6a1f;
+    position:relative;
+    transition:background .15s, border-color .15s;
+  }
+
+  .slot .slot-num{
+    position:absolute;
+    left:14px;
+    font-weight:700;
+    color:#a9812a;
+    font-size:0.95rem;
+  }
+
+  .slot.has-item{
+    padding-left:16px;
+  }
+
+  .slot.drag-over{
+    background:#fff2c2;
+    border-color:#b8860b;
+  }
+
+  .slot .placed-card{
+    margin-left:26px;
+    flex:1;
+  }
+
+  .bucket{
+    border:2px dashed var(--slot-border);
+    border-radius:14px;
+    background:var(--slot-bg);
+    padding:12px;
+    min-height:120px;
+  }
+
+  .bucket-header{
+    font-weight:700;
+    text-align:center;
+    padding:8px 10px;
+    border-radius:10px;
+    margin-bottom:10px;
+    color:#fff;
+    font-size:0.92rem;
+  }
+
+  .bucket .placed-list{
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+    min-height:40px;
+  }
+
+  .bank{
+    background:var(--panel);
+    border:2px solid var(--panel-border);
+    border-radius:16px;
+    padding:16px;
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+    box-shadow:0 4px 14px rgba(122,60,0,0.15);
+  }
+
+  .bank-title{
+    font-weight:700;
+    color:#7a3c00;
+    text-align:center;
+    margin-bottom:2px;
+    font-size:0.9rem;
+  }
+
+  .card{
+    padding:12px 16px;
+    border-radius:12px;
+    color:#fff;
+    font-weight:700;
+    text-align:center;
+    cursor:grab;
+    user-select:none;
+    box-shadow:0 3px 6px rgba(0,0,0,0.18);
+    touch-action:none;
+    font-size:0.93rem;
+    line-height:1.35;
+    transition:transform .12s, box-shadow .12s, opacity .12s;
+  }
+  .card:active{cursor:grabbing;}
+  .card.dragging{
+    opacity:0.35;
+  }
+  .card.floating{
+    position:fixed;
+    z-index:999;
+    pointer-events:none;
+    box-shadow:0 10px 22px rgba(0,0,0,0.35);
+    transform:scale(1.04) rotate(-1deg);
+  }
+
+  .card.placed{
+    cursor:default;
+    width:100%;
+  }
+
+  .card.correct-flash{
+    outline:3px solid #16a34a;
+  }
+  .card.incorrect-flash{
+    outline:3px solid #dc2626;
+  }
+
+  /* card color rotation */
+  .c0{background:linear-gradient(135deg,var(--pink),var(--pink2));}
+  .c1{background:linear-gradient(135deg,var(--red),var(--red2));}
+  .c2{background:linear-gradient(135deg,var(--blue),var(--blue2));}
+  .c3{background:linear-gradient(135deg,var(--teal),var(--teal2));}
+  .c4{background:linear-gradient(135deg,var(--purple),var(--purple2));}
+  .c5{background:linear-gradient(135deg,var(--pink2),var(--purple));}
+  .c6{background:linear-gradient(135deg,var(--teal2),var(--blue));}
+  .c7{background:linear-gradient(135deg,var(--red2),var(--pink));}
+
+  .bucket-red .bucket-header{background:linear-gradient(135deg,var(--red),var(--red2));}
+  .bucket-yellow .bucket-header{background:linear-gradient(135deg,#fbbf24,#d97706);}
+  .bucket-green .bucket-header{background:linear-gradient(135deg,var(--green),var(--green2));}
+  .bucket-blue .bucket-header{background:linear-gradient(135deg,var(--blue),var(--blue2));}
+  .bucket-teal .bucket-header{background:linear-gradient(135deg,var(--teal),var(--teal2));}
+
+  .controls{
+    display:flex;
+    justify-content:center;
+    gap:14px;
+    margin-top:26px;
+    flex-wrap:wrap;
+  }
+
+  .btn{
+    border:none;
+    border-radius:999px;
+    padding:12px 26px;
+    font-weight:700;
+    font-size:0.95rem;
+    color:#fff;
+    cursor:pointer;
+    box-shadow:0 4px 10px rgba(0,0,0,0.2);
+    transition:transform .1s, box-shadow .1s;
+  }
+  .btn:hover{transform:translateY(-1px);}
+  .btn:active{transform:translateY(0);}
+
+  .btn-check{background:linear-gradient(135deg,var(--green),var(--green2));}
+  .btn-reset{background:linear-gradient(135deg,#f87171,var(--red2));}
+  .btn-nav{background:linear-gradient(135deg,var(--orange-cta),var(--orange-cta2));}
+  .btn-nav:disabled{background:#d6b98c;cursor:not-allowed;box-shadow:none;}
+
+  .feedback{
+    margin-top:18px;
+    border-radius:14px;
+    padding:16px 20px;
+    font-size:0.95rem;
+    line-height:1.55;
+    display:none;
+  }
+  .feedback.show{display:block;}
+  .feedback.correct{
+    background:#e7f9ee;
+    border:2px solid #34d399;
+    color:#065f46;
+  }
+  .feedback.incorrect{
+    background:#fef2f2;
+    border:2px solid #f87171;
+    color:#7f1d1d;
+  }
+  .feedback strong{display:block;margin-bottom:4px;font-size:1rem;}
+
+  .nremt-note{
+    margin-top:12px;
+    font-size:0.88rem;
+    color:#7a3c00;
+    background:rgba(255,255,255,0.5);
+    border-left:4px solid #f0c860;
+    padding:10px 14px;
+    border-radius:8px;
+    display:none;
+  }
+  .nremt-note.show{display:block;}
+
+  .score-banner{
+    text-align:center;
+    font-weight:700;
+    color:#7a3c00;
+    margin-top:6px;
+    font-size:0.95rem;
+  }
+</style>
+</head>
+<body>
+
+<div class="app">
+  <header class="title-bar">
+    <h1>🩺 NREMT Assessment Challenge</h1>
+    <div class="dots" id="dots">
+      <span class="active"></span>
+      <span></span>
+      <span></span>
+    </div>
+    <div class="score-banner" id="scoreBanner"></div>
+  </header>
+
+  <div class="scenario-panel" id="scenarioPanel"></div>
+
+  <div class="board" id="board"></div>
+
+  <div class="bank" id="bank" style="margin-top:20px;">
+    <div class="bank-title" id="bankTitle">Items to Drag</div>
+    <div id="bankCards" style="display:flex; flex-wrap:wrap; gap:10px; justify-content:center;"></div>
+  </div>
+
+  <div class="feedback" id="feedback"></div>
+  <div class="nremt-note" id="nremtNote"></div>
+
+  <div class="controls">
+    <button class="btn btn-nav" id="backBtn">⬅ Back</button>
+    <button class="btn btn-check" id="checkBtn">✔️ Check Answer</button>
+    <button class="btn btn-reset" id="resetBtn">↺ Reset</button>
+    <button class="btn btn-nav" id="nextBtn">Next ➡</button>
+  </div>
+</div>
+
+<script>
+/* ============================================================
+   DATA
+   ============================================================ */
+const activities = [
+  {
+    type: "sequence",
+    label: "Activity 1: Patient Assessment Sequence",
+    scenario: "NREMT Skill: Place the EMT assessment steps in the correct order.<br><strong>Instructions:</strong> Drag each assessment component into the correct sequence.",
+    bankTitle: "Items to Drag",
+    items: [
+      "Secondary Assessment",
+      "Scene Size-Up",
+      "Reassessment",
+      "Primary Assessment",
+      "History Taking (SAMPLE/OPQRST)"
+    ],
+    correctOrder: [
+      "Scene Size-Up",
+      "Primary Assessment",
+      "History Taking (SAMPLE/OPQRST)",
+      "Secondary Assessment",
+      "Reassessment"
+    ],
+    correctFeedback: "The EMT follows a systematic approach: ensure safety, identify life threats, gather information, perform detailed assessment, and continually reassess.",
+    incorrectFeedback: "Not quite — remember: do not obtain a detailed history before correcting life-threatening problems.",
+    nremtNote: "NREMT Connection: The exam frequently asks \"What should you do first?\" NREMT expects the EMT to follow the assessment process and prioritize life threats."
+  },
+  {
+    type: "bucket",
+    label: "Activity 2: Match the Finding to the Priority Level",
+    scenario: "NREMT Skill: Determine which findings require immediate attention.<br><strong>Instructions:</strong> Drag each patient finding into the correct category.",
+    bankTitle: "Findings to Drag",
+    buckets: [
+      { key: "immediate", title: "🟥 Immediate Life Threat", colorClass: "bucket-red" },
+      { key: "further", title: "🟨 Needs Further Assessment", colorClass: "bucket-yellow" },
+      { key: "lower", title: "🟩 Lower Priority Finding", colorClass: "bucket-green" }
+    ],
+    items: [
+      { text: "Patient cannot speak due to severe respiratory distress", correct: "immediate" },
+      { text: "Patient reports mild nausea after eating", correct: "lower" },
+      { text: "Patient has uncontrolled bleeding from the arm", correct: "immediate" },
+      { text: "Patient has cool, pale, sweaty skin with low blood pressure", correct: "immediate" },
+      { text: "Patient reports pain of 3/10 after a minor ankle injury", correct: "lower" },
+      { text: "Patient is confused and has shallow breathing", correct: "immediate" },
+      { text: "Patient has a bruise on the arm after a fall", correct: "further" },
+      { text: "Patient reports chronic back pain with no change from baseline", correct: "lower" }
+    ],
+    correctFeedback: "Exactly — patients with airway, breathing, or circulation compromise are always treated first.",
+    incorrectFeedback: "Review the ABCs — findings that threaten airway, breathing, or circulation are always Immediate Life Threats.",
+    nremtNote: "NREMT Connection: The exam frequently asks \"Which patient should be treated first?\" The correct answer is usually the patient with an airway, breathing, or circulation problem."
+  },
+  {
+    type: "bucket",
+    label: "Activity 3: Match the Assessment Tool to the Correct Question",
+    scenario: "NREMT Skill: Differentiate SAMPLE and OPQRST questions.<br><strong>Instructions:</strong> Drag each question into the correct assessment category.",
+    bankTitle: "Questions to Drag",
+    buckets: [
+      { key: "sample", title: "🟦 SAMPLE History", colorClass: "bucket-blue" },
+      { key: "opqrst", title: "🟩 OPQRST Assessment", colorClass: "bucket-teal" }
+    ],
+    items: [
+      { text: "\"Do you have any allergies?\"", correct: "sample" },
+      { text: "\"What medications do you take?\"", correct: "sample" },
+      { text: "\"When did the pain begin?\"", correct: "opqrst" },
+      { text: "\"Does anything make the pain better or worse?\"", correct: "opqrst" },
+      { text: "\"What medical conditions do you have?\"", correct: "sample" },
+      { text: "\"Where exactly is the pain located?\"", correct: "opqrst" },
+      { text: "\"What happened before your symptoms started?\"", correct: "sample" },
+      { text: "\"How would you describe the pain?\"", correct: "opqrst" }
+    ],
+    correctFeedback: "Correct — SAMPLE gathers medical background; OPQRST characterizes the current complaint.",
+    incorrectFeedback: "Remember: SAMPLE = history/background questions. OPQRST = questions about the pain/complaint itself.",
+    nremtNote: "NREMT Connection: The exam expects EMTs to know when to use SAMPLE vs. OPQRST during history taking."
+  }
+];
+
+let currentActivity = 0;
+let completedActivities = [false, false, false];
+
+/* ============================================================
+   STATE PER ACTIVITY INSTANCE
+   ============================================================ */
+let state = {}; // will hold placement data for current activity
+
+const board = document.getElementById('board');
+const bankCards = document.getElementById('bankCards');
+const bankTitle = document.getElementById('bankTitle');
+const scenarioPanel = document.getElementById('scenarioPanel');
+const feedback = document.getElementById('feedback');
+const nremtNote = document.getElementById('nremtNote');
+const dots = document.querySelectorAll('#dots span');
+const backBtn = document.getElementById('backBtn');
+const nextBtn = document.getElementById('nextBtn');
+const checkBtn = document.getElementById('checkBtn');
+const resetBtn = document.getElementById('resetBtn');
+const scoreBanner = document.getElementById('scoreBanner');
+
+function shuffle(arr){
+  const a = arr.slice();
+  for(let i=a.length-1;i>0;i--){
+    const j = Math.floor(Math.random()*(i+1));
+    [a[i],a[j]]=[a[j],a[i]];
+  }
+  return a;
+}
+
+function colorClassForIndex(i){
+  return "c" + (i % 8);
+}
+
+/* ============================================================
+   RENDER
+   ============================================================ */
+function renderActivity(){
+  const act = activities[currentActivity];
+  feedback.className = "feedback";
+  feedback.innerHTML = "";
+  nremtNote.className = "nremt-note";
+  nremtNote.innerHTML = "";
+
+  dots.forEach((d,i)=>{
+    d.classList.remove('active','done');
+    if(i === currentActivity) d.classList.add('active');
+    else if(completedActivities[i]) d.classList.add('done');
+  });
+
+  scenarioPanel.innerHTML = `
+    <div class="activity-label">${act.label}</div>
+    <p>${act.scenario}</p>
+  `;
+
+  bankTitle.textContent = act.bankTitle;
+  board.innerHTML = "";
+  bankCards.innerHTML = "";
+
+  backBtn.disabled = currentActivity === 0;
+  nextBtn.disabled = currentActivity === activities.length - 1;
+
+  if(act.type === "sequence"){
+    renderSequence(act);
+  } else {
+    renderBucket(act);
+  }
+}
+
+function renderSequence(act){
+  board.style.gridTemplateColumns = "1fr 1fr";
+
+  const slotsCol = document.createElement('div');
+  slotsCol.className = "slots-col";
+  for(let i=0;i<act.correctOrder.length;i++){
+    const slot = document.createElement('div');
+    slot.className = "slot";
+    slot.dataset.slotIndex = i;
+    slot.innerHTML = `<span class="slot-num">${i+1}</span>`;
+    attachDropTarget(slot, 'slot', i);
+    slotsCol.appendChild(slot);
+  }
+
+  const bankCol = document.createElement('div');
+  bankCol.className = "bank";
+  bankCol.style.margin = "0";
+  bankCol.innerHTML = `<div class="bank-title" style="margin-bottom:4px;">Drag in Order</div>`;
+  const cardWrap = document.createElement('div');
+  cardWrap.style.display = "flex";
+  cardWrap.style.flexDirection = "column";
+  cardWrap.style.gap = "10px";
+  bankCol.appendChild(cardWrap);
+
+  board.appendChild(slotsCol);
+  board.appendChild(bankCol);
+
+  bankCards.parentElement.style.display = "none"; // hide separate bank, using bankCol instead
+
+  state = { placed: new Array(act.correctOrder.length).fill(null), order: shuffle(act.items) };
+
+  state.order.forEach((text, idx)=>{
+    const card = makeCard(text, colorClassForIndex(idx), text);
+    cardWrap.appendChild(card);
+  });
+}
+
+function renderBucket(act){
+  board.style.gridTemplateColumns = `repeat(${act.buckets.length}, 1fr)`;
+
+  state = { placements: {} }; // itemText -> bucketKey
+
+  act.buckets.forEach(b=>{
+    const bucketEl = document.createElement('div');
+    bucketEl.className = `bucket ${b.colorClass}`;
+    bucketEl.dataset.bucketKey = b.key;
+    bucketEl.innerHTML = `<div class="bucket-header">${b.title}</div><div class="placed-list"></div>`;
+    attachDropTarget(bucketEl, 'bucket', b.key);
+    board.appendChild(bucketEl);
+  });
+
+  bankCards.parentElement.style.display = "flex";
+  bankTitle.textContent = act.bankTitle;
+
+  const shuffledItems = shuffle(act.items);
+  shuffledItems.forEach((item, idx)=>{
+    const card = makeCard(item.text, colorClassForIndex(idx), item.text);
+    card.dataset.correctKey = item.correct;
+    bankCards.appendChild(card);
+  });
+}
+
+function makeCard(displayText, colorClass, id){
+  const card = document.createElement('div');
+  card.className = `card ${colorClass}`;
+  card.textContent = displayText;
+  card.dataset.id = id;
+  attachDragSource(card);
+  return card;
+}
+
+/* ============================================================
+   POINTER-BASED DRAG & DROP (cross-device)
+   ============================================================ */
+let dragEl = null;
+let dragGhost = null;
+let dragOffsetX = 0, dragOffsetY = 0;
+let dragOriginParent = null;
+let dragOriginNext = null;
+
+function attachDragSource(card){
+  card.addEventListener('pointerdown', onPointerDown);
+}
+
+function onPointerDown(e){
+  const card = e.currentTarget;
+  e.preventDefault();
+  dragEl = card;
+  dragOriginParent = card.parentElement;
+  dragOriginNext = card.nextSibling;
+
+  const rect = card.getBoundingClientRect();
+  dragOffsetX = e.clientX - rect.left;
+  dragOffsetY = e.clientY - rect.top;
+
+  dragGhost = card.cloneNode(true);
+  dragGhost.classList.add('floating');
+  dragGhost.style.width = rect.width + "px";
+  dragGhost.style.left = rect.left + "px";
+  dragGhost.style.top = rect.top + "px";
+  document.body.appendChild(dragGhost);
+
+  card.classList.add('dragging');
+
+  window.addEventListener('pointermove', onPointerMove);
+  window.addEventListener('pointerup', onPointerUp);
+}
+
+function onPointerMove(e){
+  if(!dragGhost) return;
+  dragGhost.style.left = (e.clientX - dragOffsetX) + "px";
+  dragGhost.style.top = (e.clientY - dragOffsetY) + "px";
+
+  dragGhost.style.display = "none";
+  const under = document.elementFromPoint(e.clientX, e.clientY);
+  dragGhost.style.display = "";
+
+  document.querySelectorAll('.slot.drag-over, .bucket.drag-over').forEach(el=>el.classList.remove('drag-over'));
+  if(under){
+    const slot = under.closest('.slot');
+    const bucket = under.closest('.bucket');
+    if(slot) slot.classList.add('drag-over');
+    else if(bucket) bucket.classList.add('drag-over');
+  }
+}
+
+function onPointerUp(e){
+  window.removeEventListener('pointermove', onPointerMove);
+  window.removeEventListener('pointerup', onPointerUp);
+
+  dragGhost.style.display = "none";
+  const under = document.elementFromPoint(e.clientX, e.clientY);
+  if(dragGhost) dragGhost.remove();
+  dragGhost = null;
+
+  document.querySelectorAll('.slot.drag-over, .bucket.drag-over').forEach(el=>el.classList.remove('drag-over'));
+
+  if(dragEl) dragEl.classList.remove('dragging');
+
+  const act = activities[currentActivity];
+
+  if(under){
+    const slot = under.closest('.slot');
+    const bucket = under.closest('.bucket');
+
+    if(act.type === 'sequence' && slot){
+      dropIntoSlot(slot, dragEl);
+      dragEl = null;
+      return;
+    }
+    if(act.type === 'bucket' && bucket){
+      dropIntoBucket(bucket, dragEl);
+      dragEl = null;
+      return;
+    }
+    // dropped on a card that is inside a bank/list area -> try nearest container
+    const bankArea = under.closest('#bankCards') || under.closest('.bank');
+    if(bankArea){
+      returnCardToBank(dragEl, act);
+      dragEl = null;
+      return;
+    }
+  }
+
+  // no valid target -> return to original position
+  if(dragOriginParent){
+    dragOriginParent.insertBefore(dragEl, dragOriginNext);
+  }
+  dragEl = null;
+}
+
+function returnCardToBank(card, act){
+  if(act.type === 'sequence'){
+    // find which slot it was in, clear it
+    const slotIdx = state.placed.findIndex(v => v === card.dataset.id);
+    if(slotIdx > -1){
+      state.placed[slotIdx] = null;
+      const slotEl = document.querySelector(`.slot[data-slot-index="${slotIdx}"]`);
+      slotEl.classList.remove('has-item');
+      slotEl.innerHTML = `<span class="slot-num">${slotIdx+1}</span>`;
+    }
+    const bankCol = document.querySelector('.board .bank div[style*="flex-direction"]') ||
+                     document.querySelector('.board .bank > div:nth-child(2)');
+    card.classList.remove('placed');
+    (bankCol || board.children[1]).appendChild(card);
+  } else {
+    if(state.placements[card.dataset.id]) delete state.placements[card.dataset.id];
+    card.classList.remove('placed');
+    bankCards.appendChild(card);
+  }
+}
+
+function dropIntoSlot(slot, card){
+  const idx = parseInt(slot.dataset.slotIndex, 10);
+
+  // if slot already occupied, push that card back to bank
+  if(state.placed[idx]){
+    const occupantId = state.placed[idx];
+    const occupantCard = document.querySelector(`.card[data-id="${CSS.escape(occupantId)}"]`);
+    if(occupantCard) returnToSequenceBank(occupantCard);
+    state.placed[idx] = null;
+  }
+
+  // if this card was already in another slot, clear that slot
+  const prevIdx = state.placed.findIndex(v => v === card.dataset.id);
+  if(prevIdx > -1){
+    state.placed[prevIdx] = null;
+    const prevSlot = document.querySelector(`.slot[data-slot-index="${prevIdx}"]`);
+    prevSlot.classList.remove('has-item');
+    prevSlot.innerHTML = `<span class="slot-num">${prevIdx+1}</span>`;
+  }
+
+  state.placed[idx] = card.dataset.id;
+  slot.classList.add('has-item');
+  slot.innerHTML = `<span class="slot-num">${idx+1}</span>`;
+  card.classList.add('placed');
+  card.classList.remove('correct-flash','incorrect-flash');
+  const wrapper = document.createElement('div');
+  wrapper.className = 'placed-card';
+  wrapper.appendChild(card);
+  slot.appendChild(wrapper);
+}
+
+function returnToSequenceBank(card){
+  const bankCol = board.children[1].querySelector('div[style*="flex-direction"]');
+  card.classList.remove('placed');
+  (bankCol || board.children[1]).appendChild(card);
+}
+
+function dropIntoBucket(bucket, card){
+  const key = bucket.dataset.bucketKey;
+  // remove from previous bucket placement tracking
+  state.placements[card.dataset.id] = key;
+  card.classList.add('placed');
+  card.classList.remove('correct-flash','incorrect-flash');
+  bucket.querySelector('.placed-list').appendChild(card);
+}
+
+/* ============================================================
+   DROP TARGET HELPERS (for pointer hit-testing consistency)
+   ============================================================ */
+function attachDropTarget(el, type, key){
+  // no native events needed; handled via elementFromPoint in pointerup/move
+}
+
+/* ============================================================
+   CHECK / RESET / NAV
+   ============================================================ */
+checkBtn.addEventListener('click', ()=>{
+  const act = activities[currentActivity];
+  let allCorrect = true;
+  let allPlaced = true;
+
+  if(act.type === 'sequence'){
+    act.correctOrder.forEach((correctText, idx)=>{
+      const placedId = state.placed[idx];
+      if(!placedId){ allPlaced = false; return; }
+      const cardEl = document.querySelector(`.slot[data-slot-index="${idx}"] .card`);
+      if(placedId === correctText){
+        cardEl.classList.add('correct-flash');
+        cardEl.classList.remove('incorrect-flash');
+      } else {
+        cardEl.classList.add('incorrect-flash');
+        cardEl.classList.remove('correct-flash');
+        allCorrect = false;
+      }
+    });
+  } else {
+    act.items.forEach(item=>{
+      const placedKey = state.placements[item.text];
+      const cardEl = document.querySelector(`.card[data-id="${CSS.escape(item.text)}"]`);
+      if(!placedKey){ allPlaced = false; return; }
+      if(!cardEl) return;
+      if(placedKey === item.correct){
+        cardEl.classList.add('correct-flash');
+        cardEl.classList.remove('incorrect-flash');
+      } else {
+        cardEl.classList.add('incorrect-flash');
+        cardEl.classList.remove('correct-flash');
+        allCorrect = false;
+      }
+    });
+  }
+
+  if(!allPlaced){
+    feedback.className = "feedback show incorrect";
+    feedback.innerHTML = `<strong>⏳ Not finished yet</strong>Place every item before checking your answer.`;
+    nremtNote.className = "nremt-note";
+    return;
+  }
+
+  if(allCorrect){
+    feedback.className = "feedback show correct";
+    feedback.innerHTML = `<strong>✅ Correct!</strong>${act.correctFeedback}`;
+    completedActivities[currentActivity] = true;
+    dots[currentActivity].classList.add('done');
+  } else {
+    feedback.className = "feedback show incorrect";
+    feedback.innerHTML = `<strong>❌ Not quite</strong>${act.incorrectFeedback}`;
+  }
+
+  nremtNote.className = "nremt-note show";
+  nremtNote.textContent = act.nremtNote;
+
+  updateScoreBanner();
+});
+
+resetBtn.addEventListener('click', ()=>{
+  renderActivity();
+});
+
+backBtn.addEventListener('click', ()=>{
+  if(currentActivity > 0){
+    currentActivity--;
+    renderActivity();
+  }
+});
+
+nextBtn.addEventListener('click', ()=>{
+  if(currentActivity < activities.length - 1){
+    currentActivity++;
+    renderActivity();
+  }
+});
+
+function updateScoreBanner(){
+  const done = completedActivities.filter(Boolean).length;
+  scoreBanner.textContent = done > 0 ? `Completed correctly: ${done} / ${activities.length}` : "";
+}
+
+renderActivity();
+</script>
+</body>
+</html>
