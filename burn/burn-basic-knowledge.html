@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lesson 12: Anatomy & Burns - NREMT Practice Quiz</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        .fade-in { animation: fadeIn 0.3s ease-in; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body class="bg-slate-50 min-h-screen flex flex-col items-center py-8 px-4">
+
+    <div class="max-w-2xl w-full bg-white rounded-xl shadow-lg overflow-hidden border border-slate-200">
+        <!-- Header -->
+        <div class="bg-indigo-700 p-6 text-white text-center">
+            <h1 class="text-2xl font-bold">Lesson 12: Anatomy & Burns</h1>
+            <p class="text-indigo-100 text-sm mt-1">NREMT EMT Practice Quiz — L1/L2 Cognitive Level</p>
+        </div>
+
+        <!-- Progress Bar -->
+        <div class="w-full bg-slate-200 h-2">
+            <div id="progress" class="bg-indigo-500 h-2 transition-all duration-500" style="width: 0%"></div>
+        </div>
+
+        <div id="quiz-container" class="p-6">
+            <!-- Question Section -->
+            <div id="question-box" class="fade-in">
+                <div class="flex justify-between items-center mb-4">
+                    <span id="question-number" class="text-xs font-bold text-slate-500 uppercase tracking-wider">Question 1 of 40</span>
+                    <span id="score-display" class="text-xs font-bold text-indigo-600 bg-indigo-50 px-2 py-1 rounded">Score: 0</span>
+                </div>
+                
+                <h2 id="question-text" class="text-lg font-semibold text-slate-800 mb-6 leading-snug">
+                    Loading question...
+                </h2>
+
+                <div id="options" class="space-y-3">
+                    <!-- Options injected here -->
+                </div>
+
+                <!-- Feedback Section (Hidden by default) -->
+                <div id="feedback" class="mt-6 p-4 rounded-lg hidden border">
+                    <div class="flex items-center mb-2">
+                        <span id="feedback-icon" class="mr-2 font-bold"></span>
+                        <span id="feedback-status" class="font-bold text-sm uppercase"></span>
+                    </div>
+                    <div id="feedback-text" class="text-sm text-slate-600 space-y-2"></div>
+                </div>
+
+                <!-- Navigation -->
+                <button id="next-btn" class="mt-8 w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-6 rounded-lg transition-colors hidden shadow-md">
+                    Next Question
+                </button>
+            </div>
+
+            <!-- Results Section (Hidden by default) -->
+            <div id="results-box" class="hidden text-center py-10 fade-in">
+                <div class="text-6xl mb-4">🩺</div>
+                <h2 class="text-3xl font-bold text-slate-800 mb-2">Quiz Complete!</h2>
+                <p class="text-slate-500 mb-6">You've completed the Lesson 12: Anatomy & Burns Practice Quiz.</p>
+                
+                <div class="inline-block p-8 bg-indigo-50 rounded-2xl mb-8 border border-indigo-100">
+                    <div id="final-score" class="text-5xl font-bold text-indigo-700 mb-2">0/40</div>
+                    <div id="percentage" class="text-xl font-semibold text-indigo-500">0%</div>
+                </div>
+
+                <div id="result-message" class="mb-8 px-4 text-slate-700 italic"></div>
+                
+                <button onclick="location.reload()" class="bg-slate-800 hover:bg-slate-900 text-white font-bold py-3 px-8 rounded-lg transition-colors shadow-md">
+                    Try Again
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const questions = [
+            {
+                q: "1. Anatomy is the study of:",
+                options: [
+                    "How medications affect the body",
+                    "The structures of the body",
+                    "How diseases spread",
+                    "Emergency treatment procedures"
+                ],
+                answer: 1,
+                explanation: "<strong>Rationale:</strong> Anatomy focuses on body structures."
+            },
+            {
+                q: "2. Physiology is the study of:",
+                options: [
+                    "How body systems function",
+                    "The names of bones",
+                    "Body positions only",
+                    "Injury patterns"
+                ],
+                answer: 0,
+                explanation: "<strong>Rationale:</strong> Physiology explains how body systems work."
+            },
+            {
+                q: "3. The standard reference position used when describing body locations is called:",
+                options: [
+                    "Supine position",
+                    "Fowler position",
+                    "Anatomical position",
+                    "Recovery position"
+                ],
+                answer: 2,
+                explanation: "<strong>Rationale:</strong> Anatomical position is the standard reference posture."
+            },
+            {
+                q: "4. In anatomical position, the palms face:",
+                options: [
+                    "Backward",
+                    "Forward",
+                    "Downward",
+                    "Toward the body"
+                ],
+                answer: 1,
+                explanation: "<strong>Rationale:</strong> Anatomical position has palms facing forward."
+            },
+            {
+                q: "5. The term \"superior\" means:",
+                options: [
+                    "Toward the feet",
+                    "Away from the midline",
+                    "Toward the head",
+                    "Toward the back"
+                ],
+                answer: 2,
+                explanation: "<strong>Rationale:</strong> Superior means above or toward the head."
+            },
+            {
+                q: "6. The term \"inferior\" means:",
+                options: [
+                    "Toward the lower part of the body",
+                    "Toward the front",
+                    "Toward the middle",
+                    "Toward the side"
+                ],
+                answer: 0,
+                explanation: "<strong>Rationale:</strong> Inferior means below or toward the feet."
+            },
+            {
+                q: "7. The term \"anterior\" refers to:",
+                options: [
+                    "The back of the body",
+                    "The front of the body",
+                    "The upper body",
+                    "The lower body"
+                ],
+                answer: 1,
+                explanation: "<strong>Rationale:</strong> Anterior means toward the front."
+            },
+            {
+                q: "8. Posterior means:",
+                options: [
+                    "Toward the back of the body",
+                    "Toward the head",
+                    "Toward the midline",
+                    "Away from the body"
+                ],
+                answer: 0,
+                explanation: "<strong>Rationale:</strong> Posterior means toward the back."
+            },
+            {
+                q: "9. A structure closer to the body's midline is described as:",
+                options: [
+                    "Lateral",
+                    "Distal",
+                    "Medial",
+                    "Inferior"
+                ],
+                answer: 2,
+                explanation: "<strong>Rationale:</strong> Medial means toward the midline."
+            },
+            {
+                q: "10. The ears are ______ to the nose.",
+                options: [
+                    "Medial",
+                    "Proximal",
+                    "Superior",
+                    "Lateral"
+                ],
+                answer: 3,
+                explanation: "<strong>Rationale:</strong> The ears are farther from the midline than the nose."
+            },
+            {
+                q: "11. The wrist is ______ to the elbow.",
+                options: [
+                    "Distal",
+                    "Superior",
+                    "Medial",
+                    "Proximal"
+                ],
+                answer: 0,
+                explanation: "<strong>Rationale:</strong> The wrist is farther from the attachment point of the arm."
+            },
+            {
+                q: "12. The shoulder is ______ to the hand.",
+                options: [
+                    "Distal",
+                    "Proximal",
+                    "Inferior",
+                    "Lateral"
+                ],
+                answer: 1,
+                explanation: "<strong>Rationale:</strong> The shoulder is closer to the body's attachment point."
+            },
+            {
+                q: "13. The fingers are ______ to the wrist.",
+                options: [
+                    "Superior",
+                    "Medial",
+                    "Distal",
+                    "Posterior"
+                ],
+                answer: 2,
+                explanation: "<strong>Rationale:</strong> Fingers are farther from the point of attachment."
+            },
+            {
+                q: "14. Which directional term means \"away from the midline\"?",
+                options: [
+                    "Medial",
+                    "Superior",
+                    "Proximal",
+                    "Lateral"
+                ],
+                answer: 3,
+                explanation: "<strong>Rationale:</strong> Lateral means away from the body's center line."
+            },
+            {
+                q: "15. Which directional term means \"closer to the point of attachment\"?",
+                options: [
+                    "Proximal",
+                    "Distal",
+                    "Posterior",
+                    "Inferior"
+                ],
+                answer: 0,
+                explanation: "<strong>Rationale:</strong> Proximal means closer to the attachment point."
+            },
+            {
+                q: "16. The largest organ of the human body is the:",
+                options: [
+                    "Heart",
+                    "Skin",
+                    "Liver",
+                    "Lung"
+                ],
+                answer: 1,
+                explanation: "<strong>Rationale:</strong> Skin is the body's largest organ."
+            },
+            {
+                q: "17. The outermost layer of the skin is the:",
+                options: [
+                    "Dermis",
+                    "Fascia",
+                    "Epidermis",
+                    "Subcutaneous tissue"
+                ],
+                answer: 2,
+                explanation: "<strong>Rationale:</strong> The epidermis is the outer protective layer."
+            },
+            {
+                q: "18. The layer of skin containing blood vessels and nerves is the:",
+                options: [
+                    "Epidermis",
+                    "Dermis",
+                    "Subcutaneous tissue",
+                    "Muscle layer"
+                ],
+                answer: 1,
+                explanation: "<strong>Rationale:</strong> The dermis contains nerves, vessels, glands, and follicles."
+            },
+            {
+                q: "19. The subcutaneous layer is located:",
+                options: [
+                    "Above the epidermis",
+                    "Inside the heart",
+                    "Beneath the dermis",
+                    "Inside the muscle"
+                ],
+                answer: 2,
+                explanation: "<strong>Rationale:</strong> Subcutaneous tissue is below the dermis."
+            },
+            {
+                q: "20. The epidermis primarily provides:",
+                options: [
+                    "Protection from the environment",
+                    "Blood circulation",
+                    "Muscle movement",
+                    "Hormone production"
+                ],
+                answer: 0,
+                explanation: "<strong>Rationale:</strong> The epidermis protects underlying tissues."
+            },
+            {
+                q: "21. A burn caused by flames or hot liquids is called:",
+                options: [
+                    "Electrical burn",
+                    "Thermal burn",
+                    "Chemical burn",
+                    "Radiation burn"
+                ],
+                answer: 1,
+                explanation: "<strong>Rationale:</strong> Thermal burns result from heat exposure."
+            },
+            {
+                q: "22. A burn caused by acids or bases is called:",
+                options: [
+                    "Chemical burn",
+                    "Thermal burn",
+                    "Electrical burn",
+                    "Friction burn"
+                ],
+                answer: 0,
+                explanation: "<strong>Rationale:</strong> Chemicals can damage tissue through corrosive injury."
+            },
+            {
+                q: "23. Electrical burns are dangerous because they may:",
+                options: [
+                    "Only affect the skin surface",
+                    "Cause hidden internal injuries",
+                    "Never affect the heart",
+                    "Always appear severe externally"
+                ],
+                answer: 1,
+                explanation: "<strong>Rationale:</strong> Electrical energy can travel through deep tissues."
+            },
+            {
+                q: "24. A burn caused by contact with a hot object is classified as:",
+                options: [
+                    "Electrical",
+                    "Chemical",
+                    "Thermal",
+                    "Radiation"
+                ],
+                answer: 2,
+                explanation: "<strong>Rationale:</strong> Heat transfer causes thermal burns."
+            },
+            {
+                q: "25. Which type of burn may have significant internal injury despite small skin damage?",
+                options: [
+                    "Electrical",
+                    "Sunburn",
+                    "Superficial thermal",
+                    "Minor friction burn"
+                ],
+                answer: 0,
+                explanation: "<strong>Rationale:</strong> Electrical current can damage internal tissues."
+            },
+            {
+                q: "26. A partial-thickness burn affects:",
+                options: [
+                    "Only muscle tissue",
+                    "Epidermis and part of dermis",
+                    "Bone and organs",
+                    "Only the subcutaneous layer"
+                ],
+                answer: 1,
+                explanation: "<strong>Rationale:</strong> Partial-thickness burns involve epidermis and dermis."
+            },
+            {
+                q: "27. A full-thickness burn destroys:",
+                options: [
+                    "Only the epidermis",
+                    "Hair only",
+                    "Epidermis and dermis",
+                    "Sweat only"
+                ],
+                answer: 2,
+                explanation: "<strong>Rationale:</strong> Full-thickness burns extend through both major skin layers."
+            },
+            {
+                q: "28. Blister formation is commonly associated with:",
+                options: [
+                    "Partial-thickness burns",
+                    "Full-thickness burns only",
+                    "Electrical burns only",
+                    "Chemical burns only"
+                ],
+                answer: 0,
+                explanation: "<strong>Rationale:</strong> Partial-thickness burns often produce blisters."
+            },
+            {
+                q: "29. A full-thickness burn may appear:",
+                options: [
+                    "Red and painful only",
+                    "White, brown, or charred",
+                    "Normal skin color",
+                    "Blue only"
+                ],
+                answer: 1,
+                explanation: "<strong>Rationale:</strong> Deep burns may destroy nerve endings and change appearance."
+            },
+            {
+                q: "30. A patient with a full-thickness burn may have decreased pain sensation because:",
+                options: [
+                    "The skin is colder",
+                    "Nerve endings may be destroyed",
+                    "Blood pressure is always high",
+                    "The burn is superficial"
+                ],
+                answer: 1,
+                explanation: "<strong>Rationale:</strong> Deeper burns can destroy nerves."
+            },
+            {
+                q: "31. The Rule of Nines is used to estimate:",
+                options: [
+                    "Burn depth",
+                    "Patient age",
+                    "Total body surface area burned",
+                    "Pain severity"
+                ],
+                answer: 2,
+                explanation: "<strong>Rationale:</strong> Rule of Nines estimates TBSA."
+            },
+            {
+                q: "32. TBSA stands for:",
+                options: [
+                    "Total Body Surface Area",
+                    "Total Burn Skin Assessment",
+                    "Tissue Burn Severity Analysis",
+                    "Thermal Body System Assessment"
+                ],
+                answer: 0,
+                explanation: "<strong>Rationale:</strong> TBSA measures the percentage of body burned."
+            },
+            {
+                q: "33. Burn severity is affected by:",
+                options: [
+                    "Depth and size of the burn",
+                    "Patient height only",
+                    "Eye color",
+                    "Time of day"
+                ],
+                answer: 0,
+                explanation: "<strong>Rationale:</strong> Depth, size, and location influence severity."
+            },
+            {
+                q: "34. Why are burns to the face concerning?",
+                options: [
+                    "They never require transport",
+                    "They may indicate airway involvement",
+                    "They always heal quickly",
+                    "They are always painless"
+                ],
+                answer: 1,
+                explanation: "<strong>Rationale:</strong> Facial burns may suggest inhalation injury."
+            },
+            {
+                q: "35. Smoke inhalation can threaten the:",
+                options: [
+                    "Airway",
+                    "Skeleton only",
+                    "Skin only",
+                    "Digestive system only"
+                ],
+                answer: 0,
+                explanation: "<strong>Rationale:</strong> Smoke can injure the airway and lungs."
+            },
+            {
+                q: "36. EMTs use anatomical terms primarily to:",
+                options: [
+                    "Describe locations accurately",
+                    "Diagnose diseases",
+                    "Prescribe medications",
+                    "Replace patient assessment"
+                ],
+                answer: 0,
+                explanation: "<strong>Rationale:</strong> Anatomical language improves communication."
+            },
+            {
+                q: "37. The body system most directly affected by severe burns is:",
+                options: [
+                    "Integumentary system",
+                    "Digestive system",
+                    "Nervous system only",
+                    "Skeletal system only"
+                ],
+                answer: 0,
+                explanation: "<strong>Rationale:</strong> Burns primarily affect the skin."
+            },
+            {
+                q: "38. The integumentary system includes:",
+                options: [
+                    "Heart and blood vessels",
+                    "Skin, hair, and nails",
+                    "Bones and joints",
+                    "Brain and spinal cord"
+                ],
+                answer: 1,
+                explanation: "<strong>Rationale:</strong> The integumentary system protects the body externally."
+            },
+            {
+                q: "39. A burn involving the epidermis only is classified as:",
+                options: [
+                    "Full-thickness",
+                    "Partial-thickness",
+                    "Superficial",
+                    "Electrical"
+                ],
+                answer: 2,
+                explanation: "<strong>Rationale:</strong> Superficial burns affect only the epidermis."
+            },
+            {
+                q: "40. Understanding anatomy helps EMTs:",
+                options: [
+                    "Recognize how injuries affect the body",
+                    "Avoid performing assessments",
+                    "Replace medical direction",
+                    "Eliminate the need for patient history"
+                ],
+                answer: 0,
+                explanation: "<strong>Rationale:</strong> Anatomy knowledge helps EMTs interpret injuries and provide appropriate care."
+            }
+        ];
+
+        let currentQuestion = 0;
+        let score = 0;
+        let answered = false;
+
+        const questionText = document.getElementById('question-text');
+        const optionsContainer = document.getElementById('options');
+        const questionNumber = document.getElementById('question-number');
+        const scoreDisplay = document.getElementById('score-display');
+        const feedback = document.getElementById('feedback');
+        const feedbackText = document.getElementById('feedback-text');
+        const feedbackStatus = document.getElementById('feedback-status');
+        const feedbackIcon = document.getElementById('feedback-icon');
+        const nextBtn = document.getElementById('next-btn');
+        const progressBar = document.getElementById('progress');
+
+        function loadQuestion() {
+            answered = false;
+            const q = questions[currentQuestion];
+            
+            feedback.classList.add('hidden');
+            nextBtn.classList.add('hidden');
+            optionsContainer.innerHTML = '';
+            
+            questionNumber.innerText = `Question ${currentQuestion + 1} of ${questions.length}`;
+            questionText.innerText = q.q;
+            progressBar.style.width = `${((currentQuestion) / questions.length) * 100}%`;
+
+            q.options.forEach((opt, index) => {
+                const btn = document.createElement('button');
+                btn.className = "w-full text-left p-4 rounded-lg border-2 border-slate-200 hover:border-indigo-300 hover:bg-indigo-50 transition-all font-medium text-slate-700 flex items-start";
+                btn.innerHTML = `<span class="bg-slate-100 text-slate-500 w-6 h-6 rounded-full inline-flex items-center justify-center mr-3 flex-shrink-0 text-xs">${String.fromCharCode(65 + index)}</span> <span>${opt}</span>`;
+                btn.onclick = () => checkAnswer(index, btn);
+                optionsContainer.appendChild(btn);
+            });
+        }
+
+        function checkAnswer(selectedIndex, clickedBtn) {
+            if (answered) return;
+            answered = true;
+
+            const correct = questions[currentQuestion].answer;
+            const allBtns = optionsContainer.querySelectorAll('button');
+
+            if (selectedIndex === correct) {
+                score++;
+                scoreDisplay.innerText = `Score: ${score}`;
+                clickedBtn.classList.replace('border-slate-200', 'border-green-500');
+                clickedBtn.classList.add('bg-green-50');
+                showFeedback(true);
+            } else {
+                clickedBtn.classList.replace('border-slate-200', 'border-red-500');
+                clickedBtn.classList.add('bg-red-50');
+                allBtns[correct].classList.replace('border-slate-200', 'border-green-500');
+                allBtns[correct].classList.add('bg-green-50');
+                showFeedback(false);
+            }
+
+            allBtns.forEach(btn => btn.disabled = true);
+            nextBtn.classList.remove('hidden');
+            
+            if (currentQuestion === questions.length - 1) {
+                nextBtn.innerText = "See Results";
+            }
+        }
+
+        function showFeedback(isCorrect) {
+            feedback.classList.remove('hidden');
+            if (isCorrect) {
+                feedback.classList.add('bg-green-50', 'border-green-100');
+                feedback.classList.remove('bg-red-50', 'border-red-100');
+                feedbackStatus.innerText = "Correct";
+                feedbackStatus.className = "font-bold text-sm uppercase text-green-700";
+                feedbackIcon.innerText = "✓";
+                feedbackIcon.className = "mr-2 font-bold text-green-700";
+            } else {
+                feedback.classList.add('bg-red-50', 'border-red-100');
+                feedback.classList.remove('bg-green-50', 'border-green-100');
+                feedbackStatus.innerText = "Incorrect";
+                feedbackStatus.className = "font-bold text-sm uppercase text-red-700";
+                feedbackIcon.innerText = "✗";
+                feedbackIcon.className = "mr-2 font-bold text-red-700";
+            }
+            feedbackText.innerHTML = questions[currentQuestion].explanation;
+        }
+
+        nextBtn.onclick = () => {
+            currentQuestion++;
+            if (currentQuestion < questions.length) {
+                loadQuestion();
+            } else {
+                showResults();
+            }
+        };
+
+        function showResults() {
+            document.getElementById('question-box').classList.add('hidden');
+            const resultsBox = document.getElementById('results-box');
+            resultsBox.classList.remove('hidden');
+            progressBar.style.width = '100%';
+
+            const finalScore = document.getElementById('final-score');
+            const percentage = document.getElementById('percentage');
+            const message = document.getElementById('result-message');
+
+            const percent = Math.round((score / questions.length) * 100);
+            finalScore.innerText = `${score}/${questions.length}`;
+            percentage.innerText = `${percent}%`;
+
+            if (percent >= 85) {
+                message.innerText = "Excellent work! You have a solid grasp of foundational anatomy and burn concepts.";
+            } else if (percent >= 70) {
+                message.innerText = "Good effort! Review the missed anatomical terms or burn classifications before moving on to higher-level clinical scenarios.";
+            } else {
+                message.innerText = "Keep studying! Take time to review foundational anatomy, directional terms, and burn depths.";
+            }
+        }
+
+        loadQuestion();
+    </script>
+</body>
+</html>
