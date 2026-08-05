@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NREMT Practice Quiz</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        .fade-in { animation: fadeIn 0.3s ease-in; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body class="bg-slate-50 min-h-screen flex flex-col items-center py-8 px-4">
+
+    <div class="max-w-2xl w-full bg-white rounded-xl shadow-lg overflow-hidden border border-slate-200">
+        <!-- Header -->
+        <div class="bg-indigo-700 p-6 text-white text-center">
+            <h1 class="text-2xl font-bold">NREMT Clinical Reasoning Practice</h1>
+            <p class="text-indigo-100 text-sm mt-1">NREMT Cognitive Exam (Prioritization & Assessment)</p>
+        </div>
+
+        <!-- Progress Bar -->
+        <div class="w-full bg-slate-200 h-2">
+            <div id="progress" class="bg-indigo-500 h-2 transition-all duration-500" style="width: 0%"></div>
+        </div>
+
+        <div id="quiz-container" class="p-6">
+            <!-- Question Section -->
+            <div id="question-box" class="fade-in">
+                <div class="flex justify-between items-center mb-4">
+                    <span id="question-number" class="text-xs font-bold text-slate-500 uppercase tracking-wider">Question 1 of 8</span>
+                    <span id="score-display" class="text-xs font-bold text-indigo-600 bg-indigo-50 px-2 py-1 rounded">Score: 0</span>
+                </div>
+                
+                <h2 id="question-text" class="text-lg font-semibold text-slate-800 mb-6 leading-snug">
+                    Loading question...
+                </h2>
+
+                <div id="options" class="space-y-3">
+                    <!-- Options injected here -->
+                </div>
+
+                <!-- Feedback Section (Hidden by default) -->
+                <div id="feedback" class="mt-6 p-4 rounded-lg hidden border">
+                    <div class="flex items-center mb-2">
+                        <span id="feedback-icon" class="mr-2 font-bold"></span>
+                        <span id="feedback-status" class="font-bold text-sm uppercase"></span>
+                    </div>
+                    <div id="feedback-text" class="text-sm text-slate-600 space-y-2"></div>
+                </div>
+
+                <!-- Navigation -->
+                <button id="next-btn" class="mt-8 w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-6 rounded-lg transition-colors hidden shadow-md">
+                    Next Question
+                </button>
+            </div>
+
+            <!-- Results Section (Hidden by default) -->
+            <div id="results-box" class="hidden text-center py-10 fade-in">
+                <div class="text-6xl mb-4">🚑</div>
+                <h2 class="text-3xl font-bold text-slate-800 mb-2">Quiz Complete!</h2>
+                <p class="text-slate-500 mb-6">You've finished the NREMT Practice Assessment.</p>
+                
+                <div class="inline-block p-8 bg-indigo-50 rounded-2xl mb-8 border border-indigo-100">
+                    <div id="final-score" class="text-5xl font-bold text-indigo-700 mb-2">0/8</div>
+                    <div id="percentage" class="text-xl font-semibold text-indigo-500">0%</div>
+                </div>
+
+                <div id="result-message" class="mb-8 px-4 text-slate-700 italic"></div>
+                
+                <button onclick="location.reload()" class="bg-slate-800 hover:bg-slate-900 text-white font-bold py-3 px-8 rounded-lg transition-colors shadow-md">
+                    Try Again
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const questions = [
+            {
+                q: "1. You arrive at a residence for a 54-year-old male complaining of difficulty breathing. The patient is sitting upright, anxious, and using accessory muscles. He can only speak in two-word sentences. His airway is open, and he has a respiratory rate of 34/min. What should you do first?",
+                options: [
+                    "Obtain a detailed SAMPLE history",
+                    "Apply oxygen via nonrebreather mask",
+                    "Auscultate lung sounds",
+                    "Obtain a complete set of vital signs"
+                ],
+                answer: 1,
+                explanation: "<strong>Explanation:</strong> The patient is showing severe respiratory distress. The EMT should address the immediate breathing problem.<br><br><strong>Why not the others?</strong><br>• SAMPLE is important but comes later.<br>• Lung sounds help identify the problem but do not treat the immediate threat.<br>• Vital signs are needed, but treatment of a life threat takes priority.<br><br><em>NREMT thinking: Treat life threats during the primary assessment.</em>"
+            },
+            {
+                q: "2. You arrive at a motorcycle crash. A 22-year-old male is lying on the ground. He has a large open wound on his leg with heavy bleeding. He is alert and talking but pale and anxious. What should you do first?",
+                options: [
+                    "Apply a cervical collar",
+                    "Control the bleeding",
+                    "Perform a rapid trauma assessment",
+                    "Obtain a blood pressure"
+                ],
+                answer: 1,
+                explanation: "<strong>Explanation:</strong> Massive bleeding is an immediate threat.<br><br><strong>Why not the others?</strong><br>• C-spine protection matters, but uncontrolled hemorrhage kills faster.<br>• Assessment is important, but the life threat is obvious.<br>• Vital signs do not come before controlling severe bleeding.<br><br><em>NREMT thinking: Fix immediate life threats as soon as identified.</em>"
+            },
+            {
+                q: "3. You are assessing a patient complaining of chest pain. The patient is alert and answering questions appropriately. His airway is open, breathing is adequate, and circulation is stable. What should you do next?",
+                options: [
+                    "Administer aspirin if indicated",
+                    "Perform a secondary assessment",
+                    "Begin transport immediately",
+                    "Apply an AED"
+                ],
+                answer: 0,
+                explanation: "<strong>Explanation:</strong> The patient is stable after the primary assessment. Now you move into focused treatment.<br><br><strong>Why not the others?</strong><br>• Secondary assessment is needed, but treatment for suspected cardiac issues should not be delayed.<br>• Transport is important but not the only next step.<br>• AED is for cardiac arrest, not a stable chest pain patient."
+            },
+            {
+                q: "4. You find a 67-year-old female sitting in a chair. She is confused and unable to answer questions appropriately. Her airway is open, and she is breathing normally. What should you do next?",
+                options: [
+                    "Ask family members about her medical history",
+                    "Perform a rapid physical exam",
+                    "Determine her blood glucose level if allowed by protocol",
+                    "Obtain a complete SAMPLE history"
+                ],
+                answer: 2,
+                explanation: "<strong>Explanation:</strong> Altered mental status has many causes. Hypoglycemia is a reversible cause that must be considered.<br><br><strong>Why not the others?</strong><br>• Helpful, but not the priority.<br>• Needed, but glucose evaluation may reveal an immediately treatable problem.<br>• History comes after identifying immediate threats."
+            },
+            {
+                q: "5. A 70-year-old male fell down six stairs. He complains of mild hip pain. He is alert, has normal vital signs, and denies loss of consciousness. During your assessment, you notice he is taking blood thinners. What is the most appropriate action?",
+                options: [
+                    "Allow him to refuse care because his symptoms are mild",
+                    "Perform a detailed assessment and consider rapid transport",
+                    "Focus only on the hip injury",
+                    "Wait to see if symptoms worsen"
+                ],
+                answer: 1,
+                explanation: "<strong>Explanation:</strong> Blood thinners increase risk of serious internal bleeding, especially after trauma.<br><br><strong>Why not the others?</strong><br>• Mild symptoms do not rule out serious injury.<br>• Tunnel vision is dangerous.<br>• EMTs do not wait for deterioration."
+            },
+            {
+                q: "6. A patient involved in a house fire has facial burns, soot around the mouth, and a hoarse voice. The patient is breathing adequately. What is your priority?",
+                options: [
+                    "Apply a nonrebreather mask",
+                    "Obtain a detailed burn history",
+                    "Prepare for airway management and rapid transport",
+                    "Determine the percentage of body surface area burned"
+                ],
+                answer: 2,
+                explanation: "<strong>Explanation:</strong> Signs of inhalation injury can indicate worsening airway swelling.<br><br><strong>Why not the others?</strong><br>• Oxygen is appropriate but does not address possible airway compromise.<br>• History is secondary.<br>• Burn percentage matters but not before airway concerns."
+            },
+            {
+                q: "7. You treated a patient with CPAP for severe respiratory distress. The patient's breathing improves, and oxygen saturation increases. What should you do next?",
+                options: [
+                    "Stop reassessing because the patient improved",
+                    "Continue monitoring and reassess frequently",
+                    "Remove CPAP before transport",
+                    "Obtain a complete medical history"
+                ],
+                answer: 1,
+                explanation: "<strong>Explanation:</strong> Improvement does not mean the emergency is over.<br><br><em>NREMT expects: continuous reassessment, monitoring, and recognizing deterioration.</em>"
+            },
+            {
+                q: "8. You arrive at a home and find an unconscious patient with respirations of 8/min and shallow, a large bruise on the head, and bleeding from the arm. What should you do first?",
+                options: [
+                    "Control the arm bleeding",
+                    "Apply oxygen",
+                    "Open and maintain the airway",
+                    "Obtain a trauma history"
+                ],
+                answer: 2,
+                explanation: "<strong>Explanation:</strong> Airway comes first. Even though severe bleeding exists elsewhere, securing oxygenation and airway management takes precedence when breathing is compromised."
+            }
+        ];
+
+        let currentQuestion = 0;
+        let score = 0;
+        let answered = false;
+
+        const questionText = document.getElementById('question-text');
+        const optionsContainer = document.getElementById('options');
+        const questionNumber = document.getElementById('question-number');
+        const scoreDisplay = document.getElementById('score-display');
+        const feedback = document.getElementById('feedback');
+        const feedbackText = document.getElementById('feedback-text');
+        const feedbackStatus = document.getElementById('feedback-status');
+        const feedbackIcon = document.getElementById('feedback-icon');
+        const nextBtn = document.getElementById('next-btn');
+        const progressBar = document.getElementById('progress');
+
+        function loadQuestion() {
+            answered = false;
+            const q = questions[currentQuestion];
+            
+            feedback.classList.add('hidden');
+            nextBtn.classList.add('hidden');
+            optionsContainer.innerHTML = '';
+            
+            questionNumber.innerText = `Question ${currentQuestion + 1} of ${questions.length}`;
+            questionText.innerText = q.q;
+            progressBar.style.width = `${((currentQuestion) / questions.length) * 100}%`;
+
+            q.options.forEach((opt, index) => {
+                const btn = document.createElement('button');
+                btn.className = "w-full text-left p-4 rounded-lg border-2 border-slate-200 hover:border-indigo-300 hover:bg-indigo-50 transition-all font-medium text-slate-700 flex items-start";
+                btn.innerHTML = `<span class="bg-slate-100 text-slate-500 w-6 h-6 rounded-full inline-flex items-center justify-center mr-3 flex-shrink-0 text-xs">${String.fromCharCode(65 + index)}</span> <span>${opt}</span>`;
+                btn.onclick = () => checkAnswer(index, btn);
+                optionsContainer.appendChild(btn);
+            });
+        }
+
+        function checkAnswer(selectedIndex, clickedBtn) {
+            if (answered) return;
+            answered = true;
+
+            const correct = questions[currentQuestion].answer;
+            const allBtns = optionsContainer.querySelectorAll('button');
+
+            if (selectedIndex === correct) {
+                score++;
+                scoreDisplay.innerText = `Score: ${score}`;
+                clickedBtn.classList.replace('border-slate-200', 'border-green-500');
+                clickedBtn.classList.add('bg-green-50');
+                showFeedback(true);
+            } else {
+                clickedBtn.classList.replace('border-slate-200', 'border-red-500');
+                clickedBtn.classList.add('bg-red-50');
+                allBtns[correct].classList.replace('border-slate-200', 'border-green-500');
+                allBtns[correct].classList.add('bg-green-50');
+                showFeedback(false);
+            }
+
+            allBtns.forEach(btn => btn.disabled = true);
+            nextBtn.classList.remove('hidden');
+            
+            if (currentQuestion === questions.length - 1) {
+                nextBtn.innerText = "See Results";
+            }
+        }
+
+        function showFeedback(isCorrect) {
+            feedback.classList.remove('hidden');
+            if (isCorrect) {
+                feedback.classList.add('bg-green-50', 'border-green-100');
+                feedback.classList.remove('bg-red-50', 'border-red-100');
+                feedbackStatus.innerText = "Correct";
+                feedbackStatus.className = "font-bold text-sm uppercase text-green-700";
+                feedbackIcon.innerText = "✓";
+                feedbackIcon.className = "mr-2 font-bold text-green-700";
+            } else {
+                feedback.classList.add('bg-red-50', 'border-red-100');
+                feedback.classList.remove('bg-green-50', 'border-green-100');
+                feedbackStatus.innerText = "Incorrect";
+                feedbackStatus.className = "font-bold text-sm uppercase text-red-700";
+                feedbackIcon.innerText = "✗";
+                feedbackIcon.className = "mr-2 font-bold text-red-700";
+            }
+            feedbackText.innerHTML = questions[currentQuestion].explanation;
+        }
+
+        nextBtn.onclick = () => {
+            currentQuestion++;
+            if (currentQuestion < questions.length) {
+                loadQuestion();
+            } else {
+                showResults();
+            }
+        };
+
+        function showResults() {
+            document.getElementById('question-box').classList.add('hidden');
+            const resultsBox = document.getElementById('results-box');
+            resultsBox.classList.remove('hidden');
+            progressBar.style.width = '100%';
+
+            const finalScore = document.getElementById('final-score');
+            const percentage = document.getElementById('percentage');
+            const message = document.getElementById('result-message');
+
+            const percent = Math.round((score / questions.length) * 100);
+            finalScore.innerText = `${score}/${questions.length}`;
+            percentage.innerText = `${percent}%`;
+
+            if (percent >= 85) {
+                message.innerText = "Outstanding job! You have demonstrated exceptional mastery of clinical reasoning, prioritization, and NREMT decision-making frameworks.";
+            } else if (percent >= 70) {
+                message.innerText = "Good effort! Review the scenarios you missed, focusing on primary vs. secondary priorities and recognizing immediate life threats.";
+            } else {
+                message.innerText = "Keep practicing! Revisit primary assessment steps, airway interventions, and NREMT testing priorities.";
+            }
+        }
+
+        loadQuestion();
+    </script>
+</body>
+</html>
