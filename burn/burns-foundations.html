@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lesson 12: Anatomy & Burns Quiz</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc;
+        }
+        .custom-shadow {
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        .option-btn {
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .option-btn:hover:not(:disabled) {
+            transform: translateX(4px);
+        }
+        /* Custom progress bar transition */
+        #progress-bar {
+            transition: width 0.4s ease-out;
+        }
+    </style>
+</head>
+<body class="min-h-screen text-slate-800">
+
+    <div id="app" class="max-w-3xl mx-auto px-4 py-8">
+        <!-- Header -->
+        <header class="bg-blue-600 rounded-t-2xl p-6 text-white text-center custom-shadow">
+            <h1 class="text-2xl font-bold md:text-3xl">Lesson 12: Anatomy & Burns</h1>
+            <p class="text-blue-100 mt-2">NREMT EMT Practice Quiz — L1/L2 Foundation</p>
+        </header>
+
+        <!-- Progress Bar Section -->
+        <div class="bg-white p-4 border-x border-b border-slate-200 custom-shadow flex flex-col gap-2">
+            <div class="flex justify-between text-sm font-semibold text-slate-500">
+                <span id="question-counter">Question 1 of 40</span>
+                <span id="score-counter">Score: 0</span>
+            </div>
+            <div class="w-full bg-slate-100 h-2.5 rounded-full overflow-hidden">
+                <div id="progress-bar" class="bg-blue-500 h-full w-0"></div>
+            </div>
+        </div>
+
+        <!-- Quiz Container -->
+        <main id="quiz-container" class="bg-white p-6 md:p-8 rounded-b-2xl border-x border-b border-slate-200 custom-shadow mb-8">
+            <div id="question-view">
+                <div id="question-text" class="text-lg md:text-xl font-semibold mb-6 leading-relaxed">
+                    <!-- Question text goes here -->
+                </div>
+                <div id="options-container" class="space-y-3">
+                    <!-- Options buttons go here -->
+                </div>
+                
+                <!-- Feedback Section -->
+                <div id="feedback-container" class="mt-8 p-4 rounded-xl hidden">
+                    <p id="feedback-title" class="font-bold text-lg mb-1"></p>
+                    <p id="feedback-rationale" class="text-slate-700"></p>
+                    <button id="next-btn" class="mt-6 w-full bg-slate-800 text-white font-bold py-3 px-6 rounded-xl hover:bg-slate-700 active:bg-slate-900 transition-colors">
+                        Next Question
+                    </button>
+                </div>
+            </div>
+
+            <!-- Results View (Hidden by default) -->
+            <div id="results-view" class="hidden text-center py-8">
+                <div class="mb-6">
+                    <svg class="w-20 h-20 text-blue-500 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                    <h2 class="text-3xl font-bold mb-2">Quiz Complete!</h2>
+                    <p class="text-slate-500 text-lg">Your Final Results</p>
+                </div>
+                
+                <div class="bg-slate-50 rounded-2xl p-6 mb-8 inline-block min-w-[200px]">
+                    <div class="text-5xl font-extrabold text-blue-600 mb-1" id="final-score-percent">0%</div>
+                    <div class="text-slate-600 font-semibold" id="final-score-raw">0 / 40 Correct</div>
+                </div>
+
+                <div id="performance-message" class="mb-8 text-lg font-medium px-4"></div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 max-w-md mx-auto">
+                    <button onclick="location.reload()" class="bg-blue-600 text-white font-bold py-4 px-8 rounded-xl hover:bg-blue-700 shadow-lg shadow-blue-200 transition-all">
+                        Restart Quiz
+                    </button>
+                    <button id="review-btn" class="bg-slate-200 text-slate-800 font-bold py-4 px-8 rounded-xl hover:bg-slate-300 transition-all">
+                        Review Answers
+                    </button>
+                </div>
+            </div>
+
+            <!-- Review View (Hidden by default) -->
+            <div id="review-view" class="hidden">
+                <h2 class="text-2xl font-bold mb-6 flex items-center gap-2">
+                    <button onclick="showResultsScreen()" class="p-2 hover:bg-slate-100 rounded-full transition-colors">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+                    </button>
+                    Answer Review
+                </h2>
+                <div id="review-list" class="space-y-6">
+                    <!-- Review items will be generated here -->
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        const quizData = [
+            { q: "Anatomy is the study of:", a: "B", options: { A: "How medications affect the body", B: "The structures of the body", C: "How diseases spread", D: "Emergency treatment procedures" }, r: "Anatomy focuses on body structures." },
+            { q: "Physiology is the study of:", a: "A", options: { A: "How body systems function", B: "The names of bones", C: "Body positions only", D: "Injury patterns" }, r: "Physiology explains how body systems work." },
+            { q: "The standard reference position used when describing body locations is called:", a: "C", options: { A: "Supine position", B: "Fowler position", C: "Anatomical position", D: "Recovery position" }, r: "Anatomical position is the standard reference posture." },
+            { q: "In anatomical position, the palms face:", a: "B", options: { A: "Backward", B: "Forward", C: "Downward", D: "Toward the body" }, r: "Anatomical position has palms facing forward." },
+            { q: "The term 'superior' means:", a: "C", options: { A: "Toward the feet", B: "Away from the midline", C: "Toward the head", D: "Toward the back" }, r: "Superior means above or toward the head." },
+            { q: "The term 'inferior' means:", a: "A", options: { A: "Toward the lower part of the body", B: "Toward the front", C: "Toward the middle", D: "Toward the side" }, r: "Inferior means below or toward the feet." },
+            { q: "The term 'anterior' refers to:", a: "B", options: { A: "The back of the body", B: "The front of the body", C: "The upper body", D: "The lower body" }, r: "Anterior means toward the front." },
+            { q: "Posterior means:", a: "A", options: { A: "Toward the back of the body", B: "Toward the head", C: "Toward the midline", D: "Away from the body" }, r: "Posterior means toward the back." },
+            { q: "A structure closer to the body's midline is described as:", a: "C", options: { A: "Lateral", B: "Distal", C: "Medial", D: "Inferior" }, r: "Medial means toward the midline." },
+            { q: "The ears are ______ to the nose.", a: "D", options: { A: "Medial", B: "Proximal", C: "Superior", D: "Lateral" }, r: "The ears are farther from the midline than the nose." },
+            { q: "The wrist is ______ to the elbow.", a: "A", options: { A: "Distal", B: "Superior", C: "Medial", D: "Proximal" }, r: "The wrist is farther from the attachment point of the arm." },
+            { q: "The shoulder is ______ to the hand.", a: "B", options: { A: "Distal", B: "Proximal", C: "Inferior", D: "Lateral" }, r: "The shoulder is closer to the body's attachment point." },
+            { q: "The fingers are ______ to the wrist.", a: "C", options: { A: "Superior", B: "Medial", C: "Distal", D: "Posterior" }, r: "Fingers are farther from the point of attachment." },
+            { q: "Which directional term means 'away from the midline'?", a: "D", options: { A: "Medial", B: "Superior", C: "Proximal", D: "Lateral" }, r: "Lateral means away from the body's center line." },
+            { q: "Which directional term means 'closer to the point of attachment'?", a: "A", options: { A: "Proximal", B: "Distal", C: "Posterior", D: "Inferior" }, r: "Proximal means closer to the attachment point." },
+            { q: "The largest organ of the human body is the:", a: "B", options: { A: "Heart", B: "Skin", C: "Liver", D: "Lung" }, r: "Skin is the body's largest organ." },
+            { q: "The outermost layer of the skin is the:", a: "C", options: { A: "Dermis", B: "Fascia", C: "Epidermis", D: "Subcutaneous tissue" }, r: "The epidermis is the outer protective layer." },
+            { q: "The layer of skin containing blood vessels and nerves is the:", a: "B", options: { A: "Epidermis", B: "Dermis", C: "Subcutaneous tissue", D: "Muscle layer" }, r: "The dermis contains nerves, vessels, glands, and follicles." },
+            { q: "The subcutaneous layer is located:", a: "C", options: { A: "Above the epidermis", B: "Inside the heart", C: "Beneath the dermis", D: "Inside the muscle" }, r: "Subcutaneous tissue is below the dermis." },
+            { q: "The epidermis primarily provides:", a: "A", options: { A: "Protection from the environment", B: "Blood circulation", C: "Muscle movement", D: "Hormone production" }, r: "The epidermis protects underlying tissues." },
+            { q: "A burn caused by flames or hot liquids is called:", a: "B", options: { A: "Electrical burn", B: "Thermal burn", C: "Chemical burn", D: "Radiation burn" }, r: "Thermal burns result from heat exposure." },
+            { q: "A burn caused by acids or bases is called:", a: "A", options: { A: "Chemical burn", B: "Thermal burn", C: "Electrical burn", D: "Friction burn" }, r: "Chemicals can damage tissue through corrosive injury." },
+            { q: "Electrical burns are dangerous because they may:", a: "B", options: { A: "Only affect the skin surface", B: "Cause hidden internal injuries", C: "Never affect the heart", D: "Always appear severe externally" }, r: "Electrical energy can travel through deep tissues." },
+            { q: "A burn caused by contact with a hot object is classified as:", a: "C", options: { A: "Electrical", B: "Chemical", C: "Thermal", D: "Radiation" }, r: "Heat transfer causes thermal burns." },
+            { q: "Which type of burn may have significant internal injury despite small skin damage?", a: "A", options: { A: "Electrical", B: "Sunburn", C: "Superficial thermal", D: "Minor friction burn" }, r: "Electrical current can damage internal tissues." },
+            { q: "A partial-thickness burn affects:", a: "B", options: { A: "Only muscle tissue", B: "Epidermis and part of dermis", C: "Bone and organs", D: "Only the subcutaneous layer" }, r: "Partial-thickness burns involve epidermis and dermis." },
+            { q: "A full-thickness burn destroys:", a: "C", options: { A: "Only the epidermis", B: "Hair only", C: "Epidermis and dermis", D: "Sweat only" }, r: "Full-thickness burns extend through both major skin layers." },
+            { q: "Blister formation is commonly associated with:", a: "A", options: { A: "Partial-thickness burns", B: "Full-thickness burns only", C: "Electrical burns only", D: "Chemical burns only" }, r: "Partial-thickness burns often produce blisters." },
+            { q: "A full-thickness burn may appear:", a: "B", options: { A: "Red and painful only", B: "White, brown, or charred", C: "Normal skin color", D: "Blue only" }, r: "Deep burns may destroy nerve endings and change appearance." },
+            { q: "A patient with a full-thickness burn may have decreased pain sensation because:", a: "B", options: { A: "The skin is colder", B: "Nerve endings may be destroyed", C: "Blood pressure is always high", D: "The burn is superficial" }, r: "Deeper burns can destroy nerves." },
+            { q: "The Rule of Nines is used to estimate:", a: "C", options: { A: "Burn depth", B: "Patient age", C: "Total body surface area burned", D: "Pain severity" }, r: "Rule of Nines estimates TBSA." },
+            { q: "TBSA stands for:", a: "A", options: { A: "Total Body Surface Area", B: "Total Burn Skin Assessment", C: "Tissue Burn Severity Analysis", D: "Thermal Body System Assessment" }, r: "TBSA measures the percentage of body burned." },
+            { q: "Burn severity is affected by:", a: "A", options: { A: "Depth and size of the burn", B: "Patient height only", C: "Eye color", D: "Time of day" }, r: "Depth, size, and location influence severity." },
+            { q: "Why are burns to the face concerning?", a: "B", options: { A: "They never require transport", B: "They may indicate airway involvement", C: "They always heal quickly", D: "They are always painless" }, r: "Facial burns may suggest inhalation injury." },
+            { q: "Smoke inhalation can threaten the:", a: "A", options: { A: "Airway", B: "Skeleton only", C: "Skin only", D: "Digestive system only" }, r: "Smoke can injure the airway and lungs." },
+            { q: "EMTs use anatomical terms primarily to:", a: "A", options: { A: "Describe locations accurately", B: "Diagnose diseases", C: "Prescribe medications", D: "Replace patient assessment" }, r: "Anatomical language improves communication." },
+            { q: "The body system most directly affected by severe burns is:", a: "A", options: { A: "Integumentary system", B: "Digestive system", C: "Nervous system only", D: "Skeletal system only" }, r: "Burns primarily affect the skin." },
+            { q: "The integumentary system includes:", a: "B", options: { A: "Heart and blood vessels", B: "Skin, hair, and nails", C: "Bones and joints", D: "Brain and spinal cord" }, r: "The integumentary system protects the body externally." },
+            { q: "A burn involving the epidermis only is classified as:", a: "C", options: { A: "Full-thickness", B: "Partial-thickness", C: "Superficial", D: "Electrical" }, r: "Superficial burns affect only the epidermis." },
+            { q: "Understanding anatomy helps EMTs:", a: "A", options: { A: "Recognize how injuries affect the body", B: "Avoid performing assessments", C: "Replace medical direction", D: "Eliminate the need for patient history" }, r: "Anatomy knowledge helps EMTs interpret injuries and provide appropriate care." }
+        ];
+
+        let currentIndex = 0;
+        let score = 0;
+        let userResponses = [];
+
+        // DOM Elements
+        const questionView = document.getElementById('question-view');
+        const resultsView = document.getElementById('results-view');
+        const reviewView = document.getElementById('review-view');
+        const questionText = document.getElementById('question-text');
+        const optionsContainer = document.getElementById('options-container');
+        const feedbackContainer = document.getElementById('feedback-container');
+        const feedbackTitle = document.getElementById('feedback-title');
+        const feedbackRationale = document.getElementById('feedback-rationale');
+        const nextBtn = document.getElementById('next-btn');
+        const counterText = document.getElementById('question-counter');
+        const scoreCounter = document.getElementById('score-counter');
+        const progressBar = document.getElementById('progress-bar');
+        const reviewList = document.getElementById('review-list');
+        const reviewBtn = document.getElementById('review-btn');
+
+        function initQuiz() {
+            renderQuestion();
+        }
+
+        function renderQuestion() {
+            const data = quizData[currentIndex];
+            
+            // Update UI
+            questionText.innerText = `${currentIndex + 1}. ${data.q}`;
+            counterText.innerText = `Question ${currentIndex + 1} of ${quizData.length}`;
+            scoreCounter.innerText = `Score: ${score}`;
+            progressBar.style.width = `${(currentIndex / quizData.length) * 100}%`;
+            
+            // Clear and render options
+            optionsContainer.innerHTML = '';
+            feedbackContainer.classList.add('hidden');
+            
+            ['A', 'B', 'C', 'D'].forEach(key => {
+                const btn = document.createElement('button');
+                btn.className = "option-btn w-full text-left p-4 rounded-xl border-2 border-slate-200 hover:border-blue-400 hover:bg-blue-50 font-medium flex items-center gap-4 focus:outline-none focus:ring-2 focus:ring-blue-500";
+                btn.innerHTML = `
+                    <span class="flex-shrink-0 w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center font-bold text-slate-500">${key}</span>
+                    <span>${data.options[key]}</span>
+                `;
+                btn.onclick = () => handleSelection(key, btn);
+                optionsContainer.appendChild(btn);
+            });
+        }
+
+        function handleSelection(selectedKey, selectedBtn) {
+            const data = quizData[currentIndex];
+            const isCorrect = selectedKey === data.a;
+            
+            // Record response
+            userResponses.push({
+                index: currentIndex,
+                question: data.q,
+                selected: selectedKey,
+                correct: data.a,
+                isCorrect: isCorrect,
+                rationale: data.r,
+                options: data.options
+            });
+
+            if (isCorrect) score++;
+            
+            // Disable all buttons and highlight
+            const buttons = optionsContainer.querySelectorAll('button');
+            buttons.forEach(btn => {
+                btn.disabled = true;
+                const key = btn.querySelector('span').innerText;
+                if (key === data.a) {
+                    btn.classList.add('border-green-500', 'bg-green-50');
+                    btn.querySelector('span').classList.add('bg-green-500', 'text-white');
+                } else if (key === selectedKey && !isCorrect) {
+                    btn.classList.add('border-red-500', 'bg-red-50');
+                    btn.querySelector('span').classList.add('bg-red-500', 'text-white');
+                }
+            });
+
+            // Show feedback
+            feedbackContainer.classList.remove('hidden');
+            if (isCorrect) {
+                feedbackTitle.innerText = "Correct!";
+                feedbackTitle.className = "font-bold text-lg mb-1 text-green-600";
+            } else {
+                feedbackTitle.innerText = "Incorrect";
+                feedbackTitle.className = "font-bold text-lg mb-1 text-red-600";
+            }
+            feedbackRationale.innerText = data.r;
+            
+            // Scroll to feedback
+            feedbackContainer.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+
+        nextBtn.onclick = () => {
+            currentIndex++;
+            if (currentIndex < quizData.length) {
+                renderQuestion();
+            } else {
+                showResults();
+            }
+        };
+
+        function showResults() {
+            questionView.classList.add('hidden');
+            resultsView.classList.remove('hidden');
+            progressBar.style.width = '100%';
+            
+            const percent = Math.round((score / quizData.length) * 100);
+            document.getElementById('final-score-percent').innerText = `${percent}%`;
+            document.getElementById('final-score-raw').innerText = `${score} / ${quizData.length} Correct`;
+            
+            const msg = document.getElementById('performance-message');
+            if (percent >= 90) {
+                msg.innerText = "Excellent! You have a strong foundational understanding of Anatomy & Burns.";
+                msg.className = "mb-8 text-lg font-medium px-4 text-green-600";
+            } else if (percent >= 70) {
+                msg.innerText = "Good job! You have a solid base, but review your incorrect answers to sharpen your knowledge.";
+                msg.className = "mb-8 text-lg font-medium px-4 text-blue-600";
+            } else {
+                msg.innerText = "Keep studying! Foundations are critical before moving into clinical judgment scenarios.";
+                msg.className = "mb-8 text-lg font-medium px-4 text-orange-600";
+            }
+        }
+
+        reviewBtn.onclick = () => {
+            resultsView.classList.add('hidden');
+            reviewView.classList.remove('hidden');
+            renderReview();
+        };
+
+        function showResultsScreen() {
+            reviewView.classList.add('hidden');
+            resultsView.classList.remove('hidden');
+        }
+
+        function renderReview() {
+            reviewList.innerHTML = '';
+            userResponses.forEach((resp, i) => {
+                const item = document.createElement('div');
+                item.className = `p-4 rounded-xl border-l-4 ${resp.isCorrect ? 'border-green-500 bg-green-50' : 'border-red-500 bg-red-50'} mb-4 shadow-sm`;
+                
+                let optionsHtml = '';
+                ['A', 'B', 'C', 'D'].forEach(k => {
+                    let style = "text-slate-600";
+                    if (k === resp.correct) style = "text-green-700 font-bold";
+                    if (k === resp.selected && !resp.isCorrect) style = "text-red-700 font-bold";
+                    optionsHtml += `<div class="text-sm ${style}">${k}: ${resp.options[k]}</div>`;
+                });
+
+                item.innerHTML = `
+                    <div class="font-bold mb-2">${i + 1}. ${resp.question}</div>
+                    <div class="space-y-1 mb-3">${optionsHtml}</div>
+                    <div class="text-sm text-slate-700 bg-white/50 p-2 rounded border border-slate-200">
+                        <span class="font-bold">Rationale:</span> ${resp.rationale}
+                    </div>
+                `;
+                reviewList.appendChild(item);
+            });
+        }
+
+        // Start on load
+        window.onload = initQuiz;
+    </script>
+</body>
+</html>
