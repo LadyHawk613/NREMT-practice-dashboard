@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NREMT Practice: Anatomy, Physiology & Burns</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: #f4f6f9;
+            color: #333;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        header {
+            background-color: #f97316;
+            color: white;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            flex-shrink: 0;
+        }
+        header h1 {
+            font-size: 1.15rem;
+            font-weight: 600;
+        }
+        .progress-indicator {
+            font-size: 0.9rem;
+            font-weight: 500;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 4px 10px;
+            border-radius: 12px;
+        }
+        main {
+            flex: 1;
+            max-width: 750px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 12px 16px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .card {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            padding: 16px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            overflow-y: auto;
+        }
+        .question-text {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 12px;
+            line-height: 1.35;
+        }
+        .options-list {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            margin-bottom: 12px;
+        }
+        .option-btn {
+            background: #f8fafc;
+            border: 1.5px solid #e2e8f0;
+            padding: 8px 12px;
+            border-radius: 6px;
+            text-align: left;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            color: #334155;
+            line-height: 1.25;
+        }
+        .option-btn:hover:not(:disabled) {
+            background: #fff7ed;
+            border-color: #fdba74;
+        }
+        .option-btn.correct {
+            background: #f0fdf4 !important;
+            border-color: #22c55e !important;
+            color: #166534 !important;
+        }
+        .option-btn.incorrect {
+            background: #fef2f2 !important;
+            border-color: #ef4444 !important;
+            color: #991b1b !important;
+        }
+        .rationale-box {
+            background: #fff7ed;
+            border-left: 3.5px solid #f97316;
+            padding: 8px 12px;
+            border-radius: 0 6px 6px 0;
+            font-size: 0.82rem;
+            color: #9a3412;
+            margin-bottom: 12px;
+            display: none;
+            line-height: 1.3;
+        }
+        .rationale-box.visible {
+            display: block;
+        }
+        .footer-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 1px solid #f1f5f9;
+            padding-top: 10px;
+            flex-shrink: 0;
+        }
+        .nav-btn {
+            background: #f97316;
+            color: white;
+            border: none;
+            padding: 6px 14px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background 0.15s;
+        }
+        .nav-btn:hover {
+            background: #ea580c;
+        }
+        .nav-btn:disabled {
+            background: #cbd5e1;
+            cursor: not-allowed;
+        }
+        .score-display {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #475569;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>NREMT Review: Burns & Anatomy</h1>
+        <div class="progress-indicator" id="progress-indicator">Question 1 of 20</div>
+    </header>
+
+    <main>
+        <div class="card">
+            <div>
+                <div class="question-text" id="question-text">Loading question...</div>
+                <div class="options-list" id="options-list"></div>
+                <div class="rationale-box" id="rationale-box"></div>
+            </div>
+            
+            <div class="footer-nav">
+                <div class="score-display" id="score-display">Score: 0 / 0</div>
+                <button class="nav-btn" id="next-btn" onclick="nextQuestion()" disabled>Next Question</button>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        const quizData = [
+            {
+                q: "A 34-year-old male is rescued from a house fire. He has partial-thickness burns to his chest and face. He is alert but has a hoarse voice, soot around his mouth, and singed nasal hairs. His respiratory rate is 24/min and his SpO₂ is 95% on room air. What should the EMT do FIRST?",
+                options: [
+                    "A. Apply a nonrebreather mask at 15 L/min",
+                    "B. Assess breath sounds and transport rapidly",
+                    "C. Insert an airway adjunct and begin ventilation",
+                    "D. Apply moist sterile dressings to facial burns"
+                ],
+                correct: 0,
+                rationale: "This patient has signs of possible inhalation injury. High-flow oxygen is the immediate priority. Hoarseness and soot indicate airway injury risk. He is not yet showing respiratory failure requiring BVM ventilation."
+            },
+            {
+                q: "A patient with extensive burns has pale, cool skin, a weak radial pulse, and increasing anxiety. Which physiological process best explains these findings?",
+                options: [
+                    "A. Increased vascular permeability causing fluid loss",
+                    "B. Increased oxygen absorption through damaged skin",
+                    "C. Decreased metabolic demand after injury",
+                    "D. Increased blood pressure caused by stress hormones"
+                ],
+                correct: 0,
+                rationale: "Major burns damage capillaries, causing plasma leakage into tissues. This contributes to hypovolemia and burn shock."
+            },
+            {
+                q: "A 22-year-old patient has burns to the entire anterior chest and the anterior surface of both arms. Using the Rule of Nines for adults, approximately what percentage of body surface area is burned?",
+                options: [
+                    "A. 18%",
+                    "B. 27%",
+                    "C. 36%",
+                    "D. 45%"
+                ],
+                correct: 0,
+                rationale: "Anterior chest = 9%. Each entire arm = 9% (anterior surface only = 4.5% each). Total = 9 + 4.5 + 4.5 = 18%."
+            },
+            {
+                q: "A patient touched a high-voltage electrical line and has a small entrance wound on his hand. He appears stable. Why should the EMT remain concerned?",
+                options: [
+                    "A. Electrical burns are always superficial",
+                    "B. External appearance may underestimate internal injury",
+                    "C. Electrical injuries only affect the skin",
+                    "D. Small burns rarely require transport"
+                ],
+                correct: 1,
+                rationale: "Electrical energy can travel through the body, damaging muscle, nerves, and internal organs despite minimal skin findings."
+            },
+            {
+                q: "A patient with burns to the neck and face suddenly develops difficulty speaking and increased work of breathing. Which finding is most concerning?",
+                options: [
+                    "A. Pain rating of 9/10",
+                    "B. Blister formation",
+                    "C. Increasing airway edema",
+                    "D. Minor bleeding from burned skin"
+                ],
+                correct: 2,
+                rationale: "Airway swelling can rapidly progress after facial and neck burns. Early recognition is critical."
+            },
+            {
+                q: "A 5-year-old child spills boiling water onto the chest and abdomen. Which factor makes this patient higher risk than an adult with the same burn size?",
+                options: [
+                    "A. Children have thicker skin than adults",
+                    "B. Children lose heat more rapidly",
+                    "C. Children rarely develop shock",
+                    "D. Children have smaller airway concerns"
+                ],
+                correct: 1,
+                rationale: "Children have a larger surface-area-to-body-mass ratio and lose heat quickly. They are also at increased risk for airway compromise."
+            },
+            {
+                q: "A patient has a circumferential burn around the chest. Which complication should the EMT anticipate?",
+                options: [
+                    "A. Increased lung expansion",
+                    "B. Restricted chest movement",
+                    "C. Improved oxygen exchange",
+                    "D. Increased blood pressure"
+                ],
+                correct: 1,
+                rationale: "Circumferential burns can act like a restrictive band, limiting chest expansion and ventilation."
+            },
+            {
+                q: "A patient with a burn injury is confused, breathing rapidly, and has a weak pulse. Which assessment finding would best indicate progression toward shock?",
+                options: [
+                    "A. Warm, dry skin",
+                    "B. Increasing mental status changes",
+                    "C. Decreased pain sensation",
+                    "D. Localized swelling only"
+                ],
+                correct: 1,
+                rationale: "Altered mental status is an important sign of inadequate perfusion."
+            },
+            {
+                q: "A patient involved in a house fire has burns and confusion. Pulse oximetry reads 99%. What should the EMT recognize?",
+                options: [
+                    "A. Carbon monoxide poisoning is unlikely",
+                    "B. Oxygen therapy is unnecessary",
+                    "C. Pulse oximetry may be unreliable",
+                    "D. The patient has adequate oxygen delivery"
+                ],
+                correct: 2,
+                rationale: "Pulse oximetry cannot differentiate oxyhemoglobin from carboxyhemoglobin. Carbon monoxide poisoning may exist despite normal SpO₂ readings."
+            },
+            {
+                q: "A patient has a full-thickness burn to the arm. Which description best matches this injury?",
+                options: [
+                    "A. Red, painful skin without damage",
+                    "B. Blisters with severe pain",
+                    "C. Damage through all skin layers",
+                    "D. Minor epidermal irritation"
+                ],
+                correct: 2,
+                rationale: "Full-thickness burns destroy the epidermis and dermis and may extend deeper."
+            },
+            {
+                q: "A burn patient is screaming in pain. The EMT should understand that:",
+                options: [
+                    "A. Severe pain confirms a superficial burn",
+                    "B. Pain level alone determines burn severity",
+                    "C. Burn depth and location guide treatment priorities",
+                    "D. Pain medication should delay transport"
+                ],
+                correct: 2,
+                rationale: "Pain does not reliably indicate burn severity. A deep burn may be painless due to nerve destruction."
+            },
+            {
+                q: "A patient has chemical burns from a dry powder substance. What should the EMT do FIRST?",
+                options: [
+                    "A. Flush immediately with water",
+                    "B. Brush off the powder before irrigation",
+                    "C. Cover the patient with wet dressings",
+                    "D. Neutralize the chemical"
+                ],
+                correct: 1,
+                rationale: "Dry chemicals should be brushed away before irrigation to prevent activation or spreading."
+            },
+            {
+                q: "A patient has burns involving the hands, face, and genital area. The total body surface area burned is only 8%. Why is transport to a burn center still important?",
+                options: [
+                    "A. Location affects functional outcome",
+                    "B. Small burns are always fatal",
+                    "C. Burn percentage is the only factor considered",
+                    "D. Pain medication cannot be given in the field"
+                ],
+                correct: 0,
+                rationale: "Critical areas such as hands, face, and genitalia require specialized care due to function and complications."
+            },
+            {
+                q: "A patient with a burn injury becomes increasingly restless. Vital signs show tachycardia and hypotension. Which body system should the EMT recognize as failing?",
+                options: [
+                    "A. Digestive system",
+                    "B. Integumentary system",
+                    "C. Circulatory system",
+                    "D. Skeletal system"
+                ],
+                correct: 2,
+                rationale: "These findings indicate inadequate perfusion and possible shock."
+            },
+            {
+                q: "A patient suffers burns after an explosion. He has chest pain, difficulty breathing, and decreased breath sounds on one side. Which condition should be suspected?",
+                options: [
+                    "A. Simple skin irritation",
+                    "B. Pneumothorax",
+                    "C. Heat exhaustion",
+                    "D. Isolated burn shock"
+                ],
+                correct: 1,
+                rationale: "Explosions can cause traumatic chest injuries. Decreased unilateral breath sounds suggest pneumothorax."
+            },
+            {
+                q: "An EMT is assessing a burn patient. Which finding indicates the greatest immediate threat?",
+                options: [
+                    "A. Blisters on the forearm",
+                    "B. Pain rated 10/10",
+                    "C. Hoarse voice after smoke exposure",
+                    "D. Redness around the wound"
+                ],
+                correct: 2,
+                rationale: "Airway compromise is the priority. Hoarseness after smoke exposure suggests airway injury."
+            },
+            {
+                q: "A patient has burns covering 35% TBSA. Which treatment decision is most appropriate?",
+                options: [
+                    "A. Delay transport until pain improves",
+                    "B. Focus only on dressing wounds",
+                    "C. Prioritize airway, oxygenation, and rapid transport",
+                    "D. Allow the patient to walk to the ambulance"
+                ],
+                correct: 2,
+                rationale: "Large burns require management of airway, breathing, circulation, and rapid transport."
+            },
+            {
+                q: "A patient with severe burns has no visible chest injuries but is having increasing difficulty ventilating. What should the EMT consider?",
+                options: [
+                    "A. Circumferential chest burns restricting ventilation",
+                    "B. Normal response to pain",
+                    "C. Improved lung function",
+                    "D. Dehydration only"
+                ],
+                correct: 0,
+                rationale: "Chest burns can restrict expansion and impair ventilation."
+            },
+            {
+                q: "A patient has a burn injury after being trapped in a garage fire. Which additional assessment is MOST important?",
+                options: [
+                    "A. Last meal eaten",
+                    "B. Carbon monoxide exposure symptoms",
+                    "C. Previous fractures",
+                    "D. Hand dominance"
+                ],
+                correct: 1,
+                rationale: "Enclosed-space fires increase risk for carbon monoxide poisoning."
+            },
+            {
+                q: "An EMT is teaching a student about burns. Which statement shows correct understanding?",
+                options: [
+                    "A. 'Burn depth is the only factor that determines severity.'",
+                    "B. 'Small burns can still be critical depending on location.'",
+                    "C. 'Pulse oximetry rules out carbon monoxide poisoning.'",
+                    "D. 'All burns should immediately be covered with ice.'"
+                ],
+                correct: 1,
+                rationale: "Severity depends on depth, location, TBSA, mechanism, patient age, and associated injuries."
+            }
+        ];
+
+        let currentIndex = 0;
+        let score = 0;
+        let answered = false;
+
+        function loadQuestion() {
+            answered = false;
+            const q = quizData[currentIndex];
+            
+            document.getElementById('progress-indicator').innerText = `Question ${currentIndex + 1} of ${quizData.length}`;
+            document.getElementById('question-text').innerText = q.q;
+            
+            const optionsList = document.getElementById('options-list');
+            optionsList.innerHTML = '';
+            
+            q.options.forEach((opt, idx) => {
+                const btn = document.createElement('button');
+                btn.className = 'option-btn';
+                btn.innerText = opt;
+                btn.onclick = () => selectOption(idx);
+                optionsList.appendChild(btn);
+            });
+
+            const rationaleBox = document.getElementById('rationale-box');
+            rationaleBox.innerText = '';
+            rationaleBox.classList.remove('visible');
+
+            const nextBtn = document.getElementById('next-btn');
+            nextBtn.disabled = true;
+            nextBtn.innerText = currentIndex === quizData.length - 1 ? "Finish" : "Next Question";
+        }
+
+        function selectOption(selectedIndex) {
+            if (answered) return;
+            answered = true;
+
+            const q = quizData[currentIndex];
+            const buttons = document.querySelectorAll('.option-btn');
+            
+            buttons.forEach((btn, idx) => {
+                btn.disabled = true;
+                if (idx === q.correct) {
+                    btn.classList.add('correct');
+                } else if (idx === selectedIndex) {
+                    btn.classList.add('incorrect');
+                }
+            });
+
+            if (selectedIndex === q.correct) {
+                score++;
+            }
+
+            document.getElementById('score-display').innerText = `Score: ${score} / ${currentIndex + 1}`;
+
+            const rationaleBox = document.getElementById('rationale-box');
+            rationaleBox.innerText = `Rationale: ${q.rationale}`;
+            rationaleBox.classList.add('visible');
+
+            document.getElementById('next-btn').disabled = false;
+        }
+
+        function nextQuestion() {
+            currentIndex++;
+            if (currentIndex < quizData.length) {
+                loadQuestion();
+            } else {
+                showFinalScore();
+            }
+        }
+
+        function showFinalScore() {
+            const card = document.querySelector('.card');
+            const percentage = Math.round((score / quizData.length) * 100);
+            card.innerHTML = `
+                <div style="text-align: center; margin: auto;">
+                    <h2 style="font-size: 1.4rem; color: #1f2937; margin-bottom: 8px;">Quiz Complete!</h2>
+                    <p style="font-size: 1rem; color: #475569; margin-bottom: 12px;">You scored <strong>${score}</strong> out of <strong>${quizData.length}</strong> (${percentage}%)</p>
+                    <button class="nav-btn" onclick="resetQuiz()">Restart Quiz</button>
+                </div>
+            `;
+            document.getElementById('progress-indicator').innerText = "Complete";
+        }
+
+        function resetQuiz() {
+            currentIndex = 0;
+            score = 0;
+            document.getElementById('score-display').innerText = `Score: 0 / 0`;
+            loadQuestion();
+        }
+
+        window.onload = loadQuestion;
+    </script>
+</body>
+</html>
