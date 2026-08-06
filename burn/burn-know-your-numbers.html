@@ -46,8 +46,9 @@ h1 {
     transform-style:preserve-3d;
 }
 
-.card:hover .card-inner {
-    transform:rotateY(180deg);
+/* Changed from :hover to .is-flipped class */
+.card.is-flipped .card-inner {
+    transform: rotateY(180deg);
 }
 
 .card-front, .card-back {
