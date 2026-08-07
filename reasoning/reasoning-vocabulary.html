@@ -18,65 +18,62 @@ h1 {
 }
 
 .subtitle {
-    text-align:center;
-    margin-bottom:25px;
+    text-align: center;
+    margin-bottom: 25px;
 }
 
 .container {
-    display:grid;
-    grid-template-columns:repeat(auto-fit, minmax(250px,1fr));
-    gap:20px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
 }
 
 .card {
-    height:220px;
-    perspective:1000px;
-    cursor:pointer;
+    height: 220px;
+    perspective: 1000px;
+    cursor: pointer;
 }
 
 .card-inner {
-    position:relative;
-    width:100%;
-    height:100%;
-    transition:transform 0.6s;
-    transform-style:preserve-3d;
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transition: transform 0.6s;
+    transform-style: preserve-3d;
 }
 
 .card.flip .card-inner {
-    transform:rotateY(180deg);
+    transform: rotateY(180deg);
 }
 
 .front, .back {
-    position:absolute;
-    width:100%;
-    height:100%;
-    backface-visibility:hidden;
-    border-radius:15px;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    text-align:center;
-    padding:20px;
-    box-sizing:border-box;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    border-radius: 15px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 15px;
+    box-sizing: border-box;
+    overflow: hidden;
 }
 
 .front {
-    background:#008C95;
-    font-size:24px;
-    font-weight:bold;
+    background: #008C95;
+    font-size: 24px;
+    font-weight: bold;
 }
 
 .back {
-    background:#ffffff;
-    color:#071B2D;
-    transform:rotateY(180deg);
-    font-size:16px;
-    line-height:1.4;
-}
-
-.term {
-    color:#E6B422;
-    font-weight:bold;
+    background: #ffffff;
+    color: #071B2D;
+    transform: rotateY(180deg);
+    font-size: 13px;
+    line-height: 1.3;
 }
 
 </style>
@@ -93,14 +90,12 @@ Click each card to reveal the definition and exam importance.
 
 <div class="container">
 
-
 <div class="card">
 <div class="card-inner">
 <div class="front">Perfusion</div>
 <div class="back">
-<span class="term">Perfusion</span><br><br>
 The delivery of oxygenated blood to body tissues.<br><br>
-NREMT clue: Altered mental status, cool skin, weak pulses may indicate poor perfusion.
+<strong>NREMT clue:</strong> Altered mental status, cool skin, weak pulses may indicate poor perfusion.
 </div>
 </div>
 </div>
@@ -110,9 +105,8 @@ NREMT clue: Altered mental status, cool skin, weak pulses may indicate poor perf
 <div class="card-inner">
 <div class="front">Shock</div>
 <div class="back">
-<span class="term">Shock</span><br><br>
 A condition where tissues do not receive enough oxygen.<br><br>
-Think: ABC problems, poor perfusion, rapid transport.
+<strong>Think:</strong> ABC problems, poor perfusion, rapid transport.
 </div>
 </div>
 </div>
@@ -122,9 +116,8 @@ Think: ABC problems, poor perfusion, rapid transport.
 <div class="card-inner">
 <div class="front">Hypoxia</div>
 <div class="back">
-<span class="term">Hypoxia</span><br><br>
 Low oxygen available to tissues.<br><br>
-Signs: cyanosis, altered mental status, respiratory distress.
+<strong>Signs:</strong> cyanosis, altered mental status, respiratory distress.
 </div>
 </div>
 </div>
@@ -134,9 +127,8 @@ Signs: cyanosis, altered mental status, respiratory distress.
 <div class="card-inner">
 <div class="front">Dyspnea</div>
 <div class="back">
-<span class="term">Dyspnea</span><br><br>
 Difficulty breathing or shortness of breath.<br><br>
-NREMT priority: determine if airway or breathing is threatened.
+<strong>NREMT priority:</strong> determine if airway or breathing is threatened.
 </div>
 </div>
 </div>
@@ -146,7 +138,6 @@ NREMT priority: determine if airway or breathing is threatened.
 <div class="card-inner">
 <div class="front">Tachypnea</div>
 <div class="back">
-<span class="term">Tachypnea</span><br><br>
 Abnormally rapid breathing.<br><br>
 May indicate respiratory distress, shock, or metabolic problems.
 </div>
@@ -158,9 +149,8 @@ May indicate respiratory distress, shock, or metabolic problems.
 <div class="card-inner">
 <div class="front">Bradypnea</div>
 <div class="back">
-<span class="term">Bradypnea</span><br><br>
 Abnormally slow breathing.<br><br>
-Concern: inadequate ventilation and respiratory failure.
+<strong>Concern:</strong> inadequate ventilation and respiratory failure.
 </div>
 </div>
 </div>
@@ -170,9 +160,8 @@ Concern: inadequate ventilation and respiratory failure.
 <div class="card-inner">
 <div class="front">Altered Mental Status</div>
 <div class="back">
-<span class="term">AMS</span><br><br>
 A change from normal thinking, awareness, or behavior.<br><br>
-Common causes: stroke, hypoxia, glucose problems, trauma.
+<strong>Common causes:</strong> stroke, hypoxia, glucose problems, trauma.
 </div>
 </div>
 </div>
@@ -182,9 +171,8 @@ Common causes: stroke, hypoxia, glucose problems, trauma.
 <div class="card-inner">
 <div class="front">Compensated Shock</div>
 <div class="back">
-<span class="term">Compensated Shock</span><br><br>
 The body maintains blood pressure despite poor perfusion.<br><br>
-Early signs: anxiety, tachycardia, cool skin.
+<strong>Early signs:</strong> anxiety, tachycardia, cool skin.
 </div>
 </div>
 </div>
@@ -194,9 +182,8 @@ Early signs: anxiety, tachycardia, cool skin.
 <div class="card-inner">
 <div class="front">Decompensated Shock</div>
 <div class="back">
-<span class="term">Decompensated Shock</span><br><br>
 The body can no longer maintain circulation.<br><br>
-Signs: hypotension, confusion, weak pulses.
+<strong>Signs:</strong> hypotension, confusion, weak pulses.
 </div>
 </div>
 </div>
@@ -206,9 +193,8 @@ Signs: hypotension, confusion, weak pulses.
 <div class="card-inner">
 <div class="front">Occlusion</div>
 <div class="back">
-<span class="term">Occlusion</span><br><br>
 A blockage of a vessel or airway passage.<br><br>
-Examples: stroke, heart attack, airway obstruction.
+<strong>Examples:</strong> stroke, heart attack, airway obstruction.
 </div>
 </div>
 </div>
@@ -218,7 +204,6 @@ Examples: stroke, heart attack, airway obstruction.
 <div class="card-inner">
 <div class="front">Patent Airway</div>
 <div class="back">
-<span class="term">Patent Airway</span><br><br>
 An airway that is open and allows air movement.<br><br>
 Always confirm airway before other treatment decisions.
 </div>
@@ -230,9 +215,8 @@ Always confirm airway before other treatment decisions.
 <div class="card-inner">
 <div class="front">Ventilation</div>
 <div class="back">
-<span class="term">Ventilation</span><br><br>
 Movement of air into and out of the lungs.<br><br>
-Problem: inadequate breathing requires intervention.
+<strong>Problem:</strong> inadequate breathing requires intervention.
 </div>
 </div>
 </div>
@@ -242,9 +226,8 @@ Problem: inadequate breathing requires intervention.
 <div class="card-inner">
 <div class="front">Respiration</div>
 <div class="back">
-<span class="term">Respiration</span><br><br>
 Exchange of oxygen and carbon dioxide.<br><br>
-Remember: breathing does not always equal oxygen exchange.
+<strong>Remember:</strong> breathing does not always equal oxygen exchange.
 </div>
 </div>
 </div>
@@ -254,7 +237,6 @@ Remember: breathing does not always equal oxygen exchange.
 <div class="card-inner">
 <div class="front">Crepitus</div>
 <div class="back">
-<span class="term">Crepitus</span><br><br>
 A crackling sensation caused by air under the skin or bone fragments.<br><br>
 Often associated with trauma.
 </div>
@@ -266,7 +248,6 @@ Often associated with trauma.
 <div class="card-inner">
 <div class="front">Guarding</div>
 <div class="back">
-<span class="term">Guarding</span><br><br>
 Involuntary tightening of abdominal muscles.<br><br>
 May indicate internal abdominal injury.
 </div>
@@ -278,9 +259,8 @@ May indicate internal abdominal injury.
 <div class="card-inner">
 <div class="front">Distention</div>
 <div class="back">
-<span class="term">Distention</span><br><br>
 Abnormal enlargement or swelling.<br><br>
-Examples: abdominal distention, jugular vein distention.
+<strong>Examples:</strong> abdominal distention, jugular vein distention.
 </div>
 </div>
 </div>
@@ -290,9 +270,8 @@ Examples: abdominal distention, jugular vein distention.
 <div class="card-inner">
 <div class="front">Anaphylaxis</div>
 <div class="back">
-<span class="term">Anaphylaxis</span><br><br>
 Severe allergic reaction affecting airway, breathing, and circulation.<br><br>
-Priority: rapid recognition and epinephrine when indicated.
+<strong>Priority:</strong> rapid recognition and epinephrine when indicated.
 </div>
 </div>
 </div>
@@ -302,7 +281,6 @@ Priority: rapid recognition and epinephrine when indicated.
 <div class="card-inner">
 <div class="front">CVA</div>
 <div class="back">
-<span class="term">Cerebrovascular Accident</span><br><br>
 Medical term for stroke.<br><br>
 Look for FAST signs and last known well time.
 </div>
@@ -314,7 +292,6 @@ Look for FAST signs and last known well time.
 <div class="card-inner">
 <div class="front">Mechanism of Injury</div>
 <div class="back">
-<span class="term">MOI</span><br><br>
 How an injury occurred.<br><br>
 Helps predict hidden injuries before symptoms appear.
 </div>
@@ -326,7 +303,6 @@ Helps predict hidden injuries before symptoms appear.
 <div class="card-inner">
 <div class="front">Triage</div>
 <div class="back">
-<span class="term">Triage</span><br><br>
 Sorting patients based on severity and available resources.<br><br>
 Treat the greatest number of patients effectively.
 </div>
@@ -339,16 +315,15 @@ Treat the greatest number of patients effectively.
 
 <script>
 
-const cards=document.querySelectorAll(".card");
+const cards = document.querySelectorAll(".card");
 
-cards.forEach(card=>{
-    card.addEventListener("click",()=>{
+cards.forEach(card => {
+    card.addEventListener("click", () => {
         card.classList.toggle("flip");
     });
 });
 
 </script>
-
 
 </body>
 </html>
