@@ -12,41 +12,44 @@
         }
         body {
             font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background-color: #f8fafc;
+            background-color: #f1f5f9;
             color: #1e293b;
             min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        main {
+            max-width: 720px;
+            width: 100%;
+        }
+        .card {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px -5px rgba(0,0,0,0.05), 0 8px 10px -6px rgba(0,0,0,0.05);
+            overflow: hidden;
             display: flex;
             flex-direction: column;
         }
         header {
             background-color: #f97316;
             color: white;
-            padding: 24px 16px;
+            padding: 24px 20px;
             text-align: center;
-            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
         }
         header h1 {
-            font-size: 1.5rem;
+            font-size: 1.4rem;
             font-weight: 700;
             margin-bottom: 4px;
         }
         header p {
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             opacity: 0.9;
             font-weight: 400;
         }
-        main {
-            flex: 1;
-            max-width: 720px;
-            width: 100%;
-            margin: -24px auto 32px auto;
-            padding: 0 16px;
-        }
-        .card {
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 10px 25px -5px rgba(0,0,0,0.05), 0 8px 10px -6px rgba(0,0,0,0.05);
-            padding: 28px;
+        .card-body {
+            padding: 24px;
             display: flex;
             flex-direction: column;
         }
@@ -54,10 +57,10 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 20px;
+            margin-bottom: 14px;
         }
         .stage-badge {
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             font-weight: 700;
             text-transform: uppercase;
             color: #64748b;
@@ -72,48 +75,48 @@
             border-radius: 6px;
         }
         .content-area {
-            margin-bottom: 20px;
+            margin-bottom: 16px;
         }
         .question-text {
-            font-size: 1.05rem;
+            font-size: 0.95rem;
             font-weight: 600;
             color: #0f172a;
-            line-height: 1.5;
-            margin-bottom: 24px;
+            line-height: 1.4;
+            margin-bottom: 14px;
             white-space: pre-line;
         }
         .options-list {
             display: flex;
             flex-direction: column;
-            gap: 12px;
-            margin-bottom: 20px;
+            gap: 8px;
+            margin-bottom: 14px;
         }
         .option-btn {
             background: #ffffff;
             border: 2px solid #e2e8f0;
-            padding: 14px 16px;
+            padding: 10px 14px;
             border-radius: 10px;
             text-align: left;
-            font-size: 0.95rem;
+            font-size: 0.9rem;
             cursor: pointer;
             transition: all 0.2s ease;
             color: #334155;
-            line-height: 1.4;
+            line-height: 1.3;
             display: flex;
             align-items: center;
-            gap: 14px;
+            gap: 12px;
             font-weight: 500;
         }
         .option-letter {
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            width: 28px;
-            height: 28px;
+            width: 24px;
+            height: 24px;
             background: #f1f5f9;
             color: #475569;
             border-radius: 6px;
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             font-weight: 700;
             flex-shrink: 0;
             transition: all 0.2s ease;
@@ -147,14 +150,16 @@
         .rationale-box {
             background: #f0fdf4;
             border-left: 4px solid #22c55e;
-            padding: 16px;
+            padding: 10px 14px;
             border-radius: 0 8px 8px 0;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             color: #166534;
-            margin-bottom: 24px;
+            margin-bottom: 14px;
             display: none;
-            line-height: 1.5;
+            line-height: 1.35;
             white-space: pre-line;
+            max-height: 110px;
+            overflow-y: auto;
         }
         .rationale-box.visible {
             display: block;
@@ -164,7 +169,7 @@
             justify-content: flex-end;
             align-items: center;
             border-top: 1px solid #f1f5f9;
-            padding-top: 20px;
+            padding-top: 14px;
         }
         .nav-btn {
             background: #f97316;
@@ -188,26 +193,28 @@
 </head>
 <body>
 
-    <header>
-        <h1>Advanced NREMT Practice</h1>
-        <p>NREMT Cognitive Exam (Clinical Reasoning)</p>
-    </header>
-
     <main>
         <div class="card">
-            <div class="quiz-header-row">
-                <div class="stage-badge" id="stage-badge">Question 1 of 20</div>
-                <div class="score-badge" id="score-display">Score: 0</div>
-            </div>
-            
-            <div class="content-area">
-                <div class="question-text" id="question-text">Loading question...</div>
-                <div class="options-list" id="options-list"></div>
-                <div class="rationale-box" id="rationale-box"></div>
-            </div>
-            
-            <div class="footer-nav">
-                <button class="nav-btn" id="next-btn" onclick="nextQuestion()" disabled>Next Question</button>
+            <header>
+                <h1>Advanced NREMT Practice</h1>
+                <p>NREMT Cognitive Exam (Clinical Reasoning)</p>
+            </header>
+
+            <div class="card-body">
+                <div class="quiz-header-row">
+                    <div class="stage-badge" id="stage-badge">Question 1 of 20</div>
+                    <div class="score-badge" id="score-display">Score: 0</div>
+                </div>
+                
+                <div class="content-area">
+                    <div class="question-text" id="question-text">Loading question...</div>
+                    <div class="options-list" id="options-list"></div>
+                    <div class="rationale-box" id="rationale-box"></div>
+                </div>
+                
+                <div class="footer-nav">
+                    <button class="nav-btn" id="next-btn" onclick="nextQuestion()" disabled>Next Question</button>
+                </div>
             </div>
         </div>
     </main>
@@ -224,7 +231,7 @@
                     "Administer the patient's prescribed inhaler"
                 ],
                 correct: 1,
-                rationale: "Rationale: The patient has progressed from respiratory distress to respiratory failure. Oxygen alone will not correct inadequate ventilation.\n\nDistractors:\n• Option A is appropriate for hypoxia but not respiratory failure.\n• Option C is important but delayed.\n• Option D may help bronchospasm but does not fix inadequate breathing."
+                rationale: "Rationale: The patient has progressed from respiratory distress to respiratory failure. Oxygen alone will not correct inadequate ventilation."
             },
             {
                 title: "Question 2 — Trauma Priority",
@@ -296,7 +303,7 @@
                     "Patient's age"
                 ],
                 correct: 2,
-                rationale: "Rationale: Chest pain in the presence of cardiac risk factors (diabetes, hypertension, cholesterol) highlights the primary complaint requiring critical cardiac evaluation."
+                rationale: "Rationale: Chest pain in the presence of cardiac risk factors highlights the primary complaint requiring critical cardiac evaluation."
             },
             {
                 title: "Question 8 — Burn Priorities",
@@ -308,7 +315,7 @@
                     "Obtain burn history"
                 ],
                 correct: 2,
-                rationale: "Rationale: Inhalation signs (soot, hoarseness, singed hairs) dictate airway and oxygenation as the absolute priority."
+                rationale: "Rationale: Inhalation signs dictate airway and oxygenation as the absolute priority."
             },
             {
                 title: "Question 9 — Geriatric Trauma",
@@ -320,7 +327,7 @@
                     "Focus on determining why the patient fell"
                 ],
                 correct: 1,
-                rationale: "Rationale: Anticoagulant use combined with altered mental status and vomiting strongly indicates occult intracranial hemorrhage, requiring mandatory transport."
+                rationale: "Rationale: Anticoagulant use combined with altered mental status and vomiting strongly indicates occult intracranial hemorrhage."
             },
             {
                 title: "Question 10 — Medication Decision",
@@ -332,7 +339,7 @@
                     "Wait until respiratory distress becomes severe"
                 ],
                 correct: 0,
-                rationale: "Rationale: Always verify the right patient, medication, dose, route, and expiration date according to local protocol before assistance."
+                rationale: "Rationale: Always verify right patient, medication, dose, route, and expiration date before assistance."
             },
             {
                 title: "Question 11 — OB/GYN Priority",
@@ -344,11 +351,11 @@
                     "Obtain a complete medical history"
                 ],
                 correct: 1,
-                rationale: "Rationale: Crowning indicates imminent delivery; transport must be delayed to manage the delivery safely on scene."
+                rationale: "Rationale: Crowning indicates imminent delivery; transport must be delayed to manage delivery safely on scene."
             },
             {
                 title: "Question 12 — Multiple-Casualty Incident Priority",
-                question: "You arrive at a multiple-casualty incident. Which patient should receive care FIRST?\n\nPatient A:\n• Broken wrist\n• Alert\n• Walking\n\nPatient B:\n• Deep leg laceration\n• Blood rapidly pooling on the ground\n• Weak radial pulse\n\nPatient C:\n• Chest pain\n• Alert\n• Skin warm and dry\n\nPatient D:\n• Respiratory distress\n• Cyanotic lips\n• Respiratory rate 34/min\n\nWho should you treat first?",
+                question: "You arrive at a multiple-casualty incident. Which patient should receive care FIRST?\n\n• Patient A: Broken wrist, alert, walking\n• Patient B: Deep leg laceration, blood rapidly pooling, weak radial pulse\n• Patient C: Chest pain, alert, skin warm/dry\n• Patient D: Respiratory distress, cyanotic lips, RR 34/min",
                 options: [
                     "Patient A",
                     "Patient B",
@@ -356,7 +363,7 @@
                     "Patient D"
                 ],
                 correct: 1,
-                rationale: "Rationale:\nPatient B has uncontrolled hemorrhage, an immediate life threat. Severe bleeding should be controlled immediately, even before completing the rest of the ABC assessment."
+                rationale: "Rationale: Patient B has uncontrolled hemorrhage, an immediate life threat requiring immediate control."
             },
             {
                 title: "Question 13 — Reassessment",
@@ -368,7 +375,7 @@
                     "Wait until arrival at the hospital"
                 ],
                 correct: 1,
-                rationale: "Rationale: Continuous or periodic reassessment is essential to evaluate the effectiveness of interventions and detect clinical changes."
+                rationale: "Rationale: Continuous or periodic reassessment is essential to evaluate intervention effectiveness."
             },
             {
                 title: "Question 14 — Altered Mental Status",
@@ -392,7 +399,7 @@
                     "Wait until symptoms worsen"
                 ],
                 correct: 1,
-                rationale: "Rationale: EMTs must operate strictly within their scope of practice and never administer unprescribed medications or another person's prescription."
+                rationale: "Rationale: EMTs must operate strictly within their scope of practice and never administer unprescribed medications."
             },
             {
                 title: "Question 16 — Trauma Mechanism",
@@ -416,7 +423,7 @@
                     "Mild coughing"
                 ],
                 correct: 2,
-                rationale: "Rationale: As a patient tires, respirations slow dangerously and mental status declines, marking impending respiratory arrest."
+                rationale: "Rationale: As a patient tires, respirations slow dangerously and mental status declines."
             },
             {
                 title: "Question 18 — Choosing Between Two Good Answers",
@@ -428,7 +435,7 @@
                     "Either is equally appropriate"
                 ],
                 correct: 1,
-                rationale: "Rationale: Treatment priorities and preparation for transport come before completing detailed routine assessments when systemic life threats are suspected."
+                rationale: "Rationale: Treatment priorities and preparation for transport come before completing detailed routine assessments."
             },
             {
                 title: "Question 19 — Progressive Change",
@@ -538,13 +545,13 @@
         }
 
         function showFinalScore() {
-            const card = document.querySelector('.card');
+            const cardBody = document.querySelector('.card-body');
             const percentage = Math.round((score / quizData.length) * 100);
-            card.innerHTML = `
-                <div style="text-align: center; padding: 40px 20px;">
-                    <h2 style="font-size: 1.5rem; color: #0f172a; margin-bottom: 12px;">Quiz Complete!</h2>
-                    <p style="font-size: 1.1rem; color: #475569; margin-bottom: 16px;">Final Score: <strong>${score}</strong> / <strong>${quizData.length}</strong> (${percentage}%)</p>
-                    <p style="font-size: 0.9rem; color: #64748b; margin-bottom: 24px; line-height: 1.5;">You have completed the advanced NREMT-style practice questions focused on clinical judgment, prioritization, and critical decision-making under uncertainty.</p>
+            cardBody.innerHTML = `
+                <div style="text-align: center; padding: 20px 10px;">
+                    <h2 style="font-size: 1.3rem; color: #0f172a; margin-bottom: 8px;">Quiz Complete!</h2>
+                    <p style="font-size: 1rem; color: #475569; margin-bottom: 12px;">Final Score: <strong>${score}</strong> / <strong>${quizData.length}</strong> (${percentage}%)</p>
+                    <p style="font-size: 0.85rem; color: #64748b; margin-bottom: 20px; line-height: 1.4;">You have completed the advanced NREMT-style practice questions focused on clinical judgment and prioritization.</p>
                     <button class="nav-btn" onclick="resetQuiz()">Restart Quiz</button>
                 </div>
             `;
@@ -555,8 +562,8 @@
             currentIndex = 0;
             score = 0;
             document.getElementById('score-display').innerText = `Score: 0`;
-            const card = document.querySelector('.card');
-            card.innerHTML = `
+            const cardBody = document.querySelector('.card-body');
+            cardBody.innerHTML = `
                 <div class="quiz-header-row">
                     <div class="stage-badge" id="stage-badge">Question 1 of 20</div>
                     <div class="score-badge" id="score-display">Score: 0</div>
