@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NREMT Progressive Case Studies - Lesson 12</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        .fade-in { animation: fadeIn 0.3s ease-in; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body class="bg-slate-50 min-h-screen flex flex-col items-center py-8 px-4">
+
+    <div class="max-w-2xl w-full bg-white rounded-xl shadow-lg overflow-hidden border border-slate-200">
+        <!-- Header -->
+        <div class="bg-teal-700 p-6 text-white text-center">
+            <h1 class="text-2xl font-bold">Progressive Scenario Practice</h1>
+            <p class="text-teal-100 text-sm mt-1">Lesson 12: NREMT Trauma & Medical Case Studies</p>
+        </div>
+
+        <!-- Progress Bar -->
+        <div class="w-full bg-slate-200 h-2">
+            <div id="progress" class="bg-teal-500 h-2 transition-all duration-500" style="width: 0%"></div>
+        </div>
+
+        <div id="quiz-container" class="p-6">
+            <!-- Question Section -->
+            <div id="question-box" class="fade-in">
+                
+                <!-- Metadata Header -->
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4">
+                    <span id="scenario-title" class="text-xs font-bold text-teal-800 bg-teal-50 px-2 py-1 rounded border border-teal-200">
+                        Scenario 1
+                    </span>
+                    <div class="flex items-center gap-3">
+                        <span id="phase-badge" class="text-xs font-bold text-slate-600 bg-slate-100 px-2 py-1 rounded border border-slate-200">
+                            Phase 1
+                        </span>
+                        <span id="question-number" class="text-xs font-bold text-slate-500 uppercase tracking-wider">
+                            Question 1 of 10
+                        </span>
+                        <span id="score-display" class="text-xs font-bold text-teal-700 bg-teal-50 px-2 py-1 rounded border border-teal-200">
+                            Score: 0
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Scenario Info Card -->
+                <div id="info-card" class="mb-5 p-4 bg-slate-50 rounded-lg border border-slate-200 text-sm text-slate-700 space-y-2">
+                    <!-- Context injected here -->
+                </div>
+
+                <!-- Question Prompt -->
+                <h2 id="question-text" class="text-lg font-semibold text-slate-800 mb-6 leading-snug">
+                    Loading question...
+                </h2>
+
+                <!-- Options -->
+                <div id="options" class="space-y-3">
+                    <!-- Options injected here -->
+                </div>
+
+                <!-- Submit Button for Select All That Apply -->
+                <button id="submit-multi-btn" class="mt-4 w-full bg-teal-600 hover:bg-teal-700 text-white font-bold py-3 px-6 rounded-lg transition-colors hidden shadow-md">
+                    Submit Answer
+                </button>
+
+                <!-- Feedback Section -->
+                <div id="feedback" class="mt-6 p-4 rounded-lg hidden border">
+                    <div class="flex items-center mb-2">
+                        <span id="feedback-icon" class="mr-2 font-bold"></span>
+                        <span id="feedback-status" class="font-bold text-sm uppercase"></span>
+                    </div>
+                    <p id="feedback-text" class="text-sm text-slate-600 italic"></p>
+                </div>
+
+                <!-- Navigation -->
+                <button id="next-btn" class="mt-8 w-full bg-teal-600 hover:bg-teal-700 text-white font-bold py-3 px-6 rounded-lg transition-colors hidden shadow-md">
+                    Next Question
+                </button>
+            </div>
+
+            <!-- Results Section (Hidden by default) -->
+            <div id="results-box" class="hidden text-center py-10 fade-in">
+                <div class="text-6xl mb-4">🚑</div>
+                <h2 class="text-3xl font-bold text-slate-800 mb-2">Case Studies Complete!</h2>
+                <p class="text-slate-500 mb-6">You've completed the Lesson 12 NREMT Case Studies.</p>
+                
+                <div class="inline-block p-8 bg-teal-50 rounded-2xl mb-8 border border-teal-100">
+                    <div id="final-score" class="text-5xl font-bold text-teal-700 mb-2">0/10</div>
+                    <div id="percentage" class="text-xl font-semibold text-teal-600">0%</div>
+                </div>
+
+                <div id="result-message" class="mb-8 px-4 text-slate-700 italic"></div>
+
+                <!-- Debrief Review Box -->
+                <div class="text-left bg-slate-50 border border-slate-200 rounded-xl p-5 mb-8">
+                    <h3 class="font-bold text-slate-800 text-base mb-3 border-b pb-2">Instructor Debrief Checklist</h3>
+                    <p class="text-xs text-slate-600 mb-3">Reflect on your clinical decision-making during these scenarios:</p>
+                    <ul class="list-disc list-inside text-xs text-slate-700 space-y-2">
+                        <li>How did mechanism of injury alter your trauma triage priority?</li>
+                        <li>What specific physical findings differentiated stable angina from myocardial infarction?</li>
+                        <li>When is spinal motion restriction indicated versus traditional full spine boards?</li>
+                        <li>How do compensatory mechanisms mask early hypovolemic shock?</li>
+                    </ul>
+                </div>
+                
+                <button onclick="location.reload()" class="bg-slate-800 hover:bg-slate-900 text-white font-bold py-3 px-8 rounded-lg transition-colors shadow-md">
+                    Try Case Studies Again
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const questions = [
+            // SCENARIO 1 - TRAUMA / SHOCK
+            {
+                scenario: "Scenario 1: Motor Vehicle Collision → Hypovolemic Shock",
+                patientContext: "<strong>Patient:</strong> 42-year-old male<br><strong>Dispatch:</strong> High-speed motor vehicle collision.<br><strong>Scene Info:</strong> Driver side impact with significant intrusion. Airbags deployed. Patient is restrained, complaining of severe left chest and abdominal pain.",
+                phase: "Phase 1: Scene Size-Up",
+                q: "1. What is the immediate priority during this scene size-up?",
+                type: "single",
+                options: [
+                    "Obtain a detailed medical history",
+                    "Ensure scene safety and consider specialized extrication resources",
+                    "Begin secondary physical exam inside the vehicle",
+                    "Administer sublingual nitroglycerin"
+                ],
+                answer: 1, // B
+                explanation: "Scene safety, evaluating structural hazards from a severe MVC, and requesting appropriate rescue resources take precedence before patient contact."
+            },
+            {
+                scenario: "Scenario 1: Motor Vehicle Collision → Hypovolemic Shock",
+                patientContext: "<strong>Assessment:</strong> HR: 124 bpm | BP: 98/68 mmHg | RR: 24/min | Skin: Cool, pale, clammy | Mental Status: Alert but restless",
+                phase: "Phase 2: Primary Assessment",
+                q: "2. Which physiological sign strongly suggests early compensatory shock?",
+                type: "single",
+                options: [
+                    "Bradycardia and warm skin",
+                    "Tachycardia and cool, clammy skin",
+                    "Hypertension and slow breathing",
+                    "Normal pulse and flushed skin"
+                ],
+                answer: 1, // B
+                explanation: "Sympathetic nervous system activation triggers vasoconstriction (cool, clammy skin) and an increased heart rate (tachycardia) to compensate for blood loss."
+            },
+            {
+                scenario: "Scenario 1: Motor Vehicle Collision → Hypovolemic Shock",
+                patientContext: "<strong>New Information:</strong> Breath sounds are clear bilaterally, but abdomen is rigid and tender in the upper left quadrant. Pelvis is stable.",
+                phase: "Phase 3: Treatment & Management",
+                q: "3. What is the most critical transport and treatment decision for this trauma patient?",
+                type: "single",
+                options: [
+                    "Treat on scene until vital signs completely normalize",
+                    "Rapid packaging and immediate transport to a trauma center",
+                    "Perform a complete head-to-toe detailed physical exam on scene",
+                    "Delay transport to wait for specialized physician rendezvous"
+                ],
+                answer: 1, // B
+                explanation: "Patients with potential internal hemorrhage and signs of shock require rapid packaging and immediate transport ('platinum ten minutes') to a surgical facility."
+            },
+            {
+                scenario: "Scenario 1: Motor Vehicle Collision → Hypovolemic Shock",
+                patientContext: "<strong>En Route Reassessment:</strong> BP drops to 82/50 mmHg, HR increases to 138 bpm, patient becomes lethargic and confused.",
+                phase: "Phase 4: Transport & Reassessment",
+                q: "4. What do these changing vital signs indicate?",
+                type: "single",
+                options: [
+                    "Successful compensation and stability",
+                    "Progression from compensated shock to decompensated shock",
+                    "Resolution of internal bleeding",
+                    "Normal physiological response to trauma stress"
+                ],
+                answer: 1, // B
+                explanation: "Falling blood pressure combined with worsening mental status indicates that the body's compensatory mechanisms have failed, entering decompensated shock."
+            },
+            {
+                scenario: "Scenario 1: Motor Vehicle Collision → Hypovolemic Shock",
+                patientContext: "<strong>Operations Focus:</strong> Arrival at the emergency department.",
+                phase: "Phase 5: Documentation & Handoff",
+                q: "5. When giving your verbal handoff report to the trauma team, what should be emphasized first?",
+                type: "single",
+                options: [
+                    "The patient's insurance details and home address",
+                    "Chief complaint, mechanism of injury, primary assessment findings, and vital sign trends",
+                    "Your personal theory on why the other driver crashed",
+                    "Detailed chronological history of childhood illnesses"
+                ],
+                answer: 1, // B
+                explanation: "An effective verbal handoff prioritizes immediate life threats, mechanism, objective vital sign trends, and treatments rendered."
+            },
+
+            // SCENARIO 2 - CARDIAC / MEDICAL
+            {
+                scenario: "Scenario 2: Cardiac Chest Pain → Acute Myocardial Infarction",
+                patientContext: "<strong>Patient:</strong> 58-year-old female<br><strong>Dispatch:</strong> Chest pain.<br><strong>Scene Info:</strong> Living room of private residence. Patient is sitting upright, clutching her chest, visibly distressed and sweating profusely.",
+                phase: "Phase 1: Scene Size-Up",
+                q: "6. During the scene size-up for this medical patient, you should:",
+                type: "single",
+                options: [
+                    "Immediately apply a full spinal immobilization board",
+                    "Verify scene safety and identify the nature of illness as medical chest pain",
+                    "Begin chest compressions immediately",
+                    "Search the kitchen for sharp objects"
+                ],
+                answer: 1, // B
+                explanation: "Ensuring safety and recognizing a medical nature of illness allows you to tailor your entry and immediate life-saving medical workflow."
+            },
+            {
+                scenario: "Scenario 2: Cardiac Chest Pain → Acute Myocardial Infarction",
+                patientContext: "<strong>Assessment:</strong> Pain described as 'heavy pressure like an elephant sitting on my chest,' radiating to the jaw and left arm. Onset 45 minutes ago while resting. SpO₂: 96% on room air. BP: 142/86 mmHg | HR: 88 bpm.",
+                phase: "Phase 2: Primary & Secondary Assessment",
+                q: "7. Using OPQRST, which question best addresses the 'Quality' of the pain?",
+                type: "single",
+                options: [
+                    "\"What were you doing when the pain started?\"",
+                    "\"Can you describe what the pain feels like?\"",
+                    "\"Does the pain travel anywhere else?\"",
+                    "\"How long has this pain been happening?\""
+                ],
+                answer: 1, // B
+                explanation: "OPQRST 'Quality' explores descriptive words used by the patient (e.g., crushing, pressure, sharp, dull)."
+            },
+            {
+                scenario: "Scenario 2: Cardiac Chest Pain → Acute Myocardial Infarction",
+                patientContext: "<strong>Medical History:</strong> Hypertension, previous myocardial infarction. Prescribed Aspirin and Nitroglycerin.<br><strong>Vitals check:</strong> BP is 138/84 mmHg. Patient is alert.",
+                phase: "Phase 3: Treatment & Medication",
+                q: "8. What pre-hospital interventions are standard for suspected cardiac chest pain, assuming local protocols and vitals permit?",
+                type: "single",
+                options: [
+                    "Administer oral glucose and high-dose insulin",
+                    "Administer aspirin and evaluate for nitroglycerin assistance",
+                    "Apply rigid cervical collar and traction splint",
+                    "Give immediate large-volume IV fluid boluses"
+                ],
+                answer: 1, // B
+                explanation: "Aspirin (antiplatelet) and assisting with prescribed nitroglycerin (vasodilator, if BP permits) are standard core interventions for suspected cardiac ischemia."
+            },
+            {
+                scenario: "Scenario 2: Cardiac Chest Pain → Acute Myocardial Infarction",
+                patientContext: "<strong>New Information:</strong> After administering aspirin, the patient states the pain intensity has gone from an 8/10 down to a 3/10 during transport.",
+                phase: "Phase 4: Transport & Reassessment",
+                q: "9. How frequently should vital signs be reassessed during transport for an unstable or potentially unstable cardiac patient?",
+                type: "single",
+                options: [
+                    "Only once upon arrival at the hospital",
+                    "Every 5 minutes",
+                    "Every 30 minutes",
+                    "Only if the patient asks"
+                ],
+                answer: 1, // B
+                explanation: "Unstable or high-risk patients, including those with active cardiac ischemia, require vital sign reassessments every 5 minutes."
+            },
+            {
+                scenario: "Scenario 2: Cardiac Chest Pain → Acute Myocardial Infarction",
+                patientContext: "<strong>Operations Focus:</strong> Interfacility preparation and hospital pre-notification.",
+                phase: "Phase 5: Documentation & Communication",
+                q: "10. Why is early hospital pre-notification (such as a cardiac alert / STEMI alert) critical?",
+                type: "single",
+                options: [
+                    "It ensures the hospital billing department is ready",
+                    "It allows the catheterization lab team to mobilize prior to patient arrival",
+                    "It replaces the need to write a patient care report",
+                    "It stops all other emergency traffic in the emergency department"
+                ],
+                answer: 1, // B
+                explanation: "Early notification cuts down door-to-balloon times by enabling the cardiac cath lab team to assemble before the ambulance doors open."
+            }
+        ];
+
+        let currentQuestion = 0;
+        let score = 0;
+        let selectedOptions = [];
+
+        const scenarioTitle = document.getElementById('scenario-title');
+        const phaseBadge = document.getElementById('phase-badge');
+        const infoCard = document.getElementById('info-card');
+        const questionText = document.getElementById('question-text');
+        const optionsContainer = document.getElementById('options');
+        const questionNumber = document.getElementById('question-number');
+        const scoreDisplay = document.getElementById('score-display');
+        const feedback = document.getElementById('feedback');
+        const feedbackText = document.getElementById('feedback-text');
+        const feedbackStatus = document.getElementById('feedback-status');
+        const feedbackIcon = document.getElementById('feedback-icon');
+        const nextBtn = document.getElementById('next-btn');
+        const submitMultiBtn = document.getElementById('submit-multi-btn');
+        const progressBar = document.getElementById('progress');
+
+        function loadQuestion() {
+            selectedOptions = [];
+            const q = questions[currentQuestion];
+            
+            // Reset UI
+            feedback.classList.add('hidden');
+            nextBtn.classList.add('hidden');
+            submitMultiBtn.classList.add('hidden');
+            optionsContainer.innerHTML = '';
+            
+            // Set Headers & Context
+            scenarioTitle.innerText = q.scenario.split(':')[0];
+            phaseBadge.innerText = q.phase;
+            questionNumber.innerText = `Question ${currentQuestion + 1} of ${questions.length}`;
+            infoCard.innerHTML = q.patientContext;
+            
+            let typeLabel = q.type === 'multi' ? ' <span class="text-xs font-bold text-teal-600 uppercase block mt-1">(Select all that apply)</span>' : '';
+            questionText.innerHTML = q.q + typeLabel;
+            
+            progressBar.style.width = `${((currentQuestion) / questions.length) * 100}%`;
+
+            // Create Options
+            if (q.type === 'single') {
+                q.options.forEach((opt, index) => {
+                    const btn = document.createElement('button');
+                    btn.className = "w-full text-left p-4 rounded-lg border-2 border-slate-200 hover:border-teal-300 hover:bg-teal-50 transition-all font-medium text-slate-700 flex items-start";
+                    btn.innerHTML = `<span class="bg-slate-100 text-slate-500 w-6 h-6 rounded-full inline-flex items-center justify-center mr-3 flex-shrink-0 text-xs font-bold">${String.fromCharCode(65 + index)}</span> <span>${opt}</span>`;
+                    btn.onclick = () => checkSingleAnswer(index, btn);
+                    optionsContainer.appendChild(btn);
+                });
+            } else {
+                // Multi-select
+                q.options.forEach((opt, index) => {
+                    const btn = document.createElement('button');
+                    btn.className = "w-full text-left p-4 rounded-lg border-2 border-slate-200 hover:border-teal-300 hover:bg-teal-50 transition-all font-medium text-slate-700 flex items-start";
+                    btn.innerHTML = `<span class="opt-checkbox bg-slate-100 text-slate-500 w-6 h-6 rounded inline-flex items-center justify-center mr-3 flex-shrink-0 text-xs font-bold border">${String.fromCharCode(65 + index)}</span> <span>${opt}</span>`;
+                    btn.onclick = () => toggleMultiSelect(index, btn);
+                    optionsContainer.appendChild(btn);
+                });
+                submitMultiBtn.classList.remove('hidden');
+            }
+        }
+
+        function checkSingleAnswer(selectedIndex, clickedBtn) {
+            const q = questions[currentQuestion];
+            const correct = q.answer;
+            const allBtns = optionsContainer.querySelectorAll('button');
+
+            allBtns.forEach(btn => btn.disabled = true);
+
+            if (selectedIndex === correct) {
+                score++;
+                scoreDisplay.innerText = `Score: ${score}`;
+                clickedBtn.classList.replace('border-slate-200', 'border-green-500');
+                clickedBtn.classList.add('bg-green-50');
+                showFeedback(true, q.explanation);
+            } else {
+                clickedBtn.classList.replace('border-slate-200', 'border-red-500');
+                clickedBtn.classList.add('bg-red-50');
+                allBtns[correct].classList.replace('border-slate-200', 'border-green-500');
+                allBtns[correct].classList.add('bg-green-50');
+                showFeedback(false, q.explanation);
+            }
+
+            nextBtn.classList.remove('hidden');
+            if (currentQuestion === questions.length - 1) {
+                nextBtn.innerText = "See Results";
+            }
+        }
+
+        function toggleMultiSelect(index, btn) {
+            const checkSpan = btn.querySelector('.opt-checkbox');
+            if (selectedOptions.includes(index)) {
+                selectedOptions = selectedOptions.filter(i => i !== index);
+                btn.classList.remove('border-teal-500', 'bg-teal-50');
+                btn.classList.add('border-slate-200');
+                checkSpan.classList.remove('bg-teal-600', 'text-white');
+                checkSpan.classList.add('bg-slate-100', 'text-slate-500');
+            } else {
+                selectedOptions.push(index);
+                btn.classList.add('border-teal-500', 'bg-teal-50');
+                btn.classList.remove('border-slate-200');
+                checkSpan.classList.add('bg-teal-600', 'text-white');
+                checkSpan.classList.remove('bg-slate-100', 'text-slate-500');
+            }
+        }
+
+        submitMultiBtn.onclick = () => {
+            const q = questions[currentQuestion];
+            const correctAnswers = q.answer;
+            const allBtns = optionsContainer.querySelectorAll('button');
+
+            allBtns.forEach(btn => btn.disabled = true);
+            submitMultiBtn.classList.add('hidden');
+
+            const isCorrect = 
+                selectedOptions.length === correctAnswers.length &&
+                selectedOptions.every(val => correctAnswers.includes(val));
+
+            allBtns.forEach((btn, index) => {
+                if (correctAnswers.includes(index)) {
+                    btn.classList.replace('border-slate-200', 'border-green-500');
+                    btn.classList.add('bg-green-50');
+                } else if (selectedOptions.includes(index)) {
+                    btn.classList.replace('border-slate-200', 'border-red-500');
+                    btn.classList.add('bg-red-50');
+                }
+            });
+
+            if (isCorrect) {
+                score++;
+                scoreDisplay.innerText = `Score: ${score}`;
+                showFeedback(true, q.explanation);
+            } else {
+                showFeedback(false, q.explanation);
+            }
+
+            nextBtn.classList.remove('hidden');
+            if (currentQuestion === questions.length - 1) {
+                nextBtn.innerText = "See Results";
+            }
+        };
+
+        function showFeedback(isCorrect, explanationText) {
+            feedback.classList.remove('hidden', 'bg-green-50', 'bg-red-50', 'border-green-200', 'border-red-200');
+            if (isCorrect) {
+                feedback.classList.add('bg-green-50', 'border-green-200');
+                feedbackIcon.innerText = "✅";
+                feedbackIcon.className = "mr-2 text-green-600";
+                feedbackStatus.innerText = "Correct!";
+                feedbackStatus.className = "font-bold text-sm uppercase text-green-700";
+            } else {
+                feedback.classList.add('bg-red-50', 'border-red-200');
+                feedbackIcon.innerText = "❌";
+                feedbackIcon.className = "mr-2 text-red-600";
+                feedbackStatus.innerText = "Incorrect";
+                feedbackStatus.className = "font-bold text-sm uppercase text-red-700";
+            }
+            feedbackText.innerText = explanationText;
+        }
+
+        nextBtn.onclick = () => {
+            currentQuestion++;
+            if (currentQuestion < questions.length) {
+                loadQuestion();
+            } else {
+                showResults();
+            }
+        };
+
+        function showResults() {
+            document.getElementById('question-box').classList.add('hidden');
+            document.getElementById('results-box').classList.remove('hidden');
+            progressBar.style.width = '100%';
+
+            document.getElementById('final-score').innerText = `${score}/${questions.length}`;
+            const percentage = Math.round((score / questions.length) * 100);
+            document.getElementById('percentage').innerText = `${percentage}%`;
+
+            const messageBox = document.getElementById('result-message');
+            if (percentage >= 80) {
+                messageBox.innerHTML = "🎉 <strong>Outstanding clinical judgment!</strong> You successfully managed complex trauma shock dynamics and acute coronary syndromes following NREMT standards.";
+            } else if (percentage >= 60) {
+                messageBox.innerHTML = "👍 <strong>Good job!</strong> You have a solid grasp of trauma triage and medical assessments, but review shock progression and cardiac management guidelines to strengthen your skills.";
+            } else {
+                messageBox.innerHTML = "📚 <strong>Keep studying!</strong> Focus closely on primary assessments, recognizing compensatory versus decompensated shock, and managing pre-hospital cardiac protocols.";
+            }
+        }
+
+        // Initialize First Question
+        loadQuestion();
+    </script>
+</body>
+</html>
