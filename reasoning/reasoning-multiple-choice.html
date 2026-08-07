@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lesson 14: Advanced NREMT-Style Practice Questions</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: #f4f6f9;
+            color: #333;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        header {
+            background-color: #f97316;
+            color: white;
+            padding: 8px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            flex-shrink: 0;
+        }
+        header h1 {
+            font-size: 1.05rem;
+            font-weight: 600;
+        }
+        .progress-indicator {
+            font-size: 0.85rem;
+            font-weight: 500;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 3px 8px;
+            border-radius: 12px;
+        }
+        main {
+            flex: 1;
+            max-width: 780px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 10px 14px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            overflow: hidden;
+        }
+        .card {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            padding: 14px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            overflow-y: auto;
+        }
+        .stage-badge {
+            display: inline-block;
+            background: #fff7ed;
+            color: #c2410c;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            padding: 2px 8px;
+            border-radius: 4px;
+            margin-bottom: 6px;
+            border: 1px solid #fed7aa;
+        }
+        .scenario-text {
+            font-size: 0.86rem;
+            color: #1f2937;
+            background: #f8fafc;
+            border-left: 3px solid #cbd5e1;
+            padding: 8px 12px;
+            border-radius: 0 6px 6px 0;
+            margin-bottom: 10px;
+            line-height: 1.35;
+            white-space: pre-line;
+        }
+        .question-text {
+            font-size: 0.88rem;
+            font-weight: 600;
+            color: #0f172a;
+            margin-bottom: 8px;
+            line-height: 1.3;
+        }
+        .options-list {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            margin-bottom: 10px;
+        }
+        .option-btn {
+            background: #f8fafc;
+            border: 1.5px solid #e2e8f0;
+            padding: 7px 10px;
+            border-radius: 6px;
+            text-align: left;
+            font-size: 0.82rem;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            color: #334155;
+            line-height: 1.25;
+        }
+        .option-btn:hover:not(:disabled) {
+            background: #fff7ed;
+            border-color: #fdba74;
+        }
+        .option-btn.correct {
+            background: #f0fdf4 !important;
+            border-color: #22c55e !important;
+            color: #166534 !important;
+        }
+        .option-btn.incorrect {
+            background: #fef2f2 !important;
+            border-color: #ef4444 !important;
+            color: #991b1b !important;
+        }
+        .rationale-box {
+            background: #fff7ed;
+            border-left: 3.5px solid #f97316;
+            padding: 8px 10px;
+            border-radius: 0 6px 6px 0;
+            font-size: 0.8rem;
+            color: #9a3412;
+            margin-bottom: 10px;
+            display: none;
+            line-height: 1.3;
+            white-space: pre-line;
+        }
+        .rationale-box.visible {
+            display: block;
+        }
+        .footer-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 1px solid #f1f5f9;
+            padding-top: 8px;
+            flex-shrink: 0;
+        }
+        .nav-btn {
+            background: #f97316;
+            color: white;
+            border: none;
+            padding: 5px 12px;
+            font-size: 0.82rem;
+            font-weight: 500;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background 0.15s;
+        }
+        .nav-btn:hover {
+            background: #ea580c;
+        }
+        .nav-btn:disabled {
+            background: #cbd5e1;
+            cursor: not-allowed;
+        }
+        .score-display {
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: #475569;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Lesson 14: Advanced NREMT Practice</h1>
+        <div class="progress-indicator" id="progress-indicator">Question 1 of 20</div>
+    </header>
+
+    <main>
+        <div class="card">
+            <div>
+                <div class="stage-badge" id="stage-badge">Question 1</div>
+                <div class="scenario-text" id="scenario-text">Loading scenario...</div>
+                <div class="question-text" id="question-text">Loading question...</div>
+                <div class="options-list" id="options-list"></div>
+                <div class="rationale-box" id="rationale-box"></div>
+            </div>
+            
+            <div class="footer-nav">
+                <div class="score-display" id="score-display">Score: 0 / 0</div>
+                <button class="nav-btn" id="next-btn" onclick="nextQuestion()" disabled>Next Question</button>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        const quizData = [
+            {
+                title: "Question 1 — Respiratory Failure Progression",
+                scenario: "You are treating a 58-year-old male with a history of COPD. He is sitting upright and struggling to breathe.\nInitial findings:\n• RR: 32/min\n• SpO₂: 86%\n• HR: 112\n• Speaking in short sentences\n\nYou administer oxygen. Five minutes later, the patient becomes tired and less responsive.\nFindings:\n• RR: 8/min\n• Shallow respirations\n• SpO₂: 84%",
+                question: "What is the MOST appropriate next action?",
+                options: [
+                    "A. Increase oxygen flow rate and reassess in 10 minutes",
+                    "B. Assist ventilations with a bag-valve mask",
+                    "C. Obtain a complete SAMPLE history",
+                    "D. Administer the patient's prescribed inhaler"
+                ],
+                correct: 1,
+                rationale: "Rationale: The patient has progressed from respiratory distress to respiratory failure. Oxygen alone will not correct inadequate ventilation.\n\nDistractors:\n• A is appropriate for hypoxia but not respiratory failure.\n• C is important but delayed.\n• D may help bronchospasm but does not fix inadequate breathing."
+            },
+            {
+                title: "Question 2 — Trauma Priority",
+                scenario: "You arrive at a motorcycle crash.\nA 26-year-old male is lying on the ground.\nFindings:\n• Open femur fracture\n• Severe pain\n• Respirations 24/min\n• Skin cool and pale\n• Weak radial pulse",
+                question: "What should you do FIRST?",
+                options: [
+                    "A. Apply a traction splint",
+                    "B. Control bleeding and treat for shock",
+                    "C. Perform a detailed assessment of the leg injury",
+                    "D. Administer pain medication if available"
+                ],
+                correct: 1,
+                rationale: "Rationale: The femur injury is significant, but signs of shock indicate a more immediate threat."
+            },
+            {
+                title: "Question 3 — Airway vs History",
+                scenario: "A 44-year-old female presents with an allergic reaction.\nFindings:\n• Facial swelling\n• Difficulty swallowing\n• Hoarse voice\n• Rash on chest\n\nThe patient says: 'I have never had allergies before.'",
+                question: "What should you do FIRST?",
+                options: [
+                    "A. Determine what caused the allergic reaction",
+                    "B. Obtain a complete medication history",
+                    "C. Assess airway and prepare appropriate treatment",
+                    "D. Document the patient's allergy history"
+                ],
+                correct: 2,
+                rationale: "Rationale: The airway symptoms indicate possible airway compromise."
+            },
+            {
+                title: "Question 4 — Compensated Shock",
+                scenario: "A patient involved in a car crash has:\n• HR: 118\n• BP: 118/76\n• RR: 24\n• Pale, cool skin\n• Anxiety",
+                question: "Which statement is MOST accurate?",
+                options: [
+                    "A. The patient is stable because blood pressure is normal",
+                    "B. The patient is showing signs of compensated shock",
+                    "C. The patient is experiencing only emotional stress",
+                    "D. The patient does not require rapid transport"
+                ],
+                correct: 1,
+                rationale: "Rationale: Blood pressure may remain normal during early shock."
+            },
+            {
+                title: "Question 5 — Pediatric Airway",
+                scenario: "A 5-year-old child has:\n• Fever\n• Drooling\n• Stridor\n• Sitting forward\n• Refusing to lie down",
+                question: "What is the BEST action?",
+                options: [
+                    "A. Use a tongue depressor to inspect the throat",
+                    "B. Keep the child calm and provide oxygen",
+                    "C. Place the child supine for assessment",
+                    "D. Obtain a complete SAMPLE history first"
+                ],
+                correct: 1,
+                rationale: "Rationale: Agitating the child may worsen airway obstruction."
+            },
+            {
+                title: "Question 6 — Stroke Recognition",
+                scenario: "A 73-year-old male suddenly develops:\n• Right-sided weakness\n• Slurred speech\n• Facial droop\n• Blood glucose: 104 mg/dL",
+                question: "What should you do?",
+                options: [
+                    "A. Administer oral glucose",
+                    "B. Perform a rapid stroke assessment and transport",
+                    "C. Wait to see if symptoms resolve",
+                    "D. Give aspirin if chest pain develops"
+                ],
+                correct: 1,
+                rationale: "Rationale: Sudden neurological deficits warrant rapid stroke assessment and transport after ruling out hypoglycemia."
+            },
+            {
+                title: "Question 7 — Distractor Identification",
+                scenario: "A patient complains of chest pain.\nMedical history: Diabetes, hypertension, arthritis, high cholesterol.\nVital signs:\n• BP: 132/84\n• HR: 96\n• RR: 18",
+                question: "Which finding is MOST important?",
+                options: [
+                    "A. History of arthritis",
+                    "B. Normal blood pressure",
+                    "C. Chest pain with cardiac risk factors",
+                    "D. Patient's age"
+                ],
+                correct: 2,
+                rationale: "Rationale: Chest pain in the presence of cardiac risk factors (diabetes, hypertension, cholesterol) highlights the primary complaint requiring critical cardiac evaluation."
+            },
+            {
+                title: "Question 8 — Burn Priorities",
+                scenario: "You respond to a house fire.\nPatient findings:\n• Burns to arms and chest\n• Soot around mouth\n• Hoarse voice\n• Singed nasal hair",
+                question: "What is your priority?",
+                options: [
+                    "A. Calculate total body surface area burned",
+                    "B. Cover burns with sterile dressings",
+                    "C. Assess airway and prepare oxygen therapy",
+                    "D. Obtain burn history"
+                ],
+                correct: 2,
+                rationale: "Rationale: Inhalation signs (soot, hoarseness, singed hairs) dictate airway and oxygenation as the absolute priority."
+            },
+            {
+                title: "Question 9 — Geriatric Trauma",
+                scenario: "An 84-year-old patient falls.\nThe patient says: 'I am fine. I do not want to go.'\nFindings:\n• Takes blood thinners\n• Increasing confusion\n• Vomiting",
+                question: "What is the MOST appropriate action?",
+                options: [
+                    "A. Respect the patient's wishes because there is no pain",
+                    "B. Suspect serious head injury and recommend transport",
+                    "C. Allow the patient to rest and reassess later",
+                    "D. Focus on determining why the patient fell"
+                ],
+                correct: 1,
+                rationale: "Rationale: Anticoagulant use combined with altered mental status and vomiting strongly indicates occult intracranial hemorrhage, requiring mandatory transport."
+            },
+            {
+                title: "Question 10 — Medication Decision",
+                scenario: "A patient with asthma is wheezing.\nThe patient has a prescribed inhaler.",
+                question: "Before assisting with the medication, you should:",
+                options: [
+                    "A. Confirm the medication belongs to the patient and follow protocol",
+                    "B. Give oxygen only because EMTs cannot assist medications",
+                    "C. Administer additional doses to ensure effectiveness",
+                    "D. Wait until respiratory distress becomes severe"
+                ],
+                correct: 0,
+                rationale: "Rationale: Always verify the right patient, medication, dose, route, and expiration date according to local protocol before assistance."
+            },
+            {
+                title: "Question 11 — OB/GYN Priority",
+                scenario: "A pregnant patient at 39 weeks says: 'The baby is coming.'\nAssessment:\n• Crowning visible",
+                question: "What should you do?",
+                options: [
+                    "A. Transport immediately before delivery occurs",
+                    "B. Prepare for delivery and provide support",
+                    "C. Attempt to delay delivery",
+                    "D. Obtain a complete medical history"
+                ],
+                correct: 1,
+                rationale: "Rationale: Crowning indicates imminent delivery; transport must be delayed to manage the delivery safely on scene."
+            },
+            {
+                title: "Question 12 — NREMT Priority Question",
+                scenario: "You arrive at a scene with four patients:\n• Patient A: Broken wrist, alert\n• Patient B: Severe bleeding from leg\n• Patient C: Chest pain\n• Patient D: Difficulty breathing with cyanosis",
+                question: "Who should receive attention FIRST?",
+                options: [
+                    "A. Patient A",
+                    "B. Patient B",
+                    "C. Patient C",
+                    "D. Patient D"
+                ],
+                correct: 3,
+                rationale: "Rationale: Airway/breathing threats (cyanosis and respiratory distress) generally take priority over circulation and extremity injuries."
+            },
+            {
+                title: "Question 13 — Reassessment",
+                scenario: "You have completed initial interventions and are currently monitoring your patient.",
+                question: "After treating a patient, the EMT should:",
+                options: [
+                    "A. Begin documentation immediately",
+                    "B. Reassess the patient and determine response",
+                    "C. Obtain a second SAMPLE history",
+                    "D. Wait until arrival at the hospital"
+                ],
+                correct: 1,
+                rationale: "Rationale: Continuous or periodic reassessment is essential to evaluate the effectiveness of interventions and detect clinical changes."
+            },
+            {
+                title: "Question 14 — Altered Mental Status",
+                scenario: "A diabetic patient is confused.\nFindings:\n• Blood glucose: 42 mg/dL\n• Patient can swallow\n• Patient follows commands",
+                question: "What is appropriate?",
+                options: [
+                    "A. Give oral glucose according to protocol",
+                    "B. Begin CPR",
+                    "C. Force fluids orally",
+                    "D. Delay treatment until family arrives"
+                ],
+                correct: 0,
+                rationale: "Rationale: Conscious hypoglycemic patients with a protected airway can safely receive oral glucose."
+            },
+            {
+                title: "Question 15 — Scope of Practice",
+                scenario: "A patient experiencing acute discomfort asks: 'Can you give me my friend's prescription medication?'",
+                question: "What should you do?",
+                options: [
+                    "A. Give the medication because symptoms are similar",
+                    "B. Refuse and provide appropriate care within EMT scope",
+                    "C. Give half the dose",
+                    "D. Wait until symptoms worsen"
+                ],
+                correct: 1,
+                rationale: "Rationale: EMTs must operate strictly within their scope of practice and never administer unprescribed medications or another person's prescription."
+            },
+            {
+                title: "Question 16 — Trauma Mechanism",
+                scenario: "A patient involved in a high-speed collision has no obvious external injuries.",
+                question: "Which statement is MOST accurate?",
+                options: [
+                    "A. The patient does not need assessment because there are no injuries",
+                    "B. Mechanism suggests possible hidden injuries",
+                    "C. The patient can refuse because they feel fine",
+                    "D. Only visible injuries require treatment"
+                ],
+                correct: 1,
+                rationale: "Rationale: High-energy mechanisms of injury can cause severe internal trauma despite a lack of external signs."
+            },
+            {
+                title: "Question 17 — Respiratory Assessment",
+                scenario: "A patient has been breathing rapidly due to acute respiratory distress.",
+                question: "Which finding indicates the patient may be failing?",
+                options: [
+                    "A. Anxiety",
+                    "B. Wheezing",
+                    "C. Decreasing respiratory rate with altered mental status",
+                    "D. Mild coughing"
+                ],
+                correct: 2,
+                rationale: "Rationale: As a patient tires, respirations slow dangerously and mental status declines, marking impending respiratory arrest."
+            },
+            {
+                title: "Question 18 — Choosing Between Two Good Answers",
+                scenario: "A patient with chest pain is pale and sweaty.\nPossible actions:\n• A. Obtain vital signs\n• B. Apply oxygen if indicated and prepare transport",
+                question: "Which is the better FIRST action?",
+                options: [
+                    "A. A",
+                    "B. B",
+                    "C. Both are incorrect",
+                    "D. Either is equally appropriate"
+                ],
+                correct: 1,
+                rationale: "Rationale: Treatment priorities and preparation for transport come before completing detailed routine assessments when systemic life threats are suspected."
+            },
+            {
+                title: "Question 19 — Progressive Change",
+                scenario: "A patient initially has an alert mental status and normal breathing. Ten minutes later, findings show:\n• Confused\n• Weak pulse\n• Rapid breathing",
+                question: "What changed?",
+                options: [
+                    "A. The patient's diagnosis",
+                    "B. The patient's priority level",
+                    "C. The need for assessment",
+                    "D. The patient's consent"
+                ],
+                correct: 1,
+                rationale: "Rationale: Clinical deterioration shifts the patient from stable/urgent to an immediate life-threat priority level."
+            },
+            {
+                title: "Question 20 — Final Clinical Judgment Challenge",
+                scenario: "You arrive for an unresponsive patient.\nFindings:\n• Airway open\n• Breathing shallow\n• Pulse present",
+                question: "What should you do?",
+                options: [
+                    "A. Obtain medical history",
+                    "B. Begin assisted ventilations",
+                    "C. Check blood pressure first",
+                    "D. Ask family what happened"
+                ],
+                correct: 1,
+                rationale: "Rationale: An unresponsive patient with shallow breathing requires immediate airway management and assisted ventilations."
+            }
+        ];
+
+        let currentIndex = 0;
+        let score = 0;
+        let answered = false;
+
+        function loadQuestion() {
+            answered = false;
+            const q = quizData[currentIndex];
+            
+            document.getElementById('stage-badge').innerText = `Question ${currentIndex + 1}`;
+            document.getElementById('progress-indicator').innerText = `Question ${currentIndex + 1} of ${quizData.length}`;
+            document.getElementById('scenario-text').innerText = q.scenario;
+            document.getElementById('question-text').innerText = q.question;
+            
+            const optionsList = document.getElementById('options-list');
+            optionsList.innerHTML = '';
+            
+            q.options.forEach((opt, idx) => {
+                const btn = document.createElement('button');
+                btn.className = 'option-btn';
+                btn.innerText = opt;
+                btn.onclick = () => selectOption(idx);
+                optionsList.appendChild(btn);
+            });
+
+            const rationaleBox = document.getElementById('rationale-box');
+            rationaleBox.innerText = '';
+            rationaleBox.classList.remove('visible');
+
+            const nextBtn = document.getElementById('next-btn');
+            nextBtn.disabled = true;
+            nextBtn.innerText = currentIndex === quizData.length - 1 ? "Finish Quiz" : "Next Question";
+        }
+
+        function selectOption(selectedIndex) {
+            if (answered) return;
+            answered = true;
+
+            const q = quizData[currentIndex];
+            const buttons = document.querySelectorAll('.option-btn');
+            
+            buttons.forEach((btn, idx) => {
+                btn.disabled = true;
+                if (idx === q.correct) {
+                    btn.classList.add('correct');
+                } else if (idx === selectedIndex) {
+                    btn.classList.add('incorrect');
+                }
+            });
+
+            if (selectedIndex === q.correct) {
+                score++;
+            }
+
+            document.getElementById('score-display').innerText = `Score: ${score} / ${currentIndex + 1}`;
+
+            const rationaleBox = document.getElementById('rationale-box');
+            rationaleBox.innerText = q.rationale;
+            rationaleBox.classList.add('visible');
+
+            document.getElementById('next-btn').disabled = false;
+        }
+
+        function nextQuestion() {
+            currentIndex++;
+            if (currentIndex < quizData.length) {
+                loadQuestion();
+            } else {
+                showFinalScore();
+            }
+        }
+
+        function showFinalScore() {
+            const card = document.querySelector('.card');
+            const percentage = Math.round((score / quizData.length) * 100);
+            card.innerHTML = `
+                <div style="text-align: center; margin: auto;">
+                    <h2 style="font-size: 1.3rem; color: #1f2937; margin-bottom: 6px;">Quiz Complete!</h2>
+                    <p style="font-size: 0.95rem; color: #475569; margin-bottom: 10px;">Final Score: <strong>${score}</strong> / <strong>${quizData.length}</strong> (${percentage}%)</p>
+                    <p style="font-size: 0.82rem; color: #64748b; margin-bottom: 14px; line-height: 1.3;">You have completed the advanced NREMT-style practice questions focused on clinical judgment, prioritization, and critical decision-making under uncertainty.</p>
+                    <button class="nav-btn" onclick="resetQuiz()">Restart Quiz</button>
+                </div>
+            `;
+            document.getElementById('progress-indicator').innerText = "Complete";
+        }
+
+        function resetQuiz() {
+            currentIndex = 0;
+            score = 0;
+            document.getElementById('score-display').innerText = `Score: 0 / 0`;
+            loadQuestion();
+        }
+
+        window.onload = loadQuestion;
+    </script>
+</body>
+</html>
