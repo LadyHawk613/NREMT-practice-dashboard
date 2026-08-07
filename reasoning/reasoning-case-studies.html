@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lesson 14: Integrated NREMT Clinical Judgment Simulations</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: #f4f6f9;
+            color: #333;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        header {
+            background-color: #f97316;
+            color: white;
+            padding: 8px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            flex-shrink: 0;
+        }
+        header h1 {
+            font-size: 1.05rem;
+            font-weight: 600;
+        }
+        .progress-indicator {
+            font-size: 0.85rem;
+            font-weight: 500;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 3px 8px;
+            border-radius: 12px;
+        }
+        main {
+            flex: 1;
+            max-width: 780px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 10px 14px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            overflow: hidden;
+        }
+        .card {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            padding: 14px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            overflow-y: auto;
+        }
+        .stage-badge {
+            display: inline-block;
+            background: #fff7ed;
+            color: #c2410c;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            padding: 2px 8px;
+            border-radius: 4px;
+            margin-bottom: 6px;
+            border: 1px solid #fed7aa;
+        }
+        .scenario-text {
+            font-size: 0.88rem;
+            color: #1f2937;
+            background: #f8fafc;
+            border-left: 3px solid #cbd5e1;
+            padding: 8px 12px;
+            border-radius: 0 6px 6px 0;
+            margin-bottom: 10px;
+            line-height: 1.35;
+            white-space: pre-line;
+        }
+        .question-text {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #0f172a;
+            margin-bottom: 8px;
+            line-height: 1.3;
+        }
+        .options-list {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            margin-bottom: 10px;
+        }
+        .option-btn {
+            background: #f8fafc;
+            border: 1.5px solid #e2e8f0;
+            padding: 7px 10px;
+            border-radius: 6px;
+            text-align: left;
+            font-size: 0.82rem;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            color: #334155;
+            line-height: 1.25;
+        }
+        .option-btn:hover:not(:disabled) {
+            background: #fff7ed;
+            border-color: #fdba74;
+        }
+        .option-btn.correct {
+            background: #f0fdf4 !important;
+            border-color: #22c55e !important;
+            color: #166534 !important;
+        }
+        .option-btn.incorrect {
+            background: #fef2f2 !important;
+            border-color: #ef4444 !important;
+            color: #991b1b !important;
+        }
+        .rationale-box {
+            background: #fff7ed;
+            border-left: 3.5px solid #f97316;
+            padding: 8px 10px;
+            border-radius: 0 6px 6px 0;
+            font-size: 0.8rem;
+            color: #9a3412;
+            margin-bottom: 10px;
+            display: none;
+            line-height: 1.3;
+        }
+        .rationale-box.visible {
+            display: block;
+        }
+        .footer-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 1px solid #f1f5f9;
+            padding-top: 8px;
+            flex-shrink: 0;
+        }
+        .nav-btn {
+            background: #f97316;
+            color: white;
+            border: none;
+            padding: 5px 12px;
+            font-size: 0.82rem;
+            font-weight: 500;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background 0.15s;
+        }
+        .nav-btn:hover {
+            background: #ea580c;
+        }
+        .nav-btn:disabled {
+            background: #cbd5e1;
+            cursor: not-allowed;
+        }
+        .score-display {
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: #475569;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Lesson 14: Clinical Judgment Simulations</h1>
+        <div class="progress-indicator" id="progress-indicator">Case 1 - Step 1</div>
+    </header>
+
+    <main>
+        <div class="card">
+            <div>
+                <div class="stage-badge" id="stage-badge">Case 1: Medical Emergency</div>
+                <div class="scenario-text" id="scenario-text">Loading scenario...</div>
+                <div class="question-text" id="question-text">Loading question...</div>
+                <div class="options-list" id="options-list"></div>
+                <div class="rationale-box" id="rationale-box"></div>
+            </div>
+            
+            <div class="footer-nav">
+                <div class="score-display" id="score-display">Score: 0 / 0</div>
+                <button class="nav-btn" id="next-btn" onclick="nextStep()" disabled>Next Step</button>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        const cases = [
+            // Case 1
+            {
+                title: "Case 1: Medical Emergency (Acute Respiratory Distress)",
+                steps: [
+                    {
+                        stage: "Information 1: Scene Size-Up",
+                        scenario: "Dispatch: You are dispatched for a 'person having trouble breathing.'\nYou arrive at a home and find a 67-year-old male sitting upright on the edge of his bed.\nScene is safe. Patient is alert, anxious, and using accessory muscles.\nPatient says: 'I can't catch my breath.'",
+                        question: "What is your FIRST priority?",
+                        options: [
+                            "A. Ask about past medical history",
+                            "B. Assess airway and breathing",
+                            "C. Obtain a complete set of vital signs",
+                            "D. Determine if the patient has COPD"
+                        ],
+                        correct: 1,
+                        rationale: "Discussion: C is important, D may be useful, and A may eventually be needed. However, B is the priority because breathing difficulty is an ABC problem."
+                    },
+                    {
+                        stage: "Information 2: Primary Assessment",
+                        scenario: "Findings:\n• Airway: open\n• Breathing: RR 34/min, shallow, audible wheezing\n• Circulation: HR 118, skin pale and sweaty\n• SpO₂: 88%",
+                        question: "What intervention should occur FIRST?",
+                        options: [
+                            "A. Apply oxygen",
+                            "B. Assist with prescribed inhaler",
+                            "C. Obtain SAMPLE history",
+                            "D. Transport immediately without intervention"
+                        ],
+                        correct: 0,
+                        rationale: "Best Answer: A. Discussion: B may be appropriate later, but oxygen addresses the immediate oxygenation problem."
+                    },
+                    {
+                        stage: "Information 3: Patient Deteriorates",
+                        scenario: "Five minutes later:\n• Patient becomes confused\n• Respiratory rate decreases to 10/min\n• Breathing becomes shallow\n• SpO₂ remains 88%",
+                        question: "What is the MOST appropriate next action?",
+                        options: [
+                            "A. Continue oxygen therapy",
+                            "B. Perform a more detailed lung assessment",
+                            "C. Assist ventilations with a BVM",
+                            "D. Ask about medications"
+                        ],
+                        correct: 2,
+                        rationale: "Best Answer: C. The patient has progressed from respiratory distress to respiratory failure. Clinical reasoning: Recognize respiratory distress transitioning to respiratory failure."
+                    }
+                ]
+            },
+            // Case 2
+            {
+                title: "Case 2: Trauma (Motor Vehicle Collision With Hidden Injury)",
+                steps: [
+                    {
+                        stage: "Information 1: Scene",
+                        scenario: "Dispatch: You respond to a two-car MVC. A 35-year-old male was the restrained driver. Vehicle damage is significant.\nFindings: Airbags deployed, windshield cracked. Patient walking around at scene.\nPatient states: 'I'm fine. I just want to go home.'",
+                        question: "What should concern you MOST?",
+                        options: [
+                            "A. Patient refusing care",
+                            "B. Patient walking after the crash",
+                            "C. Mechanism suggests possible internal injury",
+                            "D. Lack of obvious bleeding"
+                        ],
+                        correct: 2,
+                        rationale: "Best Answer: C. High-energy mechanisms require thorough assessment regardless of initial ambulatory status."
+                    },
+                    {
+                        stage: "Information 2: Assessment",
+                        scenario: "Patient reports:\n• Abdominal pain, dizziness\n• Vital signs: HR 112, BP 106/70, RR 22\n• Skin: Cool and pale",
+                        question: "Which finding is most significant?",
+                        options: [
+                            "A. Abdominal pain",
+                            "B. Tachycardia and poor skin signs",
+                            "C. Patient's anxiety",
+                            "D. Minor vehicle damage"
+                        ],
+                        correct: 1,
+                        rationale: "Best Answer: B. Tachycardia and pale/cool skin are early indicators of systemic hypoperfusion/shock."
+                    },
+                    {
+                        stage: "Information 3: Patient Changes",
+                        scenario: "During transport, patient becomes:\n• Confused\n• More pale\n• Weak radial pulse",
+                        question: "What should you suspect?",
+                        options: [
+                            "A. Pain reaction only",
+                            "B. Developing shock",
+                            "C. Anxiety attack",
+                            "D. Minor abdominal injury"
+                        ],
+                        correct: 1,
+                        rationale: "Best Answer: B. Clinical reasoning: A patient can appear stable initially but deteriorate as internal hemorrhage progresses."
+                    }
+                ]
+            },
+            // Case 3
+            {
+                title: "Case 3: Pediatric (Respiratory Distress in a Child)",
+                steps: [
+                    {
+                        stage: "Information 1: Scene & Approach",
+                        scenario: "Dispatch: You respond to a 4-year-old child with breathing difficulty.\nYou find: Child sitting upright, parent reports fever. Child refuses to lie down and appears anxious.",
+                        question: "What is the best approach?",
+                        options: [
+                            "A. Force the child to lie down for examination",
+                            "B. Keep child calm and assess airway",
+                            "C. Immediately inspect the throat",
+                            "D. Separate child from parent"
+                        ],
+                        correct: 1,
+                        rationale: "Best Answer: B. Minimizing agitation is vital in pediatric respiratory compromise to prevent total airway closure."
+                    },
+                    {
+                        stage: "Information 2: Assessment",
+                        scenario: "Assessment findings:\n• Drooling, stridor, increased effort breathing\n• Child cannot speak normally",
+                        question: "What is the priority?",
+                        options: [
+                            "A. Obtain temperature",
+                            "B. Provide oxygen and minimize agitation",
+                            "C. Ask about immunization history",
+                            "D. Obtain a detailed SAMPLE history"
+                        ],
+                        correct: 1,
+                        rationale: "Best Answer: B. Support oxygenation gently without forcing invasive or anxiety-inducing throat examinations."
+                    },
+                    {
+                        stage: "Information 3: Status Change",
+                        scenario: "Child becomes quieter and less responsive.",
+                        question: "What does this indicate?",
+                        options: [
+                            "A. Improvement",
+                            "B. Fatigue and possible respiratory failure",
+                            "C. Reduced anxiety",
+                            "D. Fever resolution"
+                        ],
+                        correct: 1,
+                        rationale: "Best Answer: B. Clinical reasoning: A quiet child is not always a better child; a tiring child may be entering respiratory failure."
+                    }
+                ]
+            },
+            // Case 4
+            {
+                title: "Case 4: Geriatric (Fall With Hidden Head Injury)",
+                steps: [
+                    {
+                        stage: "Information 1: Scene",
+                        scenario: "Dispatch: You respond to an 82-year-old female who fell at home.\nPatient states: 'مصادر I just slipped. I'm okay.' She denies pain.",
+                        question: "What should the EMT remember?",
+                        options: [
+                            "A. No pain means no injury",
+                            "B. Older adults may have serious injury with minimal symptoms",
+                            "C. Falls from standing are never serious",
+                            "D. Refusal should be encouraged"
+                        ],
+                        correct: 1,
+                        rationale: "Best Answer: B. Geriatric patients often mask severe underlying trauma or intracranial injury."
+                    },
+                    {
+                        stage: "Information 2: Additional Findings",
+                        scenario: "Additional findings:\n• Takes blood thinner medication\n• Increasing confusion\n• Vomiting once",
+                        question: "What is the greatest concern?",
+                        options: [
+                            "A. Dehydration",
+                            "B. Intracranial bleeding",
+                            "C. Minor concussion only",
+                            "D. Medication side effect"
+                        ],
+                        correct: 1,
+                        rationale: "Best Answer: B. Anticoagulant use combined with confusion and vomiting strongly points toward intracranial hemorrhage."
+                    },
+                    {
+                        stage: "Information 3: Deterioration",
+                        scenario: "Patient becomes difficult to arouse.",
+                        question: "What is your priority action?",
+                        options: [
+                            "A. Complete medication history",
+                            "B. Perform airway assessment and prepare rapid transport",
+                            "C. Ask family about past falls",
+                            "D. Allow patient to sleep"
+                        ],
+                        correct: 1,
+                        rationale: "Best Answer: B. Clinical reasoning: Age and medications change risk assessment, demanding immediate airway protection and transport."
+                    }
+                ]
+            },
+            // Case 5
+            {
+                title: "Case 5: OB/GYN (Complicated Delivery)",
+                steps: [
+                    {
+                        stage: "Information 1: Patient Presentation",
+                        scenario: "Dispatch: You respond to a pregnant patient in labor.\nPatient is 39 weeks pregnant with contractions every 2 minutes. States: 'The baby is coming.'",
+                        question: "What is your first priority?",
+                        options: [
+                            "A. Transport immediately",
+                            "B. Assess for imminent delivery",
+                            "C. Obtain full medical history",
+                            "D. Determine insurance information"
+                        ],
+                        correct: 1,
+                        rationale: "Best Answer: B. When delivery is imminent, preparing on scene is necessary instead of risking delivery during transport."
+                    },
+                    {
+                        stage: "Information 2: Visual Inspection",
+                        scenario: "You observe crowning is occurring.",
+                        question: "What should you do?",
+                        options: [
+                            "A. Prepare for delivery",
+                            "B. Attempt to stop the delivery",
+                            "C. Transport without assisting",
+                            "D. Push the baby's head back"
+                        ],
+                        correct: 0,
+                        rationale: "Best Answer: A. Support normal progression and prepare delivery equipment."
+                    },
+                    {
+                        stage: "Information 3: Field Complication",
+                        scenario: "The baby's head delivers. You see the umbilical cord wrapped around the neck.",
+                        question: "What should you do?",
+                        options: [
+                            "A. Gently attempt to slip cord over the head",
+                            "B. Pull on the cord",
+                            "C. Immediately clamp and cut",
+                            "D. Delay delivery"
+                        ],
+                        correct: 0,
+                        rationale: "Best Answer: A. Clinical reasoning: Gently try to slip the cord over the head; if too tight, clamp and cut. Never pull on the cord."
+                    }
+                ]
+            },
+            // Case 6
+            {
+                title: "Case 6: Multi-System CAT Challenge (Prioritization)",
+                steps: [
+                    {
+                        stage: "Information 1: Workplace Accident Scene",
+                        scenario: "Dispatch: You arrive at a workplace accident with three patients:\n• Patient A: Broken arm, alert, walking\n• Patient B: Chest pain, pale, sweaty\n• Patient C: Facial burns, hoarse voice, difficulty breathing",
+                        question: "Who should be treated FIRST?",
+                        options: [
+                            "A. Patient A",
+                            "B. Patient B",
+                            "C. Patient C",
+                            "D. Treat all equally"
+                        ],
+                        correct: 2,
+                        rationale: "Best Answer: C. Airway compromise and inhalation injury represent an immediate life threat."
+                    },
+                    {
+                        stage: "Information 2: Clinical Rationale",
+                        scenario: "Reviewing multi-patient triage priorities in a trauma/medical mixed scene.",
+                        question: "Why is Patient C your top priority?",
+                        options: [
+                            "A. Burns are always the worst injury",
+                            "B. Airway compromise is an immediate life threat",
+                            "C. Chest pain is not serious",
+                            "D. Broken bones cause shock"
+                        ],
+                        correct: 1,
+                        rationale: "Best Answer: B. ABCs dictate that airway issues take precedence over circulation (Patient B) and isolated extremity injuries (Patient A)."
+                    },
+                    {
+                        stage: "Information 3: Final Challenge Summary",
+                        scenario: "Instructor Goal for Lesson 14:\nThe NREMT is not asking: 'Do you know the disease?'\nIt is asking: 'Can you recognize what matters most right now and act safely?'",
+                        question: "What clinical judgment skill is most critical across all these cases?",
+                        options: [
+                            "A. Memorizing textbook disease definitions",
+                            "B. Prioritizing immediate life threats and adapting to patient changes",
+                            "C. Delaying care until diagnostic labs arrive",
+                            "D. Focusing solely on secondary injuries"
+                        ],
+                        correct: 1,
+                        rationale: "Best Answer: B. Recognizing what matters most right now and acting safely is the core of NREMT clinical judgment."
+                    }
+                ]
+            }
+        ];
+
+        let currentCaseIndex = 0;
+        let currentStepIndex = 0;
+        let score = 0;
+        let answered = false;
+        let totalStepsCount = 0;
+        let currentStepGlobalNumber = 1;
+
+        // Count total steps across all cases for progress calculation
+        cases.forEach(c => totalStepsCount += c.steps.length);
+
+        function loadStep() {
+            answered = false;
+            const cCase = cases[currentCaseIndex];
+            const step = cCase.steps[currentStepIndex];
+            
+            document.getElementById('stage-badge').innerText = cCase.title;
+            document.getElementById('progress-indicator').innerText = `Step ${currentStepGlobalNumber} of ${totalStepsCount}`;
+            document.getElementById('scenario-text').innerText = `${step.stage}\n\n${step.scenario}`;
+            document.getElementById('question-text').innerText = step.question;
+            
+            const optionsList = document.getElementById('options-list');
+            optionsList.innerHTML = '';
+            
+            step.options.forEach((opt, idx) => {
+                const btn = document.createElement('button');
+                btn.className = 'option-btn';
+                btn.innerText = opt;
+                btn.onclick = () => selectOption(idx);
+                optionsList.appendChild(btn);
+            });
+
+            const rationaleBox = document.getElementById('rationale-box');
+            rationaleBox.innerText = '';
+            rationaleBox.classList.remove('visible');
+
+            const nextBtn = document.getElementById('next-btn');
+            nextBtn.disabled = true;
+            nextBtn.innerText = (currentCaseIndex === cases.length - 1 && currentStepIndex === cCase.steps.length - 1) ? "Finish Simulations" : "Next Step";
+        }
+
+        function selectOption(selectedIndex) {
+            if (answered) return;
+            answered = true;
+
+            const step = cases[currentCaseIndex].steps[currentStepIndex];
+            const buttons = document.querySelectorAll('.option-btn');
+            
+            buttons.forEach((btn, idx) => {
+                btn.disabled = true;
+                if (idx === step.correct) {
+                    btn.classList.add('correct');
+                } else if (idx === selectedIndex) {
+                    btn.classList.add('incorrect');
+                }
+            });
+
+            if (selectedIndex === step.correct) {
+                score++;
+            }
+
+            document.getElementById('score-display').innerText = `Score: ${score} / ${currentStepGlobalNumber}`;
+
+            const rationaleBox = document.getElementById('rationale-box');
+            rationaleBox.innerText = `Discussion / Rationale: ${step.rationale}`;
+            rationaleBox.classList.add('visible');
+
+            document.getElementById('next-btn').disabled = false;
+        }
+
+        function nextStep() {
+            currentStepIndex++;
+            currentStepGlobalNumber++;
+
+            if (currentStepIndex < cases[currentCaseIndex].steps.length) {
+                loadStep();
+            } else {
+                currentCaseIndex++;
+                currentStepIndex = 0;
+                if (currentCaseIndex < cases.length) {
+                    loadStep();
+                } else {
+                    showFinalScore();
+                }
+            }
+        }
+
+        function showFinalScore() {
+            const card = document.querySelector('.card');
+            const percentage = Math.round((score / totalStepsCount) * 100);
+            card.innerHTML = `
+                <div style="text-align: center; margin: auto;">
+                    <h2 style="font-size: 1.3rem; color: #1f2937; margin-bottom: 6px;">Simulations Complete!</h2>
+                    <p style="font-size: 0.95rem; color: #475569; margin-bottom: 10px;">Clinical Judgment Score: <strong>${score}</strong> / <strong>${totalStepsCount}</strong> (${percentage}%)</p>
+                    <p style="font-size: 0.82rem; color: #64748b; margin-bottom: 14px; line-height: 1.3;">You have successfully navigated medical, trauma, pediatric, geriatric, OB/GYN, and multi-system prioritization cases. You are prepared for Lesson 15: Comprehensive NREMT Review & CAT Preparation.</p>
+                    <button class="nav-btn" onclick="resetSimulations()">Restart Simulations</button>
+                </div>
+            `;
+            document.getElementById('progress-indicator').innerText = "Complete";
+        }
+
+        function resetSimulations() {
+            currentCaseIndex = 0;
+            currentStepIndex = 0;
+            score = 0;
+            currentStepGlobalNumber = 1;
+            document.getElementById('score-display').innerText = `Score: 0 / 0`;
+            loadStep();
+        }
+
+        window.onload = loadStep;
+    </script>
+</body>
+</html>
