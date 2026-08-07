@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Progressive Case Studies L4: NREMT Clinical Reasoning</title>
+    <style>
+        @page {
+            size: A4;
+            margin: 15mm 12mm;
+            background-color: #f4f6f8;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            color: #333;
+            background-color: #f4f6f8;
+            line-height: 1.5;
+        }
+        *, *::before, *::after { box-sizing: border-box; }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            background-color: #4a5dce;
+            color: white;
+            padding: 25px;
+            text-align: center;
+            border-radius: 8px 8px 0 0;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .header h1 { margin: 0; font-size: 26px; }
+        .header p { margin: 5px 0 0; opacity: 0.9; font-size: 14px; }
+
+        .case-card {
+            background: white;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            margin-bottom: 25px;
+        }
+        h2 { 
+            color: #4a5dce; 
+            border-left: 4px solid #4a5dce; 
+            padding-left: 10px; 
+            margin-top: 0; 
+            font-size: 20px;
+        }
+        
+        .scenario-box {
+            background: #fdfdfd;
+            border: 1px solid #e0e0e0;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+        }
+        
+        .question-box {
+            margin-top: 20px;
+            padding: 15px;
+            background: #f0f4ff;
+            border-radius: 5px;
+            border: 1px solid #d0dfff;
+        }
+        .question-box p {
+            margin-top: 0;
+            font-weight: 600;
+            color: #1a2b88;
+        }
+        .option {
+            display: block;
+            margin: 8px 0;
+            padding: 10px 12px;
+            background: white;
+            border: 1px solid #c8d1ff;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background 0.2s;
+        }
+        .option:hover { background: #e0e7ff; }
+
+        .rationale-box {
+            margin-top: 15px;
+            padding: 12px;
+            background: #eef9ec;
+            border-left: 4px solid #38a169;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        .rationale-box strong { color: #276749; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header">
+        <h1>Progressive Case Studies</h1>
+        <p>NREMT Clinical Reasoning Practice</p>
+    </div>
+
+    <!-- Case Study 1 -->
+    <div class="case-card">
+        <h2>Case Study 1: Altered Mental Status — Diabetic Emergency vs Stroke</h2>
+        <div class="scenario-box">
+            <p><strong>Dispatch:</strong> You are dispatched to a private residence for a 64-year-old male with altered mental status. His wife states: <em>"He was outside working in the yard, then he came inside confused and started acting strange."</em> Scene is safe.</p>
+            <p><strong>Initial Assessment:</strong> Patient is sitting in a chair. General appearance: Pale, sweaty, confused.</p>
+            <p><strong>Primary Assessment:</strong></p>
+            <ul>
+                <li>Airway: Open</li>
+                <li>Breathing: Rapid and shallow (Respirations: 24/min, SpO₂: 95%)</li>
+                <li>Circulation: Pulse: 112/min, weak radial pulse, skin cool and clammy</li>
+                <li>Mental Status: Opens eyes spontaneously, answers questions incorrectly</li>
+            </ul>
+        </div>
+        
+        <div class="question-box">
+            <p>Question 1: What should you do first?</p>
+            <div class="option">A. Perform a detailed neurological assessment</div>
+            <div class="option">B. Administer oxygen and assess for immediate life threats</div>
+            <div class="option">C. Obtain a complete SAMPLE history from the wife</div>
+            <div class="option">D. Determine if the patient has a history of stroke</div>
+            <div class="rationale-box">
+                <strong>Correct Answer:</strong> B<br>
+                <strong>Rationale:</strong> The patient has altered mental status. Immediate assessment and treatment of ABC problems come before detailed history.
+            </div>
+        </div>
+
+        <div class="scenario-box" style="margin-top: 20px;">
+            <p><strong>Additional Information:</strong> The wife states: <em>"He has diabetes. He takes insulin but sometimes forgets to eat."</em> A blood glucose check shows 38 mg/dL. The patient is awake and able to swallow.</p>
+        </div>
+
+        <div class="question-box">
+            <p>Question 2: What is the most appropriate treatment?</p>
+            <div class="option">A. Administer oral glucose</div>
+            <div class="option">B. Give aspirin</div>
+            <div class="option">C. Place the patient supine and monitor</div>
+            <div class="option">D. Administer insulin</div>
+            <div class="rationale-box">
+                <strong>Correct Answer:</strong> A<br>
+                <strong>Rationale:</strong> A conscious patient with suspected hypoglycemia who can swallow should receive oral glucose.
+            </div>
+        </div>
+
+        <div class="scenario-box" style="margin-top: 20px;">
+            <p><strong>Progression:</strong> After oral glucose, the patient becomes alert, speech improves, and he states he feels better. His wife says: <em>"He doesn't need to go now. He is fine."</em></p>
+        </div>
+
+        <div class="question-box">
+            <p>Question 3: What is your best response?</p>
+            <div class="option">A. Transport is recommended because the cause of the hypoglycemia needs evaluation</div>
+            <div class="option">B. Allow refusal because symptoms resolved</div>
+            <div class="option">C. Tell the wife hypoglycemia is harmless once corrected</div>
+            <div class="option">D. Leave if the patient appears normal</div>
+            <div class="rationale-box">
+                <strong>Correct Answer:</strong> A<br>
+                <strong>Rationale:</strong> Correction of blood glucose does not eliminate the possibility of a serious underlying cause.
+            </div>
+        </div>
+
+        <div class="scenario-box" style="margin-top: 20px;">
+            <p><strong>New Information:</strong> During reassessment, the patient becomes confused again and blood glucose drops to 52 mg/dL.</p>
+        </div>
+
+        <div class="question-box">
+            <p>Question 4: What is the most likely explanation?</p>
+            <div class="option">A. Stroke has developed</div>
+            <div class="option">B. The patient is having a panic attack</div>
+            <div class="option">C. The patient may have a longer-acting insulin effect causing recurrent hypoglycemia</div>
+            <div class="option">D. The glucose meter must be inaccurate</div>
+            <div class="rationale-box">
+                <strong>Correct Answer:</strong> C
+            </div>
+        </div>
+    </div>
+
+    <!-- Case Study 2 -->
+    <div class="case-card">
+        <h2>Case Study 2: Trauma — MVC With Chest Injury and Shock</h2>
+        <div class="scenario-box">
+            <p><strong>Dispatch:</strong> You respond to a two-car motor vehicle collision. A 37-year-old male was the restrained driver, sitting upright outside the vehicle.</p>
+            <p><strong>Assessment:</strong> Patient states: <em>"My chest hurts, but I think I am okay."</em> Findings: Seatbelt marks across chest, increasing difficulty breathing.</p>
+            <p><strong>Vital Signs & Findings:</strong></p>
+            <ul>
+                <li>Respirations: 30/min | Pulse: 118/min | BP: 104/70 | SpO₂: 89%</li>
+                <li>Chest: Unequal rise and fall, decreased breath sounds on the left</li>
+            </ul>
+        </div>
+
+        <div class="question-box">
+            <p>Question 5: Your priority concern is:</p>
+            <div class="option">A. Broken ribs causing pain</div>
+            <div class="option">B. Anxiety related to the crash</div>
+            <div class="option">C. A life-threatening respiratory problem</div>
+            <div class="option">D. Minor chest trauma</div>
+            <div class="rationale-box">
+                <strong>Correct Answer:</strong> C
+            </div>
+        </div>
+
+        <div class="scenario-box" style="margin-top: 20px;">
+            <p><strong>Progression:</strong> The patient becomes more distressed with increasing respiratory difficulty, distended neck veins, and trachea shifted away from the injured side.</p>
+        </div>
+
+        <div class="question-box">
+            <p>Question 6: Which condition is most likely?</p>
+            <div class="option">A. Tension pneumothorax</div>
+            <div class="option">B. Simple pneumothorax</div>
+            <div class="option">C. Pulmonary embolism</div>
+            <div class="option">D. Hyperventilation syndrome</div>
+            <div class="rationale-box">
+                <strong>Correct Answer:</strong> A
+            </div>
+        </div>
+
+        <div class="question-box">
+            <p>Question 7: Your partner wants to complete a full secondary assessment before moving the patient. What should you do?</p>
+            <div class="option">A. Agree because secondary assessment is always required first</div>
+            <div class="option">B. Wait until family arrives</div>
+            <div class="option">C. Complete the SAMPLE history before transport</div>
+            <div class="option">D. Begin rapid transport because the patient has a critical condition</div>
+            <div class="rationale-box">
+                <strong>Correct Answer:</strong> D
+            </div>
+        </div>
+
+        <div class="scenario-box" style="margin-top: 20px;">
+            <p><strong>During Transport:</strong> The patient becomes pale, confused, and hypotensive.</p>
+        </div>
+
+        <div class="question-box">
+            <p>Question 8: Which finding best indicates worsening shock?</p>
+            <div class="option">A. Increased pain level</div>
+            <div class="option">B. Altered mental status with decreasing blood pressure</div>
+            <div class="option">C. Patient requesting water</div>
+            <div class="option">D. Increased anxiety only</div>
+            <div class="rationale-box">
+                <strong>Correct Answer:</strong> B
+            </div>
+        </div>
+    </div>
+
+    <!-- Case Study 3 -->
+    <div class="case-card">
+        <h2>Case Study 3: Pediatric Emergency — Anaphylaxis and Airway Threat</h2>
+        <div class="scenario-box">
+            <p><strong>Dispatch:</strong> You respond to a daycare for a 4-year-old child having trouble breathing. Teacher states: <em>"He was eating a snack when suddenly he started coughing."</em></p>
+            <p><strong>Assessment:</strong> Child is sitting upright, crying, difficulty speaking. Vital signs: Respirations 36/min, Pulse 142/min, SpO₂ 90%. Findings: Wheezing, facial swelling, hives.</p>
+        </div>
+
+        <div class="question-box">
+            <p>Question 9: What condition should you suspect?</p>
+            <div class="option">A. Asthma exacerbation</div>
+            <div class="option">B. Foreign body obstruction only</div>
+            <div class="option">C. Anxiety reaction</div>
+            <div class="option">D. Anaphylaxis</div>
+            <div class="rationale-box">
+                <strong>Correct Answer:</strong> D
+            </div>
+        </div>
+
+        <div class="scenario-box" style="margin-top: 20px;">
+            <p><strong>Progression:</strong> The child becomes quieter. The wheezing decreases, but the child appears tired.</p>
+        </div>
+
+        <div class="question-box">
+            <p>Question 10: Why is this concerning?</p>
+            <div class="option">A. The allergic reaction has resolved</div>
+            <div class="option">B. The airway may be worsening despite reduced wheezing</div>
+            <div class="option">C. The child is becoming calm</div>
+            <div class="option">D. Oxygen is no longer needed</div>
+            <div class="rationale-box">
+                <strong>Correct Answer:</strong> B
+            </div>
+        </div>
+
+        <div class="scenario-box" style="margin-top: 20px;">
+            <p><strong>Additional Information:</strong> The child has a prescribed epinephrine auto-injector.</p>
+        </div>
+
+        <div class="question-box">
+            <p>Question 11: What is the most appropriate action?</p>
+            <div class="option">A. Wait until the child loses consciousness</div>
+            <div class="option">B. Provide fluids first</div>
+            <div class="option">C. Assist with epinephrine administration according to protocol</div>
+            <div class="option">D. Give only oxygen</div>
+            <div class="rationale-box">
+                <strong>Correct Answer:</strong> C
+            </div>
+        </div>
+
+        <div class="scenario-box" style="margin-top: 20px;">
+            <p><strong>After Treatment:</strong> The child's breathing improves. Parents request: <em>"Can we just take him home?"</em></p>
+        </div>
+
+        <div class="question-box">
+            <p>Question 12: Your best explanation:</p>
+            <div class="option">A. Symptoms may return after temporary improvement</div>
+            <div class="option">B. Epinephrine permanently prevents recurrence</div>
+            <div class="option">C. Children never need transport after improvement</div>
+            <div class="option">D. Transport is optional because he looks better</div>
+            <div class="rationale-box">
+                <strong>Correct Answer:</strong> A
+            </div>
+        </div>
+    </div>
+
+    <!-- Case Study 4 -->
+    <div class="case-card">
+        <h2>Case Study 4: Multiple Casualty Incident — Triage and Decision Making</h2>
+        <div class="scenario-box">
+            <p><strong>Dispatch:</strong> You respond to a warehouse collapse where four patients are found:</p>
+            <ul>
+                <li><strong>Patient A:</strong> Walking around, minor cuts, angry and yelling</li>
+                <li><strong>Patient B:</strong> Severe bleeding from leg, alert, respirations 22/min</li>
+                <li><strong>Patient C:</strong> Lying still, not breathing initially</li>
+                <li><strong>Patient D:</strong> Severe difficulty breathing, cyanotic lips, chest deformity</li>
+            </ul>
+        </div>
+
+        <div class="question-box">
+            <p>Question 13: Which patient should receive immediate attention?</p>
+            <div class="option">A. Patient D because of respiratory distress</div>
+            <div class="option">B. Patient B because bleeding is visible</div>
+            <div class="option">C. Patient A because they are closest</div>
+            <div class="option">D. Patient C because they appear unconscious</div>
+            <div class="rationale-box">
+                <strong>Correct Answer:</strong> A
+            </div>
+        </div>
+
+        <div class="question-box">
+            <p>Question 14: Patient B has severe bleeding. What is the most appropriate initial intervention?</p>
+            <div class="option">A. Provide oxygen only</div>
+            <div class="option">B. Apply direct pressure to control bleeding</div>
+            <div class="option">C. Complete a full medical history</div>
+            <div class="option">D. Delay treatment until all patients are assessed</div>
+            <div class="rationale-box">
+                <strong>Correct Answer:</strong> B
+            </div>
+        </div>
+
+        <div class="question-box">
+            <p>Question 15: Patient C is not breathing. After opening the airway, the patient begins breathing. The next step is:</p>
+            <div class="option">A. Ignore the patient because they were initially apneic</div>
+            <div class="option">B. Give food and water</div>
+            <div class="option">C. Tag and prioritize based on breathing and circulation status</div>
+            <div class="option">D. Move the patient immediately without reassessment</div>
+            <div class="rationale-box">
+                <strong>Correct Answer:</strong> C
+            </div>
+        </div>
+
+        <div class="question-box">
+            <p>Question 16: After the incident, your documentation should include:</p>
+            <div class="option">A. Your opinion about who caused the accident</div>
+            <div class="option">B. Only treatments performed</div>
+            <div class="option">C. Only the patient's complaints</div>
+            <div class="option">D. Objective findings, assessment, treatment, and patient response</div>
+            <div class="rationale-box">
+                <strong>Correct Answer:</strong> D
+            </div>
+        </div>
+    </div>
+
+</div>
+
+</body>
+</html>
