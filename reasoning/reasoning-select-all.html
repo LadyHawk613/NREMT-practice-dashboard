@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NREMT Select All That Apply Practice</title>
+    <style>
+        * { box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #071B2D;
+            color: #333;
+            margin: 0;
+            padding: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .main-wrapper {
+            width: 60%;
+            height: 96vh;
+            background: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        header {
+            background-color: #008C95;
+            color: white;
+            padding: 12px 20px;
+            text-align: center;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 1.2rem;
+        }
+
+        header p {
+            margin: 3px 0 0;
+            font-size: 0.8rem;
+            opacity: 0.9;
+        }
+
+        .content-area {
+            flex: 1;
+            padding: 15px 25px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .question-container {
+            display: none;
+        }
+
+        .question-container.active {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .q-title {
+            font-size: 0.95rem;
+            font-weight: bold;
+            color: #071B2D;
+            margin: 0;
+        }
+
+        .findings-box {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            padding: 8px 12px;
+            border-radius: 5px;
+            font-size: 0.82rem;
+        }
+
+        .findings-box ul {
+            margin: 4px 0 0 15px;
+            padding: 0;
+        }
+
+        .options-list {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .option-label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 10px;
+            background: #f1f5f9;
+            border: 1px solid #cbd5e1;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.82rem;
+            transition: background 0.2s;
+        }
+
+        .option-label:hover {
+            background: #e2e8f0;
+        }
+
+        .option-label input {
+            cursor: pointer;
+        }
+
+        .rationale-box {
+            margin-top: 5px;
+            padding: 8px 10px;
+            background: #f0fdf4;
+            border-left: 3px solid #22c55e;
+            border-radius: 4px;
+            font-size: 0.78rem;
+            color: #166534;
+            display: none;
+        }
+
+        .rationale-box.visible {
+            display: block;
+        }
+
+        /* Result highlighting classes */
+        .option-label.correct-highlight {
+            background-color: #dcfce7 !important;
+            border-color: #22c55e !important;
+            color: #166534;
+        }
+
+        .option-label.incorrect-highlight {
+            background-color: #fee2e2 !important;
+            border-color: #ef4444 !important;
+            color: #991b1b;
+        }
+
+        .navigation-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 10px;
+            border-top: 1px solid #e2e8f0;
+            margin-top: 10px;
+        }
+
+        .progress-indicator {
+            font-size: 0.82rem;
+            color: #64748b;
+            font-weight: 600;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn {
+            background: #008C95;
+            color: white;
+            border: none;
+            padding: 6px 14px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.82rem;
+            font-weight: 600;
+        }
+
+        .btn:hover {
+            background: #00737a;
+        }
+
+        .btn-secondary {
+            background: #64748b;
+        }
+
+        .btn-secondary:hover {
+            background: #475569;
+        }
+    </style>
+</head>
+<body>
+
+<div class="main-wrapper">
+    <header>
+        <h1>Lesson 14: Integrated NREMT Scenarios</h1>
+        <p>Select All That Apply Practice</p>
+    </header>
+
+    <div class="content-area">
+        <div id="questions-wrapper">
+
+            <!-- Question 1 -->
+            <div class="question-container active" data-q="1">
+                <p class="q-title">Question 1 — Respiratory Failure Recognition</p>
+                <div class="findings-box">
+                    You are assessing a 62-year-old patient with difficulty breathing.
+                    <ul>
+                        <li>RR: 34/min</li>
+                        <li>Accessory muscle use</li>
+                        <li>SpO₂: 86%</li>
+                        <li>Unable to speak full sentences | Increasing fatigue</li>
+                    </ul>
+                </div>
+                <p style="margin:4px 0; font-size:0.82rem; font-weight:600;">Which findings indicate possible respiratory failure? Select all that apply.</p>
+                <div class="options-list">
+                    <label class="option-label" data-correct="true"><input type="checkbox" value="A"> A. Increasing fatigue</label>
+                    <label class="option-label" data-correct="false"><input type="checkbox" value="B"> B. Respiratory rate of 34/min</label>
+                    <label class="option-label" data-correct="true"><input type="checkbox" value="C"> C. Inability to speak full sentences</label>
+                    <label class="option-label" data-correct="false"><input type="checkbox" value="D"> D. Accessory muscle use</label>
+                    <label class="option-label" data-correct="false"><input type="checkbox" value="E"> E. Patient reports a history of asthma</label>
+                </div>
+                <div class="rationale-box">
+                    <strong>Rationale:</strong> Respiratory failure is indicated when the patient can no longer maintain adequate breathing. Tachypnea and accessory muscles indicate distress, while fatigue and inability to speak indicate worsening failure.
+                </div>
+            </div>
+
+            <!-- Question 2 -->
+            <div class="question-container" data-q="2">
+                <p class="q-title">Question 2 — Primary Assessment Priorities</p>
+                <div class="findings-box">
+                    You arrive at a motor vehicle collision.
+                </div>
+                <p style="margin:4px 0; font-size:0.82rem; font-weight:600;">Which actions are appropriate during the initial assessment? Select all that apply.</p>
+                <div class="options-list">
+                    <label class="option-label" data-correct="true"><input type="checkbox" value="A"> A. Ensure scene safety</label>
+                    <label class="option-label" data-correct="true"><input type="checkbox" value="B"> B. Determine the mechanism of injury</label>
+                    <label class="option-label" data-correct="false"><input type="checkbox" value="C"> C. Obtain a complete SAMPLE history</label>
+                    <label class="option-label" data-correct="true"><input type="checkbox" value="D"> D. Identify immediate life threats</label>
+                    <label class="option-label" data-correct="false"><input type="checkbox" value="E"> E. Perform a detailed neurological examination</label>
+                </div>
+                <div class="rationale-box">
+                    <strong>Rationale:</strong> The EMT must first identify hazards, understand the mechanism, and identify threats. SAMPLE and detailed exams occur later.
+                </div>
+            </div>
+
+            <!-- Question 3 -->
+            <div class="question-container" data-q="3">
+                <p class="q-title">Question 3 — Shock Recognition</p>
+                <div class="findings-box">
+                    A trauma patient has:
+                    <ul>
+                        <li>HR: 124 | Cool pale skin | Anxiety | Weak radial pulse | BP: 118/82</li>
+                    </ul>
+                </div>
+                <p style="margin:4px 0; font-size:0.82rem; font-weight:600;">Which findings suggest developing shock? Select all that apply.</p>
+                <div class="options-list">
+                    <label class="option-label" data-correct="true"><input type="checkbox" value="A"> A. Cool pale skin</label>
+                    <label class="option-label" data-correct="false"><input type="checkbox" value="B"> B. Normal blood pressure</label>
+                    <label class="option-label" data-correct="true"><input type="checkbox" value="C"> C. Weak radial pulse</label>
+                    <label class="option-label" data-correct="true"><input type="checkbox" value="D"> D. Tachycardia</label>
+                    <label class="option-label" data-correct="true"><input type="checkbox" value="E"> E. Patient is anxious</label>
+                </div>
+                <div class="rationale-box">
+                    <strong>Rationale:</strong> Blood pressure may remain normal during compensated shock, while tachycardia, cool/pale skin, weak pulse, and anxiety point toward early shock.
+                </div>
+            </div>
+
+            <!-- Question 4 -->
+            <div class="question-container" data-q="4">
+                <p class="q-title">Question 4 — Airway Threats</p>
+                <div class="findings-box">
+                    Evaluate clinical indicators for potential airway compromise.
+                </div>
+                <p style="margin:4px 0; font-size:0.82rem; font-weight:600;">Which findings suggest a possible airway problem? Select all that apply.</p>
+                <div class="options-list">
+                    <label class="option-label" data-correct="true"><input type="checkbox" value="A"> A. Hoarse voice after a house fire</label>
+                    <label class="option-label" data-correct="true"><input type="checkbox" value="B"> B. Drooling and difficulty swallowing</label>
+                    <label class="option-label" data-correct="false"><input type="checkbox" value="C"> C. Respiratory rate of 22/min</label>
+                    <label class="option-label" data-correct="true"><input type="checkbox" value="D"> D. Facial swelling after an allergic reaction</label>
+                    <label class="option-label" data-correct="false"><input type="checkbox" value="E"> E. Chest pain after exertion</label>
+                </div>
+                <div class="rationale-box">
+                    <strong>Rationale:</strong> Airway compromise may occur before complete obstruction; hoarseness, drooling, and facial swelling point directly to airway threats.
+                </div>
+            </div>
+
+            <!-- Question 5 -->
+            <div class="question-container" data-q="5">
+                <p class="q-title">Question 5 — Pediatric Assessment</p>
+                <div class="findings-box">
+                    You are assessing a 3-year-old child.
+                </div>
+                <p style="margin:4px 0; font-size:0.82rem; font-weight:600;">Which findings require immediate concern? Select all that apply.</p>
+                <div class="options-list">
+                    <label class="option-label" data-correct="true"><input type="checkbox" value="A"> A. Child is sitting upright and refusing to lie down</label>
+                    <label class="option-label" data-correct="false"><input type="checkbox" value="B"> B. Child is crying during assessment</label>
+                    <label class="option-label" data-correct="true"><input type="checkbox" value="C"> C. Stridor</label>
+                    <label class="option-label" data-correct="true"><input type="checkbox" value="D"> D. Drooling</label>
+                    <label class="option-label" data-correct="false"><input type="checkbox" value="E"> E. Child wants a parent nearby</label>
+                </div>
+                <div class="rationale-box">
+                    <strong>Rationale:</strong> Children may compensate until they suddenly deteriorate. Stridor and drooling suggest severe airway compromise, and refusing to lie down indicates respiratory distress.
+                </div>
+            </div>
+
+            <!-- Question 6 -->
+            <div class="question-container" data-q="6">
+                <p class="q-title">Question 6 — Stroke Assessment</p>
+                <div class="findings-box">
+                    A 75-year-old patient suddenly develops weakness.
+                </div>
+                <p style="margin:4px 0; font-size:0.82rem; font-weight:600;">Which findings support possible stroke? Select all that apply.</p>
+                <div class="options-list">
+                    <label class="option-label" data-correct="true"><input type="checkbox" value="A"> A. Facial droop</label>
+                    <label class="option-label" data-correct="true"><input type="checkbox" value="B"> B. Slurred speech</label>
+                    <label class="option-label" data-correct="false"><input type="checkbox" value="C"> C. Blood glucose of 104 mg/dL</label>
+                    <label class="option-label" data-correct="true"><input type="checkbox" value="D"> D. One-sided weakness</label>
+                    <label class="option-label" data-correct="false"><input type="checkbox" value="E"> E. Chest tenderness</label>
+                </div>
+                <div class="rationale-box">
+                    <strong>Rationale:</strong> Normal glucose helps rule out hypoglycemia as the cause of neurological deficits, while facial droop, slurred speech, and unilateral weakness support a stroke.
+                </div>
+            </div>
+
+            <!-- Question 7 -->
+            <div class="question-container" data-q="7">
+                <p class="q-title">Question 7 — Burn Patient Priorities</p>
+                <div class="findings-box">
+                    A patient was rescued from a house fire with burns to chest/arms, soot around mouth, hoarse voice, and singed facial hair.
+                </div>
+                <p style="margin:4px 0; font-size:0.82rem; font-weight:600;">Which actions are appropriate? Select all that apply.</p>
+                <div class="options-list">
+                    <label class="option-label" data-correct="true"><input type="checkbox" value="A"> A. Assess airway frequently</label>
+                    <label class="option-label" data-correct="true"><input type="checkbox" value="B"> B. Provide oxygen according to protocol</label>
+                    <label class="option-label" data-correct="false"><input type="checkbox" value="C"> C. Calculate burn percentage before treatment</label>
+                    <label class="option-label" data-correct="true"><input type="checkbox" value="D"> D. Consider inhalation injury</label>
+                    <label class="option-label" data-correct="false"><input type="checkbox" value="E"> E. Delay transport until burns are covered</label>
+                </div>
+                <div class="rationale-box">
+                    <strong>Rationale:</strong> Airway compromise takes priority over burn calculations and wound care. Inhalation injury must be suspected given the presentation.
+                </div>
+            </div>
+
+            <!-- Question 8 -->
+            <div class="question-container" data-q="8">
+                <p class="q-title">Question 8 — Geriatric Patient Assessment</p>
+                <div class="findings-box">
+                    An 82-year-old patient fell, takes anticoagulants, is confused, and vomited once.
+                </div>
+                <p style="margin:4px 0; font-size:0.82rem; font-weight:600;">Which statements are correct? Select all that apply.</p>
+                <div class="options-list">
+                    <label class="option-label" data-correct="true"><input type="checkbox" value="A"> A. Older adults may have serious injury without severe pain</label>
+                    <label class="option-label" data-correct="true"><input type="checkbox" value="B"> B. Anticoagulants increase concern for bleeding</label>
+                    <label class="option-label" data-correct="false"><input type="checkbox" value="C"> C. The patient is stable because there is no visible bleeding</label>
+                    <label class="option-label" data-correct="true"><input type="checkbox" value="D"> D. Head injury should be considered</label>
+                    <label class="option-label" data-correct="true"><input type="checkbox" value="E"> E. Transport decisions should consider patient risk factors</label>
+                </div>
+                <div class="rationale-box">
+                    <strong>Rationale:</strong> Geriatric presentations can mask severe trauma. Anticoagulants heighten intracranial hemorrhage risks, making comprehensive transport and evaluation crucial.
+                </div>
+            </div>
+
+            <!-- Question 9 -->
+            <div class="question-container" data-q="9">
+                <p class="q-title">Question 9 — EMT Scope of Practice</p>
+                <div class="findings-box">
+                    Evaluate appropriate actions within the standard EMT scope of practice.
+                </div>
+                <p style="margin:4px 0; font-size:0.82rem; font-weight:600;">Which actions are appropriate for an EMT? Select all that apply.</p>
+                <div class="options-list">
+                    <label class="option-label" data-correct="true"><input type="checkbox" value="A"> A. Assist with a patient's prescribed inhaler when allowed by protocol</label>
+                    <label class="option-label" data-correct="false"><input type="checkbox" value="B"> B. Diagnose pneumonia</label>
+                    <label class="option-label" data-correct="true"><input type="checkbox" value="C"> C. Provide oxygen therapy when indicated</label>
+                    <label class="option-label" data-correct="false"><input type="checkbox" value="D"> D. Administer medication outside protocol because the patient requests it</label>
+                    <label class="option-label" data-correct="true"><input type="checkbox" value="E"> E. Perform a patient assessment</label>
+                </div>
+                <div class="rationale-box">
+                    <strong>Rationale:</strong> EMTs perform assessments, provide oxygen, and assist with specific prescribed medications per protocol, but do not diagnose medical conditions or bypass protocols.
+                </div>
+            </div>
+
+            <!-- Question 10 -->
+            <div class="question-container" data-q="10">
+                <p class="q-title">Question 10 — Scene Size-Up</p>
+                <div class="findings-box">
+                    At an industrial accident scene:
+                </div>
+                <p style="margin:4px 0; font-size:0.82rem; font-weight:600;">Which actions are appropriate? Select all that apply.</p>
+                <div class="options-list">
+                    <label class="option-label" data-correct="true"><input type="checkbox" value="A"> A. Look for hazards</label>
+                    <label class="option-label" data-correct="true"><input type="checkbox" value="B"> B. Determine if additional resources are needed</label>
+                    <label class="option-label" data-correct="false"><input type="checkbox" value="C"> C. Immediately enter without protective equipment</label>
+                    <label class="option-label" data-correct="true"><input type="checkbox" value="D"> D. Consider number of patients</label>
+                    <label class="option-label" data-correct="true"><input type="checkbox" value="E"> E. Determine mechanism of injury</label>
+                </div>
+                <div class="rationale-box">
+                    <strong>Rationale:</strong> Scene size-up requires hazard checks, resource evaluation, patient counts, and MOI determination while strictly maintaining personal safety.
+                </div>
+            </div>
+
+            <!-- Question 11 -->
+            <div class="question-container" data-q="11">
+                <p class="q-title">Question 11 — Respiratory Treatment Decisions</p>
+                <div class="findings-box">
+                    A patient is breathing inadequately.
+                </div>
+                <p style="margin:4px 0; font-size:0.82rem; font-weight:600;">Which actions may be appropriate? Select all that apply.</p>
+                <div class="options-list">
+                    <label class="option-label" data-correct="true"><input type="checkbox" value="A"> A. Assist ventilations with a BVM</label>
+                    <label class="option-label" data-correct="true"><input type="checkbox" value="B"> B. Provide oxygen when indicated</label>
+                    <label class="option-label" data-correct="false"><input type="checkbox" value="C"> C. Obtain a detailed medical history first</label>
+                    <label class="option-label" data-correct="true"><input type="checkbox" value="D"> D. Monitor patient response</label>
+                    <label class="option-label" data-correct="false"><input type="checkbox" value="E"> E. Delay treatment until vital signs are complete</label>
+                </div>
+                <div class="rationale-box">
+                    <strong>Rationale:</strong> Inadequate breathing requires immediate intervention (BVM/oxygen) and continuous monitoring rather than delaying care for history or full vitals.
+                </div>
+            </div>
+
+            <!-- Question 12 -->
+            <div class="question-container" data-q="12">
+                <p class="q-title">Question 12 — Multiple Casualty Incident</p>
+                <div class="findings-box">
+                    You arrive at an accident scene with multiple patients.
+                </div>
+                <p style="margin:4px 0; font-size:0.82rem; font-weight:600;">Which patients require the highest priority? Select all that apply.</p>
+                <div class="options-list">
+                    <label class="option-label" data-correct="true"><input type="checkbox" value="A"> A. Patient with uncontrolled bleeding</label>
+                    <label class="option-label" data-correct="false"><input type="checkbox" value="B"> B. Patient with minor fracture and normal breathing</label>
+                    <label class="option-label" data-correct="true"><input type="checkbox" value="C"> C. Patient with severe respiratory distress</label>
+                    <label class="option-label" data-correct="true"><input type="checkbox" value="D"> D. Patient with altered mental status</label>
+                    <label class="option-label" data-correct="false"><input type="checkbox" value="E"> E. Patient requesting pain medication</label>
+                </div>
+                <div class="rationale-box">
+                    <strong>Rationale:</strong> Immediate life threats (airway, breathing, circulation issues like severe bleeding, respiratory distress, and AMS) receive top triage priority.
+                </div>
+            </div>
+
+            <!-- Question 13 -->
+            <div class="question-container" data-q="13">
+                <p class="q-title">Question 13 — Reassessment</p>
+                <div class="findings-box">
+                    After providing treatment during transport:
+                </div>
+                <p style="margin:4px 0; font-size:0.82rem; font-weight:600;">EMTs should: Select all that apply.</p>
+                <div class="options-list">
+                    <label class="option-label" data-correct="true"><input type="checkbox" value="A"> A. Evaluate if the intervention worked</label>
+                    <label class="option-label" data-correct="true"><input type="checkbox" value="B"> B. Repeat important vital signs</label>
+                    <label class="option-label" data-correct="false"><input type="checkbox" value="C"> C. Ignore patient changes during transport</label>
+                    <label class="option-label" data-correct="true"><input type="checkbox" value="D"> D. Adjust care based on patient response</label>
+                    <label class="option-label" data-correct="true"><input type="checkbox" value="E"> E. Document findings</label>
+                </div>
+                <div class="rationale-box">
+                    <strong>Rationale:</strong> Reassessment involves repeating vitals, checking intervention efficacy, adjusting treatment, and documenting changes.
+                </div>
+            </div>
+
+            <!-- Question 14 -->
+            <div class="question-container" data-q="14">
+                <p class="q-title">Question 14 — NREMT Test Strategy</p>
+                <div class="findings-box">
+                    When unsure of an answer on the NREMT exam:
+                </div>
+                <p style="margin:4px 0; font-size:0.82rem; font-weight:600;">Students should: Select all that apply.</p>
+                <div class="options-list">
+                    <label class="option-label" data-correct="true"><input type="checkbox" value="A"> A. Look for the most immediate threat</label>
+                    <label class="option-label" data-correct="false"><input type="checkbox" value="B"> B. Choose the longest answer</label>
+                    <label class="option-label" data-correct="true"><input type="checkbox" value="C"> C. Eliminate answers that violate EMT scope</label>
+                    <label class="option-label" data-correct="true"><input type="checkbox" value="D"> D. Consider ABC priorities</label>
+                    <label class="option-label" data-correct="false"><input type="checkbox" value="E"> E. Choose the most complicated intervention</label>
+                </div>
+                <div class="rationale-box">
+                    <strong>Rationale:</strong> NREMT testing heavily rewards prioritizing ABCs, recognizing immediate threats, and eliminating choices outside standard scope.
+                </div>
+            </div>
+
+            <!-- Question 15 -->
+            <div class="question-container" data-q="15">
+                <p class="q-title">Question 15 — Final Clinical Judgment Scenario</p>
+                <div class="findings-box">
+                    You arrive for an unconscious patient. Findings: Airway open, breathing shallow, pulse present.
+                </div>
+                <p style="margin:4px 0; font-size:0.82rem; font-weight:600;">Which actions are appropriate? Select all that apply.</p>
+                <div class="options-list">
+                    <label class="option-label" data-correct="true"><input type="checkbox" value="A"> A. Assist ventilations</label>
+                    <label class="option-label" data-correct="false"><input type="checkbox" value="B"> B. Obtain SAMPLE history immediately</label>
+                    <label class="option-label" data-correct="true"><input type="checkbox" value="C"> C. Assess breathing adequacy</label>
+                    <label class="option-label" data-correct="true"><input type="checkbox" value="D"> D. Monitor response to treatment</label>
+                    <label class="option-label" data-correct="false"><input type="checkbox" value="E"> E. Begin a detailed secondary assessment first</label>
+                </div>
+                <div class="rationale-box">
+                    <strong>Rationale:</strong> Shallow breathing in an unconscious patient demands assisted ventilations and ongoing monitoring of treatment response before history or secondary exams.
+                </div>
+            </div>
+
+        </div>
+
+        <div class="navigation-footer">
+            <span class="progress-indicator" id="progress-txt">Question 1 of 15</span>
+            <div class="btn-group">
+                <button class="btn btn-secondary" id="prev-btn" onclick="changeQuestion(-1)">Previous</button>
+                <button class="btn" id="check-btn" onclick="checkAnswer()">Check Answer</button>
+                <button class="btn" id="next-btn" onclick="changeQuestion(1)">Next</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    let currentQ = 1;
+    const totalQ = 15;
+
+    function updateView() {
+        document.querySelectorAll('.question-container').forEach(el => {
+            el.classList.remove('active');
+        });
+        document.querySelector(`.question-container[data-q="${currentQ}"]`).classList.add('active');
+        document.getElementById('progress-txtinnerText', `Question ${currentQ} of ${totalQ}`);
+        document.getElementById('progress-txt').innerText = `Question ${currentQ} of ${totalQ}`;
+        
+        document.getElementById('prev-btn').style.display = currentQ === 1 ? 'none' : 'inline-block';
+        document.getElementById('next-btn').style.display = currentQ === totalQ ? 'none' : 'inline-block';
+    }
+
+    function changeQuestion(direction) {
+        currentQ += direction;
+        if (currentQ < 1) currentQ = 1;
+        if (currentQ > totalQ) currentQ = totalQ;
+        updateView();
+    }
+
+    function checkAnswer() {
+        const activeContainer = document.querySelector('.question-container.active');
+        const labels = activeContainer.querySelectorAll('.option-label');
+        const rationale = activeContainer.querySelector('.rationale-box');
+
+        labels.forEach(label => {
+            const checkbox = label.querySelector('input');
+            const isCorrectAnswer = label.getAttribute('data-correct') === 'true';
+            
+            label.classList.remove('correct-highlight', 'incorrect-highlight');
+
+            if (isCorrectAnswer) {
+                label.classList.add('correct-highlight');
+            } else if (checkbox.checked && !isCorrectAnswer) {
+                label.classList.add('incorrect-highlight');
+            }
+        });
+
+        if (rationale) {
+            rationale.classList.add('visible');
+        }
+    }
+
+    updateView();
+</script>
+
+</body>
+</html>
