@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NREMT Interactive Drag-and-Drop Activities</title>
+    <style>
+        * { box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            margin: 0;
+            padding: 10px;
+            color: #333;
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            font-size: 1.3rem;
+            margin: 0 0 5px 0;
+        }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            justify-content: center;
+            gap: 6px;
+            margin-bottom: 8px;
+        }
+        .tab-btn {
+            background: #e2e8f0;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 0.8rem;
+            color: #4a5568;
+            transition: all 0.2s;
+        }
+        .tab-btn.active {
+            background: #3182ce;
+            color: white;
+        }
+
+        /* Container */
+        .activity-container {
+            display: none;
+            background: white;
+            padding: 12px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            flex-grow: 1;
+            max-height: calc(100vh - 100px);
+            overflow-y: auto;
+        }
+        .activity-container.active {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .instructions {
+            font-size: 0.85rem;
+            color: #718096;
+            margin: 0;
+            background: #f7fafc;
+            padding: 6px 10px;
+            border-left: 3px solid #3182ce;
+            border-radius: 0 4px 4px 0;
+        }
+
+        /* Workspace Grid */
+        .workspace {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            flex-grow: 1;
+        }
+
+        .pool-section, .drop-section {
+            background: #f8fafc;
+            border: 2px dashed #cbd5e0;
+            border-radius: 6px;
+            padding: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            min-height: 140px;
+        }
+        .pool-section h3, .drop-section h3 {
+            margin: 0 0 4px 0;
+            font-size: 0.85rem;
+            color: #2d3748;
+            border-bottom: 1px solid #e2e8f0;
+            padding-bottom: 3px;
+        }
+
+        /* Draggable Items */
+        .drag-item {
+            background: white;
+            border: 1px solid #cbd5e0;
+            padding: 6px 8px;
+            border-radius: 4px;
+            cursor: grab;
+            font-size: 0.78rem;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+            user-select: none;
+            transition: transform 0.1s, box-shadow 0.1s;
+        }
+        .drag-item:active { cursor: grabbing; }
+
+        /* Drop Zones */
+        .drop-zone {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 4px;
+            padding: 6px;
+            min-height: 45px;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        .drop-zone-title {
+            font-size: 0.75rem;
+            font-weight: bold;
+            color: #4a5568;
+            margin-bottom: 2px;
+        }
+
+        /* Controls & Feedback */
+        .controls {
+            display: flex;
+            justify-content: flex-end;
+            gap: 8px;
+            margin-top: 4px;
+        }
+        .btn {
+            background: #3182ce;
+            color: white;
+            border: none;
+            padding: 6px 14px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        .btn:hover { background: #2b6cb0; }
+        .btn-reset { background: #718096; }
+        .btn-reset:hover { background: #4a5568; }
+
+        /* Status Colors */
+        .correct { background: #c6f6d5 !important; border-color: #38a169 !important; color: #22543d; }
+        .incorrect { background: #fed7d7 !important; border-color: #e53e3e !important; color: #742a2a; }
+    </style>
+</head>
+<body>
+
+    <h1>NREMT Clinical Reasoning Practice</h1>
+
+    <div class="tabs">
+        <button class="tab-btn active" onclick="switchTab(0)">Activity 1: Priority Actions</button>
+        <button class="tab-btn" onclick="switchTab(1)">Activity 2: Decision Sequence</button>
+    </div>
+
+    <!-- Activity 1 -->
+    <div id="activity-0" class="activity-container active">
+        <p class="instructions"><strong>Instructions:</strong> Drag each patient situation into the correct priority action category.</p>
+        <div class="workspace">
+            <div class="pool-section" id="pool-1" ondragover="allowDrop(event)" ondrop="dropToPool(event)">
+                <h3>Patient Situations</h3>
+                <div class="drag-item" draggable="true" id="item-a" ondragstart="drag(event)" data-answer="immediate"><strong>A.</strong> 58M unconscious, RR 6/min, weak pulse</div>
+                <div class="drag-item" draggable="true" id="item-b" ondragstart="drag(event)" data-answer="monitor"><strong>B.</strong> 25F ankle injury after fall, alert, normal breathing</div>
+                <div class="drag-item" draggable="true" id="item-c" ondragstart="drag(event)" data-answer="immediate"><strong>C.</strong> 70yo chest pressure, pale, sweaty, short of breath</div>
+                <div class="drag-item" draggable="true" id="item-d" ondragstart="drag(event)" data-answer="immediate"><strong>D.</strong> 40yo deep arm laceration, blood rapidly soaking clothes</div>
+                <div class="drag-item" draggable="true" id="item-e" ondragstart="drag(event)" data-answer="assess"><strong>E.</strong> 30yo nausea after eating, alert, normal vitals</div>
+            </div>
+            <div class="drop-section">
+                <h3>Categories</h3>
+                <div class="drop-zone" ondragover="allowDrop(event)" ondrop="drop(event)" data-category="immediate">
+                    <span class="drop-zone-title">🟥 Immediate Intervention Needed</span>
+                </div>
+                <div class="drop-zone" ondragover="allowDrop(event)" ondrop="drop(event)" data-category="assess">
+                    <span class="drop-zone-title">🟨 Assessment Needed First</span>
+                </div>
+                <div class="drop-zone" ondragover="allowDrop(event)" ondrop="drop(event)" data-category="monitor">
+                    <span class="drop-zone-title">🟩 Continue Monitoring</span>
+                </div>
+            </div>
+        </div>
+        <div class="controls">
+            <button class="btn btn-reset" onclick="resetActivity(0)">Reset</button>
+            <button class="btn" onclick="checkAnswers(0)">Check Answers</button>
+        </div>
+    </div>
+
+    <!-- Activity 2 -->
+    <div id="activity-1" class="activity-container">
+        <p class="instructions"><strong>Instructions:</strong> Drag the NREMT decision-making steps into the correct chronological order.</p>
+        <div class="workspace">
+            <div class="pool-section" id="pool-2" ondragover="allowDrop(event)" ondrop="dropToPool(event)">
+                <h3>Steps Pool</h3>
+                <div class="drag-item" draggable="true" id="step-5" ondragstart="drag(event)" data-order="5">Obtain SAMPLE history</div>
+                <div class="drag-item" draggable="true" id="step-1" ondragstart="drag(event)" data-order="1">Scene safety assessment</div>
+                <div class="drag-item" draggable="true" id="step-2" ondragstart="drag(event)" data-order="2">Primary assessment</div>
+                <div class="drag-item" draggable="true" id="step-3" ondragstart="drag(event)" data-order="3">Determine treatment priorities</div>
+                <div class="drag-item" draggable="true" id="step-4" ondragstart="drag(event)" data-order="4">Secondary assessment</div>
+                <div class="drag-item" draggable="true" id="step-7" ondragstart="drag(event)" data-order="7">Reassess patient response</div>
+                <div class="drag-item" draggable="true" id="step-6" ondragstart="drag(event)" data-order="6">Transport decision</div>
+            </div>
+            <div class="drop-section">
+                <h3>Correct Order Sequence</h3>
+                <div class="drop-zone" ondragover="allowDrop(event)" ondrop="drop(event)" data-order="1"><span class="drop-zone-title">1️⃣ Step 1</span></div>
+                <div class="drop-zone" ondragover="allowDrop(event)" ondrop="drop(event)" data-order="2"><span class="drop-zone-title">2️⃣ Step 2</span></div>
+                <div class="drop-zone" ondragover="allowDrop(event)" ondrop="drop(event)" data-order="3"><span class="drop-zone-title">3️⃣ Step 3</span></div>
+                <div class="drop-zone" ondragover="allowDrop(event)" ondrop="drop(event)" data-order="4"><span class="drop-zone-title">4️⃣ Step 4</span></div>
+                <div class="drop-zone" ondragover="allowDrop(event)" ondrop="drop(event)" data-order="5"><span class="drop-zone-title">5️⃣ Step 5</span></div>
+                <div class="drop-zone" ondragover="allowDrop(event)" ondrop="drop(event)" data-order="6"><span class="drop-zone-title">6️⃣ Step 6</span></div>
+                <div class="drop-zone" ondragover="allowDrop(event)" ondrop="drop(event)" data-order="7"><span class="drop-zone-title">7️⃣ Step 7</span></div>
+            </div>
+        </div>
+        <div class="controls">
+            <button class="btn btn-reset" onclick="resetActivity(1)">Reset</button>
+            <button class="btn" onclick="checkAnswers(1)">Check Answers</button>
+        </div>
+    </div>
+
+    <script>
+        function switchTab(index) {
+            document.querySelectorAll('.tab-btn').forEach((btn, i) => {
+                btn.classList.toggle('active', i === index);
+            });
+            document.querySelectorAll('.activity-container').forEach((cont, i) => {
+                cont.classList.toggle('active', i === index);
+            });
+        }
+
+        function allowDrop(ev) {
+            ev.preventDefault();
+        }
+
+        function drag(ev) {
+            ev.dataTransfer.setData("text", ev.target.id);
+        }
+
+        function drop(ev) {
+            ev.preventDefault();
+            let data = ev.dataTransfer.getData("text");
+            let draggedElement = document.getElementById(data);
+            let targetZone = ev.target.closest('.drop-zone');
+            if (targetZone) {
+                targetZone.appendChild(draggedElement);
+            }
+        }
+
+        function dropToPool(ev) {
+            ev.preventDefault();
+            let data = ev.dataTransfer.getData("text");
+            let draggedElement = document.getElementById(data);
+            let pool = ev.target.closest('.pool-section');
+            if (pool) {
+                pool.appendChild(draggedElement);
+                draggedElement.classList.remove('correct', 'incorrect');
+            }
+        }
+
+        function checkAnswers(activityIndex) {
+            const container = document.getElementById(`activity-${activityIndex}`);
+            const zones = container.querySelectorAll('.drop-zone');
+
+            zones.forEach(zone => {
+                const items = zone.querySelectorAll('.drag-item');
+                items.forEach(item => {
+                    let isCorrect = false;
+                    if (activityIndex === 0) {
+                        isCorrect = item.dataset.answer === zone.dataset.category;
+                    } else if (activityIndex === 1) {
+                        isCorrect = item.dataset.order === zone.dataset.order;
+                    }
+                    item.classList.toggle('correct', isCorrect);
+                    item.classList.toggle('incorrect', !isCorrect);
+                });
+            });
+        }
+
+        function resetActivity(activityIndex) {
+            const container = document.getElementById(`activity-${activityIndex}`);
+            const pool = container.querySelector('.pool-section');
+            container.querySelectorAll('.drag-item').forEach(item => {
+                item.classList.remove('correct', 'incorrect');
+                pool.appendChild(item);
+            });
+        }
+    </script>
+</body>
+</html>
