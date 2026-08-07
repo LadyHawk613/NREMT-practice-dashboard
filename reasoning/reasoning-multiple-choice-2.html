@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NREMT Progressive Case Studies - Lesson 14</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        .fade-in { animation: fadeIn 0.3s ease-in; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+<body class="bg-slate-50 min-h-screen flex flex-col items-center py-8 px-4">
+
+    <div class="max-w-2xl w-full bg-white rounded-xl shadow-lg overflow-hidden border border-slate-200">
+        <!-- Header -->
+        <div class="bg-teal-700 p-6 text-white text-center">
+            <h1 class="text-2xl font-bold">Progressive Scenario Practice</h1>
+            <p class="text-teal-100 text-sm mt-1">Lesson 14: Integrated NREMT Scenarios & Clinical Reasoning</p>
+        </div>
+
+        <!-- Progress Bar -->
+        <div class="w-full bg-slate-200 h-2">
+            <div id="progress" class="bg-teal-500 h-2 transition-all duration-500" style="width: 0%"></div>
+        </div>
+
+        <div id="quiz-container" class="p-6">
+            <!-- Question Section -->
+            <div id="question-box" class="fade-in">
+                
+                <!-- Metadata Header -->
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4">
+                    <span id="scenario-title" class="text-xs font-bold text-teal-800 bg-teal-50 px-2 py-1 rounded border border-teal-200">
+                        Scenario 1
+                    </span>
+                    <div class="flex items-center gap-3">
+                        <span id="phase-badge" class="text-xs font-bold text-slate-600 bg-slate-100 px-2 py-1 rounded border border-slate-200">
+                            Phase 1
+                        </span>
+                        <span id="question-number" class="text-xs font-bold text-slate-500 uppercase tracking-wider">
+                            Question 1 of 20
+                        </span>
+                        <span id="score-display" class="text-xs font-bold text-teal-700 bg-teal-50 px-2 py-1 rounded border border-teal-200">
+                            Score: 0
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Scenario Info Card -->
+                <div id="info-card" class="mb-5 p-4 bg-slate-50 rounded-lg border border-slate-200 text-sm text-slate-700 space-y-2">
+                    <!-- Context injected here -->
+                </div>
+
+                <!-- Question Prompt -->
+                <h2 id="question-text" class="text-lg font-semibold text-slate-800 mb-6 leading-snug">
+                    Loading question...
+                </h2>
+
+                <!-- Options -->
+                <div id="options" class="space-y-3">
+                    <!-- Options injected here -->
+                </div>
+
+                <!-- Submit Button for Select All That Apply -->
+                <button id="submit-multi-btn" class="mt-4 w-full bg-teal-600 hover:bg-teal-700 text-white font-bold py-3 px-6 rounded-lg transition-colors hidden shadow-md">
+                    Submit Answer
+                </button>
+
+                <!-- Feedback Section -->
+                <div id="feedback" class="mt-6 p-4 rounded-lg hidden border">
+                    <div class="flex items-center mb-2">
+                        <span id="feedback-icon" class="mr-2 font-bold"></span>
+                        <span id="feedback-status" class="font-bold text-sm uppercase"></span>
+                    </div>
+                    <p id="feedback-text" class="text-sm text-slate-600 italic"></p>
+                </div>
+
+                <!-- Navigation -->
+                <button id="next-btn" class="mt-8 w-full bg-teal-600 hover:bg-teal-700 text-white font-bold py-3 px-6 rounded-lg transition-colors hidden shadow-md">
+                    Next Question
+                </button>
+            </div>
+
+            <!-- Results Section (Hidden by default) -->
+            <div id="results-box" class="hidden text-center py-10 fade-in">
+                <div class="text-6xl mb-4">🚑</div>
+                <h2 class="text-3xl font-bold text-slate-800 mb-2">Case Studies Complete!</h2>
+                <p class="text-slate-500 mb-6">You've completed the Lesson 14 NREMT Case Studies.</p>
+                
+                <div class="inline-block p-8 bg-teal-50 rounded-2xl mb-8 border border-teal-100">
+                    <div id="final-score" class="text-5xl font-bold text-teal-700 mb-2">0/20</div>
+                    <div id="percentage" class="text-xl font-semibold text-teal-600">0%</div>
+                </div>
+
+                <div id="result-message" class="mb-8 px-4 text-slate-700 italic"></div>
+
+                <!-- Debrief Review Box -->
+                <div class="text-left bg-slate-50 border border-slate-200 rounded-xl p-5 mb-8">
+                    <h3 class="font-bold text-slate-800 text-base mb-3 border-b pb-2">Instructor Debrief Checklist</h3>
+                    <p class="text-xs text-slate-600 mb-3">Reflect on your clinical decision-making during these scenarios:</p>
+                    <ul class="list-disc list-inside text-xs text-slate-700 space-y-2">
+                        <li>How do you distinguish immediate life threats from secondary assessment priorities?</li>
+                        <li>What vital sign trends indicate decompensation versus stable compensation?</li>
+                        <li>How does EMT scope of practice govern medication administration and refusal?</li>
+                        <li>Why are scene safety and airway management prioritized above all else?</li>
+                    </ul>
+                </div>
+                
+                <button onclick="location.reload()" class="bg-slate-800 hover:bg-slate-900 text-white font-bold py-3 px-8 rounded-lg transition-colors shadow-md">
+                    Try Case Studies Again
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const questions = [
+            {
+                scenario: "Question 1 — Airway Priority",
+                patientContext: "<strong>Patient:</strong> 54-year-old male rescued from a house fire.<br><strong>Findings:</strong> Facial burns, singed nasal hairs, hoarse voice, soot around mouth, SpO₂ 95%.",
+                phase: "Phase 1: Assessment",
+                q: "What should concern you MOST?",
+                type: "single",
+                options: [
+                    "The patient's oxygen saturation is normal",
+                    "The patient may develop airway swelling",
+                    "The patient needs a complete burn assessment first",
+                    "The patient needs pain medication before transport"
+                ],
+                answer: 1,
+                explanation: "A normal SpO₂ does not rule out inhalation injury. Airway swelling can rapidly worsen."
+            },
+            {
+                scenario: "Question 2 — Treatment Priority",
+                patientContext: "<strong>Scene:</strong> Motorcycle crash.<br><strong>Patient findings:</strong> Open femur fracture, heavy bleeding from the wound, pale skin, weak radial pulse.",
+                phase: "Phase 2: Intervention",
+                q: "What should you do FIRST?",
+                type: "single",
+                options: [
+                    "Apply a traction splint",
+                    "Control the bleeding",
+                    "Assess range of motion",
+                    "Obtain a SAMPLE history"
+                ],
+                answer: 1,
+                explanation: "Uncontrolled hemorrhage is an immediate life threat."
+            },
+            {
+                scenario: "Question 3 — Respiratory Distress vs Failure",
+                patientContext: "<strong>Patient:</strong> Asthma patient experiencing difficulty breathing.<br><strong>Findings:</strong> RR 34/min, wheezing, anxiety, speaking in short sentences.",
+                phase: "Phase 3: Monitoring",
+                q: "Which finding would indicate the patient is worsening?",
+                type: "single",
+                options: [
+                    "Increased wheezing",
+                    "Respiratory rate decreasing to 8/min with fatigue",
+                    "Patient requesting medication",
+                    "Mild chest tightness"
+                ],
+                answer: 1,
+                explanation: "A decreasing respiratory rate in a tiring patient may indicate respiratory failure."
+            },
+            {
+                scenario: "Question 4 — Stroke Recognition",
+                patientContext: "<strong>Patient:</strong> 68-year-old female suddenly develops weakness.<br><strong>Findings:</strong> Facial droop, slurred speech, right arm weakness, blood glucose 110 mg/dL.",
+                phase: "Phase 4: Stroke Protocol",
+                q: "Which action is MOST appropriate?",
+                type: "single",
+                options: [
+                    "Administer oral glucose",
+                    "Determine the last known well time and transport rapidly",
+                    "Allow the patient to rest and reassess later",
+                    "Ask the patient to walk to evaluate weakness"
+                ],
+                answer: 1,
+                explanation: "Rapid transport with a known last-known-well time is critical for stroke management."
+            },
+            {
+                scenario: "Question 5 — Pediatric Assessment",
+                patientContext: "<strong>Patient:</strong> 4-year-old child having difficulty breathing.<br><strong>Findings:</strong> Sitting upright, drooling, stridor, appears frightened.",
+                phase: "Phase 5: Pediatric Care",
+                q: "What should you avoid?",
+                type: "single",
+                options: [
+                    "Providing oxygen",
+                    "Keeping the child calm",
+                    "Forcing the child to lie down",
+                    "Monitoring breathing effort"
+                ],
+                answer: 2,
+                explanation: "Agitation and positioning changes may worsen airway compromise."
+            },
+            {
+                scenario: "Question 6 — Altered Mental Status",
+                patientContext: "<strong>Scene:</strong> Unconscious patient found.<br><strong>Assessment:</strong> Airway open, respirations 5/min, pulse present.",
+                phase: "Phase 6: Resuscitation",
+                q: "What should you do FIRST?",
+                type: "single",
+                options: [
+                    "Obtain medical history from family",
+                    "Begin assisted ventilations",
+                    "Check blood glucose",
+                    "Perform a detailed physical exam"
+                ],
+                answer: 1,
+                explanation: "Inadequate ventilations require immediate assisted ventilations as a primary ABC priority."
+            },
+            {
+                scenario: "Question 7 — Shock Assessment",
+                patientContext: "<strong>Patient:</strong> Involved in a car crash.<br><strong>Findings:</strong> HR 122, BP 116/78, cool clammy skin, anxiety.",
+                phase: "Phase 7: Trauma Evaluation",
+                q: "What is the BEST interpretation?",
+                type: "single",
+                options: [
+                    "The patient is stable because blood pressure is normal",
+                    "The patient may be experiencing compensated shock",
+                    "The patient is experiencing only stress",
+                    "The patient does not need transport"
+                ],
+                answer: 1,
+                explanation: "Tachycardia and cool, clammy skin with a normal blood pressure point toward compensated shock."
+            },
+            {
+                scenario: "Question 8 — OB/GYN Emergency",
+                patientContext: "<strong>Patient:</strong> Pregnant patient in labor.<br><strong>Findings:</strong> Crowning, strong contractions, patient pushing.",
+                phase: "Phase 8: Childbirth",
+                q: "What should you do?",
+                type: "single",
+                options: [
+                    "Transport immediately without assisting delivery",
+                    "Prepare for delivery",
+                    "Attempt to stop contractions",
+                    "Obtain a complete medical history first"
+                ],
+                answer: 1,
+                explanation: "When crowning is present and delivery is imminent, prepare for field delivery."
+            },
+            {
+                scenario: "Question 9 — Medication Administration",
+                patientContext: "<strong>Patient:</strong> Asthma patient asks for help using their inhaler.",
+                phase: "Phase 9: Pharmacology",
+                q: "Before assisting, the EMT should:",
+                type: "single",
+                options: [
+                    "Verify the medication and follow protocol",
+                    "Give extra doses to ensure improvement",
+                    "Administer the medication even if it belongs to someone else",
+                    "Refuse because EMTs cannot assist medications"
+                ],
+                answer: 0,
+                explanation: "Always verify the right patient, medication, dose, route, and expiration date according to local protocol."
+            },
+            {
+                scenario: "Question 10 — Geriatric Trauma",
+                patientContext: "<strong>Patient:</strong> 80-year-old patient falls.<br><strong>Findings:</strong> Takes anticoagulants, increasing confusion, headache, vomiting.",
+                phase: "Phase 10: Geriatric Evaluation",
+                q: "What is the greatest concern?",
+                type: "single",
+                options: [
+                    "Dehydration",
+                    "Intracranial bleeding",
+                    "Minor concussion",
+                    "Anxiety"
+                ],
+                answer: 1,
+                explanation: "Elderly patients on anticoagulants who suffer head trauma are at high risk for intracranial hemorrhage, even after minor falls."
+            },
+            {
+                scenario: "Question 11 — Scene Safety",
+                patientContext: "<strong>Scene:</strong> Workplace accident involving hazardous chemicals.",
+                phase: "Phase 11: Scene Size-Up",
+                q: "What should you do FIRST?",
+                type: "single",
+                options: [
+                    "Enter quickly to remove patients",
+                    "Determine hazards and use appropriate PPE",
+                    "Begin treatment immediately",
+                    "Move all patients without assessment"
+                ],
+                answer: 1,
+                explanation: "Scene safety and proper PPE take absolute priority before entering a hazardous environment."
+            },
+            {
+                scenario: "Question 12 — Chest Pain",
+                patientContext: "<strong>Patient:</strong> 59-year-old patient reports chest pressure.<br><strong>Findings:</strong> Pale, sweaty, short of breath.",
+                phase: "Phase 12: Medical Assessment",
+                q: "What is the priority?",
+                type: "single",
+                options: [
+                    "Determine the patient's diet history",
+                    "Recognize possible cardiac emergency and provide appropriate care",
+                    "Ask about previous injuries",
+                    "Wait to see if symptoms improve"
+                ],
+                answer: 1,
+                explanation: "Signs of acute coronary syndrome require prompt recognition, oxygen if indicated, aspirin, and transport readiness."
+            },
+            {
+                scenario: "Question 13 — Burn Severity",
+                patientContext: "<strong>Triage Assessment:</strong> Evaluating multiple burn patients.",
+                phase: "Phase 13: Burn Triage",
+                q: "Which patient requires the MOST urgent attention?",
+                type: "single",
+                options: [
+                    "Small superficial burn on the hand",
+                    "Partial-thickness burn on the arm",
+                    "Facial burns with difficulty breathing",
+                    "Minor sunburn"
+                ],
+                answer: 2,
+                explanation: "Airway compromise takes priority."
+            },
+            {
+                scenario: "Question 14 — Seizure Patient",
+                patientContext: "<strong>Patient:</strong> Has stopped seizing.<br><strong>Findings:</strong> Confused, slow responses, breathing adequately.",
+                phase: "Phase 14: Post-Seizure Care",
+                q: "What should you do?",
+                type: "single",
+                options: [
+                    "Immediately restrain the patient",
+                    "Protect the airway and monitor",
+                    "Give food and water",
+                    "Force the patient to answer questions"
+                ],
+                answer: 1,
+                explanation: "Post-ictal patients require airway protection, high-flow oxygen if needed, and close neurological monitoring."
+            },
+            {
+                scenario: "Question 15 — Drug Overdose",
+                patientContext: "<strong>Patient:</strong> Suspected opioid overdose.<br><strong>Findings:</strong> Unresponsive, respirations 6/min, pulse present.",
+                phase: "Phase 15: Toxicology",
+                q: "What is the priority?",
+                type: "single",
+                options: [
+                    "Identify the medication involved",
+                    "Assist ventilations",
+                    "Search the house for medications",
+                    "Obtain insurance information"
+                ],
+                answer: 1,
+                explanation: "Respiratory depression from opioids requires immediate bag-valve-mask ventilations and airway support."
+            },
+            {
+                scenario: "Question 16 — Patient Refusal",
+                patientContext: "<strong>Patient:</strong> Improves after treatment and wants to refuse transport.",
+                phase: "Phase 16: Legal & Ethical",
+                q: "What should the EMT do?",
+                type: "single",
+                options: [
+                    "Allow refusal because symptoms improved",
+                    "Explain risks and follow refusal procedures",
+                    "Leave immediately",
+                    "Ask family to make the decision"
+                ],
+                answer: 1,
+                explanation: "Competent patients have the right to refuse, but EMTs must thoroughly explain risks, consult medical direction, and document completely."
+            },
+            {
+                scenario: "Question 17 — Multiple Patients",
+                patientContext: "<strong>Scene:</strong> Multi-patient vehicle collision.<br><strong>Patient A:</strong> Walking, minor cuts.<br><strong>Patient B:</strong> Severe bleeding from leg.<br><strong>Patient C:</strong> Arm fracture.<br><strong>Patient D:</strong> Chest pain but alert.",
+                phase: "Phase 17: Triage",
+                q: "Who should receive care FIRST?",
+                type: "single",
+                options: [
+                    "Patient A",
+                    "Patient B",
+                    "Patient C",
+                    "Patient D"
+                ],
+                answer: 1,
+                explanation: "Uncontrolled bleeding is an immediate threat."
+            },
+            {
+                scenario: "Question 18 — Clinical Judgment",
+                patientContext: "<strong>Patient:</strong> Initially complains of shortness of breath.<br><strong>After treatment:</strong> Respirations improve, patient becomes less anxious.",
+                phase: "Phase 18: Reassessment",
+                q: "What should you do next?",
+                type: "single",
+                options: [
+                    "Assume the problem is solved",
+                    "Reassess the patient",
+                    "Cancel transport",
+                    "Stop monitoring"
+                ],
+                answer: 1,
+                explanation: "Continuous reassessment is essential to verify if interventions are working and to catch any clinical deterioration early."
+            },
+            {
+                scenario: "Question 19 — EMT Scope",
+                patientContext: "<strong>Patient interaction:</strong> Patient asks, 'Can you tell me if I am having a heart attack?'",
+                phase: "Phase 19: Professional Communication",
+                q: "The best response is:",
+                type: "single",
+                options: [
+                    "\"Yes, you are definitely having one.\"",
+                    "\"I cannot diagnose, but I can assess and provide care.\"",
+                    "\"No, it is probably anxiety.\"",
+                    "\"Only the hospital can check your pulse.\""
+                ],
+                answer: 1,
+                explanation: "EMTs provide emergency assessment and supportive care but do not diagnose medical conditions."
+            },
+            {
+                scenario: "Question 20 — Final NREMT Reasoning Question",
+                patientContext: "<strong>Patient:</strong> Fell from a ladder.<br><strong>Findings:</strong> Patient alert, neck pain, tingling in hands, normal breathing.",
+                phase: "Phase 20: Trauma Integration",
+                q: "What is the priority?",
+                type: "single",
+                options: [
+                    "Allow the patient to walk to the ambulance",
+                    "Maintain spinal precautions and assess further",
+                    "Give the patient water",
+                    "Focus only on the neck pain score"
+                ],
+                answer: 1,
+                explanation: "Neck pain and neurological deficits (tingling) following trauma indicate potential spinal injury requiring strict spinal precautions."
+            }
+        ];
+
+        let currentQuestion = 0;
+        let score = 0;
+        let selectedOptions = [];
+
+        const scenarioTitle = document.getElementById('scenario-title');
+        const phaseBadge = document.getElementById('phase-badge');
+        const infoCard = document.getElementById('info-card');
+        const questionText = document.getElementById('question-text');
+        const optionsContainer = document.getElementById('options');
+        const questionNumber = document.getElementById('question-number');
+        const scoreDisplay = document.getElementById('score-display');
+        const feedback = document.getElementById('feedback');
+        const feedbackText = document.getElementById('feedback-text');
+        const feedbackStatus = document.getElementById('feedback-status');
+        const feedbackIcon = document.getElementById('feedback-icon');
+        const nextBtn = document.getElementById('next-btn');
+        const submitMultiBtn = document.getElementById('submit-multi-btn');
+        const progressBar = document.getElementById('progress');
+
+        function loadQuestion() {
+            selectedOptions = [];
+            const q = questions[currentQuestion];
+            
+            // Reset UI
+            feedback.classList.add('hidden');
+            nextBtn.classList.add('hidden');
+            submitMultiBtn.classList.add('hidden');
+            optionsContainer.innerHTML = '';
+            
+            // Set Headers & Context
+            scenarioTitle.innerText = q.scenario.split('—')[0].trim();
+            phaseBadge.innerText = q.phase;
+            questionNumber.innerText = `Question ${currentQuestion + 1} of ${questions.length}`;
+            infoCard.innerHTML = q.patientContext;
+            
+            let typeLabel = q.type === 'multi' ? ' <span class="text-xs font-bold text-teal-600 uppercase block mt-1">(Select all that apply)</span>' : '';
+            questionText.innerHTML = q.q + typeLabel;
+            
+            progressBar.style.width = `${((currentQuestion) / questions.length) * 100}%`;
+
+            // Create Options
+            if (q.type === 'single') {
+                q.options.forEach((opt, index) => {
+                    const btn = document.createElement('button');
+                    btn.className = "w-full text-left p-4 rounded-lg border-2 border-slate-200 hover:border-teal-300 hover:bg-teal-50 transition-all font-medium text-slate-700 flex items-start";
+                    btn.innerHTML = `<span class="bg-slate-100 text-slate-500 w-6 h-6 rounded-full inline-flex items-center justify-center mr-3 flex-shrink-0 text-xs font-bold">${String.fromCharCode(65 + index)}</span> <span>${opt}</span>`;
+                    btn.onclick = () => checkSingleAnswer(index, btn);
+                    optionsContainer.appendChild(btn);
+                });
+            } else {
+                q.options.forEach((opt, index) => {
+                    const btn = document.createElement('button');
+                    btn.className = "w-full text-left p-4 rounded-lg border-2 border-slate-200 hover:border-teal-300 hover:bg-teal-50 transition-all font-medium text-slate-700 flex items-start";
+                    btn.innerHTML = `<span class="opt-checkbox bg-slate-100 text-slate-500 w-6 h-6 rounded inline-flex items-center justify-center mr-3 flex-shrink-0 text-xs font-bold border">${String.fromCharCode(65 + index)}</span> <span>${opt}</span>`;
+                    btn.onclick = () => toggleMultiSelect(index, btn);
+                    optionsContainer.appendChild(btn);
+                });
+                submitMultiBtn.classList.remove('hidden');
+            }
+        }
+
+        function checkSingleAnswer(selectedIndex, clickedBtn) {
+            const q = questions[currentQuestion];
+            const correct = q.answer;
+            const allBtns = optionsContainer.querySelectorAll('button');
+
+            allBtns.forEach(btn => btn.disabled = true);
+
+            if (selectedIndex === correct) {
+                score++;
+                scoreDisplay.innerText = `Score: ${score}`;
+                clickedBtn.classList.replace('border-slate-200', 'border-green-500');
+                clickedBtn.classList.add('bg-green-50');
+                showFeedback(true, q.explanation);
+            } else {
+                clickedBtn.classList.replace('border-slate-200', 'border-red-500');
+                clickedBtn.classList.add('bg-red-50');
+                allBtns[correct].classList.replace('border-slate-200', 'border-green-500');
+                allBtns[correct].classList.add('bg-green-50');
+                showFeedback(false, q.explanation);
+            }
+
+            nextBtn.classList.remove('hidden');
+            if (currentQuestion === questions.length - 1) {
+                nextBtn.innerText = "See Results";
+            }
+        }
+
+        function toggleMultiSelect(index, btn) {
+            const checkSpan = btn.querySelector('.opt-checkbox');
+            if (selectedOptions.includes(index)) {
+                selectedOptions = selectedOptions.filter(i => i !== index);
+                btn.classList.remove('border-teal-500', 'bg-teal-50');
+                btn.classList.add('border-slate-200');
+                checkSpan.classList.remove('bg-teal-600', 'text-white');
+                checkSpan.classList.add('bg-slate-100', 'text-slate-500');
+            } else {
+                selectedOptions.push(index);
+                btn.classList.add('border-teal-500', 'bg-teal-50');
+                btn.classList.remove('border-slate-200');
+                checkSpan.classList.add('bg-teal-600', 'text-white');
+                checkSpan.classList.remove('bg-slate-100', 'text-slate-500');
+            }
+        }
+
+        submitMultiBtn.onclick = () => {
+            const q = questions[currentQuestion];
+            const correctAnswers = q.answer;
+            const allBtns = optionsContainer.querySelectorAll('button');
+
+            allBtns.forEach(btn => btn.disabled = true);
+            submitMultiBtn.classList.add('hidden');
+
+            const isCorrect = 
+                selectedOptions.length === correctAnswers.length &&
+                selectedOptions.every(val => correctAnswers.includes(val));
+
+            allBtns.forEach((btn, index) => {
+                if (correctAnswers.includes(index)) {
+                    btn.classList.replace('border-slate-200', 'border-green-500');
+                    btn.classList.add('bg-green-50');
+                } else if (selectedOptions.includes(index)) {
+                    btn.classList.replace('border-slate-200', 'border-red-500');
+                    btn.classList.add('bg-red-50');
+                }
+            });
+
+            if (isCorrect) {
+                score++;
+                scoreDisplay.innerText = `Score: ${score}`;
+                showFeedback(true, q.explanation);
+            } else {
+                showFeedback(false, q.explanation);
+            }
+
+            nextBtn.classList.remove('hidden');
+            if (currentQuestion === questions.length - 1) {
+                nextBtn.innerText = "See Results";
+            }
+        };
+
+        function showFeedback(isCorrect, explanationText) {
+            feedback.classList.remove('hidden', 'bg-green-50', 'bg-red-50', 'border-green-200', 'border-red-200');
+            if (isCorrect) {
+                feedback.classList.add('bg-green-50', 'border-green-200');
+                feedbackIcon.innerText = "✅";
+                feedbackIcon.className = "mr-2 text-green-600";
+                feedbackStatus.innerText = "Correct!";
+                feedbackStatus.className = "font-bold text-sm uppercase text-green-700";
+            } else {
+                feedback.classList.add('bg-red-50', 'border-red-200');
+                feedbackIcon.innerText = "❌";
+                feedbackIcon.className = "mr-2 text-red-600";
+                feedbackStatus.innerText = "Incorrect";
+                feedbackStatus.className = "font-bold text-sm uppercase text-red-700";
+            }
+            feedbackText.innerText = explanationText;
+        }
+
+        nextBtn.onclick = () => {
+            currentQuestion++;
+            if (currentQuestion < questions.length) {
+                loadQuestion();
+            } else {
+                showResults();
+            }
+        };
+
+        function showResults() {
+            document.getElementById('question-box').classList.add('hidden');
+            document.getElementById('results-box').classList.remove('hidden');
+            progressBar.style.width = '100%';
+
+            document.getElementById('final-score').innerText = `${score}/${questions.length}`;
+            const percentage = Math.round((score / questions.length) * 100);
+            document.getElementById('percentage').innerText = `${percentage}%`;
+
+            const messageBox = document.getElementById('result-message');
+            if (percentage >= 80) {
+                messageBox.innerHTML = "🎉 <strong>Outstanding clinical judgment!</strong> You successfully navigated complex NREMT scenarios across medical, trauma, and operational domains.";
+            } else if (percentage >= 60) {
+                messageBox.innerHTML = "👍 <strong>Good job!</strong> You have a solid grasp of core EMT protocols, but review specific clinical decision-making areas to elevate your readiness.";
+            } else {
+                messageBox.innerHTML = "📚 <strong>Keep studying!</strong> Focus closely on priority decision-making, airway management, and identifying immediate life threats.";
+            }
+        }
+
+        // Initialize First Question
+        loadQuestion();
+    </script>
+</body>
+</html>
