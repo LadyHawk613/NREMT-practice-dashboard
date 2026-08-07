@@ -138,6 +138,11 @@
         .rationale-box.visible {
             display: block;
         }
+        .rationale-box.correct-rationale {
+            background: #f0fdf4 !important;
+            border-left-color: #22c55e !important;
+            color: #166534 !important;
+        }
         .footer-nav {
             display: flex;
             justify-content: space-between;
@@ -338,7 +343,7 @@
                 steps: [
                     {
                         stage: "Information 1: Scene",
-                        scenario: "Dispatch: You respond to an 82-year-old female who fell at home.\nPatient states: 'مصادر I just slipped. I'm okay.' She denies pain.",
+                        scenario: "Dispatch: You respond to an 82-year-old female who fell at home.\nPatient states: I just slipped. I'm okay. She denies pain.",
                         question: "What should the EMT remember?",
                         options: [
                             "A. No pain means no injury",
@@ -476,7 +481,6 @@
         let totalStepsCount = 0;
         let currentStepGlobalNumber = 1;
 
-        // Count total steps across all cases for progress calculation
         cases.forEach(c => totalStepsCount += c.steps.length);
 
         function loadStep() {
@@ -502,7 +506,7 @@
 
             const rationaleBox = document.getElementById('rationale-box');
             rationaleBox.innerText = '';
-            rationaleBox.classList.remove('visible');
+            rationaleBox.classList.remove('visible', 'correct-rationale');
 
             const nextBtn = document.getElementById('next-btn');
             nextBtn.disabled = true;
@@ -515,6 +519,7 @@
 
             const step = cases[currentCaseIndex].steps[currentStepIndex];
             const buttons = document.querySelectorAll('.option-btn');
+            const isCorrect = (selectedIndex === step.correct);
             
             buttons.forEach((btn, idx) => {
                 btn.disabled = true;
@@ -525,7 +530,7 @@
                 }
             });
 
-            if (selectedIndex === step.correct) {
+            if (isCorrect) {
                 score++;
             }
 
@@ -534,6 +539,11 @@
             const rationaleBox = document.getElementById('rationale-box');
             rationaleBox.innerText = `Discussion / Rationale: ${step.rationale}`;
             rationaleBox.classList.add('visible');
+            if (isCorrect) {
+                rationaleBox.classList.add('correct-rationale');
+            } else {
+                rationaleBox.classList.remove('correct-rationale');
+            }
 
             document.getElementById('next-btn').disabled = false;
         }
