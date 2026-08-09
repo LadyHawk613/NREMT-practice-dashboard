@@ -1,0 +1,1520 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NREMT Scene Size-Up & Safety</title>
+
+<style>
+:root {
+    --navy: #071B2D;
+    --teal: #008C95;
+    --gold: #E6B422;
+    --light: #F3F6F8;
+    --white: #FFFFFF;
+    --green: #198754;
+    --red: #C62828;
+    --gray: #66727D;
+    --border: #D5DDE3;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    background: var(--light);
+    color: #17212B;
+}
+
+header {
+    background: var(--navy);
+    color: white;
+    text-align: center;
+    padding: 26px 20px;
+}
+
+header h1 {
+    margin: 0 0 8px;
+    font-size: 30px;
+}
+
+header p {
+    margin: 0;
+    color: #dce8ed;
+}
+
+.container {
+    max-width: 1100px;
+    margin: auto;
+    padding: 25px;
+}
+
+.progress {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 25px;
+}
+
+.progress div {
+    flex: 1;
+    height: 9px;
+    border-radius: 10px;
+    background: #d5dde3;
+}
+
+.progress .active {
+    background: var(--teal);
+}
+
+.progress .complete {
+    background: var(--gold);
+}
+
+.card {
+    background: white;
+    border-radius: 10px;
+    padding: 22px;
+    margin-bottom: 20px;
+    box-shadow: 0 3px 12px rgba(0,0,0,.08);
+}
+
+.card h2 {
+    color: var(--navy);
+    margin-top: 0;
+}
+
+.instruction {
+    border-left: 6px solid var(--gold);
+}
+
+.hidden {
+    display: none !important;
+}
+
+button {
+    font-family: inherit;
+}
+
+.primary-btn {
+    border: none;
+    padding: 13px 22px;
+    border-radius: 7px;
+    font-weight: bold;
+    cursor: pointer;
+    background: var(--teal);
+    color: white;
+    font-size: 15px;
+}
+
+.primary-btn:hover {
+    opacity: .9;
+}
+
+.secondary-btn {
+    border: none;
+    padding: 13px 22px;
+    border-radius: 7px;
+    font-weight: bold;
+    cursor: pointer;
+    background: var(--gold);
+    color: var(--navy);
+    font-size: 15px;
+}
+
+/* ================================
+   SCENE
+================================ */
+
+.scene {
+    position: relative;
+    height: 560px;
+    background:
+        linear-gradient(#b9d2df 0 38%, #73818a 38% 100%);
+    border: 4px solid var(--navy);
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+/* road */
+
+.road {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 275px;
+    height: 170px;
+    background: #41484d;
+}
+
+.road-line {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 355px;
+    height: 5px;
+    background: repeating-linear-gradient(
+        to right,
+        white 0 55px,
+        transparent 55px 100px
+    );
+}
+
+/* grass */
+
+.grass {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 115px;
+    background: #7f9b72;
+}
+
+/* vehicles */
+
+.car {
+    position: absolute;
+    width: 220px;
+    height: 95px;
+    border: 5px solid #252525;
+    border-radius: 22px;
+    z-index: 4;
+}
+
+.car1 {
+    left: 19%;
+    top: 285px;
+    transform: rotate(-12deg);
+    background: #7b7f84;
+}
+
+.car2 {
+    left: 58%;
+    top: 310px;
+    transform: rotate(13deg);
+    background: #a4a7aa;
+}
+
+.car::before {
+    content: "";
+    position: absolute;
+    width: 80px;
+    height: 35px;
+    background: #9ec1d2;
+    border: 3px solid #252525;
+    left: 65px;
+    top: 12px;
+    border-radius: 5px;
+}
+
+/* smoke */
+
+.smoke {
+    position: absolute;
+    left: 72%;
+    top: 205px;
+    font-size: 65px;
+    z-index: 7;
+}
+
+/* fuel */
+
+.fuel {
+    position: absolute;
+    left: 49%;
+    top: 420px;
+    width: 145px;
+    height: 42px;
+    background: rgba(45,30,15,.65);
+    border-radius: 50%;
+    z-index: 5;
+}
+
+/* power line */
+
+.wire-horizontal {
+    position: absolute;
+    left: 5%;
+    top: 105px;
+    width: 90%;
+    height: 5px;
+    background: #222;
+    transform: rotate(4deg);
+    z-index: 2;
+}
+
+.wire-down {
+    position: absolute;
+    left: 35%;
+    top: 100px;
+    width: 6px;
+    height: 190px;
+    background: #222;
+    transform: rotate(12deg);
+    z-index: 2;
+}
+
+/* traffic */
+
+.traffic {
+    position: absolute;
+    right: 3%;
+    top: 330px;
+    font-size: 58px;
+    z-index: 8;
+}
+
+/* people */
+
+.person {
+    position: absolute;
+    font-size: 48px;
+    z-index: 9;
+}
+
+.person1 {
+    left: 82%;
+    top: 245px;
+}
+
+.person2 {
+    left: 88%;
+    top: 285px;
+}
+
+.person3 {
+    left: 75%;
+    top: 445px;
+}
+
+/* patient */
+
+.patient {
+    position: absolute;
+    left: 67%;
+    top: 430px;
+    font-size: 52px;
+    z-index: 10;
+}
+
+/* broken glass */
+
+.glass {
+    position: absolute;
+    width: 45px;
+    height: 30px;
+    border: 4px solid #9bbbc7;
+    transform: rotate(25deg);
+    z-index: 5;
+}
+
+.glass1 {
+    left: 11%;
+    top: 430px;
+}
+
+.glass2 {
+    left: 29%;
+    top: 455px;
+}
+
+/* backpack */
+
+.backpack {
+    position: absolute;
+    left: 7%;
+    bottom: 25px;
+    font-size: 55px;
+}
+
+/* phone */
+
+.phone {
+    position: absolute;
+    left: 91%;
+    bottom: 25px;
+    font-size: 42px;
+}
+
+/* coffee */
+
+.coffee {
+    position: absolute;
+    left: 42%;
+    bottom: 30px;
+    font-size: 42px;
+}
+
+/* dog */
+
+.dog {
+    position: absolute;
+    left: 52%;
+    bottom: 22px;
+    font-size: 50px;
+}
+
+/* labels */
+
+.scene-label {
+    position: absolute;
+    z-index: 20;
+    padding: 8px 11px;
+    border-radius: 6px;
+    border: 2px solid var(--navy);
+    background: white;
+    font-size: 12px;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 2px 5px rgba(0,0,0,.25);
+}
+
+.scene-label:hover {
+    background: #eef7f8;
+    border-color: var(--teal);
+}
+
+.scene-label.selected {
+    background: #e8f5e9;
+    border-color: var(--green);
+    color: #155d34;
+}
+
+.scene-label.incorrect {
+    background: #ffebee;
+    border-color: var(--red);
+    color: var(--red);
+}
+
+.label-traffic {
+    right: 1%;
+    top: 395px;
+}
+
+.label-wire {
+    left: 24%;
+    top: 125px;
+}
+
+.label-smoke {
+    right: 9%;
+    top: 190px;
+}
+
+.label-fuel {
+    left: 48%;
+    top: 465px;
+}
+
+.label-vehicles {
+    left: 16%;
+    top: 255px;
+}
+
+.label-patients {
+    right: 5%;
+    top: 475px;
+}
+
+.label-glass {
+    left: 6%;
+    top: 390px;
+}
+
+.label-bystander {
+    right: 4%;
+    top: 235px;
+}
+
+.label-backpack {
+    left: 4%;
+    bottom: 8px;
+}
+
+.label-phone {
+    right: 0;
+    bottom: 8px;
+}
+
+.label-coffee {
+    left: 38%;
+    bottom: 8px;
+}
+
+.label-dog {
+    left: 49%;
+    bottom: 8px;
+}
+
+/* ================================
+   FEEDBACK
+================================ */
+
+.feedback {
+    margin-top: 18px;
+    padding: 15px;
+    border-radius: 8px;
+    display: none;
+}
+
+.feedback.show {
+    display: block;
+}
+
+.feedback.correct {
+    background: #e8f5e9;
+    border-left: 5px solid var(--green);
+}
+
+.feedback.incorrect {
+    background: #ffebee;
+    border-left: 5px solid var(--red);
+}
+
+/* ================================
+   PRIORITY QUESTION
+================================ */
+
+.choice {
+    width: 100%;
+    display: block;
+    text-align: left;
+    background: white;
+    border: 2px solid var(--border);
+    padding: 15px;
+    margin: 10px 0;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 15px;
+}
+
+.choice:hover {
+    border-color: var(--teal);
+}
+
+.choice.correct {
+    background: #e8f5e9;
+    border-color: var(--green);
+}
+
+.choice.incorrect {
+    background: #ffebee;
+    border-color: var(--red);
+}
+
+.choice:disabled {
+    cursor: default;
+}
+
+.question-title {
+    color: var(--navy);
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.score {
+    background: var(--navy);
+    color: white;
+    padding: 14px;
+    border-radius: 8px;
+    text-align: center;
+    margin-bottom: 18px;
+}
+
+/* ================================
+   SCENARIO ACTIVITY
+================================ */
+
+.scenario-box {
+    background: #eef7f8;
+    border: 2px solid var(--teal);
+    padding: 20px;
+    border-radius: 9px;
+    line-height: 1.6;
+}
+
+.scenario-question {
+    font-size: 20px;
+    font-weight: bold;
+    color: var(--navy);
+    margin-top: 20px;
+}
+
+.explanation {
+    margin-top: 15px;
+    background: white;
+    border-left: 5px solid var(--gold);
+    padding: 15px;
+    display: none;
+}
+
+.explanation.show {
+    display: block;
+}
+
+.final {
+    text-align: center;
+    background: white;
+    padding: 30px;
+    border-radius: 10px;
+}
+
+.final-score {
+    font-size: 52px;
+    color: var(--teal);
+    font-weight: bold;
+}
+
+@media(max-width: 700px) {
+
+    .container {
+        padding: 12px;
+    }
+
+    .scene {
+        height: 620px;
+    }
+
+    .scene-label {
+        font-size: 10px;
+        padding: 6px;
+    }
+
+    header h1 {
+        font-size: 24px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <h1>NREMT Final Review</h1>
+    <p>Scene Size-Up & Safety</p>
+</header>
+
+<div class="container">
+
+<div class="progress">
+    <div id="progress1" class="active"></div>
+    <div id="progress2"></div>
+    <div id="progress3"></div>
+</div>
+
+
+<!-- ======================================================
+     ACTIVITY 1
+====================================================== -->
+
+<section id="activity1">
+
+<div class="card instruction">
+
+<h2>Activity 1 — Safe to Enter?</h2>
+
+<p>
+You are the first EMT arriving at a motor vehicle collision.
+Before approaching the patients, you must perform a scene size-up.
+</p>
+
+<p>
+<strong>Layer 1: Identify the scene concerns.</strong>
+</p>
+
+<p>
+Click <strong>every item that should influence your scene size-up,
+safety, or resource decisions.</strong>
+</p>
+
+<p>
+Some items are intentionally irrelevant or lower priority.
+Do not simply click everything you see.
+</p>
+
+</div>
+
+
+<div class="scene" id="scene">
+
+<div class="road"></div>
+<div class="road-line"></div>
+<div class="grass"></div>
+
+<div class="car car1"></div>
+<div class="car car2"></div>
+
+<div class="smoke">☁️</div>
+
+<div class="wire-horizontal"></div>
+<div class="wire-down"></div>
+
+<div class="fuel"></div>
+
+<div class="traffic">🚙</div>
+
+<div class="person person1">🧍</div>
+<div class="person person2">🧍</div>
+<div class="person person3">🧍</div>
+
+<div class="patient">🧑</div>
+
+<div class="glass glass1"></div>
+<div class="glass glass2"></div>
+
+<div class="backpack">🎒</div>
+<div class="phone">📱</div>
+<div class="coffee">☕</div>
+<div class="dog">🐕</div>
+
+
+<!-- CORRECT ITEMS -->
+
+<button class="scene-label label-traffic"
+        data-correct="true"
+        data-name="Moving traffic">
+🚙 MOVING TRAFFIC
+</button>
+
+<button class="scene-label label-wire"
+        data-correct="true"
+        data-name="Downed electrical wire">
+⚡ DOWNED POWER LINE
+</button>
+
+<button class="scene-label label-smoke"
+        data-correct="true"
+        data-name="Smoke">
+🔥 SMOKE / FIRE HAZARD
+</button>
+
+<button class="scene-label label-fuel"
+        data-correct="true"
+        data-name="Fuel leak">
+⛽ FUEL LEAK
+</button>
+
+<button class="scene-label label-vehicles"
+        data-correct="true"
+        data-name="Damaged vehicles">
+🚗 DAMAGED VEHICLES
+</button>
+
+<button class="scene-label label-patients"
+        data-correct="true"
+        data-name="Multiple people/potential patients">
+👥 PATIENT COUNT
+</button>
+
+<button class="scene-label label-glass"
+        data-correct="true"
+        data-name="Broken glass">
+🪟 BROKEN GLASS
+</button>
+
+<button class="scene-label label-bystander"
+        data-correct="true"
+        data-name="Bystanders">
+🧍 BYSTANDERS
+</button>
+
+
+<!-- DISTRACTORS -->
+
+<button class="scene-label label-backpack"
+        data-correct="false"
+        data-name="Backpack">
+🎒 BACKPACK
+</button>
+
+<button class="scene-label label-phone"
+        data-correct="false"
+        data-name="Phone">
+📱 PHONE
+</button>
+
+<button class="scene-label label-coffee"
+        data-correct="false"
+        data-name="Coffee">
+☕ COFFEE
+</button>
+
+<button class="scene-label label-dog"
+        data-correct="false"
+        data-name="Dog">
+🐕 DOG
+</button>
+
+</div>
+
+
+<div id="layer1Feedback" class="feedback"></div>
+
+<div style="margin-top:18px;">
+
+<strong>
+Correct scene concerns identified:
+<span id="foundCount">0</span> / 8
+</strong>
+
+</div>
+
+
+<button
+    id="toLayer2"
+    class="primary-btn hidden"
+    style="margin-top:18px;"
+    onclick="showLayer2()">
+
+Continue to Layer 2
+
+</button>
+
+
+<!-- ======================================================
+     LAYER 2
+====================================================== -->
+
+<div id="layer2" class="hidden" style="margin-top:30px;">
+
+<div class="card instruction">
+
+<h2>Layer 2 — Prioritize the Threats</h2>
+
+<p>
+You identified several scene concerns. Now apply clinical
+decision-making.
+</p>
+
+<p>
+<strong>
+Which THREE findings require you to consider additional
+resources or scene-safety measures before entering?
+</strong>
+</p>
+
+<p>
+Select exactly three.
+</p>
+
+</div>
+
+
+<div id="priorityChoices">
+
+<button class="choice priority"
+        data-correct="true"
+        onclick="selectPriority(this)">
+A. Moving traffic
+</button>
+
+<button class="choice priority"
+        data-correct="true"
+        onclick="selectPriority(this)">
+B. Leaking fuel
+</button>
+
+<button class="choice priority"
+        data-correct="true"
+        onclick="selectPriority(this)">
+C. Downed electrical wire
+</button>
+
+<button class="choice priority"
+        data-correct="false"
+        onclick="selectPriority(this)">
+D. Broken glass
+</button>
+
+<button class="choice priority"
+        data-correct="false"
+        onclick="selectPriority(this)">
+E. Patient with an injured ankle
+</button>
+
+</div>
+
+
+<div id="priorityFeedback" class="feedback"></div>
+
+
+<button
+    id="completePart1"
+    class="primary-btn hidden"
+    onclick="startActivity2()">
+
+Continue to "You Are the First EMT"
+
+</button>
+
+</div>
+
+</section>
+
+
+<!-- ======================================================
+     ACTIVITY 2
+====================================================== -->
+
+<section id="activity2" class="hidden">
+
+<div class="card instruction">
+
+<h2>Activity 2 — You Are the First EMT</h2>
+
+<p>
+You are now the first EMT on scene. Information will be
+revealed progressively.
+</p>
+
+<p>
+Choose the <strong>best action</strong> based on the information
+available at that moment.
+</p>
+
+</div>
+
+
+<div class="score">
+
+Question <span id="qNumber">1</span> of 8
+&nbsp; | &nbsp;
+Score: <span id="scenarioScore">0</span>
+</div>
+
+
+<div id="scenarioArea"></div>
+
+
+<div id="finalResults" class="final hidden">
+
+<h2>Scene Size-Up Complete</h2>
+
+<div class="final-score">
+<span id="percent">0</span>%
+</div>
+
+<p id="finalMessage"></p>
+
+<div class="card" style="text-align:left;">
+
+<h3>Scene Size-Up Checklist</h3>
+
+<p>✓ PPE and personal safety</p>
+<p>✓ Scene hazards</p>
+<p>✓ Mechanism of injury / nature of illness</p>
+<p>✓ Number of patients</p>
+<p>✓ Need for additional resources</p>
+<p>✓ Safe access to the patient</p>
+
+</div>
+
+<button class="primary-btn"
+        onclick="location.reload()">
+
+Start Again
+
+</button>
+
+</div>
+
+</section>
+
+</div>
+
+
+<script>
+
+/* =========================================================
+   LAYER 1
+========================================================= */
+
+const correctLabels =
+    document.querySelectorAll('[data-correct="true"]');
+
+let selectedCorrect = 0;
+
+document.querySelectorAll(".scene-label").forEach(label => {
+
+    label.addEventListener("click", function() {
+
+        const isCorrect =
+            this.dataset.correct === "true";
+
+        const feedback =
+            document.getElementById("layer1Feedback");
+
+        if (this.classList.contains("selected") ||
+            this.classList.contains("incorrect")) {
+
+            return;
+        }
+
+        if (isCorrect) {
+
+            this.classList.add("selected");
+
+            selectedCorrect++;
+
+            document.getElementById("foundCount")
+                .textContent = selectedCorrect;
+
+            feedback.className =
+                "feedback show correct";
+
+            feedback.innerHTML =
+                "<strong>Correct.</strong> " +
+                this.dataset.name +
+                " is relevant to scene size-up.";
+
+            if (selectedCorrect === 8) {
+
+                document.getElementById("toLayer2")
+                    .classList.remove("hidden");
+
+                feedback.innerHTML =
+                    "<strong>Layer 1 complete.</strong><br>" +
+                    "You identified the major scene-size-up concerns. " +
+                    "Now determine which findings require the highest " +
+                    "level of safety concern or additional resources.";
+            }
+
+        } else {
+
+            this.classList.add("incorrect");
+
+            feedback.className =
+                "feedback show incorrect";
+
+            feedback.innerHTML =
+                "<strong>Not the best choice.</strong><br>" +
+                this.dataset.name +
+                " is not, by itself, an important scene-size-up concern " +
+                "based on the information provided. Avoid clicking every " +
+                "unusual object simply because it is visible.";
+
+            setTimeout(() => {
+
+                this.classList.remove("incorrect");
+
+            }, 1200);
+
+        }
+
+    });
+
+});
+
+
+/* =========================================================
+   LAYER 2
+========================================================= */
+
+let prioritySelected = [];
+
+function selectPriority(button) {
+
+    if (button.classList.contains("correct") ||
+        button.classList.contains("incorrect")) {
+
+        return;
+    }
+
+    if (prioritySelected.includes(button)) {
+
+        return;
+
+    }
+
+    prioritySelected.push(button);
+
+    button.classList.add(
+        button.dataset.correct === "true"
+            ? "correct"
+            : "incorrect"
+    );
+
+    if (prioritySelected.length === 3) {
+
+        evaluatePriority();
+
+    }
+
+}
+
+
+function evaluatePriority() {
+
+    const feedback =
+        document.getElementById("priorityFeedback");
+
+    const correctSelections =
+        prioritySelected.filter(
+            button => button.dataset.correct === "true"
+        ).length;
+
+    if (correctSelections === 3) {
+
+        feedback.className =
+            "feedback show correct";
+
+        feedback.innerHTML =
+            "<strong>Excellent.</strong><br>" +
+            "Moving traffic, leaking fuel, and a downed electrical " +
+            "wire can create immediate threats to patients and rescuers " +
+            "and may require additional resources or scene-safety measures.";
+
+        document.getElementById("completePart1")
+            .classList.remove("hidden");
+
+    } else {
+
+        feedback.className =
+            "feedback show incorrect";
+
+        feedback.innerHTML =
+            "<strong>Review your choices.</strong><br>" +
+            "Focus on hazards that could immediately threaten the " +
+            "patient or rescuers and may require scene control or " +
+            "additional resources.";
+
+        prioritySelected.forEach(button => {
+
+            if (button.dataset.correct === "false") {
+
+                setTimeout(() => {
+
+                    button.classList.remove("incorrect");
+
+                }, 1500);
+
+            }
+
+        });
+
+        prioritySelected = [];
+
+        document.querySelectorAll(".priority")
+            .forEach(button => {
+
+                button.classList.remove("correct");
+
+            });
+
+    }
+
+}
+
+
+/* =========================================================
+   START ACTIVITY 2
+========================================================= */
+
+function startActivity2() {
+
+    document.getElementById("activity1")
+        .classList.add("hidden");
+
+    document.getElementById("activity2")
+        .classList.remove("hidden");
+
+    document.getElementById("progress1")
+        .classList.remove("active");
+
+    document.getElementById("progress1")
+        .classList.add("complete");
+
+    document.getElementById("progress2")
+        .classList.add("active");
+
+    loadScenario();
+
+}
+
+
+/* =========================================================
+   PROGRESSIVE SCENARIOS
+========================================================= */
+
+const scenarios = [
+
+{
+    situation:
+    "Dispatch reports a single-vehicle collision. You arrive and see a badly damaged vehicle near an active roadway.",
+
+    question:
+    "What should you do FIRST?",
+
+    answers: [
+        "Approach the vehicle and begin assessing the driver.",
+        "Evaluate the scene for hazards and determine whether it is safe to approach.",
+        "Ask the driver what happened.",
+        "Obtain a set of vital signs."
+    ],
+
+    correct: 1,
+
+    explanation:
+    "Scene safety comes before patient contact. Determine whether hazards such as traffic, fire, fuel, unstable vehicles, or other threats are present."
+},
+
+{
+    situation:
+    "Traffic is moving quickly around the crash. You are concerned that another vehicle could strike the wreckage or responders.",
+
+    question:
+    "What is the most appropriate action?",
+
+    answers: [
+        "Enter the vehicle quickly before another crash occurs.",
+        "Ask the patient to move away from the vehicle.",
+        "Request appropriate resources to establish scene safety.",
+        "Begin obtaining the patient's SAMPLE history."
+    ],
+
+    correct: 2,
+
+    explanation:
+    "The EMT should not enter an unsafe scene. Additional resources may be needed for traffic control and scene protection."
+},
+
+{
+    situation:
+    "You notice smoke coming from the engine compartment and what appears to be leaking fuel.",
+
+    question:
+    "What should influence your scene-size-up decision?",
+
+    answers: [
+        "Only the patient's injuries.",
+        "Fire and fuel hazards, scene safety, and the need for additional resources.",
+        "The patient's blood pressure and pulse.",
+        "The patient's medical history."
+    ],
+
+    correct: 1,
+
+    explanation:
+    "Potential fire and fuel hazards can endanger patients and rescuers. Scene safety must be addressed before patient contact."
+},
+
+{
+    situation:
+    "Fire personnel arrive and establish the crash scene as safe. You can now approach the vehicle. You see two occupants.",
+
+    question:
+    "What important scene-size-up information have you identified?",
+
+    answers: [
+        "The number of patients.",
+        "The patient's SAMPLE history.",
+        "The patient's blood pressure.",
+        "The patient's OPQRST history."
+    ],
+
+    correct: 0,
+
+    explanation:
+    "Determining the number of patients is part of scene size-up and helps determine whether additional EMS resources are needed."
+},
+
+{
+    situation:
+    "One occupant appears unconscious. The other patient is awake and calling for help.",
+
+    question:
+    "What should you consider before beginning detailed assessment?",
+
+    answers: [
+        "Whether additional EMS resources are needed.",
+        "The patient's last oral intake.",
+        "The patient's complete medical history.",
+        "The patient's medication list."
+    ],
+
+    correct: 0,
+
+    explanation:
+    "Multiple patients, especially when one may be critically ill, may require additional resources."
+},
+
+{
+    situation:
+    "The scene is secure and sufficient personnel are available. You approach the unconscious patient.",
+
+    question:
+    "What happens next?",
+
+    answers: [
+        "Begin the patient's SAMPLE history.",
+        "Perform the primary assessment.",
+        "Complete the patient care report.",
+        "Obtain a detailed OPQRST history."
+    ],
+
+    correct: 1,
+
+    explanation:
+    "Once the scene is safe and the patient is accessible, begin the patient assessment with the primary assessment."
+},
+
+{
+    situation:
+    "During your primary assessment, you discover a major airway problem.",
+
+    question:
+    "What is the most appropriate approach?",
+
+    answers: [
+        "Finish the entire secondary assessment first.",
+        "Obtain a complete SAMPLE history.",
+        "Address the immediate life threat.",
+        "Wait until arrival at the hospital."
+    ],
+
+    correct: 2,
+
+    explanation:
+    "Life threats are treated as they are identified. Do not delay critical treatment to complete a detailed assessment."
+},
+
+{
+    situation:
+    "After treatment, you reassess the patient. The patient's condition has worsened and the patient is becoming less responsive.",
+
+    question:
+    "What should you do?",
+
+    answers: [
+        "Continue the secondary assessment.",
+        "Return to the primary assessment and address immediate life threats.",
+        "Complete the PCR before doing anything else.",
+        "Obtain a detailed SAMPLE history."
+    ],
+
+    correct: 1,
+
+    explanation:
+    "When a patient's condition deteriorates, return to the primary assessment. Reassessment is continuous throughout patient care."
+}
+
+];
+
+let currentScenario = 0;
+let scenarioCorrect = 0;
+let answered = false;
+
+
+/* =========================================================
+   LOAD SCENARIO
+========================================================= */
+
+function loadScenario() {
+
+    const s = scenarios[currentScenario];
+
+    answered = false;
+
+    document.getElementById("qNumber")
+        .textContent = currentScenario + 1;
+
+    document.getElementById("scenarioScore")
+        .textContent = scenarioCorrect;
+
+    const area =
+        document.getElementById("scenarioArea");
+
+    area.innerHTML = "";
+
+    const box =
+        document.createElement("div");
+
+    box.className = "scenario-box";
+
+    box.innerHTML =
+        "<strong>Situation</strong>" +
+        "<p>" + s.situation + "</p>";
+
+    area.appendChild(box);
+
+    const question =
+        document.createElement("div");
+
+    question.className =
+        "scenario-question";
+
+    question.textContent =
+        s.question;
+
+    area.appendChild(question);
+
+    s.answers.forEach((answer,index) => {
+
+        const button =
+            document.createElement("button");
+
+        button.className = "choice";
+
+        button.textContent =
+            String.fromCharCode(65 + index) +
+            ". " + answer;
+
+        button.onclick =
+            () => answerScenario(index,button);
+
+        area.appendChild(button);
+
+    });
+
+}
+
+
+/* =========================================================
+   ANSWER SCENARIO
+========================================================= */
+
+function answerScenario(selected,button) {
+
+    if (answered) return;
+
+    answered = true;
+
+    const s = scenarios[currentScenario];
+
+    const buttons =
+        document.querySelectorAll("#scenarioArea .choice");
+
+    buttons.forEach(b => b.disabled = true);
+
+    if (selected === s.correct) {
+
+        button.classList.add("correct");
+
+        scenarioCorrect++;
+
+    } else {
+
+        button.classList.add("incorrect");
+
+        buttons[s.correct]
+            .classList.add("correct");
+
+    }
+
+    document.getElementById("scenarioScore")
+        .textContent = scenarioCorrect;
+
+    const explanation =
+        document.createElement("div");
+
+    explanation.className =
+        "explanation show";
+
+    explanation.innerHTML =
+        "<strong>" +
+        (selected === s.correct
+            ? "✓ Correct"
+            : "✗ Not the best choice") +
+        "</strong>" +
+        "<p>" + s.explanation + "</p>";
+
+    document.getElementById("scenarioArea")
+        .appendChild(explanation);
+
+    const next =
+        document.createElement("button");
+
+    next.className = "primary-btn";
+
+    next.style.marginTop = "15px";
+
+    next.textContent =
+        currentScenario === scenarios.length - 1
+            ? "See Final Results"
+            : "Next Situation";
+
+    next.onclick = () => {
+
+        if (currentScenario === scenarios.length - 1) {
+
+            showResults();
+
+        } else {
+
+            currentScenario++;
+
+            loadScenario();
+
+        }
+
+    };
+
+    document.getElementById("scenarioArea")
+        .appendChild(next);
+
+}
+
+
+/* =========================================================
+   RESULTS
+========================================================= */
+
+function showResults() {
+
+    document.getElementById("scenarioArea")
+        .classList.add("hidden");
+
+    document.querySelector(".score")
+        .classList.add("hidden");
+
+    document.getElementById("finalResults")
+        .classList.remove("hidden");
+
+    document.getElementById("progress2")
+        .classList.remove("active");
+
+    document.getElementById("progress2")
+        .classList.add("complete");
+
+    document.getElementById("progress3")
+        .classList.add("active");
+
+    const percent =
+        Math.round(
+            scenarioCorrect /
+            scenarios.length *
+            100
+        );
+
+    document.getElementById("percent")
+        .textContent = percent;
+
+    if (percent >= 90) {
+
+        document.getElementById("finalMessage")
+            .textContent =
+            "Excellent. You demonstrated strong scene-size-up and safety decision-making.";
+
+    } else if (percent >= 75) {
+
+        document.getElementById("finalMessage")
+            .textContent =
+            "Good work. Review the questions you missed and focus on safety, hazards, patient count, and resource decisions.";
+
+    } else {
+
+        document.getElementById("finalMessage")
+            .textContent =
+            "Review Scene Size-Up & Safety before moving forward. Safety and hazard recognition must become automatic priorities.";
+
+    }
+
+}
+
+</script>
+
+</body>
+</html>
