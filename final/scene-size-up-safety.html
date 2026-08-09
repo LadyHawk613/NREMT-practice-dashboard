@@ -569,20 +569,16 @@ button {
 }
 
 @media(max-width: 700px) {
-
     .container {
         padding: 12px;
     }
-
     .scene {
         height: 620px;
     }
-
     .scene-label {
         font-size: 10px;
         padding: 6px;
     }
-
     header h1 {
         font-size: 24px;
     }
@@ -772,21 +768,6 @@ Correct scene concerns identified:
 Continue to Layer 2
 
 </button>
-    
-function showLayer2() {
-
-    document.getElementById("layer2")
-        .classList.remove("hidden");
-
-    document.getElementById("toLayer2")
-        .classList.add("hidden");
-
-    document.getElementById("layer2")
-        .scrollIntoView({
-            behavior: "smooth",
-            block: "start"
-        });
-}
 
 <!-- ======================================================
      LAYER 2
@@ -943,7 +924,26 @@ Start Again
 <script>
 
 /* =========================================================
-   LAYER 1
+   LAYER 1 TRANSITION FUNCTION (FIXED)
+========================================================= */
+
+function showLayer2() {
+    document.getElementById("layer2")
+        .classList.remove("hidden");
+
+    document.getElementById("toLayer2")
+        .classList.add("hidden");
+
+    document.getElementById("layer2")
+        .scrollIntoView({
+            behavior: "smooth",
+            block: "start"
+        });
+}
+
+
+/* =========================================================
+   LAYER 1 LOGIC
 ========================================================= */
 
 const correctLabels =
