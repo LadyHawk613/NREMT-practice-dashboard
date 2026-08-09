@@ -182,12 +182,12 @@
     flex: 1;
     display: flex;
     flex-direction: column;
-    gap: 6px;
-    padding: 10px;
+    gap: 4px;
+    padding: 6px;
     background: rgba(255,255,255,0.35);
     border-radius: 16px;
     border: 2px solid rgba(255,255,255,0.5);
-    overflow-y: auto;
+    overflow: visible;
   }
 
   /* Ordering Layout */
@@ -233,18 +233,18 @@
   /* Card Style */
   .card {
     width: 100%;
-    min-height: 42px;
-    border-radius: 10px;
+    min-height: 32px;
+    border-radius: 8px;
     display: flex;
     align-items: center;
     justify-content: center;
     text-align: center;
-    font-size: 12px;
+    font-size: 11px;
     font-weight: 700;
     color: #fff;
     cursor: grab;
-    padding: 6px 10px;
-    box-shadow: 0 3px 6px rgba(0,0,0,0.2);
+    padding: 4px 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.15);
     user-select: none;
     transition: transform 0.1s, background 0.2s;
   }
@@ -423,7 +423,7 @@
       const bankCol = document.createElement("div");
       bankCol.className = "bank";
       bankCol.id = "bank";
-      bankCol.style.flex = "0 0 320px";
+      bankCol.style.flex = "0 0 300px";
       shuffle(act.allCards).forEach(c => bankCol.appendChild(createCard(c.text, c.color)));
 
       const rightCol = document.createElement("div");
@@ -476,15 +476,12 @@
         labelsCol.appendChild(lbl);
       });
 
-      // Column 2: Drop Zones (Modified height and padding to ensure all fit without vertical scrolling)
+      // Column 2: Drop Zones
       const dropsCol = document.createElement("div");
       dropsCol.className = "matching-drops";
       act.pairs.forEach(p => {
         const drop = document.createElement("div");
         drop.className = "matching-drop-zone";
-        drop.style.height = "calc((100% - 32px) / 5)";
-        drop.style.minHeight = "42px";
-        drop.style.padding = "2px 5px";
         drop.dataset.condition = p.condition;
         dropsCol.appendChild(drop);
       });
