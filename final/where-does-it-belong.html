@@ -1,0 +1,1154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NREMT — Where Does It Belong?</title>
+
+<style>
+    :root {
+        --navy: #071B2D;
+        --teal: #008C95;
+        --gold: #E6B422;
+        --white: #FFFFFF;
+        --light: #F3F6F8;
+        --gray: #66727D;
+        --green: #198754;
+        --red: #C62828;
+        --border: #D5DDE3;
+    }
+
+    * {
+        box-sizing: border-box;
+    }
+
+    body {
+        margin: 0;
+        font-family: Arial, Helvetica, sans-serif;
+        background: var(--light);
+        color: #17212B;
+    }
+
+    header {
+        background: var(--navy);
+        color: white;
+        padding: 24px 30px;
+        text-align: center;
+    }
+
+    header h1 {
+        margin: 0 0 8px;
+        font-size: 30px;
+    }
+
+    header p {
+        margin: 0;
+        color: #D9E6EC;
+        font-size: 16px;
+    }
+
+    .container {
+        max-width: 1200px;
+        margin: auto;
+        padding: 24px;
+    }
+
+    .instructions {
+        background: white;
+        border-left: 6px solid var(--gold);
+        padding: 18px 20px;
+        margin-bottom: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 7px rgba(0,0,0,.08);
+    }
+
+    .instructions h2 {
+        margin-top: 0;
+        color: var(--navy);
+    }
+
+    .top-bar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 15px;
+        background: var(--navy);
+        color: white;
+        padding: 14px 18px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+        flex-wrap: wrap;
+    }
+
+    .round {
+        font-weight: bold;
+        color: var(--gold);
+    }
+
+    .score {
+        font-weight: bold;
+    }
+
+    .progress-wrap {
+        background: #314354;
+        height: 10px;
+        border-radius: 10px;
+        overflow: hidden;
+        flex: 1;
+        min-width: 180px;
+    }
+
+    .progress {
+        height: 100%;
+        background: var(--gold);
+        width: 0%;
+        transition: width .3s ease;
+    }
+
+    .cards-title {
+        color: var(--navy);
+        margin-bottom: 10px;
+    }
+
+    .cards-area {
+        min-height: 125px;
+        background: white;
+        border: 2px dashed var(--border);
+        border-radius: 10px;
+        padding: 15px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-bottom: 25px;
+    }
+
+    .card {
+        background: var(--navy);
+        color: white;
+        padding: 15px 18px;
+        border-radius: 8px;
+        cursor: grab;
+        font-weight: bold;
+        max-width: 300px;
+        box-shadow: 0 3px 6px rgba(0,0,0,.18);
+        user-select: none;
+        transition: transform .15s, opacity .15s;
+    }
+
+    .card:hover {
+        transform: translateY(-2px);
+    }
+
+    .card.dragging {
+        opacity: .45;
+    }
+
+    .card.selected {
+        outline: 4px solid var(--gold);
+    }
+
+    .domains {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 14px;
+    }
+
+    .drop-zone {
+        background: white;
+        border: 3px solid var(--teal);
+        border-radius: 10px;
+        min-height: 220px;
+        padding: 12px;
+        transition: background .2s, transform .2s;
+    }
+
+    .drop-zone h3 {
+        margin: 0 0 8px;
+        font-size: 17px;
+        color: var(--navy);
+        text-align: center;
+    }
+
+    .drop-zone p {
+        font-size: 12px;
+        color: var(--gray);
+        text-align: center;
+        margin-bottom: 12px;
+    }
+
+    .drop-zone.over {
+        background: #E3F4F5;
+        transform: scale(1.02);
+    }
+
+    .drop-zone.correct {
+        border-color: var(--green);
+        background: #E8F5E9;
+    }
+
+    .drop-zone.incorrect {
+        animation: shake .3s;
+        border-color: var(--red);
+    }
+
+    .zone-card {
+        background: var(--teal);
+        color: white;
+        padding: 9px;
+        border-radius: 6px;
+        margin-top: 8px;
+        font-size: 13px;
+        font-weight: bold;
+    }
+
+    @keyframes shake {
+        0% { transform: translateX(0); }
+        25% { transform: translateX(-6px); }
+        50% { transform: translateX(6px); }
+        75% { transform: translateX(-6px); }
+        100% { transform: translateX(0); }
+    }
+
+    .feedback {
+        margin-top: 20px;
+        background: white;
+        border-radius: 10px;
+        padding: 18px;
+        border-left: 6px solid var(--teal);
+        display: none;
+    }
+
+    .feedback.show {
+        display: block;
+    }
+
+    .feedback.correct {
+        border-left-color: var(--green);
+    }
+
+    .feedback.incorrect {
+        border-left-color: var(--red);
+    }
+
+    .feedback-title {
+        font-weight: bold;
+        font-size: 18px;
+        margin-bottom: 8px;
+    }
+
+    .why-btn {
+        margin-top: 12px;
+        background: var(--navy);
+        color: white;
+        border: none;
+        padding: 9px 14px;
+        border-radius: 6px;
+        cursor: pointer;
+        font-weight: bold;
+    }
+
+    .why-btn:hover {
+        background: var(--teal);
+    }
+
+    .explanation {
+        display: none;
+        margin-top: 12px;
+        background: #F3F6F8;
+        padding: 12px;
+        border-radius: 6px;
+        line-height: 1.5;
+    }
+
+    .explanation.show {
+        display: block;
+    }
+
+    .controls {
+        display: flex;
+        justify-content: center;
+        gap: 12px;
+        margin-top: 25px;
+        flex-wrap: wrap;
+    }
+
+    button {
+        border: none;
+        padding: 13px 22px;
+        border-radius: 7px;
+        font-weight: bold;
+        cursor: pointer;
+        font-size: 15px;
+    }
+
+    .primary-btn {
+        background: var(--teal);
+        color: white;
+    }
+
+    .primary-btn:hover {
+        background: #006F76;
+    }
+
+    .secondary-btn {
+        background: var(--navy);
+        color: white;
+    }
+
+    .secondary-btn:hover {
+        background: #102C42;
+    }
+
+    .gold-btn {
+        background: var(--gold);
+        color: var(--navy);
+    }
+
+    .hidden {
+        display: none !important;
+    }
+
+    .results {
+        background: white;
+        border-radius: 12px;
+        padding: 35px;
+        text-align: center;
+        box-shadow: 0 3px 12px rgba(0,0,0,.12);
+    }
+
+    .results h2 {
+        color: var(--navy);
+        font-size: 30px;
+    }
+
+    .final-score {
+        font-size: 50px;
+        font-weight: bold;
+        color: var(--teal);
+        margin: 20px;
+    }
+
+    .review-box {
+        text-align: left;
+        background: var(--light);
+        padding: 18px;
+        border-radius: 8px;
+        margin-top: 20px;
+    }
+
+    .review-box h3 {
+        color: var(--navy);
+    }
+
+    .scenario-box {
+        background: #EEF7F8;
+        border: 2px solid var(--teal);
+        padding: 18px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+        line-height: 1.6;
+    }
+
+    .round-intro {
+        background: var(--navy);
+        color: white;
+        padding: 20px;
+        border-radius: 10px;
+        margin-bottom: 20px;
+    }
+
+    .round-intro h2 {
+        margin-top: 0;
+        color: var(--gold);
+    }
+
+    @media (max-width: 900px) {
+        .domains {
+            grid-template-columns: 1fr 1fr;
+        }
+    }
+
+    @media (max-width: 600px) {
+        .domains {
+            grid-template-columns: 1fr;
+        }
+
+        header h1 {
+            font-size: 24px;
+        }
+
+        .container {
+            padding: 12px;
+        }
+
+        .card {
+            max-width: 100%;
+            width: 100%;
+        }
+    }
+</style>
+</head>
+
+<body>
+
+<header>
+    <h1>NREMT Final Review</h1>
+    <p>Where Does It Belong?</p>
+</header>
+
+<div class="container">
+
+    <div id="game">
+
+        <div class="instructions">
+            <h2>How to Play</h2>
+            <p>
+                Drag each EMT task into the NREMT domain where it belongs.
+                Think about <strong>when and why</strong> the EMT performs the task.
+            </p>
+            <p>
+                Some questions are intentionally tricky. An action may be related
+                to more than one part of patient care, but choose the domain that
+                best represents the task.
+            </p>
+        </div>
+
+        <div class="round-intro" id="roundIntro">
+            <h2 id="roundTitle">Round 1 — Learn the Domains</h2>
+            <p id="roundDescription">
+                Start with straightforward examples. Learn what belongs in each
+                part of the EMT workflow.
+            </p>
+        </div>
+
+        <div class="top-bar">
+            <div class="round" id="roundDisplay">Round 1 of 3</div>
+
+            <div class="progress-wrap">
+                <div class="progress" id="progress"></div>
+            </div>
+
+            <div class="score">
+                Score: <span id="score">0</span>
+            </div>
+        </div>
+
+        <h2 class="cards-title">Drag a task into the correct domain:</h2>
+
+        <div class="cards-area" id="cardsArea"></div>
+
+        <div class="domains">
+
+            <div class="drop-zone" data-domain="scene">
+                <h3>Scene Size-Up & Safety</h3>
+                <p>Before approaching / entering the scene</p>
+            </div>
+
+            <div class="drop-zone" data-domain="primary">
+                <h3>Primary Assessment</h3>
+                <p>Identify immediate life threats</p>
+            </div>
+
+            <div class="drop-zone" data-domain="secondary">
+                <h3>Secondary Assessment</h3>
+                <p>Gather additional information</p>
+            </div>
+
+            <div class="drop-zone" data-domain="treatment">
+                <h3>Patient Treatment & Transport</h3>
+                <p>Treat, monitor, and transport</p>
+            </div>
+
+            <div class="drop-zone" data-domain="operations">
+                <h3>Operations</h3>
+                <p>EMS systems, documentation & provider safety</p>
+            </div>
+
+        </div>
+
+        <div class="feedback" id="feedback">
+            <div class="feedback-title" id="feedbackTitle"></div>
+            <div id="feedbackText"></div>
+
+            <button class="why-btn" id="whyButton">
+                Why?
+            </button>
+
+            <div class="explanation" id="explanation"></div>
+        </div>
+
+        <div class="controls">
+            <button class="secondary-btn" onclick="resetCurrentRound()">
+                Reset Round
+            </button>
+
+            <button class="gold-btn hidden" id="nextRoundButton" onclick="nextRound()">
+                Continue
+            </button>
+        </div>
+
+    </div>
+
+
+    <div id="results" class="results hidden">
+
+        <h2>Final Results</h2>
+
+        <div class="final-score">
+            <span id="finalScore">0</span>%
+        </div>
+
+        <p id="finalMessage"></p>
+
+        <div class="review-box">
+            <h3>Final NREMT Reminder</h3>
+
+            <p>
+                <strong>Scene → Primary → Secondary → Treatment/Transport → Operations</strong>
+            </p>
+
+            <p>
+                If the patient's condition deteriorates,
+                <strong>return to the primary assessment.</strong>
+            </p>
+
+            <p>
+                When you are unsure on the NREMT, ask:
+                <strong>“What can kill this patient first?”</strong>
+            </p>
+        </div>
+
+        <div class="controls">
+            <button class="primary-btn" onclick="restartGame()">
+                Start Again
+            </button>
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+
+const rounds = [
+
+    // ============================
+    // ROUND 1
+    // ============================
+
+    {
+        title: "Round 1 — Learn the Domains",
+        description:
+            "Start with straightforward examples. Learn what belongs in each part of the EMT workflow.",
+
+        cards: [
+
+            {
+                text: "Determine whether the scene is safe",
+                domain: "scene",
+                why: "Scene safety must be established before the EMT approaches the patient."
+            },
+
+            {
+                text: "Put on appropriate PPE",
+                domain: "scene",
+                why: "PPE protects the EMT and is part of scene safety and preparation."
+            },
+
+            {
+                text: "Determine the number of patients",
+                domain: "scene",
+                why: "Determining the number of patients occurs during scene size-up."
+            },
+
+            {
+                text: "Assess the patient's general impression",
+                domain: "primary",
+                why: "The general impression is part of the primary assessment."
+            },
+
+            {
+                text: "Assess the airway",
+                domain: "primary",
+                why: "Airway assessment is a core component of the primary assessment."
+            },
+
+            {
+                text: "Assess breathing",
+                domain: "primary",
+                why: "Breathing is assessed during the primary assessment to identify immediate threats."
+            },
+
+            {
+                text: "Obtain a SAMPLE history",
+                domain: "secondary",
+                why: "SAMPLE is part of gathering a more detailed patient history."
+            },
+
+            {
+                text: "Perform OPQRST",
+                domain: "secondary",
+                why: "OPQRST helps obtain detailed information about a patient's symptoms."
+            },
+
+            {
+                text: "Control life-threatening bleeding",
+                domain: "treatment",
+                why: "The primary assessment identifies the life threat; controlling the bleeding is the treatment."
+            },
+
+            {
+                text: "Complete the patient care report",
+                domain: "operations",
+                why: "Documentation is an EMS operations responsibility."
+            }
+
+        ]
+    },
+
+    // ============================
+    // ROUND 2
+    // ============================
+
+    {
+        title: "Round 2 — Think Carefully",
+        description:
+            "These tasks are more difficult because more than one domain may seem reasonable.",
+
+        cards: [
+
+            {
+                text: "Determine whether the patient requires rapid transport",
+                domain: "primary",
+                why: "The primary assessment helps determine patient priority, immediate treatment needs, and the need for rapid transport."
+            },
+
+            {
+                text: "Request additional EMS resources",
+                domain: "scene",
+                why: "Recognizing the need for additional resources is part of scene size-up and safety."
+            },
+
+            {
+                text: "Obtain baseline vital signs",
+                domain: "secondary",
+                why: "Baseline vital signs provide additional information about the patient's condition after immediate life threats are addressed."
+            },
+
+            {
+                text: "Determine the patient's last known well time",
+                domain: "secondary",
+                why: "Last known well is important history information, particularly when evaluating suspected stroke."
+            },
+
+            {
+                text: "Administer an appropriate medication",
+                domain: "treatment",
+                why: "Medication administration is a treatment intervention."
+            },
+
+            {
+                text: "Assist with ventilation",
+                domain: "treatment",
+                why: "Ventilatory assistance is an immediate treatment for inadequate ventilation."
+            },
+
+            {
+                text: "Apply appropriate spinal motion restriction",
+                domain: "treatment",
+                why: "Spinal motion restriction is part of patient treatment and management."
+            },
+
+            {
+                text: "Communicate with medical direction",
+                domain: "operations",
+                why: "Communication with medical direction is part of EMS operations."
+            },
+
+            {
+                text: "Give a hospital handoff",
+                domain: "operations",
+                why: "Transfer-of-care communication is an operational responsibility."
+            },
+
+            {
+                text: "Maintain provider safety",
+                domain: "operations",
+                why: "Provider safety and well-being are part of EMS operations."
+            }
+
+        ]
+    },
+
+    // ============================
+    // ROUND 3
+    // ============================
+
+    {
+        title: "Round 3 — NREMT Challenge",
+        description:
+            "These are designed like NREMT reasoning questions. Think about the EMT workflow, not just the task itself.",
+
+        cards: [
+
+            {
+                text: "Enter a violent scene because the patient needs immediate care",
+                domain: "scene",
+                why: "The important concept is scene safety. An EMT should not enter an unsafe scene until it has been made safe or appropriate resources are present."
+            },
+
+            {
+                text: "Obtain a complete SAMPLE history before treating severe airway obstruction",
+                domain: "primary",
+                why: "This is a deliberate trap. A severe airway problem is an immediate life threat and must be addressed before a detailed history."
+            },
+
+            {
+                text: "Continue the secondary assessment after the patient becomes unresponsive",
+                domain: "primary",
+                why: "If the patient's condition deteriorates, stop the secondary assessment and return immediately to the primary assessment."
+            },
+
+            {
+                text: "Determine whether oxygen is indicated",
+                domain: "primary",
+                why: "The need for oxygen is determined during assessment of breathing and oxygenation. Administration itself is treatment."
+            },
+
+            {
+                text: "Administer oxygen when indicated",
+                domain: "treatment",
+                why: "Administration of oxygen is a patient treatment intervention."
+            },
+
+            {
+                text: "Repeat vital signs after treatment",
+                domain: "secondary",
+                why: "Repeated vital signs are part of monitoring and reassessment. They help determine whether the patient's condition or response to treatment has changed."
+            },
+
+            {
+                text: "Document objective findings rather than opinions",
+                domain: "operations",
+                why: "Accurate, objective documentation is an important EMS operations responsibility."
+            },
+
+            {
+                text: "Determine the patient's last known well time",
+                domain: "secondary",
+                why: "This information comes from the patient or witnesses and is part of the history/secondary assessment."
+            },
+
+            {
+                text: "Determine whether the patient needs additional resources before approaching",
+                domain: "scene",
+                why: "Resource needs are considered during scene size-up before patient contact."
+            },
+
+            {
+                text: "Reassess a patient after an intervention",
+                domain: "secondary",
+                why: "Reassessment determines whether the patient's condition or response to treatment has changed. If a life threat develops, the EMT returns to the primary assessment."
+            }
+
+        ]
+    }
+
+];
+
+let currentRound = 0;
+let currentCards = [];
+let totalAnswered = 0;
+let correctAnswers = 0;
+let roundAnswered = 0;
+
+let draggedCard = null;
+let selectedCard = null;
+
+const cardsArea = document.getElementById("cardsArea");
+const feedback = document.getElementById("feedback");
+const feedbackTitle = document.getElementById("feedbackTitle");
+const feedbackText = document.getElementById("feedbackText");
+const explanation = document.getElementById("explanation");
+const whyButton = document.getElementById("whyButton");
+const nextRoundButton = document.getElementById("nextRoundButton");
+
+
+// ========================================
+// LOAD ROUND
+// ========================================
+
+function loadRound() {
+
+    const round = rounds[currentRound];
+
+    document.getElementById("roundTitle").textContent = round.title;
+    document.getElementById("roundDescription").textContent = round.description;
+    document.getElementById("roundDisplay").textContent =
+        `Round ${currentRound + 1} of ${rounds.length}`;
+
+    currentCards = [...round.cards];
+
+    roundAnswered = 0;
+
+    cardsArea.innerHTML = "";
+
+    document.querySelectorAll(".drop-zone").forEach(zone => {
+        zone.classList.remove("correct", "incorrect", "over");
+
+        zone.querySelectorAll(".zone-card").forEach(card => card.remove());
+    });
+
+    feedback.classList.remove("show", "correct", "incorrect");
+
+    explanation.classList.remove("show");
+    explanation.textContent = "";
+
+    nextRoundButton.classList.add("hidden");
+
+    currentCards.forEach((cardData, index) => {
+
+        const card = document.createElement("div");
+
+        card.className = "card";
+        card.draggable = true;
+
+        card.textContent = cardData.text;
+
+        card.dataset.index = index;
+
+        card.addEventListener("dragstart", function(e) {
+            draggedCard = card;
+            card.classList.add("dragging");
+        });
+
+        card.addEventListener("dragend", function() {
+            card.classList.remove("dragging");
+            draggedCard = null;
+        });
+
+        // Mobile/touch fallback
+        card.addEventListener("click", function() {
+
+            if (selectedCard === card) {
+                card.classList.remove("selected");
+                selectedCard = null;
+                return;
+            }
+
+            document.querySelectorAll(".card").forEach(c =>
+                c.classList.remove("selected")
+            );
+
+            selectedCard = card;
+            card.classList.add("selected");
+        });
+
+        cardsArea.appendChild(card);
+    });
+
+    updateProgress();
+}
+
+
+// ========================================
+// DROP ZONES
+// ========================================
+
+document.querySelectorAll(".drop-zone").forEach(zone => {
+
+    zone.addEventListener("dragover", function(e) {
+        e.preventDefault();
+        zone.classList.add("over");
+    });
+
+    zone.addEventListener("dragleave", function() {
+        zone.classList.remove("over");
+    });
+
+    zone.addEventListener("drop", function(e) {
+
+        e.preventDefault();
+
+        zone.classList.remove("over");
+
+        if (draggedCard) {
+            evaluateCard(draggedCard, zone);
+        }
+    });
+
+    // Touch-friendly click placement
+    zone.addEventListener("click", function() {
+
+        if (selectedCard) {
+
+            const card = selectedCard;
+
+            card.classList.remove("selected");
+
+            selectedCard = null;
+
+            evaluateCard(card, zone);
+        }
+
+    });
+
+});
+
+
+// ========================================
+// EVALUATE CARD
+// ========================================
+
+function evaluateCard(card, zone) {
+
+    const index = Number(card.dataset.index);
+
+    const cardData = currentCards[index];
+
+    const selectedDomain = zone.dataset.domain;
+
+    const isCorrect = selectedDomain === cardData.domain;
+
+    feedback.classList.add("show");
+
+    explanation.classList.remove("show");
+
+    explanation.textContent = cardData.why;
+
+    if (isCorrect) {
+
+        correctAnswers++;
+        totalAnswered++;
+        roundAnswered++;
+
+        feedback.classList.remove("incorrect");
+        feedback.classList.add("correct");
+
+        feedbackTitle.textContent = "✓ Correct";
+
+        feedbackText.textContent =
+            `This task belongs in ${getDomainName(cardData.domain)}.`;
+
+        zone.classList.add("correct");
+
+        setTimeout(() => {
+            zone.classList.remove("correct");
+        }, 700);
+
+        // Move card into zone
+        const zoneCard = document.createElement("div");
+
+        zoneCard.className = "zone-card";
+        zoneCard.textContent = cardData.text;
+
+        zone.appendChild(zoneCard);
+
+        card.remove();
+
+        updateProgress();
+
+        if (roundAnswered === currentCards.length) {
+
+            feedbackTitle.textContent = "Round Complete";
+
+            feedbackText.textContent =
+                "Excellent. You have correctly classified every task in this round.";
+
+            nextRoundButton.classList.remove("hidden");
+        }
+
+    } else {
+
+        totalAnswered++;
+
+        feedback.classList.remove("correct");
+        feedback.classList.add("incorrect");
+
+        feedbackTitle.textContent = "Not quite";
+
+        feedbackText.innerHTML =
+            `That task belongs in <strong>${getDomainName(cardData.domain)}</strong>.<br>
+             Try placing it in the correct domain.`;
+
+        zone.classList.add("incorrect");
+
+        setTimeout(() => {
+            zone.classList.remove("incorrect");
+        }, 500);
+
+        // Card remains in original area
+    }
+
+    document.getElementById("score").textContent = correctAnswers;
+
+}
+
+
+// ========================================
+// DOMAIN NAME
+// ========================================
+
+function getDomainName(domain) {
+
+    const names = {
+
+        scene: "Scene Size-Up & Safety",
+
+        primary: "Primary Assessment",
+
+        secondary: "Secondary Assessment",
+
+        treatment: "Patient Treatment & Transport",
+
+        operations: "Operations"
+
+    };
+
+    return names[domain];
+}
+
+
+// ========================================
+// WHY BUTTON
+// ========================================
+
+whyButton.addEventListener("click", function() {
+
+    explanation.classList.toggle("show");
+
+    whyButton.textContent =
+        explanation.classList.contains("show")
+            ? "Hide Explanation"
+            : "Why?";
+
+});
+
+
+// ========================================
+// PROGRESS
+// ========================================
+
+function updateProgress() {
+
+    const percent =
+        (roundAnswered / currentCards.length) * 100;
+
+    document.getElementById("progress").style.width =
+        percent + "%";
+}
+
+
+// ========================================
+// NEXT ROUND
+// ========================================
+
+function nextRound() {
+
+    if (currentRound < rounds.length - 1) {
+
+        currentRound++;
+
+        loadRound();
+
+    } else {
+
+        showResults();
+
+    }
+
+}
+
+
+// ========================================
+// RESET ROUND
+// ========================================
+
+function resetCurrentRound() {
+
+    loadRound();
+
+}
+
+
+// ========================================
+// RESULTS
+// ========================================
+
+function showResults() {
+
+    document.getElementById("game").classList.add("hidden");
+
+    document.getElementById("results").classList.remove("hidden");
+
+    const totalPossible =
+        rounds.reduce((sum, round) => sum + round.cards.length, 0);
+
+    const percentage =
+        Math.round((correctAnswers / totalPossible) * 100);
+
+    document.getElementById("finalScore").textContent =
+        percentage;
+
+    let message = "";
+
+    if (percentage >= 90) {
+
+        message =
+            "Excellent. You demonstrate strong understanding of the NREMT assessment framework.";
+
+    } else if (percentage >= 80) {
+
+        message =
+            "Good work. Review the explanations for the items that required another attempt.";
+
+    } else if (percentage >= 70) {
+
+        message =
+            "You have a workable foundation. Review the differences between primary assessment, secondary assessment, and treatment.";
+
+    } else {
+
+        message =
+            "Review the five NREMT domains before continuing. Focus especially on what happens first during patient assessment.";
+
+    }
+
+    document.getElementById("finalMessage").textContent =
+        message;
+}
+
+
+// ========================================
+// RESTART
+// ========================================
+
+function restartGame() {
+
+    currentRound = 0;
+    totalAnswered = 0;
+    correctAnswers = 0;
+    roundAnswered = 0;
+
+    document.getElementById("score").textContent = "0";
+
+    document.getElementById("results").classList.add("hidden");
+
+    document.getElementById("game").classList.remove("hidden");
+
+    loadRound();
+
+}
+
+
+// ========================================
+// START
+// ========================================
+
+loadRound();
+
+</script>
+
+</body>
+</html>
