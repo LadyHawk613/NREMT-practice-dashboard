@@ -236,23 +236,23 @@ button {
 
 <header>
     <h1>Progressive NREMT Final Challenge</h1>
-    <p>The Patient With More Than One Problem</p>
+    <p>The Patient With More Than One Problem — High-Level Clinical Decision-Making</p>
 </header>
 
 <div class="container">
 
 <!-- WELCOME SCREEN -->
 <section id="welcomeScreen" class="card instruction">
-    <h2>Student Instructions</h2>
-    <p>You will receive additional information as the call progresses. At each stage:</p>
+    <h2>Directions & Student Instructions</h2>
+    <p>At each stage, several choices may represent reasonable EMT actions. Select the <strong>BEST</strong> answer based on the patient's current condition and the priorities of the EMT.</p>
     <ul>
+        <li>Do not choose an answer simply because it is appropriate. Choose the action that is most appropriate at this moment.</li>
         <li>Do not assume the first explanation is the correct one.</li>
         <li>Consider the patient's current condition, not just the chief complaint.</li>
         <li>Pay attention to changes in vital signs and mental status.</li>
-        <li>Several answer choices may represent reasonable actions, but select the <strong>BEST</strong> answer.</li>
-        <li>Once you submit an answer, you cannot go back and change it.</li>
+        <li>Once you submit an answer, assume you cannot go back and change it.</li>
     </ul>
-    <p>This progressive case challenge consists of <strong>11 scenarios</strong>.</p>
+    <p>This challenge consists of <strong>11 progressive scenarios</strong>.</p>
     <button class="primary-btn" onclick="startQuiz()" style="margin-top: 15px;">Begin Final Challenge</button>
 </section>
 
@@ -284,8 +284,8 @@ button {
     <p id="finalMessage" style="font-size: 16px; margin-bottom: 25px;"></p>
     <div class="card" style="text-align: left; background: var(--light);">
         <h3 style="color: var(--navy); margin-top: 0;">Key Takeaway & Meta-Reasoning:</h3>
-        <p>The EMT should continuously integrate new findings, recognize changes from baseline, reprioritize threats, and modify assessment and treatment as the patient's condition evolves.</p>
-        <p style="margin-top: 10px;"><strong>Domain Focus:</strong> Scene Size-Up, Primary Assessment, Secondary Assessment, Treatment & Transport, and Operations.</p>
+        <p>The EMT should continuously integrate new findings, recognize changes from baseline, reprioritize immediate threats, and modify assessment and treatment as the patient's condition changes.</p>
+        <p style="margin-top: 10px;"><strong>Core Decision Rule:</strong> Is the patient stable? Continue focused secondary assessment. Is the patient changing? Reassess. Is the patient deteriorating? Return to primary assessment.</p>
     </div>
     <button class="primary-btn" onclick="location.reload()" style="margin-top: 15px;">Restart Final Challenge</button>
 </section>
@@ -295,150 +295,150 @@ button {
 <script>
 const questions = [
     {
-        title: "Question 1 — Scene Size-Up & Safety",
+        title: "QUESTION 1 — SCENE SIZE-UP & SAFETY",
         type: "single",
-        situation: "<strong>Dispatch (18:42):</strong> 64-year-old male with weakness and \"stomach trouble.\" Patient has been sick since dinner; possible food poisoning. Wife reports history of hypertension, high cholesterol, GERD, and prescription medications. Ate steak, potatoes, and dessert ~2 hours ago; history of indigestion; increasingly weak for ~45 minutes. Wife states: <em>\"He says he doesn't want to go to the hospital.\"</em><br><br><strong>Arrival:</strong> You arrive at a large home. Wife is outside waving you toward the house. Several family members inside. <strong>Strong odor of natural gas near the front entrance.</strong> Wife says the gas stove has been malfunctioning (no visible fire). Patient is inside. Your partner removed the stretcher. Wife says: <em>\"He's in the living room. Please hurry.\"</em>",
-        prompt: "What should you do FIRST?",
+        situation: "<strong>Dispatch (18:42):</strong> 64-year-old male with weakness and \"stomach trouble.\" Patient has been sick since dinner; possible food poisoning. Caller is the patient's wife reporting hypertension, high cholesterol, GERD, prescription medications, large dinner ~2 hours ago, previous episodes of indigestion, and increasing weakness for ~45 minutes. Wife states to dispatch: <em>\"He says he doesn't want to go to the hospital.\"</em><br><br><strong>Arrival:</strong> You arrive at a large home. Wife is standing outside. You notice a <strong>strong odor of natural gas near the front entrance</strong>. Gas stove has reportedly been malfunctioning (no visible fire). Patient is somewhere inside. Several family members are inside. Your partner has removed the stretcher. Wife says: <em>\"He's in the living room. Please hurry.\"</em>",
+        prompt: "What is the BEST initial action?",
         options: [
-            { text: "Enter the residence quickly with your partner because the patient may be experiencing a time-sensitive medical emergency.", correct: false },
-            { text: "Ask the wife to bring the patient outside while you and your partner prepare the stretcher.", correct: false },
-            { text: "Move to a safe location, identify the hazard, and request appropriate resources before entering the potentially hazardous environment.", correct: true },
-            { text: "Put on additional PPE and enter the residence while remaining near the doorway.", correct: false }
+            { text: "Have the wife identify the patient's exact location while you remain outside and request fire/rescue because of the suspected gas leak.", correct: false },
+            { text: "Move the ambulance to a position that allows rapid patient removal, then enter with PPE while avoiding the kitchen.", correct: false },
+            { text: "Request fire/rescue and establish a safe operating area while determining whether the scene can be safely entered.", correct: true },
+            { text: "Have your partner enter briefly to determine whether the patient is conscious while you remain outside with the equipment.", correct: false }
         ],
-        rationale: "The strong odor of natural gas represents a potentially dangerous scene hazard. The EMT must protect the patient, public, and responders before entering. PPE does not make an unsafe atmosphere safe.<br><strong>Domain:</strong> Scene Size-Up & Safety"
+        rationale: "<strong>Why C is BEST:</strong> A suspected natural-gas hazard creates an immediate scene-safety concern. The EMT should not enter until the environment has been assessed and deemed safe.<br><strong>Why others are tempting:</strong> A focuses on info gathering without full scene control; B relies on PPE which does not make an unsafe atmosphere safe; D places a responder in unnecessary danger.<br><strong>Domain:</strong> Scene Size-Up & Safety"
     },
     {
-        title: "Question 2 — Primary Assessment",
+        title: "QUESTION 2 — PRIMARY ASSESSMENT",
         type: "single",
-        situation: "<strong>Stage 2:</strong> Fire personnel are requested and establish a safe position outside. The fire department determines that the immediate area can be entered safely.<br><br>You find the patient sitting upright on a couch. He is pale and visibly uncomfortable. He says: <em>\"It's just my stomach. I don't think I need an ambulance.\"</em><br><br><strong>Initial assessment:</strong><br>• Airway: patent | Breathing: rapid but adequate | Circulation: radial pulse present | Mental status: alert and oriented | Skin: pale, cool, and mildly diaphoretic<br>• Vital signs: HR: 108/min | RR: 24/min | BP: 108/68 mmHg | SpO₂: 96%",
-        prompt: "Which finding should <strong>MOST</strong> strongly influence your immediate assessment priority?",
+        situation: "<strong>Stage 2:</strong> Fire personnel determine the immediate area can be entered safely. You find the patient sitting upright on a couch. He appears uncomfortable. He says: <em>\"It's just my stomach. I don't think I need an ambulance.\"</em><br><br><strong>Initial findings:</strong> Airway patent | Breathing rapid but adequate | Radial pulse present | Alert and oriented | Pale, cool, mildly diaphoretic<br><strong>Vital signs:</strong> HR: 108 | RR: 24 | BP: 108/68 | SpO₂: 96%",
+        prompt: "Which finding should MOST influence your immediate priorities?",
         options: [
-            { text: "His history of GERD", correct: false },
-            { text: "His wife's statement that he ate a large dinner", correct: false },
-            { text: "His pale, cool, diaphoretic appearance with tachycardia and tachypnea", correct: true },
-            { text: "His statement that he does not want to go to the hospital", correct: false }
+            { text: "The patient has a history of GERD and believes the symptoms are indigestion.", correct: false },
+            { text: "The patient is pale and diaphoretic with tachycardia and tachypnea despite describing the problem as gastrointestinal.", correct: true },
+            { text: "The patient's blood pressure is still within a range that provides adequate perfusion.", correct: false },
+            { text: "The patient is alert, oriented, and able to speak in complete sentences.", correct: false }
         ],
-        rationale: "The patient's current physiologic findings are more important than the presumed cause of the complaint or his initial preference regarding transport. Pale, cool, diaphoretic skin combined with tachycardia and tachypnea suggests possible circulatory or systemic compromise.<br><strong>Domain:</strong> Primary Assessment"
+        rationale: "<strong>Why B is BEST:</strong> The patient's overall presentation suggests possible systemic compromise. Individual normal or near-normal findings do not outweigh the concerning pattern. Clinical significance comes from the combination of findings, not one reassuring number.<br><strong>Domain:</strong> Primary Assessment"
     },
     {
-        title: "Question 3 — Primary Assessment / Clinical Priority",
+        title: "QUESTION 3 — PRIMARY ASSESSMENT",
         type: "single",
-        situation: "<strong>Stage 2 Progression:</strong> While you assess the patient, he suddenly becomes quieter. You ask, <em>\"Are you having trouble breathing?\"</em> He says, <em>\"A little.\"</em><br><br><strong>You observe:</strong><br>• RR: 30/min | Shallow respirations | Increasing accessory muscle use<br>• SpO₂: 93% | HR: 116/min | BP: 104/64 mmHg<br>• He remains conscious and can answer questions.",
-        prompt: "Which action is <strong>MOST</strong> appropriate?",
+        situation: "<strong>Stage 2 Progression:</strong> While you continue your primary assessment, the patient becomes quieter. He says: <em>\"A little harder to breathe.\"</em><br><br><strong>You observe:</strong><br>• RR: 30 | Shallow respirations | Accessory muscle use<br>• SpO₂: 93% | HR: 116 | BP: 104/64<br>• He remains conscious and answers questions appropriately.",
+        prompt: "What is the BEST next action?",
         options: [
-            { text: "Continue immediately to OPQRST because the patient's chief complaint is abdominal discomfort.", correct: false },
-            { text: "Perform a focused assessment of breathing effectiveness and provide appropriate respiratory support based on your findings and protocol.", correct: true },
-            { text: "Obtain a blood glucose measurement before addressing the respiratory findings.", correct: false },
-            { text: "Ask the wife whether the patient has ever had anxiety attacks.", correct: false }
+            { text: "Obtain a focused cardiovascular history because the patient's chest/abdominal symptoms may represent a cardiac emergency.", correct: false },
+            { text: "Assess the effectiveness of breathing and address the respiratory problem while continuing to monitor the patient's overall condition.", correct: true },
+            { text: "Obtain a blood glucose level because weakness and diaphoresis may indicate hypoglycemia.", correct: false },
+            { text: "Continue obtaining OPQRST because determining the cause of the patient's discomfort will guide treatment.", correct: false }
         ],
-        rationale: "The patient's respiratory status has worsened. The EMT should prioritize the current physiologic problem rather than continue gathering secondary-history information. An SpO₂ of 93% does not by itself determine whether respiratory support is needed; work of breathing and overall clinical presentation matter.<br><strong>Domain:</strong> Primary Assessment / Patient Treatment & Transport"
+        rationale: "<strong>Why B is BEST:</strong> A, C, and D are all reasonable considerations in this patient, but the patient's current respiratory deterioration has become the immediate priority. A good assessment plan can become the wrong plan when the patient's condition changes.<br><strong>Domain:</strong> Primary Assessment / Respiratory Priority"
     },
     {
-        title: "Question 4 — Secondary Assessment",
+        title: "QUESTION 4 — SECONDARY ASSESSMENT",
         type: "single",
-        situation: "<strong>Stage 3:</strong> After appropriate initial respiratory support, the patient's breathing becomes somewhat easier. You obtain a focused history.<br><br><strong>Patient description:</strong><br>• <em>\"A heavy pressure right below my chest.\"</em><br>• Onset ~45 minutes ago | Gradually worsening | Worse when walking | Not relieved by antacids | Pressure rather than sharp pain | Severity: 7/10 | Occasionally extends toward his left shoulder<br>• Wife says: <em>\"He gets heartburn all the time.\"</em> Patient adds: <em>\"This feels different.\"</em>",
-        prompt: "Which finding is <strong>MOST</strong> important when interpreting the patient's OPQRST information?",
+        situation: "<strong>Stage 3:</strong> After appropriate initial respiratory support, the patient's breathing becomes somewhat easier. You obtain OPQRST.<br><br><strong>Patient reports:</strong><br>• Onset: ~45 mins ago | Provocation: worse when walking | Quality: \"heavy pressure\" | Region: upper abdomen/lower chest | Radiation: occasionally toward left shoulder | Severity: 7/10 | Time: progressively worsening<br>• Reports nausea and continued diaphoresis.<br>• Wife says: <em>\"He has GERD. He had a huge dinner.\"</em> Patient responds: <em>\"This feels different from my heartburn.\"</em>",
+        prompt: "Which finding should MOST influence your focused assessment?",
         options: [
-            { text: "The discomfort began after eating.", correct: false },
-            { text: "He has a history of GERD.", correct: false },
-            { text: "The discomfort is pressure-like, worsens with exertion, and radiates toward the shoulder.", correct: true },
-            { text: "Antacids have failed to relieve the discomfort.", correct: false }
+            { text: "The patient ate a large meal before becoming symptomatic.", correct: false },
+            { text: "The patient has a history of GERD and frequently experiences heartburn.", correct: false },
+            { text: "The patient's discomfort is pressure-like, worsens with exertion, and radiates toward the shoulder.", correct: true },
+            { text: "The patient reports that antacids did not relieve the discomfort.", correct: false }
         ],
-        rationale: "Several findings are concerning, but the pressure-like quality, exertional worsening, and radiation create a particularly concerning pattern. The meal and GERD history are plausible explanations but should not cause anchoring.<br><strong>Domain:</strong> Secondary Assessment"
+        rationale: "<strong>Why C is BEST:</strong> All four findings are potentially relevant, but the combination of pressure + exertional worsening + radiation is the strongest clinical clue requiring further cardiovascular consideration. The meal and GERD history are dangerous distractors.<br><strong>Domain:</strong> Secondary Assessment / Clinical Significance"
     },
     {
-        title: "Question 5 — SAMPLE / Medication Decision",
+        title: "QUESTION 5 — SAMPLE / MEDICATION",
         type: "single",
-        situation: "<strong>Stage 3 Progression:</strong> You continue SAMPLE. History: Hypertension, hyperlipidemia, GERD, no known cardiac diagnosis, no medication allergies.<br><br><strong>Medications:</strong> Lisinopril, Atorvastatin, Omeprazole, Aspirin 81 mg daily. Patient says: <em>\"I also have some nitroglycerin somewhere. My doctor gave it to me a while back.\"</em> Wife finds the bottle (prescribed to the patient).<br><br><strong>Current BP:</strong> 92/60 mmHg. Patient says: <em>\"I haven't taken any of it today.\"</em>",
-        prompt: "Which consideration is <strong>MOST</strong> important before assisting with the patient's prescribed nitroglycerin?",
+        situation: "<strong>Stage 3 Progression:</strong> You continue SAMPLE. History: Hypertension, hyperlipidemia, GERD, no known cardiac diagnosis, no allergies.<br><br><strong>Medications:</strong> Lisinopril, Atorvastatin, Omeprazole, Aspirin 81 mg daily. Wife finds a nitroglycerin bottle prescribed to him.<br><strong>Current BP:</strong> 92/60. Patient says: <em>\"I haven't taken any today.\"</em>",
+        prompt: "What should MOST influence your decision regarding the nitroglycerin?",
         options: [
-            { text: "His history of GERD", correct: false },
-            { text: "Whether his current blood pressure and other contraindication considerations permit administration under local protocol", correct: true },
-            { text: "Whether he ate a large meal before taking the medication", correct: false },
-            { text: "Whether the medication bottle is more than a year old", correct: false }
+            { text: "The medication is prescribed to the patient, so assisting with it would generally be appropriate if the symptoms are consistent with his previous episodes.", correct: false },
+            { text: "The patient's history and current symptoms make nitroglycerin potentially relevant, but his current blood pressure requires consideration of contraindications and applicable protocol before administration.", correct: true },
+            { text: "Because the patient has not taken nitroglycerin today, administering his prescribed dose may prevent further deterioration.", correct: false },
+            { text: "Because the patient has GERD, nitroglycerin should be avoided until a gastrointestinal cause has been excluded.", correct: false }
         ],
-        rationale: "The patient is hypotensive. Before assisting with a prescribed medication, the EMT must evaluate the patient's current condition and follow local protocol, including contraindications. Medication administration details are protocol-dependent.<br><strong>Domain:</strong> Secondary Assessment / Patient Treatment & Transport"
+        rationale: "<strong>Why B is BEST:</strong> Prescribed medication + compatible symptoms does not automatically mean administer it. The EMT must evaluate the current patient (who is hypotensive) and follow applicable protocol.<br><strong>Domain:</strong> Secondary Assessment / Medication Decision"
     },
     {
-        title: "Question 6 — Vital-Sign Interpretation",
+        title: "QUESTION 6 — VITAL-SIGN TREND",
         type: "single",
-        situation: "<strong>Stage 4:</strong> You decide not to administer nitroglycerin due to protocol criteria. Five minutes later:<br>• BP: 86/54 mmHg | HR: 124/min | RR: 28/min | SpO₂: 94%<br>• Skin: pale, cool, clammy | Mental status: alert but increasingly anxious<br>• Patient says: <em>\"Something is really wrong.\"</em>",
-        prompt: "Which interpretation <strong>BEST</strong> describes the patient's change?",
+        situation: "<strong>Stage 4 Reassessment:</strong> Five minutes later:<br>• BP: 86/54 | HR: 124 | RR: 28 | SpO₂: 94%<br>• Skin: pale, cool, clammy | Mental status: alert but increasingly anxious<br>• Patient says: <em>\"Something is really wrong.\"</em>",
+        prompt: "Which interpretation BEST explains the change?",
         options: [
-            { text: "The patient's condition is essentially unchanged because he remains alert.", correct: false },
-            { text: "The decreased blood pressure is expected because he is anxious.", correct: false },
-            { text: "The increased heart rate and respiratory rate indicate that the patient's anxiety is worsening.", correct: false },
-            { text: "The combination of falling blood pressure, rising heart rate, tachypnea, and worsening skin findings indicates possible deterioration in perfusion.", correct: true }
+            { text: "The patient's increasing anxiety is likely producing the elevated heart rate and respiratory rate.", correct: false },
+            { text: "The patient's oxygen saturation remains relatively preserved, suggesting that the condition may not have significantly worsened.", correct: false },
+            { text: "The patient's lower blood pressure combined with rising heart rate, respiratory rate, and worsening skin findings indicates deterioration requiring reassessment and treatment.", correct: true },
+            { text: "The patient's tachycardia may represent compensation, so the most appropriate action is to continue gathering history while monitoring him closely.", correct: false }
         ],
-        rationale: "The critical issue is the trend: BP decreased, HR increased, RR increased, skin became more abnormal, and patient reports worsening symptoms. These findings suggest deterioration and possible circulatory compromise.<br><strong>Domain:</strong> Primary Assessment / Patient Treatment & Transport"
+        rationale: "<strong>Why C is BEST:</strong> Although anxiety and compensation are valid concepts, the trend (BP ↓, HR ↑, RR ↑, skin worsened, symptoms worsened) demonstrates clear physiological deterioration.<br><strong>Domain:</strong> Primary Assessment / Vital-Sign Trends"
     },
     {
-        title: "Question 7 — Reassessment (Select ALL That Apply)",
+        title: "QUESTION 7 — REASSESSMENT PRIORITIES (Select ALL That Apply)",
         type: "multi",
         requiredCount: 4,
-        situation: "<strong>Stage 4 Reassessment:</strong> The patient's condition continues to show signs of instability and ongoing physiologic deterioration.",
-        prompt: "Which findings should be considered high-priority reassessment findings at this point? Select <strong>ALL</strong> that apply.",
+        situation: "<strong>Stage 4 Reassessment:</strong> You are preparing the patient for transport amidst ongoing clinical deterioration.",
+        prompt: "Which findings should receive priority reassessment given the patient's deterioration? Select <strong>ALL</strong> that apply.",
         options: [
-            { text: "Blood pressure", correct: true },
-            { text: "Mental status", correct: true },
-            { text: "Skin condition and perfusion", correct: true },
-            { text: "Whether his wife believes the symptoms are indigestion", correct: false },
-            { text: "Respiratory rate and effort", correct: true },
-            { text: "Whether he has eaten anything since the symptoms began", correct: false }
+            { text: "Blood pressure and pulse quality", correct: true },
+            { text: "Mental status and ability to protect the airway", correct: true },
+            { text: "Whether his wife still believes this is indigestion", correct: false },
+            { text: "Respiratory rate, effort, and oxygenation", correct: true },
+            { text: "Skin color, temperature, and moisture", correct: true },
+            { text: "Whether he has experienced GERD symptoms after previous meals", correct: false }
         ],
-        rationale: "The patient's condition is changing. The EMT should reassess ABCs, mental status, vital signs, perfusion, and response to treatment. The wife's interpretation and additional food history are not high-priority reassessment findings during deterioration.<br><strong>Domain:</strong> Primary Assessment / Reassessment"
+        rationale: "<strong>Why:</strong> A, B, D, and E directly evaluate changing circulation, airway/mental status, breathing, and perfusion. C and F are historical info that do not outrank reassessment of immediate physiologic deterioration.<br><strong>Domain:</strong> Primary Assessment / Reassessment"
     },
     {
-        title: "Question 8 — Acute Instability & Priority Action",
+        title: "QUESTION 8 — PRIMARY ASSESSMENT OVERRIDES SECONDARY ASSESSMENT",
         type: "single",
-        situation: "<strong>Stage 5 — The Turning Point:</strong> You prepare the patient for transport. While moving him toward the stretcher, he suddenly says, <em>\"I'm dizzy.\"</em> He becomes pale and slumps against your partner. He is still breathing. He opens his eyes when spoken to but gives an inappropriate answer.<br><br><strong>Repeat vital signs:</strong> BP: 72/44 mmHg | HR: 132/min | RR: 30/min | SpO₂: 91%<br><em>Your partner says: \"We still haven't finished the SAMPLE history.\"</em>",
-        prompt: "What is the <strong>MOST</strong> appropriate next action?",
+        situation: "<strong>Stage 5 — The Turning Point:</strong> While moving the patient toward the stretcher, he says: <em>\"I'm dizzy.\"</em> He suddenly slumps against your partner. He opens his eyes when spoken to but gives an inappropriate answer.<br><br><strong>Repeat vital signs:</strong> BP: 72/44 | HR: 132 | RR: 30 | SpO₂: 91%<br><em>Your partner says: \"We still haven't finished the SAMPLE history.\"</em>",
+        prompt: "What is the BEST next action?",
         options: [
-            { text: "Complete SAMPLE so the receiving facility has the patient's complete medical history.", correct: false },
-            { text: "Perform a focused abdominal examination to determine whether the hypotension is caused by an abdominal emergency.", correct: false },
-            { text: "Return immediately to the primary assessment, address immediate life threats, provide appropriate supportive treatment, and continue transport.", correct: true },
-            { text: "Obtain another OPQRST history because the patient's symptoms have changed.", correct: false }
+            { text: "Complete the SAMPLE history while your partner continues monitoring the patient, because the receiving hospital will need the information.", correct: false },
+            { text: "Perform a focused abdominal examination to determine whether internal bleeding or another abdominal process is causing the hypotension.", correct: false },
+            { text: "Return to the primary assessment, reassess immediate life threats, provide appropriate treatment, and continue preparing for rapid transport.", correct: true },
+            { text: "Obtain another OPQRST history because the patient's sudden change may provide important diagnostic information.", correct: false }
         ],
-        rationale: "The patient's condition has become unstable with severe hypotension, tachycardia, tachypnea, altered mental status, worsening SpO₂, and poor perfusion. The secondary assessment must be abandoned in favor of the primary assessment and immediate treatment.<br><strong>Domain:</strong> Primary Assessment / Patient Treatment & Transport"
+        rationale: "<strong>Why C is BEST:</strong> The patient's severe hypotension, altered mental status, tachycardia, and worsening condition require abandoning secondary assessment tasks to return immediately to primary assessment and supportive care.<br><strong>Domain:</strong> Primary Assessment / Treatment & Transport"
     },
     {
-        title: "Question 9 — Treatment & Transport / Consent",
+        title: "QUESTION 9 — CONSENT / TRANSPORT",
         type: "single",
-        situation: "<strong>Stage 6 — Transport Decision:</strong> You begin appropriate supportive care and move the patient toward the ambulance. His wife attempts to stop you: <em>\"Wait. He doesn't want to go. He told me he just wants to lie down.\"</em><br><br>The patient is now confused and unable to consistently answer questions. His wife says: <em>\"I'll sign for him if you need me to.\"</em>",
-        prompt: "Which consideration is <strong>MOST</strong> important regarding transport and refusal of care?",
+        situation: "<strong>Stage 6 — Treatment & Transport:</strong> You begin appropriate supportive care and prepare for transport. The patient's wife says: <em>\"He told me earlier that he didn't want to go.\"</em> The patient is now confused and unable to consistently answer questions. She says: <em>\"I'll sign whatever you need.\"</em>",
+        prompt: "Which statement BEST reflects the EMT's responsibility?",
         options: [
-            { text: "The patient's wife can refuse treatment on his behalf because she is familiar with his medical history.", correct: false },
-            { text: "Because the patient previously said he did not want transport, his decision remains valid.", correct: false },
-            { text: "The patient's current altered mental status and clinical deterioration require reassessment of his decision-making capacity and appropriate management under applicable consent/refusal procedures.", correct: true },
-            { text: "The EMT should wait until the patient becomes fully alert and then ask him again whether he wants transport.", correct: false }
+            { text: "The patient's earlier refusal should be respected because he expressed his wishes while alert.", correct: false },
+            { text: "The wife can authorize transport because the patient is currently confused and she knows his medical history.", correct: false },
+            { text: "The patient's current condition requires reassessment of his ability to make an informed decision, with management of consent/refusal according to applicable law, protocol, and medical direction.", correct: true },
+            { text: "Because the patient is confused, the EMT should transport him without discussing the situation with the patient or attempting to determine his wishes.", correct: false }
         ],
-        rationale: "The patient's condition has changed substantially. A previously expressed preference does not eliminate the need to evaluate the patient's current decision-making capacity. The spouse's wishes do not automatically substitute for the patient's decision-making capacity.<br><strong>Domain:</strong> Treatment & Transport"
+        rationale: "<strong>Why C is BEST:</strong> A previously expressed preference cannot simply be carried forward when the patient's capacity changes due to clinical deterioration. Neither spouse nor EMT can unilaterally override consent procedures without proper protocols.<br><strong>Domain:</strong> Consent & Transport"
     },
     {
-        title: "Question 10 — Final Challenge (Critical Deterioration)",
+        title: "QUESTION 10 — FINAL CLINICAL PRIORITY",
         type: "single",
-        situation: "<strong>Stage 7 — Operations:</strong> The patient is loaded into the ambulance. Your partner contacts medical control. The receiving facility is ~12 minutes away. During transport, the patient becomes increasingly difficult to arouse.<br><br><strong>Current vitals:</strong> BP: 68/40 mmHg | HR: 136/min | RR: 8/min, shallow | SpO₂: 86%<br><em>Your partner says: \"Should I finish documenting the SAMPLE history now?\"</em>",
-        prompt: "Which action <strong>BEST</strong> reflects appropriate EMT clinical judgment?",
+        situation: "<strong>Stage 7 — Operations / Transport:</strong> Patient is loaded into the ambulance (~12 mins to hospital).<br><strong>In transit:</strong> BP: 68/40 | HR: 136 | RR: 8, shallow | SpO₂: 86% | Increasingly difficult to arouse.<br><em>Your partner says: \"Should I finish documenting the SAMPLE history?\"</em>",
+        prompt: "Which action BEST reflects appropriate EMT decision-making?",
         options: [
-            { text: "Finish documenting SAMPLE because accurate documentation is required before arrival.", correct: false },
-            { text: "Continue focusing on immediate airway, breathing, and circulation problems, provide appropriate treatment within EMT scope/protocol, communicate the patient's deterioration, and reassess continuously.", correct: true },
-            { text: "Contact the receiving hospital and wait for instructions before providing additional treatment.", correct: false },
-            { text: "Obtain a complete medication history because the deterioration may be medication-related.", correct: false }
+            { text: "Continue gathering and documenting SAMPLE information while your partner manages the patient's immediate problems.", correct: false },
+            { text: "Continue treatment and reassessment while contacting the receiving facility with an updated report about the patient's deterioration.", correct: true },
+            { text: "Contact medical control before providing additional care because the patient's condition has changed significantly.", correct: false },
+            { text: "Focus exclusively on airway management because the decreasing respiratory rate is now the patient's only immediate threat.", correct: false }
         ],
-        rationale: "The patient is critically deteriorating (severe hypotension, marked tachycardia, respiratory rate falling to 8/min, shallow respirations, hypoxemia, worsening mental status). The EMT must prioritize immediate threats to life, treatment within scope/protocol, communication, and continuous reassessment.<br><strong>Domain:</strong> Primary Assessment / Treatment / Operations"
+        rationale: "<strong>Why B is BEST:</strong> The patient is critically deteriorating and requires simultaneous treatment, reassessment, communication, and transport. Documentation and non-urgent history cannot take priority over immediate care.<br><strong>Domain:</strong> Primary Assessment / Treatment / Operations"
     },
     {
-        title: "Question 11 — Meta-Reasoning & Clinical Synthesis",
+        title: "QUESTION 11 — FINAL META-QUESTION",
         type: "single",
-        situation: "Throughout this progressive challenge, you navigated anchoring (\"It's indigestion\"), premature closure (GERD + recent meal), false reassurance (initially adequate SpO₂ and alert mental status), competing priorities, and rapid physiological deterioration.",
-        prompt: "Which statement <strong>BEST</strong> describes the EMT reasoning demonstrated throughout this case?",
+        situation: "Throughout this progressive challenge, you navigated anchoring, premature closure, false reassurance, competing priorities, and rapid physiological deterioration.",
+        prompt: "Which statement BEST describes the clinical reasoning required throughout this case?",
         options: [
-            { text: "The EMT should identify the most likely diagnosis early and use subsequent findings primarily to confirm it.", correct: false },
-            { text: "The EMT should complete each assessment step in order before changing treatment priorities.", correct: false },
-            { text: "The EMT should continuously integrate new findings, recognize changes from baseline, reprioritize threats, and modify assessment and treatment as the patient's condition evolves.", correct: true },
-            { text: "The EMT should rely primarily on vital-sign thresholds to determine whether a patient is stable.", correct: false }
+            { text: "Once a likely diagnosis becomes apparent, the EMT should focus subsequent assessment primarily on confirming that diagnosis.", correct: false },
+            { text: "The EMT should complete each assessment component in sequence unless a definitive diagnosis has been established.", correct: false },
+            { text: "The EMT should continuously integrate new findings, recognize changes from baseline, reprioritize immediate threats, and modify assessment and treatment as the patient's condition changes.", correct: true },
+            { text: "The EMT should give greatest weight to abnormal vital signs because objective measurements are more reliable than patient history.", correct: false }
         ],
-        rationale: "The key competency demonstrated is not simply memorizing OPQRST, SAMPLE, or individual treatment procedures. It is the ability to recognize clinically significant cues, interpret them in context, identify deterioration, and change priorities appropriately.<br><strong>Domain:</strong> Integrated Clinical Reasoning"
+        rationale: "<strong>Why C is BEST:</strong> NREMT-style questions test your ability to determine what matters most right now based on changing patient conditions, rather than following rigid checklists or premature diagnoses.<br><strong>Domain:</strong> Integrated Clinical Reasoning"
     }
 ];
 
@@ -544,7 +544,6 @@ function submitAnswer() {
         }
     }
     
-    // Highlight options
     optionItems.forEach((item, idx) => {
         item.classList.add("disabled");
         const input = item.querySelector("input");
@@ -566,7 +565,7 @@ function submitAnswer() {
         <h4 style="color: ${isCorrect ? 'var(--green)' : 'var(--red)'};">
             ${isCorrect ? "✓ Correct Clinical Decision" : "✗ Suboptimal Choice"}
         </h4>
-        <p><strong>Rationale:</strong> ${q.rationale}</p>
+        <p>${q.rationale}</p>
     `;
     feedbackBox.classList.add("show");
     
