@@ -1,10 +1,9 @@
-```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>NREMT Primary Assessment — Clinical Decision Making</title>
+<title>NREMT Lesson 15 — Primary Assessment Challenge</title>
 
 <style>
 :root {
@@ -26,16 +25,17 @@
 
 body {
     margin:0;
-    font-family:Arial,Helvetica,sans-serif;
+    font-family:Arial, Helvetica, sans-serif;
     background:var(--light);
     color:#17212B;
+    line-height:1.55;
 }
 
 header {
     background:var(--navy);
     color:white;
-    text-align:center;
     padding:28px 20px;
+    text-align:center;
 }
 
 header h1 {
@@ -57,7 +57,7 @@ header p {
 .progress {
     display:flex;
     gap:8px;
-    margin-bottom:25px;
+    margin-bottom:22px;
 }
 
 .progress div {
@@ -78,34 +78,69 @@ header p {
 .card {
     background:white;
     border-radius:10px;
-    padding:22px;
+    padding:24px;
     margin-bottom:20px;
     box-shadow:0 3px 12px rgba(0,0,0,.08);
-}
-
-.card h2 {
-    color:var(--navy);
-    margin-top:0;
 }
 
 .instructions {
     border-left:6px solid var(--gold);
 }
 
-.scenario {
-    background:#eef7f8;
+.instructions h2 {
+    color:var(--navy);
+    margin-top:0;
+}
+
+.score {
+    background:var(--navy);
+    color:white;
+    padding:13px 18px;
+    border-radius:8px;
+    text-align:center;
+    margin-bottom:20px;
+    font-weight:bold;
+}
+
+.case-header {
+    background:#eaf4f5;
     border:2px solid var(--teal);
     border-radius:9px;
-    padding:20px;
-    line-height:1.65;
-    margin-bottom:20px;
+    padding:18px;
+    margin-bottom:18px;
+}
+
+.case-header strong {
+    color:var(--navy);
+}
+
+.scene {
+    background:#f8fafb;
+    border-left:5px solid var(--gold);
+    padding:18px;
+    margin:15px 0;
+    border-radius:6px;
+}
+
+.scene-title {
+    font-weight:bold;
+    color:var(--navy);
+    margin-bottom:8px;
+}
+
+.question-number {
+    color:var(--teal);
+    font-weight:bold;
+    font-size:14px;
+    text-transform:uppercase;
+    letter-spacing:.5px;
 }
 
 .question {
-    font-size:20px;
+    font-size:21px;
     font-weight:bold;
     color:var(--navy);
-    margin:20px 0 15px;
+    margin:10px 0 18px;
 }
 
 .choice {
@@ -115,15 +150,16 @@ header p {
     background:white;
     border:2px solid var(--border);
     padding:16px;
-    margin:10px 0;
+    margin:11px 0;
     border-radius:8px;
     cursor:pointer;
     font-size:15px;
-    line-height:1.45;
+    line-height:1.5;
 }
 
-.choice:hover {
+.choice:hover:not(:disabled) {
     border-color:var(--teal);
+    background:#f7fcfc;
 }
 
 .choice.correct {
@@ -141,11 +177,10 @@ header p {
 }
 
 .feedback {
-    padding:16px;
+    padding:18px;
     border-radius:8px;
-    margin-top:15px;
+    margin-top:18px;
     display:none;
-    line-height:1.55;
 }
 
 .feedback.show {
@@ -162,20 +197,22 @@ header p {
     border-left:5px solid var(--red);
 }
 
-.next-btn,
-.start-btn,
-.restart-btn {
-    border:0;
-    border-radius:7px;
-    padding:13px 22px;
-    font-weight:bold;
-    cursor:pointer;
-    font-size:15px;
-    margin-top:15px;
+.feedback strong {
+    font-size:17px;
 }
 
 .next-btn,
-.start-btn {
+.restart-btn {
+    border:0;
+    border-radius:7px;
+    padding:14px 24px;
+    font-weight:bold;
+    cursor:pointer;
+    font-size:15px;
+    margin-top:16px;
+}
+
+.next-btn {
     background:var(--teal);
     color:white;
 }
@@ -185,87 +222,47 @@ header p {
     color:white;
 }
 
-.score {
-    background:var(--navy);
-    color:white;
+.clue {
+    display:inline-block;
+    padding:5px 9px;
+    border-radius:5px;
+    background:#eef1f3;
+    color:#46515a;
+    font-size:12px;
+    margin:3px 3px 3px 0;
+}
+
+.distractor-warning {
+    background:#fff8e6;
+    border-left:5px solid var(--gold);
     padding:14px;
-    border-radius:8px;
-    text-align:center;
-    margin-bottom:20px;
-}
-
-.hidden {
-    display:none !important;
-}
-
-/* Activity 2 */
-
-.sort-grid {
-    display:grid;
-    grid-template-columns:repeat(3,1fr);
-    gap:15px;
-    margin-top:20px;
-}
-
-.dropzone {
-    min-height:190px;
-    background:#f8fafb;
-    border:3px dashed var(--border);
-    border-radius:10px;
-    padding:14px;
-}
-
-.dropzone h3 {
-    margin-top:0;
-    text-align:center;
-    color:var(--navy);
-    font-size:16px;
-}
-
-.dropzone.life {
-    border-color:var(--red);
-}
-
-.dropzone.primary {
-    border-color:var(--gold);
-}
-
-.dropzone.secondary {
-    border-color:var(--teal);
-}
-
-.finding {
-    background:white;
-    border:2px solid var(--border);
-    border-radius:8px;
-    padding:12px;
-    margin:9px 0;
-    cursor:pointer;
+    margin:15px 0;
+    border-radius:5px;
     font-size:14px;
-    line-height:1.4;
-}
-
-.finding:hover {
-    border-color:var(--teal);
-}
-
-.finding.selected {
-    opacity:.5;
-}
-
-.feedback-box {
-    margin-top:20px;
 }
 
 .final {
     text-align:center;
-    padding:30px;
+    padding:35px;
 }
 
 .final-score {
-    font-size:55px;
+    font-size:60px;
     font-weight:bold;
     color:var(--teal);
+}
+
+.breakdown {
+    text-align:left;
+    max-width:700px;
+    margin:25px auto;
+    background:#f8fafb;
+    padding:20px;
+    border-radius:8px;
+}
+
+.hidden {
+    display:none !important;
 }
 
 @media(max-width:750px) {
@@ -273,12 +270,12 @@ header p {
         padding:12px;
     }
 
-    .sort-grid {
-        grid-template-columns:1fr;
-    }
-
     header h1 {
         font-size:24px;
+    }
+
+    .question {
+        font-size:18px;
     }
 }
 </style>
@@ -287,750 +284,837 @@ header p {
 <body>
 
 <header>
-    <h1>NREMT Primary Assessment</h1>
-    <p>Recognize the Life Threat — Prioritize — Treat — Reassess</p>
+    <h1>Primary Assessment: Clinical Decision Challenge</h1>
+    <p>NREMT Final Review — Recognize • Prioritize • Treat • Reassess</p>
 </header>
 
 <div class="container">
 
-<div class="progress">
-    <div id="p1" class="active"></div>
-    <div id="p2"></div>
-    <div id="p3"></div>
-</div>
+    <div class="progress">
+        <div id="p1" class="active"></div>
+        <div id="p2"></div>
+        <div id="p3"></div>
+    </div>
 
+    <section id="activity">
 
-<!-- =====================================================
-ACTIVITY 1
-===================================================== -->
+        <div class="card instructions">
 
-<section id="activity1">
+            <h2>High-Level Clinical Decision Making</h2>
 
-<div class="card instructions">
+            <p>
+                You are the treating EMT on this call. Information will be
+                revealed progressively.
+            </p>
 
-<h2>Activity 1 — What Comes Next?</h2>
+            <p>
+                <strong>
+                    The patient has multiple problems. Your task is not to
+                    identify everything that is wrong. Your task is to determine
+                    what requires your attention NOW.
+                </strong>
+            </p>
 
-<p>
-This is a progressive patient scenario. Information will be revealed
-one step at a time.
-</p>
+            <div class="distractor-warning">
+                <strong>Important:</strong> Some information is deliberately
+                relevant but not immediately actionable. Do not automatically
+                choose the most dramatic diagnosis, the most abnormal number,
+                or the longest medical history.
+            </div>
 
-<p>
-<strong>
-Do not choose an answer simply because it is medically important.
-Choose what should be addressed NEXT based on the patient's current condition.
-</strong>
-</p>
+            <p>
+                At several points, the patient's condition will change.
+                When it does, reconsider the primary assessment rather than
+                continuing the plan you were already following.
+            </p>
 
-<p>
-Several findings are included to distract you from the immediate priority.
-</p>
+        </div>
 
-</div>
+        <div class="score">
+            Clinical Decision Score:
+            <span id="score">0</span> / 12
+        </div>
 
-<div class="score">
-    Activity 1 Score:
-    <span id="score1">0</span> / 8
-</div>
+        <div id="questionArea"></div>
 
-<div id="scenarioArea"></div>
+    </section>
 
-</section>
+    <section id="final" class="hidden">
 
+        <div class="card final">
 
-<!-- =====================================================
-ACTIVITY 2
-===================================================== -->
+            <h2>Primary Assessment Challenge Complete</h2>
 
-<section id="activity2" class="hidden">
+            <div class="final-score">
+                <span id="finalPercent">0</span>%
+            </div>
 
-<div class="card instructions">
+            <p id="finalMessage"></p>
 
-<h2>Activity 2 — Life Threat or Not?</h2>
+            <div class="breakdown">
+                <h3>What this activity tested</h3>
 
-<p>
-The primary assessment requires you to recognize conditions that demand
-immediate intervention.
-</p>
+                <ul>
+                    <li>General impression and responsiveness</li>
+                    <li>Airway assessment</li>
+                    <li>Recognition of inadequate breathing</li>
+                    <li>Recognition of inadequate perfusion</li>
+                    <li>Life-threatening external bleeding</li>
+                    <li>Prioritization when several problems coexist</li>
+                    <li>Reassessment after intervention</li>
+                    <li>Recognition of deterioration</li>
+                    <li>Changing priorities when the patient's condition changes</li>
+                    <li>Transition from primary to secondary assessment</li>
+                </ul>
 
-<p>
-For each finding, decide where it belongs:
-</p>
+                <p>
+                    <strong>Mental model:</strong>
+                    Recognize → Prioritize → Treat → Reassess
+                </p>
 
-<ul>
-<li><strong>Immediate Life Threat</strong> — requires immediate attention</li>
-<li><strong>Continue Primary Assessment</strong> — important, but not currently the immediate life threat</li>
-<li><strong>Secondary Assessment / Further Evaluation</strong> — does not require immediate intervention during the primary assessment</li>
-</ul>
+                <p>
+                    A correct decision five minutes ago does not guarantee
+                    that it is still the correct decision now.
+                </p>
+            </div>
 
-<p>
-<strong>Some findings are deliberately borderline or distracting.</strong>
-Think about the entire clinical picture.
-</p>
+            <button class="restart-btn" onclick="location.reload()">
+                Attempt Again
+            </button>
 
-</div>
+        </div>
 
-<div class="score">
-    Activity 2 Score:
-    <span id="score2">0</span> / 10
-</div>
-
-<div class="card">
-
-<h3>Click a finding, then choose where it belongs.</h3>
-
-<div id="findingArea"></div>
-
-</div>
-
-<div class="sort-grid">
-
-<div class="dropzone life">
-<h3>🔴 Immediate Life Threat</h3>
-<div id="lifeZone"></div>
-</div>
-
-<div class="dropzone primary">
-<h3>🟡 Continue Primary Assessment</h3>
-<div id="primaryZone"></div>
-</div>
-
-<div class="dropzone secondary">
-<h3>🔵 Secondary / Further Evaluation</h3>
-<div id="secondaryZone"></div>
-</div>
-
-</div>
-
-<div id="sortingFeedback" class="feedback"></div>
-
-<button id="finishBtn"
-        class="next-btn hidden"
-        onclick="showFinal()">
-See Final Results
-</button>
-
-</section>
-
-
-<!-- =====================================================
-FINAL
-===================================================== -->
-
-<section id="final" class="hidden">
-
-<div class="card final">
-
-<h2>Primary Assessment Complete</h2>
-
-<div class="final-score">
-<span id="finalPercent">0</span>%
-</div>
-
-<p id="finalMessage"></p>
-
-<hr>
-
-<h3>Primary Assessment Mental Model</h3>
-
-<p>
-<strong>Recognize → Prioritize → Treat → Reassess</strong>
-</p>
-
-<p>
-If the patient's condition changes, return to the primary assessment
-and address the new life threat.
-</p>
-
-<button class="restart-btn"
-        onclick="location.reload()">
-Start Again
-</button>
-
-</div>
-
-</section>
+    </section>
 
 </div>
 
 
 <script>
+const questions = [
 
-/* =====================================================
-ACTIVITY 1 — PROGRESSIVE SCENARIO
-===================================================== */
-
-const scenarios = [
-
-{
-    situation:
-    "You arrive at a private residence for a 67-year-old male with weakness. His wife tells you he has a history of hypertension and type 2 diabetes. He is sitting upright in a chair and appears anxious. His skin is pale and cool.",
-
-    question:
-    "What should you assess FIRST?",
-
-    answers:[
-        "His blood glucose level.",
-        "His blood pressure."
-        "His airway and responsiveness.",
-        "His medication list.",
-    ],
-
-    correct:2,
-
-    explanation:
-    "The primary assessment begins with general impression and level of consciousness/responsiveness, followed by airway, breathing, and circulation. The patient's diabetes and blood pressure history are distracting information at this point."
-},
+/* =========================================================
+QUESTION 1 — CORRECT ANSWER B
+========================================================= */
 
 {
-    situation:
-    "The patient responds appropriately when you speak to him. His airway is open. He says, 'I can't catch my breath.' His respiratory rate is 30/min and his breathing appears labored.",
+    title:"Scene Arrival",
 
-    question:
-    "What should you do NEXT?",
+    situation:`
+        You are dispatched at 19:40 to a private residence for a
+        "63-year-old male, weakness and dizziness."
 
-    answers:[
-        "Obtain a SAMPLE history.",
-        "Obtain a blood pressure.",
-        "Ask his wife when he last ate."
-        "Assess whether his breathing is adequate and address any immediate respiratory problem.",
-    ],
+        The patient's wife meets you at the front door. She says her
+        husband has been feeling sick since lunch.
 
-    correct:3,
+        She reports that he has:
+        <span class="clue">Type 2 diabetes</span>
+        <span class="clue">Hypertension</span>
+        <span class="clue">High cholesterol</span>
+        <span class="clue">COPD</span>
 
-    explanation:
-    "Once responsiveness and airway are assessed, breathing must be evaluated. The patient's medication history and last oral intake are not the priority while a potential respiratory life threat exists."
-},
+        She also says he had "a little too much to drink" at a family
+        gathering yesterday.
 
-{
-    situation:
-    "You determine that the patient's breathing is shallow with poor chest movement. His oxygen saturation is 84%. His wife tells you he has had pneumonia twice this year.",
+        There are several prescription bottles on the kitchen counter.
+        The patient is seated approximately 20 feet away in a recliner.
+    `,
 
-    question:
-    "What is the priority?",
+    question:"Before beginning the hands-on primary assessment, which action is MOST appropriate?",
 
     answers:[
-        "Begin appropriate treatment for inadequate ventilation.",
-        "Ask about his previous pneumonia.",
-        "Complete the SAMPLE history."
-        "Obtain a complete set of vital signs before treating.",
-    ],
-
-    correct:0,
-
-    explanation:
-    "The patient has signs of inadequate ventilation. Treatment of the immediate life threat should not be delayed to obtain a history or complete vital signs."
-},
-
-{
-    situation:
-    "After you begin managing his breathing, the patient becomes more alert. His skin remains pale and cool. His radial pulse is rapid and weak.",
-
-    question:
-    "What should you assess next during the primary assessment?",
-
-    answers:[
-        "Circulation and perfusion.",
-        "His medication compliance.",
-        "His abdominal history."
-        "His last oral intake.",
-    ],
-
-    correct:3,
-
-    explanation:
-    "After airway and breathing are addressed, circulation and perfusion must be evaluated. The history information is important later but does not take priority over the primary assessment."
-},
-
-{
-    situation:
-    "You notice a large amount of blood soaking through the patient's clothing from his lower leg. His wife says he fell against a piece of metal before you arrived.",
-
-    question:
-    "What should you do?",
-
-    answers:[
-        "Immediately control the life-threatening external bleeding.",
-        "Continue the secondary assessment before treating the wound.",
-        "Ask the wife what medications he takes.",
-        "Obtain a blood pressure first."
-    ],
-
-    correct:0,
-
-    explanation:
-    "Life-threatening external bleeding requires immediate intervention. Do not delay treatment for a history, vital signs, or secondary assessment."
-},
-
-{
-    situation:
-    "The bleeding is controlled. The patient's breathing is now adequate, and he is alert. He continues to complain of weakness. His wife says he has not taken his diabetes medication today.",
-
-    question:
-    "What should happen next?",
-
-    answers:[
-        "Repeat the primary assessment and continue evaluating for life threats.",
-        "Immediately obtain a complete SAMPLE history and nothing else.",
-        "Assume the problem is low blood glucose.",
-        "Transport without further assessment."
-    ],
-
-    correct:0,
-
-    explanation:
-    "The primary assessment is not a one-time checklist. Continue evaluating the patient and reassess after interventions. Do not assume the diagnosis from the history."
-},
-
-{
-    situation:
-    "During reassessment, the patient suddenly becomes confused and difficult to arouse. His breathing becomes slow and shallow.",
-
-    question:
-    "What should you do?",
-
-    answers:[
-        "Continue with the secondary assessment.",
-        "Return to the primary assessment and address the new airway/breathing problem.",
-        "Ask his wife about his medical history.",
-        "Obtain a detailed OPQRST history."
+        "Immediately obtain the patient's blood glucose because he has diabetes.",
+        "Determine whether the scene is safe, identify the number of patients, and consider the need for additional resources.",
+        "Ask the patient to describe everything he has eaten and drunk since lunch.",
+        "Ask the wife which medications he takes and whether he has taken them today."
     ],
 
     correct:1,
 
-    explanation:
-    "A change in condition requires returning to the primary assessment. The new alteration in responsiveness and inadequate breathing creates an immediate life threat."
+    explanation:`
+        Scene size-up comes before the hands-on patient assessment.
+        The medical history and diabetes are important, but they do not
+        replace determining scene safety, the number of patients, and
+        resource needs.
+    `
 },
 
-{
-    situation:
-    "You manage the immediate breathing problem. The patient improves and is now responsive with adequate breathing. You have time to obtain additional information.",
+/* =========================================================
+QUESTION 2 — CORRECT ANSWER A
+========================================================= */
 
-    question:
-    "What is now appropriate?",
+{
+    title:"General Impression",
+
+    situation:`
+        The scene is safe and there is one patient.
+
+        You approach the patient. He is sitting upright with his eyes open.
+        He looks at you but does not immediately answer.
+
+        His wife says, "He was talking normally five minutes ago."
+
+        You notice:
+        <span class="clue">Pale skin</span>
+        <span class="clue">Cool skin</span>
+        <span class="clue">Visible sweating</span>
+        <span class="clue">Empty glass on table</span>
+        <span class="clue">Old oxygen equipment in the room</span>
+
+        His wife continues telling you that he has COPD and sometimes gets
+        anxious when he cannot breathe.
+    `,
+
+    question:"What should you do NEXT?",
 
     answers:[
-        "Ignore the patient's history because the primary assessment is complete.",
-        "Stop reassessing because the patient improved.",
-        "Begin or continue the secondary assessment and obtain a focused history.",
-        "Repeat only the initial scene size-up."
+        "Determine the patient's level of responsiveness and begin the primary assessment.",
+        "Place the patient on oxygen immediately because he has COPD.",
+        "Obtain a blood glucose level because altered behavior in a diabetic patient may indicate hypoglycemia.",
+        "Ask the wife whether he has previously had panic attacks."
+    ],
+
+    correct:0,
+
+    explanation:`
+        The patient's change from normal conversation to delayed response
+        makes responsiveness a priority. Do not prematurely label the
+        problem as hypoglycemia, anxiety, COPD, or intoxication.
+    `
+},
+
+/* =========================================================
+QUESTION 3 — CORRECT ANSWER D
+========================================================= */
+
+{
+    title:"Airway",
+
+    situation:`
+        The patient responds when you speak loudly and says,
+        "I'm okay... just tired."
+
+        His speech is slightly garbled.
+
+        As you speak with him, you hear a low-pitched snoring sound.
+        His wife says he has been sleeping poorly for several nights.
+
+        There is no visible blood around his mouth.
+
+        His medication list includes a sleep medication that he takes
+        occasionally.
+    `,
+
+    question:"Which finding should receive your immediate attention?",
+
+    answers:[
+        "His history of poor sleep.",
+        "The possibility that he took too much sleep medication.",
+        "The fact that his speech is slightly garbled.",
+        "The abnormal airway sound suggesting partial airway obstruction."
+    ],
+
+    correct:3,
+
+    explanation:`
+        Snoring in a patient with altered responsiveness can indicate
+        partial upper-airway obstruction. The exact cause is less important
+        at this moment than recognizing and addressing the airway threat.
+    `
+},
+
+/* =========================================================
+QUESTION 4 — CORRECT ANSWER C
+========================================================= */
+
+{
+    title:"Breathing",
+
+    situation:`
+        You reposition the airway and the snoring improves.
+
+        The patient now opens his eyes and answers questions, but he is
+        increasingly restless.
+
+        Respirations are:
+        <span class="clue">28/min</span>
+        <span class="clue">Shallow</span>
+        <span class="clue">Irregular</span>
+
+        You notice minimal chest rise.
+
+        His wife says, "That is not how he normally breathes."
+
+        She also mentions that he has COPD, has not eaten since breakfast,
+        and complained of indigestion earlier.
+    `,
+
+    question:"Which finding is MOST important in determining your next action?",
+
+    answers:[
+        "His history of COPD.",
+        "His earlier complaint of indigestion.",
+        "The combination of shallow, irregular respirations and minimal chest rise.",
+        "His lack of food intake."
     ],
 
     correct:2,
 
-    explanation:
-    "Once immediate life threats are addressed and the patient is stable enough, proceed to the secondary assessment and focused history while continuing reassessment."
+    explanation:`
+        Respiratory rate alone does not determine adequacy. The quality
+        and effectiveness of breathing matter. Shallow, irregular
+        respirations with minimal chest rise indicate inadequate breathing
+        and require immediate attention.
+    `
+},
+
+/* =========================================================
+QUESTION 5 — CORRECT ANSWER A
+========================================================= */
+
+{
+    title:"Treatment Priority",
+
+    situation:`
+        You begin managing the patient's inadequate breathing.
+
+        While you are doing so, his wife tells you that he had a heart
+        attack six years ago and takes a daily aspirin.
+
+        She also says he complained of "heartburn" after eating pizza
+        earlier.
+
+        The patient is pale and diaphoretic.
+
+        A blood pressure cuff and pulse oximeter are available in your
+        equipment bag.
+    `,
+
+    question:"Which action should take priority at this point?",
+
+    answers:[
+        "Continue addressing the patient's inadequate breathing and reassess its effectiveness.",
+        "Obtain a blood pressure before continuing treatment.",
+        "Ask the wife whether his previous heart attack felt similar.",
+        "Determine whether the patient should take aspirin for possible ACS."
+    ],
+
+    correct:0,
+
+    explanation:`
+        The patient's known immediate problem is inadequate breathing.
+        Treatment and reassessment of that life threat take priority over
+        obtaining additional history or pursuing a possible diagnosis.
+    `
+},
+
+/* =========================================================
+QUESTION 6 — CORRECT ANSWER B
+========================================================= */
+
+{
+    title:"Circulation",
+
+    situation:`
+        After your initial breathing intervention, the patient's chest
+        movement improves.
+
+        He is now speaking more clearly.
+
+        You assess circulation and find:
+        <span class="clue">Radial pulse 126/min</span>
+        <span class="clue">Weak radial pulse</span>
+        <span class="clue">Pale, cool skin</span>
+        <span class="clue">Capillary refill delayed</span>
+
+        His wife says he has had diarrhea several times today.
+
+        She also points out a small amount of blood on his sock and says
+        he cut his foot on a piece of broken glass yesterday.
+    `,
+
+    question:"Which problem should receive the greatest priority NOW?",
+
+    answers:[
+        "The small wound on his foot.",
+        "The abnormal perfusion findings suggesting a circulation problem.",
+        "The history of diarrhea.",
+        "His previous myocardial infarction."
+    ],
+
+    correct:1,
+
+    explanation:`
+        The patient is showing signs of poor perfusion. The diarrhea may
+        provide a possible explanation, but the EMT's immediate concern is
+        the patient's current circulatory status, not establishing the
+        diagnosis first.
+    `
+},
+
+/* =========================================================
+QUESTION 7 — CORRECT ANSWER D
+========================================================= */
+
+{
+    title:"New Information — External Bleeding",
+
+    situation:`
+        While evaluating the patient's circulation, you notice blood
+        pooling underneath his recliner.
+
+        When the patient's pant leg is moved, you discover a deep wound
+        to the lower leg.
+
+        Blood is flowing rapidly from the wound.
+
+        The wife says she did not know he was bleeding and explains that
+        he fell against a metal table earlier in the afternoon.
+
+        The patient remains pale and weak.
+    `,
+
+    question:"What should you do FIRST?",
+
+    answers:[
+        "Determine whether the patient takes anticoagulant medication.",
+        "Obtain a blood pressure to determine how severe the blood loss is.",
+        "Ask the wife how long ago the fall occurred.",
+        "Immediately control the life-threatening external bleeding."
+    ],
+
+    correct:3,
+
+    explanation:`
+        Life-threatening external bleeding is an immediate circulation
+        threat. Treatment should not be delayed for a blood pressure,
+        medication history, or additional questions.
+    `
+},
+
+/* =========================================================
+QUESTION 8 — CORRECT ANSWER C
+========================================================= */
+
+{
+    title:"Reassessment — The Patient Changes",
+
+    situation:`
+        Direct pressure is applied and the bleeding is controlled.
+
+        The patient's pulse remains rapid.
+
+        You are preparing to continue the assessment when the patient
+        suddenly says:
+
+        "I feel like I'm going to pass out."
+
+        His eyes close.
+
+        He no longer responds when you speak to him.
+    `,
+
+    question:"What should you do NEXT?",
+
+    answers:[
+        "Ask the wife whether he has ever fainted before.",
+        "Continue with the SAMPLE history because the bleeding has been controlled.",
+        "Return immediately to the primary assessment and reassess airway, breathing, and circulation.",
+        "Obtain another blood pressure before changing your treatment plan."
+    ],
+
+    correct:2,
+
+    explanation:`
+        A significant change in mental status requires returning to the
+        primary assessment. The fact that the previous bleeding problem was
+        treated does not mean the patient remains stable.
+    `
+},
+
+/* =========================================================
+QUESTION 9 — CORRECT ANSWER B
+========================================================= */
+
+{
+    title:"Respiratory Deterioration",
+
+    situation:`
+        The patient is now unresponsive.
+
+        You assess his breathing and find:
+
+        <span class="clue">Respiratory rate 8/min</span>
+        <span class="clue">Very shallow chest movement</span>
+        <span class="clue">Irregular pattern</span>
+
+        His pulse is still present.
+
+        The pulse oximeter displays 78%, although you recognize that pulse
+        oximetry is not the primary determinant of whether breathing is
+        adequate.
+
+        His wife is crying and tells you that he has never been this sick.
+    `,
+
+    question:"Which finding most directly determines the immediate treatment priority?",
+
+    answers:[
+        "The fact that he has COPD.",
+        "The patient's inadequate rate and depth of breathing.",
+        "The oxygen saturation of 78%.",
+        "The wife's statement that he has never been this sick."
+    ],
+
+    correct:1,
+
+    explanation:`
+        Adequacy of ventilation is determined clinically by rate, depth,
+        effort, and effectiveness. The patient has inadequate breathing and
+        a pulse, so respiratory support is the immediate priority.
+    `
+},
+
+/* =========================================================
+QUESTION 10 — CORRECT ANSWER D
+========================================================= */
+
+{
+    title:"Sudden Cardiac Arrest",
+
+    situation:`
+        You begin managing the patient's inadequate breathing.
+
+        A few moments later, while reassessing him, you can no longer
+        palpate a pulse.
+
+        The patient remains unresponsive and is not breathing normally.
+
+        His wife says, "Can you check his blood sugar? He has diabetes."
+
+        The glucose meter is immediately accessible.
+    `,
+
+    question:"What should you do NEXT?",
+
+    answers:[
+        "Obtain a blood pressure to confirm the absence of circulation.",
+        "Ask the wife whether he has a DNR order before doing anything.",
+        "Check the patient's blood glucose because diabetes may have caused the event.",
+        "Recognize cardiac arrest and immediately begin the appropriate resuscitation sequence."
+    ],
+
+    correct:3,
+
+    explanation:`
+        The patient is unresponsive, not breathing normally, and has no
+        palpable pulse. The priority has shifted to cardiac arrest
+        management. Blood glucose and history are no longer the immediate
+        priority.
+    `
+},
+
+/* =========================================================
+QUESTION 11 — CORRECT ANSWER C
+========================================================= */
+
+{
+    title:"After Resuscitation — Priorities Change Again",
+
+    situation:`
+        Appropriate resuscitation is initiated.
+
+        The patient regains a palpable pulse and begins breathing
+        spontaneously.
+
+        He remains confused but responds to verbal stimuli.
+
+        You now find:
+
+        <span class="clue">Pulse 108/min</span>
+        <span class="clue">Respirations 22/min</span>
+        <span class="clue">Chest rise present</span>
+        <span class="clue">Skin pale and cool</span>
+        <span class="clue">Leg bleeding remains controlled</span>
+
+        His wife is now providing a detailed list of his medications.
+    `,
+
+    question:"What is the MOST appropriate approach now?",
+
+    answers:[
+        "Stop reassessing because the patient has regained a pulse.",
+        "Focus exclusively on determining whether the patient had a myocardial infarction.",
+        "Return to the secondary assessment and obtain a focused history while continuing frequent reassessment for deterioration.",
+        "Obtain a complete medical history before reassessing his airway and breathing."
+    ],
+
+    correct:2,
+
+    explanation:`
+        The immediate cardiac arrest has been addressed, but the patient
+        remains unstable. Continue frequent reassessment while progressing
+        into the secondary assessment and focused history as appropriate.
+        Do not assume that return of a pulse means the emergency is over.
+    `
+},
+
+/* =========================================================
+QUESTION 12 — CORRECT ANSWER A
+========================================================= */
+
+{
+    title:"Final Decision — The Priority Shifts One More Time",
+
+    situation:`
+        During reassessment, the patient suddenly becomes restless again.
+
+        He begins breathing rapidly.
+
+        You hear a wet, gurgling sound with each breath.
+
+        His pulse remains present.
+
+        His wife is attempting to explain that he was diagnosed with
+        congestive heart failure three years ago and that he has not taken
+        one of his medications today.
+
+        She also tells you that he has been having black stools for several
+        days.
+
+        The patient's blood pressure is 84/50 mmHg.
+    `,
+
+    question:"Which action should receive priority?",
+
+    answers:[
+        "Return to the primary assessment and immediately address the patient's newly inadequate airway/breathing condition while reassessing circulation.",
+        "Continue obtaining the medication history because his missed medication may explain the deterioration.",
+        "Obtain a complete set of vital signs before intervening.",
+        "Ask about the black stools to determine whether gastrointestinal bleeding caused the problem."
+    ],
+
+    correct:0,
+
+    explanation:`
+        The patient has deteriorated again. The wet, gurgling respirations
+        and rapid change in condition require an immediate return to the
+        primary assessment. The medication history, black stools, and
+        hypotension may be clinically important, but they do not take
+        priority over a newly developing airway/breathing threat.
+    `
 }
 
 ];
 
-let currentScenario = 0;
-let score1 = 0;
-let scenarioAnswered = false;
+let current = 0;
+let score = 0;
+let answered = false;
 
 
-/* =====================================================
-LOAD ACTIVITY 1
-===================================================== */
+/* =========================================================
+LOAD QUESTION
+========================================================= */
 
-function loadScenario() {
+function loadQuestion() {
 
-    const s = scenarios[currentScenario];
+    answered = false;
 
-    scenarioAnswered = false;
+    const q = questions[current];
 
-    const area = document.getElementById("scenarioArea");
+    const area = document.getElementById("questionArea");
 
     area.innerHTML = "";
 
-    const box = document.createElement("div");
+    const caseHeader = document.createElement("div");
+    caseHeader.className = "case-header";
 
-    box.className = "scenario";
+    caseHeader.innerHTML = `
+        <strong>Progressive Scenario — Decision Point ${current + 1} of ${questions.length}</strong>
+        <p>
+            The patient is changing. Use only the information available
+            at this point in the call.
+        </p>
+    `;
 
-    box.innerHTML =
-        "<strong>Patient Information</strong>" +
-        "<p>" + s.situation + "</p>";
+    area.appendChild(caseHeader);
 
-    area.appendChild(box);
 
-    const q = document.createElement("div");
+    const scene = document.createElement("div");
+    scene.className = "scene";
 
-    q.className = "question";
+    scene.innerHTML = `
+        <div class="scene-title">${q.title}</div>
+        <div>${q.situation}</div>
+    `;
 
-    q.textContent = s.question;
+    area.appendChild(scene);
 
-    area.appendChild(q);
 
-    s.answers.forEach((answer,index)=>{
+    const questionNumber = document.createElement("div");
+    questionNumber.className = "question-number";
+    questionNumber.textContent =
+        `Decision Point ${current + 1}`;
+
+    area.appendChild(questionNumber);
+
+
+    const question = document.createElement("div");
+    question.className = "question";
+    question.textContent = q.question;
+
+    area.appendChild(question);
+
+
+    q.answers.forEach((answer, index) => {
 
         const button = document.createElement("button");
 
         button.className = "choice";
 
-        button.textContent =
-            String.fromCharCode(65+index) +
-            ". " + answer;
+        button.innerHTML =
+            `<strong>${String.fromCharCode(65 + index)}.</strong> ${answer}`;
 
-        button.onclick =
-            ()=>answerScenario(index,button);
+        button.onclick = () => answerQuestion(index, button);
 
         area.appendChild(button);
 
     });
-
 }
 
 
-/* =====================================================
-ANSWER ACTIVITY 1
-===================================================== */
+/* =========================================================
+ANSWER QUESTION
+========================================================= */
 
-function answerScenario(selected,button) {
+function answerQuestion(selected, selectedButton) {
 
-    if(scenarioAnswered) return;
+    if (answered) return;
 
-    scenarioAnswered = true;
+    answered = true;
 
-    const s = scenarios[currentScenario];
+    const q = questions[current];
 
     const buttons =
-        document.querySelectorAll("#scenarioArea .choice");
+        document.querySelectorAll("#questionArea .choice");
 
-    buttons.forEach(b=>b.disabled=true);
+    buttons.forEach(button => {
+        button.disabled = true;
+    });
 
-    if(selected === s.correct){
 
-        button.classList.add("correct");
+    const correct = selected === q.correct;
 
-        score1++;
+    if (correct) {
 
-        document.getElementById("score1")
-            .textContent = score1;
+        score++;
+
+        selectedButton.classList.add("correct");
 
     } else {
 
-        button.classList.add("incorrect");
+        selectedButton.classList.add("incorrect");
 
-        buttons[s.correct]
-            .classList.add("correct");
+        buttons[q.correct].classList.add("correct");
 
     }
 
-    const feedback =
-        document.createElement("div");
+
+    document.getElementById("score").textContent = score;
+
+
+    const feedback = document.createElement("div");
 
     feedback.className =
         "feedback show " +
-        (selected === s.correct
-            ? "correct"
-            : "incorrect");
+        (correct ? "correct" : "incorrect");
 
-    feedback.innerHTML =
-        "<strong>" +
-        (selected === s.correct
-            ? "✓ Correct"
-            : "✗ Not the best choice") +
-        "</strong>" +
-        "<p>" + s.explanation + "</p>";
+    feedback.innerHTML = `
+        <strong>
+            ${correct ? "✓ Correct clinical decision" : "✗ Not the best decision"}
+        </strong>
 
-    document.getElementById("scenarioArea")
-        .appendChild(feedback);
+        <p>${q.explanation}</p>
+    `;
 
-    const next =
-        document.createElement("button");
+    document.getElementById("questionArea").appendChild(feedback);
+
+
+    const next = document.createElement("button");
 
     next.className = "next-btn";
 
     next.textContent =
-        currentScenario === scenarios.length-1
-            ? "Continue to Activity 2"
-            : "Reveal Next Finding";
+        current === questions.length - 1
+            ? "View Final Results"
+            : "Continue — Reveal Next Decision Point";
 
-    next.onclick = ()=>{
 
-        if(currentScenario === scenarios.length-1){
+    next.onclick = () => {
 
-            startActivity2();
+        if (current === questions.length - 1) {
+
+            showFinal();
 
         } else {
 
-            currentScenario++;
+            current++;
 
-            loadScenario();
+            updateProgress();
+
+            loadQuestion();
+
+            window.scrollTo({
+                top:0,
+                behavior:"smooth"
+            });
 
         }
 
     };
 
-    document.getElementById("scenarioArea")
-        .appendChild(next);
+
+    document.getElementById("questionArea").appendChild(next);
 }
 
 
-/* =====================================================
-START ACTIVITY 2
-===================================================== */
+/* =========================================================
+PROGRESS
+========================================================= */
 
-function startActivity2(){
+function updateProgress() {
 
-    document.getElementById("activity1")
-        .classList.add("hidden");
+    const percentage =
+        current / questions.length;
 
-    document.getElementById("activity2")
-        .classList.remove("hidden");
-
-    document.getElementById("p1")
-        .classList.remove("active");
-
-    document.getElementById("p1")
-        .classList.add("complete");
-
-    document.getElementById("p2")
-        .classList.add("active");
-
-    buildFindings();
-}
-
-
-/* =====================================================
-ACTIVITY 2 — SORTING
-===================================================== */
-
-const findings = [
-
-{
-    text:
-    "Patient is unresponsive and not breathing normally.",
-    answer:"life"
-},
-
-{
-    text:
-    "Severe airway obstruction with inability to speak.",
-    answer:"life"
-},
-
-{
-    text:
-    "Bright-red blood is spurting from a large leg wound.",
-    answer:"life"
-},
-
-{
-    text:
-    "Respirations are 6/min with shallow chest movement.",
-    answer:"life"
-},
-
-{
-    text:
-    "Patient is alert, speaking normally, and breathing adequately.",
-    answer:"primary"
-},
-
-{
-    text:
-    "Radial pulse is rapid but palpable in an anxious patient with no other immediate life threat.",
-    answer:"primary"
-},
-
-{
-    text:
-    "Patient has severe shortness of breath but is currently speaking in full sentences with adequate breathing.",
-    answer:"primary"
-},
-
-{
-    text:
-    "Patient has a minor forearm abrasion with controlled bleeding.",
-    answer:"secondary"
-},
-
-{
-    text:
-    "Patient reports a history of hypertension but has no immediate airway, breathing, or circulation problem.",
-    answer:"secondary"
-},
-
-{
-    text:
-    "Patient reports mild abdominal pain but is alert with adequate breathing and no major bleeding.",
-    answer:"secondary"
-}
-
-];
-
-let currentFinding = 0;
-let score2 = 0;
-
-function buildFindings(){
-
-    const area =
-        document.getElementById("findingArea");
-
-    area.innerHTML = "";
-
-    findings.forEach((finding,index)=>{
-
-        const div =
-            document.createElement("div");
-
-        div.className = "finding";
-
-        div.textContent =
-            (index+1) + ". " + finding.text;
-
-        div.onclick =
-            ()=>chooseCategory(index,div);
-
-        area.appendChild(div);
-
-    });
-
-}
-
-
-function chooseCategory(index,element){
-
-    if(element.classList.contains("selected"))
-        return;
-
-    const finding = findings[index];
-
-    const category =
-        prompt(
-            "Where does this finding belong?\n\n" +
-            "1 = Immediate Life Threat\n" +
-            "2 = Continue Primary Assessment\n" +
-            "3 = Secondary / Further Evaluation"
-        );
-
-    if(category !== "1" &&
-       category !== "2" &&
-       category !== "3"){
-
-        return;
+    if (current >= 4) {
+        document.getElementById("p1")
+            .classList.add("complete");
     }
 
-    let selectedCategory;
-
-    if(category === "1")
-        selectedCategory = "life";
-
-    if(category === "2")
-        selectedCategory = "primary";
-
-    if(category === "3")
-        selectedCategory = "secondary";
-
-    element.classList.add("selected");
-
-    const clone =
-        document.createElement("div");
-
-    clone.className = "finding";
-
-    clone.textContent =
-        element.textContent;
-
-    if(selectedCategory === finding.answer){
-
-        score2++;
-
-        document.getElementById("score2")
-            .textContent = score2;
-
-        clone.style.borderColor =
-            "var(--green)";
-
-        clone.style.background =
-            "#e8f5e9";
-
-        showSortFeedback(true,finding);
-
-    } else {
-
-        clone.style.borderColor =
-            "var(--red)";
-
-        clone.style.background =
-            "#ffebee";
-
-        showSortFeedback(false,finding);
-
+    if (current >= 8) {
+        document.getElementById("p2")
+            .classList.add("active");
     }
 
-    if(selectedCategory === "life")
-        document.getElementById("lifeZone")
-            .appendChild(clone);
-
-    if(selectedCategory === "primary")
-        document.getElementById("primaryZone")
-            .appendChild(clone);
-
-    if(selectedCategory === "secondary")
-        document.getElementById("secondaryZone")
-            .appendChild(clone);
-
-    currentFinding++;
-
-    if(currentFinding === findings.length){
-
-        document.getElementById("finishBtn")
-            .classList.remove("hidden");
-
+    if (current >= 8) {
+        document.getElementById("p1")
+            .classList.remove("active");
     }
 
+    if (current === questions.length - 1) {
+        document.getElementById("p2")
+            .classList.add("complete");
+    }
 }
 
 
-function showSortFeedback(correct,finding){
+/* =========================================================
+FINAL RESULTS
+========================================================= */
 
-    const box =
-        document.getElementById("sortingFeedback");
+function showFinal() {
 
-    box.className =
-        "feedback show " +
-        (correct ? "correct" : "incorrect");
-
-    if(correct){
-
-        box.innerHTML =
-            "<strong>Correct.</strong><br>" +
-            "This finding belongs in the category you selected.";
-
-    } else {
-
-        let correctText;
-
-        if(finding.answer === "life")
-            correctText =
-                "<strong>Immediate Life Threat</strong>";
-
-        if(finding.answer === "primary")
-            correctText =
-                "<strong>Continue Primary Assessment</strong>";
-
-        if(finding.answer === "secondary")
-            correctText =
-                "<strong>Secondary / Further Evaluation</strong>";
-
-        box.innerHTML =
-            "<strong>Not the best category.</strong><br>" +
-            "This finding belongs under " +
-            correctText + ".";
-    }
-
-}
-
-
-/* =====================================================
-FINAL
-===================================================== */
-
-function showFinal(){
-
-    document.getElementById("activity2")
+    document.getElementById("activity")
         .classList.add("hidden");
 
     document.getElementById("final")
@@ -1045,47 +1129,49 @@ function showFinal(){
     document.getElementById("p3")
         .classList.add("active");
 
-    const total =
-        scenarios.length + findings.length;
-
-    const totalCorrect =
-        score1 + score2;
-
     const percent =
-        Math.round(totalCorrect / total * 100);
+        Math.round((score / questions.length) * 100);
 
     document.getElementById("finalPercent")
         .textContent = percent;
 
-    let message;
 
-    if(percent >= 90){
+    let message = "";
 
-        message =
-            "Excellent. You demonstrated strong recognition and prioritization of life threats.";
-
-    } else if(percent >= 75){
+    if (percent >= 92) {
 
         message =
-            "Good performance. Review the distinctions between immediate treatment, continued primary assessment, and secondary assessment.";
+            "Excellent clinical prioritization. You consistently identified the immediate problem while filtering out distracting information and recognized when the patient's changing condition required a new priority.";
+
+    } else if (percent >= 83) {
+
+        message =
+            "Strong performance. You demonstrated good primary-assessment reasoning, but review the points at which a changing patient condition requires you to abandon the previous plan and reassess.";
+
+    } else if (percent >= 75) {
+
+        message =
+            "Developing performance. You can identify many immediate threats, but additional practice is needed when several clinically important findings compete for attention.";
 
     } else {
 
         message =
-            "Additional review is recommended. Focus on recognizing life threats and determining what must be addressed immediately.";
+            "Further review is recommended. Focus on distinguishing the patient's immediate life threat from information that is important for diagnosis, history, or later assessment.";
     }
+
 
     document.getElementById("finalMessage")
         .textContent = message;
 }
 
 
-/* Start */
+/* =========================================================
+START
+========================================================= */
 
-loadScenario();
+loadQuestion();
 
 </script>
 
 </body>
 </html>
-```
