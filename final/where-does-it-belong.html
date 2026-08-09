@@ -544,18 +544,12 @@ const rounds = [
 
         cards: [
 
-            {
-                text: "Determine whether the scene is safe",
-                domain: "scene",
-                why: "Scene safety must be established before the EMT approaches the patient."
-            },
-
-            {
-                text: "Put on appropriate PPE",
-                domain: "scene",
-                why: "PPE protects the EMT and is part of scene safety and preparation."
-            },
-
+             {
+                text: "Complete the patient care report",
+                domain: "operations",
+                why: "Documentation is an EMS operations responsibility."
+            }, 
+            
             {
                 text: "Determine the number of patients",
                 domain: "scene",
@@ -566,6 +560,12 @@ const rounds = [
                 text: "Assess the patient's general impression",
                 domain: "primary",
                 why: "The general impression is part of the primary assessment."
+            },
+
+            {
+                text: "Determine whether the scene is safe",
+                domain: "scene",
+                why: "Scene safety must be established before the EMT approaches the patient."
             },
 
             {
@@ -587,6 +587,12 @@ const rounds = [
             },
 
             {
+                text: "Put on appropriate PPE",
+                domain: "scene",
+                why: "PPE protects the EMT and is part of scene safety and preparation."
+            },
+
+            {
                 text: "Perform OPQRST",
                 domain: "secondary",
                 why: "OPQRST helps obtain detailed information about a patient's symptoms."
@@ -596,12 +602,6 @@ const rounds = [
                 text: "Control life-threatening bleeding",
                 domain: "treatment",
                 why: "The primary assessment identifies the life threat; controlling the bleeding is the treatment."
-            },
-
-            {
-                text: "Complete the patient care report",
-                domain: "operations",
-                why: "Documentation is an EMS operations responsibility."
             }
 
         ]
@@ -618,6 +618,18 @@ const rounds = [
 
         cards: [
 
+             {
+                text: "Obtain baseline vital signs",
+                domain: "secondary",
+                why: "Baseline vital signs provide additional information about the patient's condition after immediate life threats are addressed."
+            },
+
+             {
+                text: "Communicate with medical direction",
+                domain: "operations",
+                why: "Communication with medical direction is part of EMS operations."
+            },
+
             {
                 text: "Determine whether the patient requires rapid transport",
                 domain: "primary",
@@ -629,13 +641,7 @@ const rounds = [
                 domain: "scene",
                 why: "Recognizing the need for additional resources is part of scene size-up and safety."
             },
-
-            {
-                text: "Obtain baseline vital signs",
-                domain: "secondary",
-                why: "Baseline vital signs provide additional information about the patient's condition after immediate life threats are addressed."
-            },
-
+           
             {
                 text: "Determine the patient's last known well time",
                 domain: "secondary",
@@ -659,13 +665,7 @@ const rounds = [
                 domain: "treatment",
                 why: "Spinal motion restriction is part of patient treatment and management."
             },
-
-            {
-                text: "Communicate with medical direction",
-                domain: "operations",
-                why: "Communication with medical direction is part of EMS operations."
-            },
-
+           
             {
                 text: "Give a hospital handoff",
                 domain: "operations",
