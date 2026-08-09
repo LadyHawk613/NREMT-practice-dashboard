@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NREMT Operations Simulation — You’re the Incident Commander</title>
+
+<style>
+:root {
+    --navy: #071B2D;
+    --teal: #008C95;
+    --gold: #E6B422;
+    --light: #F3F6F8;
+    --white: #FFFFFF;
+    --green: #198754;
+    --red: #C62828;
+    --gray: #66727D;
+    --border: #D5DDE3;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    background: var(--light);
+    color: #17212B;
+}
+
+header {
+    background: var(--navy);
+    color: white;
+    text-align: center;
+    padding: 26px 20px;
+}
+
+header h1 {
+    margin: 0 0 8px;
+    font-size: 28px;
+}
+
+header p {
+    margin: 0;
+    color: #dce8ed;
+}
+
+.container {
+    max-width: 950px;
+    margin: auto;
+    padding: 25px;
+}
+
+.progress {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 25px;
+}
+
+.progress div {
+    flex: 1;
+    height: 9px;
+    border-radius: 10px;
+    background: #d5dde3;
+    transition: background 0.3s ease;
+}
+
+.progress .active {
+    background: var(--teal);
+}
+
+.progress .complete {
+    background: var(--gold);
+}
+
+.card {
+    background: white;
+    border-radius: 10px;
+    padding: 25px;
+    margin-bottom: 20px;
+    box-shadow: 0 3px 12px rgba(0,0,0,.08);
+}
+
+.card h2 {
+    color: var(--navy);
+    margin-top: 0;
+}
+
+.instruction {
+    border-left: 6px solid var(--gold);
+}
+
+.hidden {
+    display: none !important;
+}
+
+button {
+    font-family: inherit;
+}
+
+.primary-btn {
+    border: none;
+    padding: 13px 22px;
+    border-radius: 7px;
+    font-weight: bold;
+    cursor: pointer;
+    background: var(--teal);
+    color: white;
+    font-size: 15px;
+    transition: opacity 0.2s;
+}
+
+.primary-btn:hover:not(:disabled) {
+    opacity: .9;
+}
+
+.primary-btn:disabled {
+    background: var(--gray);
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+.score-bar {
+    background: var(--navy);
+    color: white;
+    padding: 14px;
+    border-radius: 8px;
+    text-align: center;
+    margin-bottom: 20px;
+    font-weight: bold;
+}
+
+.scenario-box {
+    background: #eef7f8;
+    border: 2px solid var(--teal);
+    padding: 20px;
+    border-radius: 9px;
+    line-height: 1.6;
+    margin-bottom: 20px;
+}
+
+.scenario-question {
+    font-size: 18px;
+    font-weight: bold;
+    color: var(--navy);
+    margin-bottom: 15px;
+}
+
+.option-item {
+    width: 100%;
+    display: flex;
+    align-items: flex-start;
+    text-align: left;
+    background: white;
+    border: 2px solid var(--border);
+    padding: 15px;
+    margin: 10px 0;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 15px;
+    transition: all 0.2s ease;
+}
+
+.option-item:hover:not(.disabled) {
+    border-color: var(--teal);
+    background: #f7fcfc;
+}
+
+.option-item input {
+    margin-top: 3px;
+    margin-right: 12px;
+    transform: scale(1.2);
+    cursor: pointer;
+}
+
+.option-item.correct-highlight {
+    background: #e8f5e9 !important;
+    border-color: var(--green) !important;
+    color: #155d34;
+    font-weight: bold;
+}
+
+.option-item.incorrect-highlight {
+    background: #ffebee !important;
+    border-color: var(--red) !important;
+    color: var(--red);
+}
+
+.feedback-box {
+    margin-top: 20px;
+    background: #fff8e1;
+    border-left: 5px solid var(--gold);
+    padding: 18px;
+    border-radius: 6px;
+    display: none;
+}
+
+.feedback-box.show {
+    display: block;
+}
+
+.feedback-box h4 {
+    margin: 0 0 8px 0;
+    color: var(--navy);
+}
+
+.final {
+    text-align: center;
+    background: white;
+    padding: 30px;
+    border-radius: 10px;
+}
+
+.final-score {
+    font-size: 52px;
+    color: var(--teal);
+    font-weight: bold;
+    margin: 15px 0;
+}
+
+@media(max-width: 700px) {
+    .container {
+        padding: 12px;
+    }
+    header h1 {
+        font-size: 22px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <h1>NREMT Operations Simulation</h1>
+    <p>“You’re the Incident Commander” — Dynamic EMS Operations</p>
+</header>
+
+<div class="container">
+
+<!-- WELCOME SCREEN -->
+<section id="welcomeScreen" class="card instruction">
+    <h2>Dynamic Incident Management Simulation</h2>
+    <p>As the first-arriving EMT crew at a complex motor vehicle collision, you must direct operations, prioritize scene safety, manage limited resources, communicate effectively with dispatch, and make critical command decisions under pressure.</p>
+    <p>This simulation consists of <strong>6 progressive rounds</strong>. Each decision impacts scene management and tests whether you put safety and resource coordination ahead of impulsive patient care.</p>
+    <button class="primary-btn" onclick="startSimulation()" style="margin-top: 15px;">Start Simulation</button>
+</section>
+
+<!-- SIMULATION SCREEN -->
+<section id="simScreen" class="hidden">
+    <div class="progress" id="progressBar">
+        <div id="prog1" class="active"></div>
+        <div id="prog2"></div>
+        <div id="prog3"></div>
+        <div id="prog4"></div>
+        <div id="prog5"></div>
+        <div id="prog6"></div>
+    </div>
+
+    <div class="score-bar">
+        Round <span id="roundNumber">1</span> of 6
+        &nbsp; | &nbsp;
+        Operations Score: <span id="currentScore">0</span> / 6
+    </div>
+
+    <div class="card">
+        <div id="roundContent"></div>
+        <div id="feedbackBox" class="feedback-box"></div>
+        <button id="submitBtn" class="primary-btn hidden" style="margin-top: 20px;" onclick="submitRound()">Submit Decision</button>
+        <button id="nextBtn" class="primary-btn hidden" style="margin-top: 20px;" onclick="nextRound()">Next Round</button>
+    </div>
+</section>
+
+<!-- FINAL RESULTS SCREEN -->
+<section id="finalResults" class="final hidden">
+    <h2>Incident Command Debriefing</h2>
+    <p>Simulation Completed</p>
+    <div class="final-score">
+        <span id="finalPercent">0</span>%
+    </div>
+    <p id="finalMessage" style="font-size: 16px; margin-bottom: 25px;"></p>
+    <div class="card" style="text-align: left; background: var(--light);">
+        <h3 style="color: var(--navy); margin-top: 0;">Command Takeaways:</h3>
+        <p>✓ Scene safety and apparatus positioning always precede patient contact.</p>
+        <p>✓ Hazard recognition and specialized resource requests (fire/hazmat) prevent responder injury.</p>
+        <p>✓ Clear, concise operational communication replaces cluttered narrative updates.</p>
+        <p>✓ Emotional pressure from screaming patients or bystanders must not compromise safety protocols.</p>
+    </div>
+    <button class="primary-btn" onclick="location.reload()" style="margin-top: 15px;">Restart Simulation</button>
+</section>
+
+</div>
+
+<script>
+const rounds = [
+    {
+        title: "Round 1 — Scene Management",
+        type: "multi",
+        requiredCount: 2,
+        situation: "You are the first EMT crew arriving at a highway collision. Three vehicles are involved. One vehicle is smoking. Traffic is still moving around the scene. Several bystanders are approaching the patients. You can see at least four patients, but you cannot yet determine the total number of patients.",
+        prompt: "Select the <strong>TWO</strong> highest-priority actions.",
+        options: [
+            { text: "Begin assessing the most severely injured patient immediately.", correct: false },
+            { text: "Position the ambulance to protect the scene and warn approaching traffic.", correct: true },
+            { text: "Request additional resources (fire rescue, additional ambulances, law enforcement).", correct: true },
+            { text: "Enter the smoking vehicle to remove the driver before treatment.", correct: false },
+            { text: "Ask bystanders to begin helping and moving patients.", correct: false }
+        ],
+        rationale: "Scene safety, proper vehicle positioning, and early request for additional resources precede patient care. Entering smoking vehicles or involving untrained bystanders prematurely creates major safety risks."
+    },
+    {
+        title: "Round 2 — Identify the Operational Problem",
+        type: "single",
+        situation: "New information appears: A second vehicle has leaking fuel. One patient is trapped. A power line is down approximately 30 feet from the crash.",
+        prompt: "What is the EMT's best next operational decision?",
+        options: [
+            { text: "Approach the vehicles immediately to pull out the trapped patient before fuel ignites.", correct: false },
+            { text: "Establish a safe staging zone, maintain a safe distance from the downed power line and fuel leak, and request specialized resources (fire/hazmat) and law enforcement.", correct: true },
+            { text: "Instruct the bystanders to help pull the trapped patient out of the vehicle.", correct: false },
+            { text: "Begin triage of the walking patients while ignoring the downed power line since it is 30 feet away.", correct: false }
+        ],
+        rationale: "Downed power lines and active fuel leaks present lethal hazards. The EMT must recognize operational boundaries, stage safely, and request specialized agency support."
+    },
+    {
+        title: "Round 3 — Resource Management",
+        type: "multi",
+        requiredCount: 3,
+        situation: "You have limited resources on scene: 1 ambulance, 2 EMTs, 4 patients (1 trapped, 1 with severe bleeding, 2 apparently walking). Fire rescue is 8 minutes away. Another ambulance is 12 minutes away.",
+        prompt: "Which actions should occur <strong>FIRST</strong>? Select <strong>THREE</strong>.",
+        options: [
+            { text: "Apply direct pressure or tourniquet to control the severe bleeding.", correct: true },
+            { text: "Direct walking bystanders to move a safe distance away from hazards.", correct: true },
+            { text: "Enter the vehicle to attempt extrication of the trapped patient alone.", correct: false },
+            { text: "Establish command and maintain safe positioning/observation while awaiting fire rescue.", correct: true },
+            { text: "Drive the ambulance directly past the downed power line to get closer to patients.", correct: false }
+        ],
+        rationale: "Immediate life threats (severe bleeding) can be addressed if safe, bystanders must be moved out of harm's way, and incident command/safe positioning must be maintained while waiting for heavy rescue and backup."
+    },
+    {
+        title: "Round 4 — Communications",
+        type: "single",
+        situation: "You contact dispatch via radio to update them on conditions.<br><em>“We're at the crash on Highway 24. It's pretty bad. There are several people hurt and one car is smoking. We're trying to figure everything out. I think there are maybe four or five patients. We need help.”</em>",
+        prompt: "Which information is <strong>MOST</strong> important to communicate immediately to dispatch?",
+        options: [
+            { text: "The emotional state of the bystanders and the weather conditions.", correct: false },
+            { text: "Exact location, specific environmental hazards (smoking vehicle, leaking fuel, downed power line), patient count estimate, and specific resource requests.", correct: true },
+            { text: "A complete detailed medical history of the first patient encountered.", correct: false },
+            { text: "Your personal frustration with traffic congestion and delayed backup.", correct: false }
+        ],
+        rationale: "Dispatch requires concise, actionable operational data: exact location, hazards requiring specific responders (fire/hazmat), patient count, and resource needs rather than vague narrative descriptions."
+    },
+    {
+        title: "Round 5 — Change the Situation",
+        type: "single",
+        situation: "<strong>UPDATE:</strong> The smoke becomes heavier. A bystander reports that another patient is trapped in the rear vehicle. Your EMT partner wants to enter the vehicle because the trapped patient is screaming.",
+        prompt: "What should you do?",
+        options: [
+            { text: "Let your partner enter since patient rescue is the top priority in EMS.", correct: false },
+            { text: "Order your partner to stop, remind them that scene safety precedes patient contact, and wait for fire/rescue personnel.", correct: true },
+            { text: "Enter the vehicle together to split the risk.", correct: false },
+            { text: "Tell the bystander to go into the vehicle instead.", correct: false }
+        ],
+        rationale: "Emotional pressure from screaming patients or anxious partners must not override safety rules. EMTs do not enter burning or structurally unstable hazardous environments without appropriate PPE and specialized fire rescue mitigation."
+    },
+    {
+        title: "Round 6 — Final Incident Command Decision",
+        type: "single",
+        situation: "You have completed your initial scene assessment. Fire rescue is responding. Four patients have been identified. The scene remains partially hazardous.",
+        prompt: "Which action <strong>BEST</strong> demonstrates appropriate EMT operational decision-making?",
+        options: [
+            { text: "Begin treating the most seriously injured patient while waiting for fire rescue.", correct: false },
+            { text: "Move all patients away from the vehicles before beginning treatment.", correct: false },
+            { text: "Establish a safe operating area, communicate scene conditions and resource needs, and coordinate patient access with responding agencies.", correct: true },
+            { text: "Enter the vehicle with your partner because the patient's condition may deteriorate before fire rescue arrives.", correct: false }
+        ],
+        rationale: "Option C correctly integrates incident command, ongoing scene safety, professional communication, and inter-agency coordination. Options A, B, and D violate safety protocols or attempt dangerous interventions without proper rescue control."
+    }
+];
+
+let currentRound = 0;
+let score = 0;
+let answered = false;
+
+function startSimulation() {
+    document.getElementById("welcomeScreen").classList.add("hidden");
+    document.getElementById("simScreen").classList.remove("hidden");
+    loadRound();
+}
+
+function loadRound() {
+    answered = false;
+    const r = rounds[currentRound];
+    
+    document.getElementById("roundNumber").textContent = currentRound + 1;
+    document.getElementById("currentScore").textContent = score;
+    document.getElementById("submitBtn").classList.remove("hidden");
+    document.getElementById("submitBtn").disabled = true;
+    document.getElementById("nextBtn").classList.add("hidden");
+    
+    const feedbackBox = document.getElementById("feedbackBox");
+    feedbackBox.classList.remove("show");
+    feedbackBox.innerHTML = "";
+    
+    const content = document.getElementById("roundContent");
+    content.innerHTML = `
+        <h2 style="color: var(--navy); margin-bottom: 15px;">${r.title}</h2>
+        <div class="scenario-box">
+            <strong>Situation</strong>
+            <p>${r.situation}</p>
+        </div>
+        <div class="scenario-question">${r.prompt}</div>
+        <div id="optionsArea"></div>
+    `;
+    
+    const optionsArea = document.getElementById("optionsArea");
+    r.options.forEach((opt, index) => {
+        const label = document.createElement("label");
+        label.className = "option-item";
+        
+        const input = document.createElement("input");
+        input.type = r.type === "multi" ? "checkbox" : "radio";
+        input.name = "simOption";
+        input.value = index;
+        input.onchange = handleSelectionChange;
+        
+        const span = document.createElement("span");
+        span.innerHTML = `<strong>${String.fromCharCode(65 + index)}.</strong> ${opt.text}`;
+        
+        label.appendChild(input);
+        label.appendChild(span);
+        optionsArea.appendChild(label);
+    });
+}
+
+function handleSelectionChange() {
+    if (answered) return;
+    const r = rounds[currentRound];
+    const checked = document.querySelectorAll("input[name='simOption']:checked");
+    const submitBtn = document.getElementById("submitBtn");
+    
+    if (r.type === "multi") {
+        submitBtn.disabled = checked.length !== r.requiredCount;
+    } else {
+        submitBtn.disabled = checked.length === 0;
+    }
+}
+
+function submitRound() {
+    if (answered) return;
+    answered = true;
+    
+    const r = rounds[currentRound];
+    const checkedInputs = document.querySelectorAll("input[name='simOption']:checked");
+    const optionItems = document.querySelectorAll(".option-item");
+    
+    let userSelections = Array.from(checkedInputs).map(inp => parseInt(inp.value));
+    let correctIndices = [];
+    r.options.forEach((opt, idx) => {
+        if (opt.correct) correctIndices.push(idx);
+    });
+    
+    let isCorrect = false;
+    if (r.type === "single") {
+        isCorrect = userSelections.length === 1 && userSelections[0] === correctIndices[0];
+    } else {
+        if (userSelections.length === correctIndices.length) {
+            isCorrect = userSelections.every(val => correctIndices.includes(val));
+        }
+    }
+    
+    // Highlight options
+    optionItems.forEach((item, idx) => {
+        item.classList.add("disabled");
+        const input = item.querySelector("input");
+        input.disabled = true;
+        if (correctIndices.includes(idx)) {
+            item.classList.add("correct-highlight");
+        } else if (input.checked) {
+            item.classList.add("incorrect-highlight");
+        }
+    });
+    
+    if (isCorrect) {
+        score++;
+        document.getElementById("currentScore").textContent = score;
+    }
+    
+    const feedbackBox = document.getElementById("feedbackBox");
+    feedbackBox.innerHTML = `
+        <h4 style="color: ${isCorrect ? 'var(--green)' : 'var(--red)'};">
+            ${isCorrect ? "✓ Correct Decision" : "✗ Suboptimal Decision"}
+        </h4>
+        <p><strong>Rationale:</strong> ${r.rationale}</p>
+    `;
+    feedbackBox.classList.add("show");
+    
+    document.getElementById("submitBtn").classList.add("hidden");
+    const nextBtn = document.getElementById("nextBtn");
+    nextBtn.classList.remove("hidden");
+    
+    if (currentRound === rounds.length - 1) {
+        nextBtn.textContent = "View Final Debriefing";
+    }
+    
+    // Update progress bar
+    updateProgress();
+}
+
+function updateProgress() {
+    const progEl = document.getElementById(`prog${currentRound + 1}`);
+    progEl.classList.remove("active");
+    progEl.classList.add("complete");
+}
+
+function nextRound() {
+    if (currentRound === rounds.length - 1) {
+        showResults();
+    } else {
+        currentRound++;
+        // Activate next progress bar indicator
+        const nextProg = document.getElementById(`prog${currentRound + 1}`);
+        if(nextProg) nextProg.classList.add("active");
+        loadRound();
+    }
+}
+
+function showResults() {
+    document.getElementById("simScreen").classList.add("hidden");
+    document.getElementById("finalResults").classList.remove("hidden");
+    
+    const percent = Math.round((score / rounds.length) * 100);
+    document.getElementById("finalPercent").textContent = percent;
+    
+    const msg = document.getElementById("finalMessage");
+    if (percent >= 90) {
+        msg.textContent = "Outstanding Incident Command! You consistently prioritized scene safety, hazard mitigation, concise communication, and proper resource allocation.";
+    } else if (percent >= 70) {
+        msg.textContent = "Good work! You have a solid grasp of EMS operations, but review specific safety bottlenecks where emotional patient presentation tempts premature entry.";
+    } else {
+        msg.textContent = "Keep reviewing tactical operations. Remember that scene safety, staging, and resource control always take precedence over direct patient contact.";
+    }
+}
+</script>
+
+</body>
+</html>
