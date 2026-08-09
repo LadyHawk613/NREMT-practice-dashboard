@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>NREMT Clinical Reasoning: Two Answers Are Correct — Which Is Better?</title>
+<title>NREMT Final Review: Advanced Treatment & Transport Challenge</title>
 
 <style>
 :root {
@@ -38,18 +38,43 @@ header {
 
 header h1 {
     margin: 0 0 8px;
-    font-size: 28px;
+    font-size: 26px;
 }
 
 header p {
     margin: 0;
     color: #dce8ed;
+    font-size: 14px;
 }
 
 .container {
-    max-width: 900px;
+    max-width: 950px;
     margin: auto;
     padding: 25px;
+}
+
+.progress {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 25px;
+    flex-wrap: wrap;
+}
+
+.progress div {
+    flex: 1;
+    min-width: 25px;
+    height: 9px;
+    border-radius: 10px;
+    background: #d5dde3;
+    transition: background 0.3s ease;
+}
+
+.progress .active {
+    background: var(--teal);
+}
+
+.progress .complete {
+    background: var(--gold);
 }
 
 .card {
@@ -63,6 +88,7 @@ header p {
 .card h2 {
     color: var(--navy);
     margin-top: 0;
+    font-size: 20px;
 }
 
 .instruction {
@@ -86,10 +112,17 @@ button {
     background: var(--teal);
     color: white;
     font-size: 15px;
+    transition: opacity 0.2s;
 }
 
-.primary-btn:hover {
+.primary-btn:hover:not(:disabled) {
     opacity: .9;
+}
+
+.primary-btn:disabled {
+    background: var(--gray);
+    cursor: not-allowed;
+    opacity: 0.5;
 }
 
 .score-bar {
@@ -100,31 +133,34 @@ button {
     text-align: center;
     margin-bottom: 20px;
     font-weight: bold;
+    font-size: 15px;
 }
 
 .scenario-box {
     background: #eef7f8;
     border: 2px solid var(--teal);
-    padding: 20px;
+    padding: 18px;
     border-radius: 9px;
     line-height: 1.6;
     margin-bottom: 20px;
+    font-size: 14px;
 }
 
 .scenario-question {
-    font-size: 18px;
+    font-size: 17px;
     font-weight: bold;
     color: var(--navy);
     margin-bottom: 15px;
 }
 
-.choice {
+.option-item {
     width: 100%;
-    display: block;
+    display: flex;
+    align-items: flex-start;
     text-align: left;
     background: white;
     border: 2px solid var(--border);
-    padding: 15px;
+    padding: 14px;
     margin: 10px 0;
     border-radius: 8px;
     cursor: pointer;
@@ -132,42 +168,47 @@ button {
     transition: all 0.2s ease;
 }
 
-.choice:hover:not(:disabled) {
+.option-item:hover:not(.disabled) {
     border-color: var(--teal);
     background: #f7fcfc;
 }
 
-.choice.correct {
+.option-item input {
+    margin-top: 3px;
+    margin-right: 12px;
+    transform: scale(1.2);
+    cursor: pointer;
+}
+
+.option-item.correct-highlight {
     background: #e8f5e9 !important;
     border-color: var(--green) !important;
     color: #155d34;
     font-weight: bold;
 }
 
-.choice.incorrect {
+.option-item.incorrect-highlight {
     background: #ffebee !important;
     border-color: var(--red) !important;
     color: var(--red);
 }
 
-.choice:disabled {
-    cursor: default;
-}
-
-.rationale-box {
+.feedback-box {
     margin-top: 20px;
     background: #fff8e1;
     border-left: 5px solid var(--gold);
     padding: 18px;
     border-radius: 6px;
     display: none;
+    font-size: 14px;
+    line-height: 1.5;
 }
 
-.rationale-box.show {
+.feedback-box.show {
     display: block;
 }
 
-.rationale-box h4 {
+.feedback-box h4 {
     margin: 0 0 8px 0;
     color: var(--navy);
 }
@@ -191,7 +232,7 @@ button {
         padding: 12px;
     }
     header h1 {
-        font-size: 22px;
+        font-size: 20px;
     }
 }
 </style>
@@ -200,44 +241,56 @@ button {
 <body>
 
 <header>
-    <h1>NREMT Clinical Reasoning</h1>
-    <p>Two Answers Are Correct — Which Is Better?</p>
+    <h1>NREMT Final Review</h1>
+    <p>Advanced Treatment & Transport Challenge — Clinical Decision-Making</p>
 </header>
 
 <div class="container">
 
 <!-- WELCOME SCREEN -->
 <section id="welcomeScreen" class="card instruction">
-    <h2>Advanced Clinical Decision-Making</h2>
-    <p>In NREMT scenario questions, multiple options may look medically plausible or clinically appropriate. This quiz trains you to look beyond standard textbook actions and identify the <strong>most critical priority</strong> or the <strong>better immediate response</strong> under pressure.</p>
-    <p>There are 10 interactive case studies. Take your time to analyze competing clinical priorities before selecting your answer.</p>
-    <button class="primary-btn" onclick="startQuiz()" style="margin-top: 15px;">Begin Case Studies</button>
+    <h2>Directions & Student Instructions</h2>
+    <p>For each question, assume you are an EMT operating within your scope of practice and local protocols.</p>
+    <ul>
+        <li>Several answer choices may represent reasonable EMT actions. Select the <strong>BEST</strong> answer unless the question states <strong>Select ALL That Apply</strong>.</li>
+        <li>Distracting information (plausible actions, correct-but-not-best actions, and reassuring information) is intentional.</li>
+        <li>Evaluate what the patient's most important problem is <strong>NOW</strong>, rather than anchoring on initial treatment success or isolated normal numbers.</li>
+    </ul>
+    <p>This review consists of <strong>11 progressive clinical challenge questions</strong>.</p>
+    <button class="primary-btn" onclick="startQuiz()" style="margin-top: 15px;">Begin Advanced Challenge</button>
 </section>
 
 <!-- QUIZ SCREEN -->
 <section id="quizScreen" class="hidden">
+    <div class="progress" id="progressBar"></div>
+
     <div class="score-bar">
-        Question <span id="qNumber">1</span> of 10
+        Question <span id="qNumber">1</span> of 11
         &nbsp; | &nbsp;
-        Score: <span id="currentScore">0</span>
+        Correct Decisions: <span id="currentScore">0</span> / 11
     </div>
 
     <div class="card">
         <div id="scenarioArea"></div>
-        <div id="rationaleArea" class="rationale-box"></div>
+        <div id="feedbackBox" class="feedback-box"></div>
+        <button id="submitBtn" class="primary-btn hidden" style="margin-top: 20px;" onclick="submitAnswer()" disabled>Submit Answer</button>
         <button id="nextBtn" class="primary-btn hidden" style="margin-top: 20px;" onclick="nextQuestion()">Next Question</button>
     </div>
 </section>
 
-<!-- FINAL RESULTS -->
+<!-- FINAL RESULTS SCREEN -->
 <section id="finalResults" class="final hidden">
-    <h2>Assessment Complete</h2>
-    <p>Clinical Reasoning Evaluation Finished</p>
+    <h2>Final Clinical Judgment Debrief</h2>
+    <p>Advanced Challenge Completed</p>
     <div class="final-score">
         <span id="finalPercent">0</span>%
     </div>
     <p id="finalMessage" style="font-size: 16px; margin-bottom: 25px;"></p>
-    <button class="primary-btn" onclick="location.reload()">Restart Assessment</button>
+    <div class="card" style="text-align: left; background: var(--light);">
+        <h3 style="color: var(--navy); margin-top: 0;">Core Clinical Takeaway:</h3>
+        <p>The EMT must repeatedly answer: <em>"What is the patient's most important problem NOW, and what action has the greatest potential to change the outcome?"</em> Avoid falling into traps of false reassurance from isolated improved metrics.</p>
+    </div>
+    <button class="primary-btn" onclick="location.reload()" style="margin-top: 15px;">Restart Review</button>
 </section>
 
 </div>
@@ -245,193 +298,307 @@ button {
 <script>
 const questions = [
     {
-        situation: "A 58-year-old male is sitting upright and leaning forward. He has a history of COPD and hypertension. He is anxious, pale, and diaphoretic. His respirations are 30/min with increased effort. SpO₂ is 86%. He states that his chest feels \"tight.\" His radial pulse is rapid but strong.",
-        question: "Which action is MOST appropriate at this time?",
-        answers: [
-            "Assist the patient with his prescribed bronchodilator if indicated and reassess his response.",
-            "Obtain a detailed OPQRST history before beginning treatment.",
-            "Determine whether the chest tightness is caused by COPD or acute coronary syndrome before intervening.",
-            "Administer oxygen according to your local protocol and continuously reassess respiratory status."
+        title: "QUESTION 1 — MULTIPLE CHOICE",
+        type: "single",
+        situation: "<strong>The Improving Number</strong><br><br>You are treating a 71-year-old male with respiratory distress.<br><br><strong>Initial findings:</strong><br>• RR 32/min | HR 118/min | SpO₂ 84% | BP 154/88 mmHg<br>• Significant accessory muscle use | Speaking in 2–3 word phrases | Alert and anxious<br><br><strong>After appropriate respiratory treatment:</strong><br>• RR 26/min | HR 108/min | SpO₂ 94% | BP 146/84 mmHg<br>• The patient is now speaking in complete sentences but says: <em>\"I'm exhausted.\"</em><br>• You notice he has become increasingly drowsy.",
+        prompt: "What is the BEST next action?",
+        options: [
+            { text: "Continue the current treatment and reassess frequently because the vital signs have improved.", correct: false },
+            { text: "Reduce treatment because the SpO₂ has improved and the patient is no longer in obvious distress.", correct: false },
+            { text: "Recognize the change in mental status as potentially significant, reassess airway and breathing effectiveness, and prepare for prompt transport.", correct: true },
+            { text: "Obtain a detailed medical history to determine whether the fatigue is caused by his underlying condition.", correct: false }
         ],
-        correct: 3,
-        rationale: "Option A may also be appropriate, but the patient has demonstrated significant hypoxemia and respiratory distress. Oxygenation/ventilation takes priority. The student must distinguish an appropriate treatment from the best immediate treatment."
+        rationale: "<strong>Why C is Correct:</strong> Several findings improved, but increasing drowsiness in a patient who was previously in significant respiratory distress may indicate fatigue or worsening ventilation. Treatment response must be evaluated using the whole clinical picture, not SpO₂ alone.<br><strong>Distractor:</strong> A is tempting because reassessment is appropriate, but it fails to give sufficient weight to the new mental-status change."
     },
     {
-        situation: "A 72-year-old woman suddenly developed difficulty speaking and weakness of her right arm 20 minutes ago. She is sitting upright and is awake. Her airway is open, but her speech is difficult to understand. She has a history of atrial fibrillation and hypertension. Her blood glucose is 104 mg/dL.",
-        question: "Which action is MOST appropriate next?",
-        answers: [
-            "Place her supine and obtain a detailed medical history before transporting.",
-            "Perform a focused neurologic assessment and establish the time she was last known well.",
-            "Give oral glucose because altered speech may indicate hypoglycemia.",
-            "Maintain close attention to her airway because neurologic deterioration could compromise it."
+        title: "QUESTION 2 — SELECT ALL THAT APPLY",
+        type: "multi",
+        requiredCount: 3,
+        situation: "<strong>Transport or More Treatment?</strong><br><br>A 59-year-old female has severe wheezing and respiratory distress.<br><br><strong>Initial:</strong> RR 30/min | HR 126/min | SpO₂ 87% | BP 132/76 | Accessory muscle use | Speaking in short phrases<br><strong>After appropriate treatment:</strong> RR 24/min | HR 116/min | SpO₂ 92% | Less wheezing | Patient still appears fatigued",
+        prompt: "Which findings support prioritizing transport while continuing treatment and reassessment? Select <strong>ALL</strong> that apply.",
+        options: [
+            { text: "The patient remains symptomatic despite initial treatment.", correct: true },
+            { text: "Her respiratory rate has decreased.", correct: false },
+            { text: "She remains fatigued after treatment.", correct: true },
+            { text: "Her SpO₂ has improved to 92%.", correct: false },
+            { text: "Her heart rate remains significantly elevated.", correct: true }
         ],
-        correct: 1,
-        rationale: "Option D is clinically appropriate and should remain in the EMT's awareness, but B provides critical stroke information and guides time-sensitive management. The normal glucose level also makes hypoglycemia less likely."
+        rationale: "<strong>Rationale:</strong> The patient's improvement is meaningful, but she remains clinically abnormal. The three best indicators supporting continued treatment plus transport are persistent symptoms, persistent fatigue, and continued tachycardia. B and D represent improvement and therefore are not themselves reasons for transport, although they should be reassessed."
     },
     {
-        situation: "A 34-year-old male is involved in a high-speed MVC. He is alert and complains of severe abdominal pain. He has a seatbelt mark across his abdomen. His respirations are 22/min and his pulse is 104/min. Blood pressure is 118/76 mmHg. He repeatedly asks whether his wife is okay.",
-        question: "Which action is MOST appropriate?",
-        answers: [
-            "Spend several minutes obtaining a complete SAMPLE history before moving him.",
-            "Perform a focused abdominal assessment and monitor for signs of deterioration.",
-            "Rapidly assess for additional life threats while preparing for prompt transport.",
-            "Delay transport until hypotension develops so the severity of internal bleeding can be established."
+        title: "QUESTION 3 — MULTIPLE CHOICE",
+        type: "single",
+        situation: "<strong>The Refusal Trap</strong><br><br>A 68-year-old male complains of severe chest pressure.<br><br><strong>Initial findings:</strong> BP 148/86 | HR 104 | RR 20 | SpO₂ 97% | Alert and oriented | Pale and diaphoretic<br>He says: <em>\"I don't need a hospital. I've had this before.\"</em> You explain the potential seriousness of his symptoms. He continues to refuse transport.<br><br><strong>Five minutes later:</strong><br>• BP 96/60 | HR 122 | RR 24 | Skin increasingly pale and clammy<br>• Patient now says he feels weak",
+        prompt: "What is the BEST next action?",
+        options: [
+            { text: "Accept the refusal because the patient was alert when he initially made the decision.", correct: false },
+            { text: "Ask his family to convince him to accept transport.", correct: false },
+            { text: "Reassess his current mental status and decision-making capacity and follow applicable refusal procedures and medical direction.", correct: true },
+            { text: "Tell the patient that he must go because his vital signs have become abnormal.", correct: false }
         ],
-        correct: 2,
-        rationale: "Option A is reasonable, but the mechanism and abdominal findings create concern for occult internal injury. The EMT should prioritize rapid assessment, recognition of life threats, and transport rather than waiting for shock to become obvious."
+        rationale: "<strong>Rationale:</strong> The patient's condition has changed substantially. The EMT must reassess the situation, including whether the patient continues to have the capacity to make an informed decision, and follow applicable consent/refusal procedures.<br><strong>A</strong> is dangerous because it assumes capacity and circumstances have not changed.<br><strong>B</strong> may provide useful support but does not replace the EMT's assessment.<br><strong>D</strong> overstates the EMT's authority and does not address the required assessment/process."
     },
     {
-        situation: "A 61-year-old woman has crushing substernal chest pain radiating to her jaw. She is alert and breathing adequately. She denies aspirin allergy. She has not taken aspirin today. While preparing to assess her further, you learn that she has vomited twice and there are several streaks of bright-red blood in the emesis.",
-        question: "Which action is BEST?",
-        answers: [
-            "Wait for the patient to develop hypotension before deciding whether aspirin is appropriate.",
-            "Administer aspirin because suspected ACS is an indication for it.",
-            "Withhold aspirin because the active bleeding changes the risk-benefit decision.",
-            "Continue assessing and monitoring the patient while arranging prompt transport."
+        title: "QUESTION 4 — SELECT ALL THAT APPLY",
+        type: "multi",
+        requiredCount: 3,
+        situation: "<strong>Treatment Response</strong><br><br>You treat a 63-year-old patient with suspected hypoglycemia.<br><br><strong>Before treatment:</strong> Alert but confused | Skin cool and diaphoretic | HR 108 | BP 126/78 | RR 18 | Blood glucose: 48 mg/dL<br><br><strong>After appropriate treatment, the patient becomes more alert.</strong> He now answers questions appropriately, is less diaphoretic, has a glucose of 82 mg/dL, reports persistent weakness, has HR 118/min, and has mild chest pressure that he did not initially mention.",
+        prompt: "Which findings should prompt continued reassessment and consideration of transport despite improvement in glucose? Select <strong>ALL</strong> that apply.",
+        options: [
+            { text: "Persistent weakness", correct: true },
+            { text: "New chest pressure", correct: true },
+            { text: "Heart rate of 118/min", correct: true },
+            { text: "Improved mental status", correct: false },
+            { text: "Glucose increased to 82 mg/dL", correct: false }
         ],
-        correct: 3,
-        rationale: "Option C is also an appropriate treatment decision, but D represents the better overall next action. The question tests whether the student can recognize that withholding a potentially contraindicated treatment does not mean treatment stops altogether."
+        rationale: "<strong>Rationale:</strong> The glucose correction explains improvement in mental status but does not explain away new or persistent concerning findings. A, B, and C warrant continued assessment. D and E are favorable treatment responses but do not establish that the underlying problem has been completely resolved."
     },
     {
-        situation: "A 4-year-old child has had a fever and cough for two days. The child is now lethargic. Respirations are 10/min, shallow, and irregular. The child has nasal flaring and poor chest movement. SpO₂ is 82%.",
-        question: "Which action is MOST appropriate?",
-        answers: [
-            "Provide appropriate ventilatory support because the child's breathing is inadequate.",
-            "Obtain a temperature and determine whether the illness is viral or bacterial.",
-            "Provide oxygen while continuously reassessing the child's respiratory status.",
-            "Encourage the child to cough forcefully to clear the airway."
+        title: "QUESTION 5 — MULTIPLE CHOICE",
+        type: "single",
+        situation: "<strong>The \"Almost Stable\" Patient</strong><br><br>You are transporting a 74-year-old female with weakness and dizziness.<br><br><strong>Initial:</strong> BP 108/70 | HR 110 | RR 20 | SpO₂ 96% | Alert and oriented | Pale and mildly diaphoretic<br><strong>Ten minutes into transport:</strong> BP 92/60 | HR 124 | RR 24 | SpO₂ 95% | Increasingly anxious | Reports worsening dizziness",
+        prompt: "Which action is MOST appropriate?",
+        options: [
+            { text: "Continue transport and reassess at the receiving facility because the blood pressure remains measurable.", correct: false },
+            { text: "Reassess the primary assessment, provide appropriate supportive care, and communicate the patient's deterioration.", correct: true },
+            { text: "Obtain a complete SAMPLE history before changing the treatment plan.", correct: false },
+            { text: "Ask the patient whether she has experienced anxiety previously.", correct: false }
         ],
-        correct: 0,
-        rationale: "Option C is appropriate, but oxygen alone does not correct inadequate ventilation. The student must recognize that oxygenation and ventilation are not interchangeable."
+        rationale: "<strong>Rationale:</strong> The patient's trend suggests deterioration: BP ↓ + HR ↑ + RR ↑ + symptoms worsening. The EMT should not wait for a profoundly abnormal blood pressure before recognizing deterioration.<br><strong>A</strong> is particularly tempting because the patient remains conscious and the BP is not extremely low."
     },
     {
-        situation: "A 68-year-old diabetic patient is confused, pale, and diaphoretic. His blood glucose is 48 mg/dL. He is awake but has difficulty following commands and cannot reliably swallow.",
-        question: "Which action is MOST appropriate?",
-        answers: [
-            "Protect the patient's airway and closely monitor his level of responsiveness.",
-            "Give oral glucose because the blood glucose is critically low.",
-            "Have the patient drink juice before his condition worsens.",
-            "Transport promptly while continuing to reassess his neurologic and respiratory status."
+        title: "QUESTION 6 — SELECT ALL THAT APPLY",
+        type: "multi",
+        requiredCount: 3,
+        situation: "<strong>Multiple Problems, One Priority</strong><br><br>A 56-year-old male complains of abdominal pain. History includes GERD, hypertension, diabetes, recent heavy meal. He initially reports nausea and abdominal pressure.<br><br><strong>During assessment:</strong> HR 118 | RR 26 | BP 100/64 | SpO₂ 95% | Pale, cool skin | He now reports that the pressure extends into his chest.",
+        prompt: "Which findings should increase your concern that the patient requires prompt transport rather than prolonged on-scene evaluation? Select <strong>ALL</strong> that apply.",
+        options: [
+            { text: "Pressure extending into the chest", correct: true },
+            { text: "Pale, cool skin", correct: true },
+            { text: "Recent heavy meal", correct: false },
+            { text: "Tachycardia with hypotension", correct: true },
+            { text: "History of GERD", correct: false }
         ],
-        correct: 0,
-        rationale: "Option D is also appropriate, but the immediate danger is the patient's inability to safely protect his airway and inability to swallow reliably. Giving oral glucose creates an aspiration risk."
+        rationale: "<strong>Rationale:</strong> A, B, and D represent the strongest concerning findings. C and E are deliberately included because they provide plausible alternative explanations but should not outweigh the patient's current presentation."
     },
     {
-        situation: "A 27-year-old patient has been stabbed in the thigh. Blood is rapidly pooling beneath the leg. The patient is conscious and speaking normally. He is pale and anxious. His radial pulse is rapid and weak.",
-        question: "Which action is MOST appropriate?",
-        answers: [
-            "Assess the patient's circulation and continue monitoring for shock.",
-            "Obtain a complete history of the assault before treating the wound.",
-            "Determine the exact depth of the wound before beginning hemorrhage control.",
-            "Immediately control the life-threatening hemorrhage."
+        title: "QUESTION 7 — MULTIPLE CHOICE",
+        type: "single",
+        situation: "<strong>The Transport Decision</strong><br><br>You are treating a 79-year-old patient after a fall. He has mild hip pain, no obvious deformity, BP 132/78, HR 92, RR 18, SpO₂ 97%, alert and oriented. His daughter says: <em>\"He takes a blood thinner, but he didn't hit his head.\"</em> The patient agrees.<br><br><strong>During transport preparation:</strong> The patient becomes nauseated and says: <em>\"My head hurts.\"</em> He now appears slightly confused.",
+        prompt: "What is the BEST action?",
+        options: [
+            { text: "Continue transport while documenting the new symptoms because his initial assessment was normal.", correct: false },
+            { text: "Reassess mental status and the primary assessment, consider the significance of the new findings, and modify treatment/transport priorities accordingly.", correct: true },
+            { text: "Complete a detailed musculoskeletal examination before transporting.", correct: false },
+            { text: "Ask the daughter whether the patient has experienced headaches previously.", correct: false }
         ],
-        correct: 3,
-        rationale: "Option A is necessary, but it is secondary to controlling an immediately life-threatening hemorrhage. The student must distinguish assessment of a problem from treatment of the problem."
+        rationale: "<strong>Rationale:</strong> The patient's condition has changed. New headache + confusion after a fall in a patient taking an anticoagulant is significantly more concerning than the original presentation. The key is recognizing that the patient's priority has changed."
     },
     {
-        situation: "A 70-year-old patient with a history of CHF is experiencing severe shortness of breath. He is sitting upright and has crackles in both lungs. Respirations are 28/min. He is alert and speaking in short sentences. You begin appropriate treatment. Two minutes later, he becomes confused. His respirations decrease to 8/min and become shallow.",
-        question: "What is the BEST next action?",
-        answers: [
-            "Focus on obtaining a blood pressure before changing the treatment plan.",
-            "Continue the treatment that was initially started and reassess again in several minutes.",
-            "Obtain a detailed cardiac history to determine whether this is CHF or ACS.",
-            "Reassess airway and breathing and provide ventilatory support as indicated."
+        title: "QUESTION 8 — SELECT ALL THAT APPLY",
+        type: "multi",
+        requiredCount: 4,
+        situation: "<strong>What Should Travel With the Patient?</strong><br><br>You are transporting an elderly patient with worsening respiratory distress.",
+        prompt: "Which information should be communicated to the receiving facility because it could significantly affect ongoing care? Select <strong>ALL</strong> that apply.",
+        options: [
+            { text: "Significant changes in vital signs during treatment", correct: true },
+            { text: "Treatments provided and the patient's response", correct: true },
+            { text: "Relevant medications and allergies", correct: true },
+            { text: "The patient's exact chief complaint and significant associated symptoms", correct: true },
+            { text: "The patient's favorite hospital", correct: false }
         ],
-        correct: 3,
-        rationale: "Option B would have been reasonable before the deterioration. It is no longer sufficient. The patient's condition has changed from respiratory distress to inadequate breathing, requiring a new priority."
+        rationale: "<strong>Rationale:</strong> A complete transfer of care should communicate information that affects patient evaluation and treatment. The patient's preference for a particular hospital may be operationally relevant in some circumstances, but it is not equivalent to the clinical information represented by A–D."
     },
     {
-        situation: "A 45-year-old male is found confused at home. His wife reports that he has epilepsy and diabetes. There are several empty beer bottles nearby. He has no obvious trauma. His respirations are 18/min and appear adequate. His skin is cool and diaphoretic.",
-        question: "Which action is MOST appropriate next?",
-        answers: [
-            "Assess his blood glucose because hypoglycemia is a potentially reversible cause of altered mental status.",
-            "Assume the alcohol caused the altered mental status because empty bottles are present.",
-            "Continue assessing airway, breathing, and circulation while looking for immediately reversible causes.",
-            "Assume the patient had a seizure because of his medical history."
+        title: "QUESTION 9 — MULTIPLE CHOICE",
+        type: "single",
+        situation: "<strong>The Best Destination Decision</strong><br><br>You are treating a patient with suspected serious illness. The patient's condition is worsening despite appropriate EMT treatment. A small nearby facility is 5 minutes away. A larger hospital capable of definitive treatment is 18 minutes away. Your medical direction and local protocol address destination decisions for patients requiring higher-level care.",
+        prompt: "What is the BEST approach?",
+        options: [
+            { text: "Always transport to the closest hospital because minimizing transport time is the overriding priority.", correct: false },
+            { text: "Transport to the larger hospital automatically because it has more resources.", correct: false },
+            { text: "Follow applicable destination protocols and medical direction, considering the patient's condition, required capabilities, transport time, and available resources.", correct: true },
+            { text: "Ask the patient which hospital he prefers and use that choice regardless of clinical condition.", correct: false }
         ],
-        correct: 0,
-        rationale: "Option C is also correct, but A identifies a rapidly reversible and immediately testable cause of altered mental status. The history of epilepsy and alcohol use are distracting possibilities that should not cause anchoring."
+        rationale: "<strong>Rationale:</strong> Destination decisions are not based on a single rule such as \"closest hospital.\" The EMT must consider patient condition, required capabilities, transport time, local destination policy, medical direction, and available resources. B is tempting but assumes the larger facility is always appropriate."
     },
     {
-        situation: "You treat a patient with an allergic reaction who initially had wheezing, hives, and difficulty speaking. After treatment, the wheezing decreases and the patient says, \"I feel much better.\" His skin remains flushed. His pulse is 118/min. Ten minutes later, he reports that his throat \"feels strange again.\"",
-        question: "Which action is MOST appropriate?",
-        answers: [
-            "Reassess the airway and breathing immediately for recurrent or worsening obstruction.",
-            "Begin obtaining a detailed history of the patient's previous allergic reactions.",
-            "Assume the treatment was successful because the wheezing initially improved.",
-            "Continue frequent reassessment because an initially improving allergic reaction can deteriorate again."
+        title: "QUESTION 10 — SELECT ALL THAT APPLY",
+        type: "multi",
+        requiredCount: 3,
+        situation: "<strong>When the Plan Must Change</strong><br><br>You are transporting a patient after treatment for respiratory distress. The patient initially improved.<br><br><strong>Five minutes later:</strong><br>• Mental status worsens | RR decreases from 28 to 10/min | Respirations become shallow<br>• SpO₂ decreases from 94% to 86% | HR increases from 108 to 126/min",
+        prompt: "Which actions are appropriate? Select <strong>ALL</strong> that apply.",
+        options: [
+            { text: "Reassess airway and breathing immediately.", correct: true },
+            { text: "Continue to monitor the patient without changing treatment because the patient initially improved.", correct: false },
+            { text: "Provide appropriate airway/ventilatory support within EMT scope and protocol.", correct: true },
+            { text: "Communicate the deterioration to the receiving facility/medical direction as appropriate.", correct: true },
+            { text: "Continue the original treatment plan without modification.", correct: false }
         ],
-        correct: 0,
-        rationale: "Option D is also correct, but A is the immediate priority because the patient is reporting a new airway-related symptom. The student must recognize recurrent airway compromise despite previous improvement."
+        rationale: "<strong>Rationale:</strong> The patient has clearly deteriorated. The EMT must reassess the primary assessment, address airway/breathing problems, modify treatment as indicated, communicate significant deterioration, and continue reassessment during transport. B and E represent anchoring on the earlier improvement."
+    },
+    {
+        title: "QUESTION 11 — FINAL CHALLENGE",
+        type: "single",
+        situation: "<strong>Final Clinical Judgment</strong><br><br>You are transporting a patient who initially presented with moderate respiratory distress. After treatment, the patient's SpO₂ improves from 87% to 94%.<br><br><strong>However:</strong><br>• HR increases from 104 to 126 | BP decreases from 128/76 to 94/58<br>• Mental status becomes increasingly altered | Skin becomes cool and clammy | Respiratory effort becomes shallow",
+        prompt: "Which finding should have the GREATEST influence on your next action?",
+        options: [
+            { text: "The improvement in oxygen saturation", correct: false },
+            { text: "The decrease in respiratory effort", correct: false },
+            { text: "The combination of worsening perfusion and mental status", correct: true },
+            { text: "The patient's initial response to treatment", correct: false }
+        ],
+        rationale: "<strong>Rationale:</strong> This is the central Treatment & Transport skill being tested: Do not confuse improvement in one measurement with overall improvement in the patient. The patient is demonstrating worsening perfusion and mental status despite an improved SpO₂. The EMT must respond to the current overall clinical picture."
     }
 ];
 
 let currentIndex = 0;
 let score = 0;
-let answeredCurrent = false;
+let answered = false;
+
+function initProgressBar() {
+    const bar = document.getElementById("progressBar");
+    bar.innerHTML = "";
+    questions.forEach((_, idx) => {
+        const div = document.createElement("div");
+        div.id = `prog${idx}`;
+        if (idx === 0) div.className = "active";
+        bar.appendChild(div);
+    });
+}
 
 function startQuiz() {
     document.getElementById("welcomeScreen").classList.add("hidden");
     document.getElementById("quizScreen").classList.remove("hidden");
+    initProgressBar();
     loadQuestion();
 }
 
 function loadQuestion() {
-    answeredCurrent = false;
+    answered = false;
     const q = questions[currentIndex];
     
     document.getElementById("qNumber").textContent = currentIndex + 1;
     document.getElementById("currentScore").textContent = score;
+    document.getElementById("submitBtn").classList.remove("hidden");
+    document.getElementById("submitBtn").disabled = true;
     document.getElementById("nextBtn").classList.add("hidden");
-    document.getElementById("rationaleArea").classList.remove("show");
+    
+    const feedbackBox = document.getElementById("feedbackBox");
+    feedbackBox.classList.remove("show");
+    feedbackBox.innerHTML = "";
     
     const area = document.getElementById("scenarioArea");
     area.innerHTML = `
+        <h2 style="color: var(--navy); margin-bottom: 15px;">${q.title}</h2>
         <div class="scenario-box">
-            <strong>Case Scenario:</strong>
-            <p>${q.situation}</p>
+            ${q.situation}
         </div>
-        <div class="scenario-question">${q.question}</div>
+        <div class="scenario-question">${q.prompt}</div>
+        <div id="optionsArea"></div>
     `;
     
-    q.answers.forEach((ans, index) => {
-        const btn = document.createElement("button");
-        btn.className = "choice";
-        btn.innerHTML = `<strong>${String.fromCharCode(65 + index)}.</strong> ${ans}`;
-        btn.onclick = () => selectAnswer(index, btn);
-        area.appendChild(btn);
+    const optionsArea = document.getElementById("optionsArea");
+    q.options.forEach((opt, index) => {
+        const label = document.createElement("label");
+        label.className = "option-item";
+        
+        const input = document.createElement("input");
+        input.type = q.type === "multi" ? "checkbox" : "radio";
+        input.name = "quizOption";
+        input.value = index;
+        input.onchange = handleSelectionChange;
+        
+        const span = document.createElement("span");
+        span.innerHTML = `<strong>${String.fromCharCode(65 + index)}.</strong> ${opt.text}`;
+        
+        label.appendChild(input);
+        label.appendChild(span);
+        optionsArea.appendChild(label);
     });
 }
 
-function selectAnswer(selectedIndex, selectedBtn) {
-    if (answeredCurrent) return;
-    answeredCurrent = true;
+function handleSelectionChange() {
+    if (answered) return;
+    const q = questions[currentIndex];
+    const checked = document.querySelectorAll("input[name='quizOption']:checked");
+    const submitBtn = document.getElementById("submitBtn");
+    
+    if (q.type === "multi") {
+        submitBtn.disabled = checked.length !== q.requiredCount;
+    } else {
+        submitBtn.disabled = checked.length === 0;
+    }
+}
+
+function submitAnswer() {
+    if (answered) return;
+    answered = true;
     
     const q = questions[currentIndex];
-    const buttons = document.querySelectorAll("#scenarioArea .choice");
+    const checkedInputs = document.querySelectorAll("input[name='quizOption']:checked");
+    const optionItems = document.querySelectorAll(".option-item");
     
-    buttons.forEach(b => b.disabled = true);
+    let userSelections = Array.from(checkedInputs).map(inp => parseInt(inp.value));
+    let correctIndices = [];
+    q.options.forEach((opt, idx) => {
+        if (opt.correct) correctIndices.push(idx);
+    });
     
-    if (selectedIndex === q.correct) {
-        selectedBtn.classList.add("correct");
-        score++;
-        document.getElementById("currentScore").textContent = score;
+    let isCorrect = false;
+    if (q.type === "single") {
+        isCorrect = userSelections.length === 1 && userSelections[0] === correctIndices[0];
     } else {
-        selectedBtn.classList.add("incorrect");
-        buttons[q.correct].classList.add("correct");
+        if (userSelections.length === correctIndices.length) {
+            isCorrect = userSelections.every(val => correctIndices.includes(val));
+        }
     }
     
-    const rationaleArea = document.getElementById("rationaleArea");
-    rationaleArea.innerHTML = `
-        <h4>Clinical Rationale</h4>
+    optionItems.forEach((item, idx) => {
+        item.classList.add("disabled");
+        const input = item.querySelector("input");
+        input.disabled = true;
+        if (correctIndices.includes(idx)) {
+            item.classList.add("correct-highlight");
+        } else if (input.checked) {
+            item.classList.add("incorrect-highlight");
+        }
+    });
+    
+    if (isCorrect) {
+        score++;
+        document.getElementById("currentScore").textContent = score;
+    }
+    
+    const feedbackBox = document.getElementById("feedbackBox");
+    feedbackBox.innerHTML = `
+        <h4 style="color: ${isCorrect ? 'var(--green)' : 'var(--red)'};">
+            ${isCorrect ? "✓ Correct Clinical Decision" : "✗ Suboptimal Choice"}
+        </h4>
         <p>${q.rationale}</p>
     `;
-    rationaleArea.classList.add("show");
+    feedbackBox.classList.add("show");
     
+    document.getElementById("submitBtn").classList.add("hidden");
     const nextBtn = document.getElementById("nextBtn");
     nextBtn.classList.remove("hidden");
+    
     if (currentIndex === questions.length - 1) {
-        nextBtn.textContent = "View Final Results";
+        nextBtn.textContent = "View Final Debriefing";
+    }
+    
+    updateProgressIndicator(true);
+}
+
+function updateProgressIndicator(isComplete) {
+    const progEl = document.getElementById(`prog${currentIndex}`);
+    if (progEl) {
+        progEl.classList.remove("active");
+        if (isComplete) progEl.classList.add("complete");
+    }
+    const nextProg = document.getElementById(`prog${currentIndex + 1}`);
+    if (nextProg && !isComplete) {
+        nextProg.classList.add("active");
     }
 }
 
@@ -440,6 +607,8 @@ function nextQuestion() {
         showResults();
     } else {
         currentIndex++;
+        const nextProg = document.getElementById(`prog${currentIndex}`);
+        if(nextProg) nextProg.classList.add("active");
         loadQuestion();
     }
 }
@@ -453,11 +622,11 @@ function showResults() {
     
     const msg = document.getElementById("finalMessage");
     if (percent >= 90) {
-        msg.textContent = "Outstanding! You possess advanced NREMT clinical reasoning skills and consistently identify the highest priority interventions.";
-    } else if (percent >= 75) {
-        msg.textContent = "Good work! You have a solid grasp of clinical prioritization, but review the rationales for questions missed to sharpen your judgment further.";
+        msg.textContent = "Masterclass Clinical Judgment! You expertly navigated false reassurance, dynamic deterioration, and complex transport and refusal decisions.";
+    } else if (percent >= 70) {
+        msg.textContent = "Strong Clinical Performance! You correctly identified most treatment priorities, but review cases involving subtle trend reversals and changing mental status.";
     } else {
-        msg.textContent = "Keep practicing! Focus closely on distinguishing between plausible medical treatments and the critical, time-sensitive priority action.";
+        msg.textContent = "Keep Practicing! Remember to evaluate the patient's entire current picture rather than anchoring on initial treatment success or single improved metrics.";
     }
 }
 </script>
