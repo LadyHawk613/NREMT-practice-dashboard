@@ -1,0 +1,1612 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>NREMT CAT-Style Final Challenge</title>
+
+<style>
+:root {
+    --navy: #071B2D;
+    --teal: #008C95;
+    --gold: #E6B422;
+    --light: #F4F7F9;
+    --dark: #18232D;
+    --correct: #176B45;
+    --incorrect: #A52A2A;
+    --border: #D7DEE4;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    background: var(--light);
+    color: var(--dark);
+}
+
+.header {
+    background: var(--navy);
+    color: white;
+    padding: 24px 30px;
+}
+
+.header-inner {
+    max-width: 1050px;
+    margin: auto;
+}
+
+.header h1 {
+    margin: 0 0 6px 0;
+    font-size: 28px;
+}
+
+.header p {
+    margin: 0;
+    opacity: 0.85;
+}
+
+.container {
+    max-width: 1050px;
+    margin: 28px auto;
+    padding: 0 20px;
+}
+
+.panel {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+    padding: 28px;
+    margin-bottom: 20px;
+}
+
+.instructions {
+    border-left: 5px solid var(--teal);
+}
+
+.instructions h2 {
+    margin-top: 0;
+    color: var(--navy);
+}
+
+.instructions li {
+    margin-bottom: 10px;
+}
+
+button {
+    border: none;
+    border-radius: 7px;
+    padding: 13px 20px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.primary {
+    background: var(--teal);
+    color: white;
+}
+
+.primary:hover {
+    opacity: 0.9;
+}
+
+.secondary {
+    background: #E9EEF1;
+    color: var(--navy);
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* Progress */
+
+.progress-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.progress-label {
+    font-weight: bold;
+    color: var(--navy);
+}
+
+.progress-bar {
+    height: 9px;
+    background: #E2E7EA;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    width: 0%;
+    background: var(--teal);
+    transition: width 0.4s ease;
+}
+
+/* Question */
+
+.question-number {
+    color: var(--teal);
+    font-weight: bold;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.question-text {
+    font-size: 21px;
+    line-height: 1.55;
+    font-weight: 600;
+    margin: 18px 0 22px;
+}
+
+.scenario {
+    background: #F1F5F7;
+    border-left: 5px solid var(--gold);
+    padding: 18px;
+    margin-bottom: 22px;
+    line-height: 1.6;
+    border-radius: 5px;
+}
+
+.options {
+    display: grid;
+    gap: 12px;
+}
+
+.option {
+    background: white;
+    border: 2px solid var(--border);
+    padding: 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    text-align: left;
+    transition: 0.15s;
+    font-size: 16px;
+}
+
+.option:hover {
+    border-color: var(--teal);
+    background: #F6FBFB;
+}
+
+.option.selected {
+    border-color: var(--teal);
+    background: #E8F5F5;
+}
+
+.option.correct {
+    border-color: var(--correct);
+    background: #EAF7F0;
+}
+
+.option.incorrect {
+    border-color: var(--incorrect);
+    background: #FBECEC;
+}
+
+.option.disabled {
+    cursor: default;
+}
+
+/* Feedback */
+
+.feedback {
+    margin-top: 22px;
+    padding: 18px;
+    border-radius: 8px;
+    line-height: 1.55;
+}
+
+.feedback.correct {
+    background: #EAF7F0;
+    border-left: 5px solid var(--correct);
+}
+
+.feedback.incorrect {
+    background: #FBECEC;
+    border-left: 5px solid var(--incorrect);
+}
+
+.feedback-title {
+    font-weight: bold;
+    font-size: 18px;
+    margin-bottom: 7px;
+}
+
+.next-row {
+    margin-top: 20px;
+    display: flex;
+    justify-content: flex-end;
+}
+
+/* Results */
+
+.result-title {
+    color: var(--navy);
+    font-size: 30px;
+}
+
+.result-summary {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 15px;
+    margin: 25px 0;
+}
+
+.result-card {
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 18px;
+    text-align: center;
+}
+
+.result-card strong {
+    display: block;
+    font-size: 27px;
+    color: var(--teal);
+    margin-bottom: 5px;
+}
+
+.skill-row {
+    margin: 16px 0;
+}
+
+.skill-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 6px;
+    font-weight: bold;
+}
+
+.skill-bar {
+    height: 12px;
+    background: #E4E9EC;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.skill-fill {
+    height: 100%;
+    background: var(--teal);
+}
+
+.performance-box {
+    background: #F1F5F7;
+    border-radius: 8px;
+    padding: 20px;
+    margin-top: 20px;
+    line-height: 1.6;
+}
+
+.warning {
+    background: #FFF8DD;
+    border-left: 5px solid var(--gold);
+    padding: 16px;
+    margin-top: 20px;
+}
+
+@media (max-width: 700px) {
+    .header h1 {
+        font-size: 23px;
+    }
+
+    .panel {
+        padding: 20px;
+    }
+
+    .question-text {
+        font-size: 18px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header class="header">
+    <div class="header-inner">
+        <h1>NREMT CAT-Style Final Challenge</h1>
+        <p>15-question adaptive clinical reasoning assessment</p>
+    </div>
+</header>
+
+<div class="container">
+
+<!-- INTRODUCTION -->
+
+<section id="intro" class="panel instructions">
+
+    <h2>Before You Begin</h2>
+
+    <p>
+        This challenge is designed to simulate the <strong>decision-making demands</strong>
+        of an adaptive NREMT-style examination.
+    </p>
+
+    <ul>
+        <li>You will receive up to <strong>15 questions</strong>.</li>
+        <li>The difficulty of subsequent questions changes according to your performance.</li>
+        <li>You will encounter questions from multiple EMS domains.</li>
+        <li>Some questions contain two answers that appear reasonable. Select the <strong>BEST</strong> answer.</li>
+        <li>Read the entire scenario before deciding.</li>
+        <li>You cannot return to previous questions.</li>
+        <li>There is no visible difficulty rating during the challenge.</li>
+    </ul>
+
+    <div class="warning">
+        <strong>Important:</strong> This is a CAT-style educational simulation.
+        It does not reproduce the proprietary NREMT adaptive testing algorithm,
+        scoring model, or item bank.
+    </div>
+
+    <br>
+
+    <button class="primary" onclick="startTest()">Begin Challenge</button>
+
+</section>
+
+
+<!-- TEST -->
+
+<section id="test" class="panel hidden">
+
+    <div class="progress-row">
+        <span class="progress-label" id="questionCounter">
+            Question 1 of 15
+        </span>
+        <span id="domainLabel"></span>
+    </div>
+
+    <div class="progress-bar">
+        <div class="progress-fill" id="progressFill"></div>
+    </div>
+
+    <div style="margin-top:25px;">
+
+        <div class="question-number" id="questionNumber"></div>
+
+        <div class="scenario hidden" id="scenario"></div>
+
+        <div class="question-text" id="questionText"></div>
+
+        <div class="options" id="options"></div>
+
+        <div id="feedback"></div>
+
+        <div class="next-row">
+            <button
+                id="submitButton"
+                class="primary"
+                onclick="submitAnswer()">
+                Submit Answer
+            </button>
+
+            <button
+                id="nextButton"
+                class="primary hidden"
+                onclick="nextQuestion()">
+                Continue
+            </button>
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- RESULTS -->
+
+<section id="results" class="panel hidden">
+
+    <h2 class="result-title">CAT Challenge Complete</h2>
+
+    <p id="overallMessage"></p>
+
+    <div class="result-summary">
+
+        <div class="result-card">
+            <strong id="scoreDisplay">0%</strong>
+            Overall Accuracy
+        </div>
+
+        <div class="result-card">
+            <strong id="correctDisplay">0/15</strong>
+            Correct
+        </div>
+
+        <div class="result-card">
+            <strong id="levelDisplay">—</strong>
+            Final Challenge Level
+        </div>
+
+    </div>
+
+    <h3>Performance by Competency</h3>
+
+    <div id="skillResults"></div>
+
+    <div class="performance-box">
+        <h3>Clinical Reasoning Profile</h3>
+        <p id="reasoningProfile"></p>
+    </div>
+
+    <div class="performance-box">
+        <h3>Final Review Recommendation</h3>
+        <p id="recommendation"></p>
+    </div>
+
+    <button class="secondary" onclick="location.reload()">
+        Restart Challenge
+    </button>
+
+</section>
+
+</div>
+
+
+<script>
+
+/*
+===========================================================
+NREMT CAT-STYLE CHALLENGE ENGINE
+===========================================================
+
+Difficulty scale:
+1–3 = foundational
+4–5 = moderate
+6–7 = difficult
+8–9 = very difficult
+10 = integrated challenge
+
+The engine uses performance to determine which question
+difficulty is presented next.
+
+This is an educational CAT-style simulation and NOT the
+actual NREMT adaptive algorithm.
+===========================================================
+*/
+
+
+const questions = [
+
+/* ========================================================
+   LEVEL 4 — FOUNDATIONAL / MODERATE
+======================================================== */
+
+{
+    id: 1,
+    level: 4,
+    domain: "Patient Assessment",
+    scenario: `
+        A 67-year-old male complains of weakness and dizziness.
+        He is pale and diaphoretic.
+
+        BP: 92/58 mmHg<br>
+        HR: 108/min<br>
+        RR: 20/min<br>
+        SpO₂: 96%
+
+        He reports black, tarry stools for two days.
+    `,
+    question:
+        "What is the EMT's MOST appropriate immediate priority?",
+    options: [
+        "Administer oxygen because the patient is pale",
+        "Obtain a detailed gastrointestinal history before beginning treatment",
+        "Assess for signs of shock and begin appropriate supportive care",
+        "Give the patient oral fluids to improve his blood pressure"
+    ],
+    answer: 2,
+    explanation:
+        "The combination of hypotension, tachycardia, pallor, diaphoresis, and likely gastrointestinal blood loss suggests inadequate perfusion. Immediate assessment and supportive management of shock take priority over obtaining an extensive history or giving oral fluids.",
+    skill: "Patient Assessment"
+},
+
+{
+    id: 2,
+    level: 5,
+    domain: "Cardiology",
+    scenario: `
+        The same patient now becomes increasingly confused.
+
+        BP: 78/46 mmHg<br>
+        HR: 124/min<br>
+        RR: 24/min<br>
+        Skin: cool and clammy
+    `,
+    question:
+        "Which finding MOST strongly indicates that the patient's condition is deteriorating?",
+    options: [
+        "Respiratory rate of 24/min",
+        "Decreasing blood pressure accompanied by altered mental status",
+        "Cool, clammy skin",
+        "Heart rate greater than 120/min"
+    ],
+    answer: 1,
+    explanation:
+        "The combination of worsening hypotension and altered mental status strongly indicates worsening cerebral and systemic perfusion. The other findings are important, but the combined deterioration in blood pressure and mental status is more significant.",
+    skill: "Cardiology"
+},
+
+/* ========================================================
+   LEVEL 6
+======================================================== */
+
+{
+    id: 3,
+    level: 6,
+    domain: "Clinical Decision Making",
+    scenario: `
+        Your partner reports that the patient's wife says he takes
+        medication for hypertension but cannot remember the name.
+
+        The patient is becoming increasingly confused.
+    `,
+    question:
+        "Which factor should MOST influence your immediate treatment decision?",
+    options: [
+        "The patient's medication history",
+        "The duration of the patient's symptoms",
+        "The patient's current mental status and perfusion",
+        "The possibility that medication caused his hypotension"
+    ],
+    answer: 2,
+    explanation:
+        "Current clinical findings should guide immediate priorities. An incomplete medication history may be useful later, but worsening mental status and poor perfusion represent immediate threats.",
+    skill: "Clinical Decision Making"
+},
+
+{
+    id: 4,
+    level: 6,
+    domain: "Airway & Respiration",
+    scenario: `
+        A 58-year-old patient with a history of COPD is sitting upright
+        and using accessory muscles.
+
+        RR: 30/min<br>
+        SpO₂: 88%<br>
+        The patient can speak only in short phrases.
+
+        His daughter states that he became short of breath after walking
+        up a flight of stairs.
+    `,
+    question:
+        "Which action should receive the HIGHEST priority?",
+    options: [
+        "Obtain a complete history of the patient's COPD",
+        "Provide appropriate respiratory support while continuing assessment",
+        "Have the patient lie flat to reduce his work of breathing",
+        "Determine exactly what caused the shortness of breath"
+    ],
+    answer: 1,
+    explanation:
+        "The patient demonstrates significant respiratory distress and hypoxemia. Immediate respiratory support and continued assessment take priority over obtaining a complete history.",
+    skill: "Airway & Respiration"
+},
+
+/* ========================================================
+   LEVEL 7
+======================================================== */
+
+{
+    id: 5,
+    level: 7,
+    domain: "Trauma",
+    scenario: `
+        You arrive at a high-speed motor vehicle collision.
+
+        A 24-year-old driver is awake but anxious.
+
+        BP: 118/74 mmHg<br>
+        HR: 104/min<br>
+        RR: 22/min
+
+        He has an obvious left femur deformity and complains of
+        abdominal pain.
+
+        His girlfriend repeatedly tells you that he "always gets
+        anxious in emergencies."
+    `,
+    question:
+        "Which finding should MOST increase your concern for a life-threatening condition?",
+    options: [
+        "The femur deformity",
+        "Heart rate of 104/min",
+        "Increasing restlessness accompanied by abdominal pain",
+        "Anxiety immediately following the collision"
+    ],
+    answer: 2,
+    explanation:
+        "Increasing restlessness can represent early hypoperfusion or hypoxia. When combined with abdominal pain after significant trauma, it should raise concern for internal hemorrhage.",
+    skill: "Trauma"
+},
+
+{
+    id: 6,
+    level: 7,
+    domain: "Operations",
+    scenario: `
+        You are the first EMS crew arriving at a highway collision.
+
+        Three vehicles are involved. One vehicle is smoking.
+        Traffic is still moving around the scene.
+
+        You can see at least four patients, but you cannot yet
+        determine the total number of patients.
+
+        Several bystanders are approaching the vehicles.
+    `,
+    question:
+        "Which TWO actions should receive the highest priority?",
+    multi: true,
+    options: [
+        "Begin assessing the most severely injured patient",
+        "Position the ambulance to provide scene protection",
+        "Request additional resources",
+        "Enter the smoking vehicle to remove the driver",
+        "Ask bystanders to begin moving patients"
+    ],
+    answer: [1,2],
+    explanation:
+        "A potentially hazardous, multi-patient scene requires scene protection and early resource activation. Entering an unsafe vehicle before appropriate rescue resources arrive is inappropriate.",
+    skill: "Operations"
+},
+
+/* ========================================================
+   LEVEL 8
+======================================================== */
+
+{
+    id: 7,
+    level: 8,
+    domain: "Neurology",
+    scenario: `
+        You arrive at a residence for a 72-year-old female with sudden
+        weakness.
+
+        Her daughter states that the patient was "acting strangely"
+        approximately 20 minutes ago.
+
+        The patient is awake but has difficulty speaking.
+
+        BP: 168/94 mmHg<br>
+        HR: 92/min<br>
+        RR: 18/min<br>
+        SpO₂: 97%
+
+        The daughter says the patient has diabetes and hypertension.
+        She was last known to be normal approximately 30 minutes ago.
+    `,
+    question:
+        "Which piece of information is MOST important for determining the patient's immediate care and transport priority?",
+    options: [
+        "The patient's history of hypertension",
+        "The patient's history of diabetes",
+        "The exact time the patient was last known to be normal",
+        "The patient's oxygen saturation"
+    ],
+    answer: 2,
+    explanation:
+        "The last-known-well time is critical in suspected acute stroke because it helps determine eligibility for time-sensitive treatment after hospital evaluation.",
+    skill: "Neurology"
+},
+
+{
+    id: 8,
+    level: 8,
+    domain: "Pharmacology",
+    scenario: `
+        A 56-year-old patient with chest discomfort states that he
+        normally takes nitroglycerin.
+
+        He is pale and anxious.
+
+        BP: 86/54 mmHg<br>
+        HR: 104/min
+
+        His spouse tells you that he took one nitroglycerin tablet
+        before EMS arrived and asks you to give him another.
+    `,
+    question:
+        "What is the MOST appropriate response?",
+    options: [
+        "Administer another nitroglycerin because chest pain is present",
+        "Withhold nitroglycerin because the patient's blood pressure is too low",
+        "Give oxygen only and wait until the blood pressure normalizes",
+        "Give the medication because the spouse confirms the patient normally uses it"
+    ],
+    answer: 1,
+    explanation:
+        "Significant hypotension is a contraindication to nitroglycerin administration. The presence of chest pain does not override the patient's current hemodynamic status.",
+    skill: "Pharmacology"
+},
+
+/* ========================================================
+   LEVEL 9
+======================================================== */
+
+{
+    id: 9,
+    level: 9,
+    domain: "Airway & Respiration",
+    scenario: `
+        A 71-year-old patient with respiratory distress is sitting
+        upright and speaking in one- or two-word phrases.
+
+        RR: 34/min<br>
+        SpO₂: 84%
+
+        You hear coarse crackles bilaterally.
+
+        The patient suddenly becomes exhausted and stops responding
+        to verbal questions.
+
+        His daughter is crying and repeatedly tells you that he has
+        "always hated hospitals."
+    `,
+    question:
+        "Which finding should MOST immediately change your treatment priority?",
+    options: [
+        "The patient's oxygen saturation of 84%",
+        "The bilateral crackles",
+        "The patient's sudden decrease in responsiveness",
+        "The daughter's statement about hospitals"
+    ],
+    answer: 2,
+    explanation:
+        "A sudden decline in responsiveness in a patient with severe respiratory distress indicates possible impending respiratory failure and requires immediate airway and ventilation assessment.",
+    skill: "Airway & Respiration"
+},
+
+{
+    id: 10,
+    level: 9,
+    domain: "Trauma",
+    scenario: `
+        A 35-year-old male falls approximately 15 feet.
+
+        He is awake and answers questions appropriately.
+
+        BP: 124/78 mmHg<br>
+        HR: 108/min<br>
+        RR: 20/min
+
+        He complains of severe pelvic pain and says his abdomen feels
+        "tight."
+
+        There is no obvious external bleeding.
+
+        Your partner wants to spend several minutes documenting the
+        exact mechanism before moving the patient.
+    `,
+    question:
+        "Which action is MOST appropriate?",
+    options: [
+        "Delay movement until a complete mechanism-of-injury history is obtained",
+        "Focus on immediate life threats and prepare for rapid transport",
+        "Have the patient stand to determine whether the pelvis is stable",
+        "Give the patient oral fluids because there is no external bleeding"
+    ],
+    answer: 1,
+    explanation:
+        "A significant fall with pelvic pain and abdominal findings raises concern for serious internal injury and hemorrhage. Immediate assessment of life threats and timely transport take priority over extensive scene documentation.",
+    skill: "Trauma"
+},
+
+{
+    id: 11,
+    level: 9,
+    domain: "Clinical Decision Making",
+    scenario: `
+        You are treating a patient with altered mental status.
+
+        The patient's airway is currently patent.
+
+        BP: 142/86 mmHg<br>
+        HR: 112/min<br>
+        RR: 22/min<br>
+        SpO₂: 95%
+
+        A family member states that the patient has diabetes and may
+        have taken his insulin twice.
+
+        Before you can complete your assessment, the patient becomes
+        increasingly confused and begins sweating heavily.
+    `,
+    question:
+        "Which finding should MOST strongly influence your next immediate action?",
+    options: [
+        "The family member's uncertainty about the insulin dose",
+        "The patient's elevated heart rate",
+        "The combination of altered mental status and diaphoresis",
+        "The patient's oxygen saturation of 95%"
+    ],
+    answer: 2,
+    explanation:
+        "Altered mental status combined with diaphoresis in a patient with possible excessive insulin administration strongly suggests hypoglycemia and warrants prompt assessment and treatment according to protocol.",
+    skill: "Clinical Decision Making"
+},
+
+/* ========================================================
+   LEVEL 10 — VERY DIFFICULT / INTEGRATED
+======================================================== */
+
+{
+    id: 12,
+    level: 10,
+    domain: "Integrated Assessment",
+    scenario: `
+        You arrive for a 72-year-old female with sudden weakness.
+
+        She is awake but has difficulty speaking.
+
+        BP: 168/94 mmHg<br>
+        HR: 92/min<br>
+        RR: 18/min<br>
+        SpO₂: 97%
+
+        Her daughter states that the patient was normal 30 minutes ago.
+
+        During your assessment, the patient develops vomiting and
+        becomes increasingly difficult to arouse.
+
+        The daughter says the patient has diabetes and asks whether
+        this could simply be low blood sugar.
+
+        You have not yet completed a blood glucose assessment.
+    `,
+    question:
+        "Which action should receive the HIGHEST priority?",
+    options: [
+        "Obtain a detailed history of the patient's diabetes",
+        "Protect the airway while immediately reassessing the patient's condition",
+        "Wait for the patient's blood glucose result before changing your treatment",
+        "Determine whether the patient has previously experienced a stroke"
+    ],
+    answer: 1,
+    explanation:
+        "The patient's declining level of consciousness and active vomiting create an immediate airway threat. Airway protection and rapid reassessment take priority while other assessments, including glucose evaluation, continue.",
+    skill: "Integrated Assessment"
+},
+
+{
+    id: 13,
+    level: 10,
+    domain: "Operations",
+    scenario: `
+        You arrive first at a two-car collision.
+
+        One patient is walking around the scene.
+        One patient is trapped.
+        One patient is lying on the roadway.
+
+        A damaged utility pole is leaning toward the vehicles.
+        Traffic continues to pass through the scene.
+
+        Your partner wants to immediately begin treating the patient
+        lying on the roadway.
+
+        Fire rescue is approximately six minutes away.
+    `,
+    question:
+        "Which action BEST demonstrates appropriate operational decision-making?",
+    options: [
+        "Begin treating the roadway patient immediately because that patient appears most seriously injured",
+        "Enter the vehicle to assess the trapped patient before fire rescue arrives",
+        "Establish a safe operating area, communicate hazards and resource needs, and coordinate access with responding agencies",
+        "Move the trapped patient out of the vehicle before the utility pole can fall"
+    ],
+    answer: 2,
+    explanation:
+        "The leaning utility pole and moving traffic create significant scene hazards. EMS personnel should not enter an unsafe environment simply because a patient needs care. Scene safety, resource coordination, and appropriate access must be established first.",
+    skill: "Operations"
+},
+
+/* ========================================================
+   LEVEL 10 — FINAL INTEGRATED CHALLENGE
+======================================================== */
+
+{
+    id: 14,
+    level: 10,
+    domain: "Integrated Clinical Reasoning",
+    scenario: `
+        You are dispatched to a residence for a 64-year-old male with
+        "difficulty breathing."
+
+        On arrival, he is sitting upright and appears frightened.
+
+        BP: 92/58 mmHg<br>
+        HR: 126/min<br>
+        RR: 32/min<br>
+        SpO₂: 86%
+
+        He is pale, cool, and diaphoretic.
+
+        His wife states that he complained of chest pressure approximately
+        20 minutes ago but now says the pressure has improved.
+
+        The patient is becoming increasingly confused.
+
+        Your partner suggests obtaining a complete medication history
+        before transport because the patient takes several medications.
+    `,
+    question:
+        "Which action BEST reflects appropriate prioritization?",
+    options: [
+        "Complete the medication history before beginning treatment",
+        "Treat the abnormal respiratory and perfusion findings while preparing for rapid transport",
+        "Wait for the patient to report whether the chest pressure returns",
+        "Have the patient lie flat and reassess him after five minutes"
+    ],
+    answer: 1,
+    explanation:
+        "The patient demonstrates severe respiratory distress and poor perfusion with altered mental status. Immediate supportive care, continued reassessment, and preparation for rapid transport take priority over obtaining a complete medication history.",
+    skill: "Integrated Clinical Reasoning"
+},
+
+{
+    id: 15,
+    level: 10,
+    domain: "Final Integrated Decision",
+    scenario: `
+        FINAL SCENARIO
+
+        You are called for a 70-year-old patient who suddenly became
+        confused at home.
+
+        On arrival:
+
+        Airway: Patent<br>
+        Breathing: Rapid and labored<br>
+        Circulation: Cool, pale, diaphoretic<br>
+        Mental status: Confused
+
+        BP: 88/52 mmHg<br>
+        HR: 118/min<br>
+        RR: 28/min<br>
+        SpO₂: 89%
+
+        The patient's daughter reports that he complained of chest
+        pressure earlier but now denies pain.
+
+        During your assessment he becomes less responsive.
+
+        You have an additional ambulance responding, but it is
+        approximately 10 minutes away.
+
+        His daughter is asking you to stay and "figure out exactly
+        what is wrong before taking him anywhere."
+    `,
+    question:
+        "Which decision BEST demonstrates appropriate EMT clinical reasoning?",
+    options: [
+        "Delay transport until the exact cause of the patient's condition is determined",
+        "Focus on obtaining a complete medical history because the patient is becoming less responsive",
+        "Address immediate threats to airway, breathing, and circulation while preparing for rapid transport and continued reassessment",
+        "Wait for the second ambulance so that additional personnel can complete the assessment"
+    ],
+    answer: 2,
+    explanation:
+        "The patient has multiple immediate life threats and is deteriorating. The EMT should manage immediate ABC threats, continue reassessment, communicate the patient's condition, and prioritize timely transport rather than delaying care to determine a definitive diagnosis.",
+    skill: "Final Integrated Decision"
+}
+
+];
+
+
+/* ========================================================
+   STATE
+======================================================== */
+
+let currentQuestion = null;
+let currentQuestionNumber = 0;
+
+let difficulty = 5;
+
+let answersGiven = [];
+
+let totalCorrect = 0;
+
+let competencyScores = {};
+
+let selectedAnswer = null;
+
+let testStarted = false;
+
+
+/* ========================================================
+   START
+======================================================== */
+
+function startTest() {
+
+    testStarted = true;
+
+    document.getElementById("intro").classList.add("hidden");
+    document.getElementById("test").classList.remove("hidden");
+
+    currentQuestionNumber = 0;
+    difficulty = 5;
+
+    answersGiven = [];
+    totalCorrect = 0;
+
+    competencyScores = {};
+
+    nextQuestion();
+}
+
+
+/* ========================================================
+   ADAPTIVE QUESTION SELECTION
+======================================================== */
+
+function chooseQuestion() {
+
+    /*
+       Select unused questions close to the current
+       estimated difficulty.
+
+       We deliberately use a small tolerance so the
+       challenge can move upward or downward without
+       becoming predictable.
+    */
+
+    const unused = questions.filter(q =>
+        !answersGiven.some(a => a.id === q.id)
+    );
+
+    if (unused.length === 0) return null;
+
+    let candidates = unused.filter(q =>
+        Math.abs(q.level - difficulty) <= 2
+    );
+
+    if (candidates.length === 0) {
+        candidates = unused;
+    }
+
+    /*
+       Prefer questions nearest the current difficulty.
+    */
+
+    candidates.sort((a,b) => {
+
+        const da = Math.abs(a.level - difficulty);
+        const db = Math.abs(b.level - difficulty);
+
+        return da - db;
+    });
+
+    /*
+       Among similarly difficult questions, randomize
+       the selection so the challenge does not always
+       follow the same path.
+    */
+
+    const bestDistance =
+        Math.abs(candidates[0].level - difficulty);
+
+    const best = candidates.filter(q =>
+        Math.abs(q.level - difficulty) === bestDistance
+    );
+
+    return best[Math.floor(Math.random() * best.length)];
+}
+
+
+/* ========================================================
+   NEXT QUESTION
+======================================================== */
+
+function nextQuestion() {
+
+    if (currentQuestionNumber >= 15) {
+        showResults();
+        return;
+    }
+
+    currentQuestionNumber++;
+
+    currentQuestion = chooseQuestion();
+
+    if (!currentQuestion) {
+        showResults();
+        return;
+    }
+
+    selectedAnswer = null;
+
+    renderQuestion();
+}
+
+
+/* ========================================================
+   RENDER QUESTION
+======================================================== */
+
+function renderQuestion() {
+
+    document.getElementById("questionCounter").textContent =
+        `Question ${currentQuestionNumber} of 15`;
+
+    document.getElementById("questionNumber").textContent =
+        `Question ${currentQuestionNumber}`;
+
+    document.getElementById("domainLabel").textContent =
+        currentQuestion.domain;
+
+    document.getElementById("progressFill").style.width =
+        `${(currentQuestionNumber / 15) * 100}%`;
+
+    document.getElementById("questionText").innerHTML =
+        currentQuestion.question;
+
+    const scenario = document.getElementById("scenario");
+
+    if (currentQuestion.scenario) {
+        scenario.innerHTML = currentQuestion.scenario;
+        scenario.classList.remove("hidden");
+    } else {
+        scenario.classList.add("hidden");
+    }
+
+    const optionsContainer =
+        document.getElementById("options");
+
+    optionsContainer.innerHTML = "";
+
+    currentQuestion.options.forEach((option, index) => {
+
+        const button = document.createElement("button");
+
+        button.className = "option";
+
+        button.innerHTML =
+            `<strong>${String.fromCharCode(65 + index)}.</strong> ${option}`;
+
+        button.onclick = () =>
+            selectOption(index, button);
+
+        optionsContainer.appendChild(button);
+
+    });
+
+    document.getElementById("feedback").innerHTML = "";
+
+    document.getElementById("submitButton").classList.remove("hidden");
+
+    document.getElementById("nextButton").classList.add("hidden");
+
+}
+
+
+/* ========================================================
+   SELECT OPTION
+======================================================== */
+
+function selectOption(index, button) {
+
+    if (currentQuestion.multi) {
+
+        /*
+           Multi-answer question:
+           Allow multiple selections.
+        */
+
+        if (!selectedAnswer) {
+            selectedAnswer = [];
+        }
+
+        if (selectedAnswer.includes(index)) {
+
+            selectedAnswer =
+                selectedAnswer.filter(i => i !== index);
+
+            button.classList.remove("selected");
+
+        } else {
+
+            selectedAnswer.push(index);
+
+            button.classList.add("selected");
+        }
+
+    } else {
+
+        selectedAnswer = index;
+
+        document.querySelectorAll(".option")
+            .forEach(btn =>
+                btn.classList.remove("selected")
+            );
+
+        button.classList.add("selected");
+    }
+}
+
+
+/* ========================================================
+   SUBMIT
+======================================================== */
+
+function submitAnswer() {
+
+    if (
+        selectedAnswer === null ||
+        (Array.isArray(selectedAnswer) &&
+        selectedAnswer.length === 0)
+    ) {
+
+        alert("Select an answer before continuing.");
+
+        return;
+    }
+
+    const buttons =
+        document.querySelectorAll(".option");
+
+    buttons.forEach(btn =>
+        btn.classList.add("disabled")
+    );
+
+    let correct = false;
+
+    if (currentQuestion.multi) {
+
+        const selected =
+            [...selectedAnswer].sort();
+
+        const correctAnswers =
+            [...currentQuestion.answer].sort();
+
+        correct =
+            JSON.stringify(selected) ===
+            JSON.stringify(correctAnswers);
+
+    } else {
+
+        correct =
+            selectedAnswer === currentQuestion.answer;
+    }
+
+
+    /* -----------------------------------------------
+       Record competency performance
+    ----------------------------------------------- */
+
+    if (!competencyScores[currentQuestion.skill]) {
+
+        competencyScores[currentQuestion.skill] = {
+            correct: 0,
+            total: 0
+        };
+    }
+
+    competencyScores[currentQuestion.skill].total++;
+
+    if (correct) {
+
+        competencyScores[currentQuestion.skill].correct++;
+
+        totalCorrect++;
+
+        /*
+           Correct answer:
+           increase adaptive difficulty.
+        */
+
+        difficulty = Math.min(10, difficulty + 1);
+
+    } else {
+
+        /*
+           Incorrect answer:
+           decrease adaptive difficulty slightly.
+        */
+
+        difficulty = Math.max(3, difficulty - 1);
+    }
+
+
+    answersGiven.push({
+        id: currentQuestion.id,
+        correct: correct,
+        selected: selectedAnswer,
+        difficulty: currentQuestion.level,
+        skill: currentQuestion.skill
+    });
+
+
+    /* -----------------------------------------------
+       Highlight answers
+    ----------------------------------------------- */
+
+    buttons.forEach((button, index) => {
+
+        let isCorrect;
+
+        if (currentQuestion.multi) {
+
+            isCorrect =
+                currentQuestion.answer.includes(index);
+
+        } else {
+
+            isCorrect =
+                index === currentQuestion.answer;
+        }
+
+        if (isCorrect) {
+
+            button.classList.add("correct");
+
+        } else if (
+            currentQuestion.multi
+            ? selectedAnswer.includes(index)
+            : selectedAnswer === index
+        ) {
+
+            button.classList.add("incorrect");
+        }
+
+    });
+
+
+    /* -----------------------------------------------
+       Feedback
+    ----------------------------------------------- */
+
+    const feedback =
+        document.getElementById("feedback");
+
+    feedback.innerHTML = `
+        <div class="feedback ${correct ? "correct" : "incorrect"}">
+
+            <div class="feedback-title">
+                ${correct ? "Correct" : "Review the decision"}
+            </div>
+
+            <div>
+                ${currentQuestion.explanation}
+            </div>
+
+        </div>
+    `;
+
+
+    document.getElementById("submitButton")
+        .classList.add("hidden");
+
+    document.getElementById("nextButton")
+        .classList.remove("hidden");
+}
+
+
+/* ========================================================
+   RESULTS
+======================================================== */
+
+function showResults() {
+
+    document.getElementById("test")
+        .classList.add("hidden");
+
+    document.getElementById("results")
+        .classList.remove("hidden");
+
+    const percentage =
+        Math.round((totalCorrect / 15) * 100);
+
+    document.getElementById("scoreDisplay")
+        .textContent = `${percentage}%`;
+
+    document.getElementById("correctDisplay")
+        .textContent = `${totalCorrect}/15`;
+
+    document.getElementById("levelDisplay")
+        .textContent = difficulty;
+
+
+    /* -----------------------------------------------
+       Overall interpretation
+    ----------------------------------------------- */
+
+    let message = "";
+
+    if (percentage >= 87) {
+
+        message =
+            "You demonstrated strong performance across a challenging adaptive sequence. Your performance suggests that you can maintain clinical reasoning when question complexity increases.";
+
+    } else if (percentage >= 73) {
+
+        message =
+            "You demonstrated functional performance, but some higher-level decisions became inconsistent as the scenarios became more complex.";
+
+    } else {
+
+        message =
+            "Your performance indicates that additional targeted review would be beneficial before relying on rapid decision-making under exam conditions.";
+    }
+
+    document.getElementById("overallMessage")
+        .textContent = message;
+
+
+    /* -----------------------------------------------
+       Competency results
+    ----------------------------------------------- */
+
+    const skillResults =
+        document.getElementById("skillResults");
+
+    skillResults.innerHTML = "";
+
+    Object.keys(competencyScores).forEach(skill => {
+
+        const data =
+            competencyScores[skill];
+
+        const pct =
+            Math.round(
+                (data.correct / data.total) * 100
+            );
+
+        const row =
+            document.createElement("div");
+
+        row.className = "skill-row";
+
+        row.innerHTML = `
+
+            <div class="skill-header">
+
+                <span>${skill}</span>
+
+                <span>
+                    ${data.correct}/${data.total}
+                    (${pct}%)
+                </span>
+
+            </div>
+
+            <div class="skill-bar">
+
+                <div
+                    class="skill-fill"
+                    style="width:${pct}%">
+                </div>
+
+            </div>
+        `;
+
+        skillResults.appendChild(row);
+
+    });
+
+
+    /* -----------------------------------------------
+       Reasoning profile
+    ----------------------------------------------- */
+
+    const strongest =
+        findStrongestSkill();
+
+    const weakest =
+        findWeakestSkill();
+
+    let reasoning = "";
+
+    if (strongest && weakest) {
+
+        reasoning =
+            `Your strongest demonstrated area was ${strongest}. ` +
+            `Your greatest opportunity for improvement was ${weakest}. ` +
+            `Pay particular attention to questions where two choices appear clinically reasonable but one requires a higher-priority intervention.`;
+
+    } else {
+
+        reasoning =
+            "Continue practicing integrated questions that require prioritization rather than simple recall.";
+    }
+
+    document.getElementById("reasoningProfile")
+        .textContent = reasoning;
+
+
+    /* -----------------------------------------------
+       Recommendation
+    ----------------------------------------------- */
+
+    let recommendation = "";
+
+    if (percentage >= 87) {
+
+        recommendation =
+            "Continue with mixed, timed NREMT-style questions. Focus on maintaining your ability to recognize the immediate life threat before becoming distracted by secondary information.";
+
+    } else if (percentage >= 73) {
+
+        recommendation =
+            "Review the competencies with lower scores and practice additional 'best answer' questions in which several interventions appear reasonable.";
+
+    } else {
+
+        recommendation =
+            "Return to the core assessment sequence and practice prioritization before attempting another adaptive challenge.";
+    }
+
+    document.getElementById("recommendation")
+        .textContent = recommendation;
+
+}
+
+
+/* ========================================================
+   SKILL ANALYSIS
+======================================================== */
+
+function findStrongestSkill() {
+
+    let strongest = null;
+    let highest = -1;
+
+    Object.keys(competencyScores).forEach(skill => {
+
+        const d = competencyScores[skill];
+
+        const pct =
+            d.correct / d.total;
+
+        if (pct > highest) {
+
+            highest = pct;
+            strongest = skill;
+        }
+
+    });
+
+    return strongest;
+}
+
+
+function findWeakestSkill() {
+
+    let weakest = null;
+    let lowest = Infinity;
+
+    Object.keys(competencyScores).forEach(skill => {
+
+        const d = competencyScores[skill];
+
+        const pct =
+            d.correct / d.total;
+
+        if (pct < lowest) {
+
+            lowest = pct;
+            weakest = skill;
+        }
+
+    });
+
+    return weakest;
+}
+
+</script>
+
+</body>
+</html>
