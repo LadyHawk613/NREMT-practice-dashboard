@@ -1,0 +1,1091 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NREMT Primary Assessment — Clinical Decision Making</title>
+
+<style>
+:root {
+    --navy:#071B2D;
+    --teal:#008C95;
+    --gold:#E6B422;
+    --light:#F3F6F8;
+    --white:#FFFFFF;
+    --green:#198754;
+    --red:#C62828;
+    --orange:#D97706;
+    --gray:#66727D;
+    --border:#D5DDE3;
+}
+
+* {
+    box-sizing:border-box;
+}
+
+body {
+    margin:0;
+    font-family:Arial,Helvetica,sans-serif;
+    background:var(--light);
+    color:#17212B;
+}
+
+header {
+    background:var(--navy);
+    color:white;
+    text-align:center;
+    padding:28px 20px;
+}
+
+header h1 {
+    margin:0 0 8px;
+    font-size:30px;
+}
+
+header p {
+    margin:0;
+    color:#dce8ed;
+}
+
+.container {
+    max-width:1050px;
+    margin:auto;
+    padding:25px;
+}
+
+.progress {
+    display:flex;
+    gap:8px;
+    margin-bottom:25px;
+}
+
+.progress div {
+    flex:1;
+    height:9px;
+    background:#d5dde3;
+    border-radius:10px;
+}
+
+.progress .active {
+    background:var(--teal);
+}
+
+.progress .complete {
+    background:var(--gold);
+}
+
+.card {
+    background:white;
+    border-radius:10px;
+    padding:22px;
+    margin-bottom:20px;
+    box-shadow:0 3px 12px rgba(0,0,0,.08);
+}
+
+.card h2 {
+    color:var(--navy);
+    margin-top:0;
+}
+
+.instructions {
+    border-left:6px solid var(--gold);
+}
+
+.scenario {
+    background:#eef7f8;
+    border:2px solid var(--teal);
+    border-radius:9px;
+    padding:20px;
+    line-height:1.65;
+    margin-bottom:20px;
+}
+
+.question {
+    font-size:20px;
+    font-weight:bold;
+    color:var(--navy);
+    margin:20px 0 15px;
+}
+
+.choice {
+    display:block;
+    width:100%;
+    text-align:left;
+    background:white;
+    border:2px solid var(--border);
+    padding:16px;
+    margin:10px 0;
+    border-radius:8px;
+    cursor:pointer;
+    font-size:15px;
+    line-height:1.45;
+}
+
+.choice:hover {
+    border-color:var(--teal);
+}
+
+.choice.correct {
+    background:#e8f5e9;
+    border-color:var(--green);
+}
+
+.choice.incorrect {
+    background:#ffebee;
+    border-color:var(--red);
+}
+
+.choice:disabled {
+    cursor:default;
+}
+
+.feedback {
+    padding:16px;
+    border-radius:8px;
+    margin-top:15px;
+    display:none;
+    line-height:1.55;
+}
+
+.feedback.show {
+    display:block;
+}
+
+.feedback.correct {
+    background:#e8f5e9;
+    border-left:5px solid var(--green);
+}
+
+.feedback.incorrect {
+    background:#ffebee;
+    border-left:5px solid var(--red);
+}
+
+.next-btn,
+.start-btn,
+.restart-btn {
+    border:0;
+    border-radius:7px;
+    padding:13px 22px;
+    font-weight:bold;
+    cursor:pointer;
+    font-size:15px;
+    margin-top:15px;
+}
+
+.next-btn,
+.start-btn {
+    background:var(--teal);
+    color:white;
+}
+
+.restart-btn {
+    background:var(--navy);
+    color:white;
+}
+
+.score {
+    background:var(--navy);
+    color:white;
+    padding:14px;
+    border-radius:8px;
+    text-align:center;
+    margin-bottom:20px;
+}
+
+.hidden {
+    display:none !important;
+}
+
+/* Activity 2 */
+
+.sort-grid {
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:15px;
+    margin-top:20px;
+}
+
+.dropzone {
+    min-height:190px;
+    background:#f8fafb;
+    border:3px dashed var(--border);
+    border-radius:10px;
+    padding:14px;
+}
+
+.dropzone h3 {
+    margin-top:0;
+    text-align:center;
+    color:var(--navy);
+    font-size:16px;
+}
+
+.dropzone.life {
+    border-color:var(--red);
+}
+
+.dropzone.primary {
+    border-color:var(--gold);
+}
+
+.dropzone.secondary {
+    border-color:var(--teal);
+}
+
+.finding {
+    background:white;
+    border:2px solid var(--border);
+    border-radius:8px;
+    padding:12px;
+    margin:9px 0;
+    cursor:pointer;
+    font-size:14px;
+    line-height:1.4;
+}
+
+.finding:hover {
+    border-color:var(--teal);
+}
+
+.finding.selected {
+    opacity:.5;
+}
+
+.feedback-box {
+    margin-top:20px;
+}
+
+.final {
+    text-align:center;
+    padding:30px;
+}
+
+.final-score {
+    font-size:55px;
+    font-weight:bold;
+    color:var(--teal);
+}
+
+@media(max-width:750px) {
+    .container {
+        padding:12px;
+    }
+
+    .sort-grid {
+        grid-template-columns:1fr;
+    }
+
+    header h1 {
+        font-size:24px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <h1>NREMT Primary Assessment</h1>
+    <p>Recognize the Life Threat — Prioritize — Treat — Reassess</p>
+</header>
+
+<div class="container">
+
+<div class="progress">
+    <div id="p1" class="active"></div>
+    <div id="p2"></div>
+    <div id="p3"></div>
+</div>
+
+
+<!-- =====================================================
+ACTIVITY 1
+===================================================== -->
+
+<section id="activity1">
+
+<div class="card instructions">
+
+<h2>Activity 1 — What Comes Next?</h2>
+
+<p>
+This is a progressive patient scenario. Information will be revealed
+one step at a time.
+</p>
+
+<p>
+<strong>
+Do not choose an answer simply because it is medically important.
+Choose what should be addressed NEXT based on the patient's current condition.
+</strong>
+</p>
+
+<p>
+Several findings are included to distract you from the immediate priority.
+</p>
+
+</div>
+
+<div class="score">
+    Activity 1 Score:
+    <span id="score1">0</span> / 8
+</div>
+
+<div id="scenarioArea"></div>
+
+</section>
+
+
+<!-- =====================================================
+ACTIVITY 2
+===================================================== -->
+
+<section id="activity2" class="hidden">
+
+<div class="card instructions">
+
+<h2>Activity 2 — Life Threat or Not?</h2>
+
+<p>
+The primary assessment requires you to recognize conditions that demand
+immediate intervention.
+</p>
+
+<p>
+For each finding, decide where it belongs:
+</p>
+
+<ul>
+<li><strong>Immediate Life Threat</strong> — requires immediate attention</li>
+<li><strong>Continue Primary Assessment</strong> — important, but not currently the immediate life threat</li>
+<li><strong>Secondary Assessment / Further Evaluation</strong> — does not require immediate intervention during the primary assessment</li>
+</ul>
+
+<p>
+<strong>Some findings are deliberately borderline or distracting.</strong>
+Think about the entire clinical picture.
+</p>
+
+</div>
+
+<div class="score">
+    Activity 2 Score:
+    <span id="score2">0</span> / 10
+</div>
+
+<div class="card">
+
+<h3>Click a finding, then choose where it belongs.</h3>
+
+<div id="findingArea"></div>
+
+</div>
+
+<div class="sort-grid">
+
+<div class="dropzone life">
+<h3>🔴 Immediate Life Threat</h3>
+<div id="lifeZone"></div>
+</div>
+
+<div class="dropzone primary">
+<h3>🟡 Continue Primary Assessment</h3>
+<div id="primaryZone"></div>
+</div>
+
+<div class="dropzone secondary">
+<h3>🔵 Secondary / Further Evaluation</h3>
+<div id="secondaryZone"></div>
+</div>
+
+</div>
+
+<div id="sortingFeedback" class="feedback"></div>
+
+<button id="finishBtn"
+        class="next-btn hidden"
+        onclick="showFinal()">
+See Final Results
+</button>
+
+</section>
+
+
+<!-- =====================================================
+FINAL
+===================================================== -->
+
+<section id="final" class="hidden">
+
+<div class="card final">
+
+<h2>Primary Assessment Complete</h2>
+
+<div class="final-score">
+<span id="finalPercent">0</span>%
+</div>
+
+<p id="finalMessage"></p>
+
+<hr>
+
+<h3>Primary Assessment Mental Model</h3>
+
+<p>
+<strong>Recognize → Prioritize → Treat → Reassess</strong>
+</p>
+
+<p>
+If the patient's condition changes, return to the primary assessment
+and address the new life threat.
+</p>
+
+<button class="restart-btn"
+        onclick="location.reload()">
+Start Again
+</button>
+
+</div>
+
+</section>
+
+</div>
+
+
+<script>
+
+/* =====================================================
+ACTIVITY 1 — PROGRESSIVE SCENARIO
+===================================================== */
+
+const scenarios = [
+
+{
+    situation:
+    "You arrive at a private residence for a 67-year-old male with weakness. His wife tells you he has a history of hypertension and type 2 diabetes. He is sitting upright in a chair and appears anxious. His skin is pale and cool.",
+
+    question:
+    "What should you assess FIRST?",
+
+    answers:[
+        "His blood glucose level.",
+        "His airway and responsiveness.",
+        "His medication list.",
+        "His blood pressure."
+    ],
+
+    correct:1,
+
+    explanation:
+    "The primary assessment begins with general impression and level of consciousness/responsiveness, followed by airway, breathing, and circulation. The patient's diabetes and blood pressure history are distracting information at this point."
+},
+
+{
+    situation:
+    "The patient responds appropriately when you speak to him. His airway is open. He says, 'I can't catch my breath.' His respiratory rate is 30/min and his breathing appears labored.",
+
+    question:
+    "What should you do NEXT?",
+
+    answers:[
+        "Obtain a SAMPLE history.",
+        "Assess whether his breathing is adequate and address any immediate respiratory problem.",
+        "Obtain a blood pressure.",
+        "Ask his wife when he last ate."
+    ],
+
+    correct:1,
+
+    explanation:
+    "Once responsiveness and airway are assessed, breathing must be evaluated. The patient's medication history and last oral intake are not the priority while a potential respiratory life threat exists."
+},
+
+{
+    situation:
+    "You determine that the patient's breathing is shallow with poor chest movement. His oxygen saturation is 84%. His wife tells you he has had pneumonia twice this year.",
+
+    question:
+    "What is the priority?",
+
+    answers:[
+        "Ask about his previous pneumonia.",
+        "Begin appropriate treatment for inadequate ventilation.",
+        "Obtain a complete set of vital signs before treating.",
+        "Complete the SAMPLE history."
+    ],
+
+    correct:1,
+
+    explanation:
+    "The patient has signs of inadequate ventilation. Treatment of the immediate life threat should not be delayed to obtain a history or complete vital signs."
+},
+
+{
+    situation:
+    "After you begin managing his breathing, the patient becomes more alert. His skin remains pale and cool. His radial pulse is rapid and weak.",
+
+    question:
+    "What should you assess next during the primary assessment?",
+
+    answers:[
+        "Circulation and perfusion.",
+        "His last oral intake.",
+        "His medication compliance.",
+        "His abdominal history."
+    ],
+
+    correct:0,
+
+    explanation:
+    "After airway and breathing are addressed, circulation and perfusion must be evaluated. The history information is important later but does not take priority over the primary assessment."
+},
+
+{
+    situation:
+    "You notice a large amount of blood soaking through the patient's clothing from his lower leg. His wife says he fell against a piece of metal before you arrived.",
+
+    question:
+    "What should you do?",
+
+    answers:[
+        "Continue the secondary assessment before treating the wound.",
+        "Ask the wife what medications he takes.",
+        "Immediately control the life-threatening external bleeding.",
+        "Obtain a blood pressure first."
+    ],
+
+    correct:2,
+
+    explanation:
+    "Life-threatening external bleeding requires immediate intervention. Do not delay treatment for a history, vital signs, or secondary assessment."
+},
+
+{
+    situation:
+    "The bleeding is controlled. The patient's breathing is now adequate, and he is alert. He continues to complain of weakness. His wife says he has not taken his diabetes medication today.",
+
+    question:
+    "What should happen next?",
+
+    answers:[
+        "Repeat the primary assessment and continue evaluating for life threats.",
+        "Immediately obtain a complete SAMPLE history and nothing else.",
+        "Assume the problem is low blood glucose.",
+        "Transport without further assessment."
+    ],
+
+    correct:0,
+
+    explanation:
+    "The primary assessment is not a one-time checklist. Continue evaluating the patient and reassess after interventions. Do not assume the diagnosis from the history."
+},
+
+{
+    situation:
+    "During reassessment, the patient suddenly becomes confused and difficult to arouse. His breathing becomes slow and shallow.",
+
+    question:
+    "What should you do?",
+
+    answers:[
+        "Continue with the secondary assessment.",
+        "Return to the primary assessment and address the new airway/breathing problem.",
+        "Ask his wife about his medical history.",
+        "Obtain a detailed OPQRST history."
+    ],
+
+    correct:1,
+
+    explanation:
+    "A change in condition requires returning to the primary assessment. The new alteration in responsiveness and inadequate breathing creates an immediate life threat."
+},
+
+{
+    situation:
+    "You manage the immediate breathing problem. The patient improves and is now responsive with adequate breathing. You have time to obtain additional information.",
+
+    question:
+    "What is now appropriate?",
+
+    answers:[
+        "Begin or continue the secondary assessment and obtain a focused history.",
+        "Ignore the patient's history because the primary assessment is complete.",
+        "Stop reassessing because the patient improved.",
+        "Repeat only the initial scene size-up."
+    ],
+
+    correct:0,
+
+    explanation:
+    "Once immediate life threats are addressed and the patient is stable enough, proceed to the secondary assessment and focused history while continuing reassessment."
+}
+
+];
+
+let currentScenario = 0;
+let score1 = 0;
+let scenarioAnswered = false;
+
+
+/* =====================================================
+LOAD ACTIVITY 1
+===================================================== */
+
+function loadScenario() {
+
+    const s = scenarios[currentScenario];
+
+    scenarioAnswered = false;
+
+    const area = document.getElementById("scenarioArea");
+
+    area.innerHTML = "";
+
+    const box = document.createElement("div");
+
+    box.className = "scenario";
+
+    box.innerHTML =
+        "<strong>Patient Information</strong>" +
+        "<p>" + s.situation + "</p>";
+
+    area.appendChild(box);
+
+    const q = document.createElement("div");
+
+    q.className = "question";
+
+    q.textContent = s.question;
+
+    area.appendChild(q);
+
+    s.answers.forEach((answer,index)=>{
+
+        const button = document.createElement("button");
+
+        button.className = "choice";
+
+        button.textContent =
+            String.fromCharCode(65+index) +
+            ". " + answer;
+
+        button.onclick =
+            ()=>answerScenario(index,button);
+
+        area.appendChild(button);
+
+    });
+
+}
+
+
+/* =====================================================
+ANSWER ACTIVITY 1
+===================================================== */
+
+function answerScenario(selected,button) {
+
+    if(scenarioAnswered) return;
+
+    scenarioAnswered = true;
+
+    const s = scenarios[currentScenario];
+
+    const buttons =
+        document.querySelectorAll("#scenarioArea .choice");
+
+    buttons.forEach(b=>b.disabled=true);
+
+    if(selected === s.correct){
+
+        button.classList.add("correct");
+
+        score1++;
+
+        document.getElementById("score1")
+            .textContent = score1;
+
+    } else {
+
+        button.classList.add("incorrect");
+
+        buttons[s.correct]
+            .classList.add("correct");
+
+    }
+
+    const feedback =
+        document.createElement("div");
+
+    feedback.className =
+        "feedback show " +
+        (selected === s.correct
+            ? "correct"
+            : "incorrect");
+
+    feedback.innerHTML =
+        "<strong>" +
+        (selected === s.correct
+            ? "✓ Correct"
+            : "✗ Not the best choice") +
+        "</strong>" +
+        "<p>" + s.explanation + "</p>";
+
+    document.getElementById("scenarioArea")
+        .appendChild(feedback);
+
+    const next =
+        document.createElement("button");
+
+    next.className = "next-btn";
+
+    next.textContent =
+        currentScenario === scenarios.length-1
+            ? "Continue to Activity 2"
+            : "Reveal Next Finding";
+
+    next.onclick = ()=>{
+
+        if(currentScenario === scenarios.length-1){
+
+            startActivity2();
+
+        } else {
+
+            currentScenario++;
+
+            loadScenario();
+
+        }
+
+    };
+
+    document.getElementById("scenarioArea")
+        .appendChild(next);
+}
+
+
+/* =====================================================
+START ACTIVITY 2
+===================================================== */
+
+function startActivity2(){
+
+    document.getElementById("activity1")
+        .classList.add("hidden");
+
+    document.getElementById("activity2")
+        .classList.remove("hidden");
+
+    document.getElementById("p1")
+        .classList.remove("active");
+
+    document.getElementById("p1")
+        .classList.add("complete");
+
+    document.getElementById("p2")
+        .classList.add("active");
+
+    buildFindings();
+}
+
+
+/* =====================================================
+ACTIVITY 2 — SORTING
+===================================================== */
+
+const findings = [
+
+{
+    text:
+    "Patient is unresponsive and not breathing normally.",
+    answer:"life"
+},
+
+{
+    text:
+    "Severe airway obstruction with inability to speak.",
+    answer:"life"
+},
+
+{
+    text:
+    "Bright-red blood is spurting from a large leg wound.",
+    answer:"life"
+},
+
+{
+    text:
+    "Respirations are 6/min with shallow chest movement.",
+    answer:"life"
+},
+
+{
+    text:
+    "Patient is alert, speaking normally, and breathing adequately.",
+    answer:"primary"
+},
+
+{
+    text:
+    "Radial pulse is rapid but palpable in an anxious patient with no other immediate life threat.",
+    answer:"primary"
+},
+
+{
+    text:
+    "Patient has severe shortness of breath but is currently speaking in full sentences with adequate breathing.",
+    answer:"primary"
+},
+
+{
+    text:
+    "Patient has a minor forearm abrasion with controlled bleeding.",
+    answer:"secondary"
+},
+
+{
+    text:
+    "Patient reports a history of hypertension but has no immediate airway, breathing, or circulation problem.",
+    answer:"secondary"
+},
+
+{
+    text:
+    "Patient reports mild abdominal pain but is alert with adequate breathing and no major bleeding.",
+    answer:"secondary"
+}
+
+];
+
+let currentFinding = 0;
+let score2 = 0;
+
+function buildFindings(){
+
+    const area =
+        document.getElementById("findingArea");
+
+    area.innerHTML = "";
+
+    findings.forEach((finding,index)=>{
+
+        const div =
+            document.createElement("div");
+
+        div.className = "finding";
+
+        div.textContent =
+            (index+1) + ". " + finding.text;
+
+        div.onclick =
+            ()=>chooseCategory(index,div);
+
+        area.appendChild(div);
+
+    });
+
+}
+
+
+function chooseCategory(index,element){
+
+    if(element.classList.contains("selected"))
+        return;
+
+    const finding = findings[index];
+
+    const category =
+        prompt(
+            "Where does this finding belong?\n\n" +
+            "1 = Immediate Life Threat\n" +
+            "2 = Continue Primary Assessment\n" +
+            "3 = Secondary / Further Evaluation"
+        );
+
+    if(category !== "1" &&
+       category !== "2" &&
+       category !== "3"){
+
+        return;
+    }
+
+    let selectedCategory;
+
+    if(category === "1")
+        selectedCategory = "life";
+
+    if(category === "2")
+        selectedCategory = "primary";
+
+    if(category === "3")
+        selectedCategory = "secondary";
+
+    element.classList.add("selected");
+
+    const clone =
+        document.createElement("div");
+
+    clone.className = "finding";
+
+    clone.textContent =
+        element.textContent;
+
+    if(selectedCategory === finding.answer){
+
+        score2++;
+
+        document.getElementById("score2")
+            .textContent = score2;
+
+        clone.style.borderColor =
+            "var(--green)";
+
+        clone.style.background =
+            "#e8f5e9";
+
+        showSortFeedback(true,finding);
+
+    } else {
+
+        clone.style.borderColor =
+            "var(--red)";
+
+        clone.style.background =
+            "#ffebee";
+
+        showSortFeedback(false,finding);
+
+    }
+
+    if(selectedCategory === "life")
+        document.getElementById("lifeZone")
+            .appendChild(clone);
+
+    if(selectedCategory === "primary")
+        document.getElementById("primaryZone")
+            .appendChild(clone);
+
+    if(selectedCategory === "secondary")
+        document.getElementById("secondaryZone")
+            .appendChild(clone);
+
+    currentFinding++;
+
+    if(currentFinding === findings.length){
+
+        document.getElementById("finishBtn")
+            .classList.remove("hidden");
+
+    }
+
+}
+
+
+function showSortFeedback(correct,finding){
+
+    const box =
+        document.getElementById("sortingFeedback");
+
+    box.className =
+        "feedback show " +
+        (correct ? "correct" : "incorrect");
+
+    if(correct){
+
+        box.innerHTML =
+            "<strong>Correct.</strong><br>" +
+            "This finding belongs in the category you selected.";
+
+    } else {
+
+        let correctText;
+
+        if(finding.answer === "life")
+            correctText =
+                "<strong>Immediate Life Threat</strong>";
+
+        if(finding.answer === "primary")
+            correctText =
+                "<strong>Continue Primary Assessment</strong>";
+
+        if(finding.answer === "secondary")
+            correctText =
+                "<strong>Secondary / Further Evaluation</strong>";
+
+        box.innerHTML =
+            "<strong>Not the best category.</strong><br>" +
+            "This finding belongs under " +
+            correctText + ".";
+    }
+
+}
+
+
+/* =====================================================
+FINAL
+===================================================== */
+
+function showFinal(){
+
+    document.getElementById("activity2")
+        .classList.add("hidden");
+
+    document.getElementById("final")
+        .classList.remove("hidden");
+
+    document.getElementById("p2")
+        .classList.remove("active");
+
+    document.getElementById("p2")
+        .classList.add("complete");
+
+    document.getElementById("p3")
+        .classList.add("active");
+
+    const total =
+        scenarios.length + findings.length;
+
+    const totalCorrect =
+        score1 + score2;
+
+    const percent =
+        Math.round(totalCorrect / total * 100);
+
+    document.getElementById("finalPercent")
+        .textContent = percent;
+
+    let message;
+
+    if(percent >= 90){
+
+        message =
+            "Excellent. You demonstrated strong recognition and prioritization of life threats.";
+
+    } else if(percent >= 75){
+
+        message =
+            "Good performance. Review the distinctions between immediate treatment, continued primary assessment, and secondary assessment.";
+
+    } else {
+
+        message =
+            "Additional review is recommended. Focus on recognizing life threats and determining what must be addressed immediately.";
+    }
+
+    document.getElementById("finalMessage")
+        .textContent = message;
+}
+
+
+/* Start */
+
+loadScenario();
+
+</script>
+
+</body>
+</html>
+```
