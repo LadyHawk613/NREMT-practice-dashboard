@@ -772,7 +772,21 @@ Correct scene concerns identified:
 Continue to Layer 2
 
 </button>
+    
+function showLayer2() {
 
+    document.getElementById("layer2")
+        .classList.remove("hidden");
+
+    document.getElementById("toLayer2")
+        .classList.add("hidden");
+
+    document.getElementById("layer2")
+        .scrollIntoView({
+            behavior: "smooth",
+            block: "start"
+        });
+}
 
 <!-- ======================================================
      LAYER 2
