@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NREMT TEI Clickable Table Practice — Clinical Decision-Making</title>
+
+<style>
+:root {
+    --navy: #071B2D;
+    --teal: #008C95;
+    --gold: #E6B422;
+    --light: #F3F6F8;
+    --white: #FFFFFF;
+    --green: #198754;
+    --red: #C62828;
+    --gray: #66727D;
+    --border: #D5DDE3;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    background: var(--light);
+    color: #17212B;
+}
+
+header {
+    background: var(--navy);
+    color: white;
+    text-align: center;
+    padding: 26px 20px;
+}
+
+header h1 {
+    margin: 0 0 8px;
+    font-size: 26px;
+}
+
+header p {
+    margin: 0;
+    color: #dce8ed;
+    font-size: 14px;
+}
+
+.container {
+    max-width: 1050px;
+    margin: auto;
+    padding: 25px;
+}
+
+.progress {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 25px;
+}
+
+.progress div {
+    flex: 1;
+    height: 9px;
+    border-radius: 10px;
+    background: #d5dde3;
+    transition: background 0.3s ease;
+}
+
+.progress .active {
+    background: var(--teal);
+}
+
+.progress .complete {
+    background: var(--gold);
+}
+
+.card {
+    background: white;
+    border-radius: 10px;
+    padding: 25px;
+    margin-bottom: 20px;
+    box-shadow: 0 3px 12px rgba(0,0,0,.08);
+}
+
+.card h2 {
+    color: var(--navy);
+    margin-top: 0;
+    font-size: 20px;
+}
+
+.instruction {
+    border-left: 6px solid var(--gold);
+}
+
+.hidden {
+    display: none !important;
+}
+
+button {
+    font-family: inherit;
+}
+
+.primary-btn {
+    border: none;
+    padding: 13px 22px;
+    border-radius: 7px;
+    font-weight: bold;
+    cursor: pointer;
+    background: var(--teal);
+    color: white;
+    font-size: 15px;
+    transition: opacity 0.2s;
+}
+
+.primary-btn:hover:not(:disabled) {
+    opacity: .9;
+}
+
+.primary-btn:disabled {
+    background: var(--gray);
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+
+.score-bar {
+    background: var(--navy);
+    color: white;
+    padding: 14px;
+    border-radius: 8px;
+    text-align: center;
+    margin-bottom: 20px;
+    font-weight: bold;
+    font-size: 15px;
+}
+
+.scenario-box {
+    background: #eef7f8;
+    border: 2px solid var(--teal);
+    padding: 18px;
+    border-radius: 9px;
+    line-height: 1.5;
+    margin-bottom: 20px;
+    font-size: 14px;
+}
+
+.tei-table-wrapper {
+    overflow-x: auto;
+    margin-bottom: 20px;
+}
+
+.tei-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    font-size: 14px;
+}
+
+.tei-table th, .tei-table td {
+    border: 1px solid var(--border);
+    padding: 12px;
+    text-align: left;
+}
+
+.tei-table th {
+    background: var(--navy);
+    color: white;
+    font-weight: bold;
+    text-align: center;
+}
+
+.tei-table th:first-child {
+    text-align: left;
+    width: 40%;
+}
+
+.tei-table td:not(:first-child) {
+    text-align: center;
+    width: 20%;
+}
+
+.tei-table tr:nth-child(even) {
+    background: #fcfdfd;
+}
+
+input[type="radio"] {
+    transform: scale(1.3);
+    cursor: pointer;
+}
+
+.correct-row {
+    background: #e8f5e9 !important;
+}
+
+.incorrect-row {
+    background: #ffebee !important;
+}
+
+.feedback-box {
+    margin-top: 20px;
+    background: #fff8e1;
+    border-left: 5px solid var(--gold);
+    padding: 18px;
+    border-radius: 6px;
+    display: none;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.feedback-box.show {
+    display: block;
+}
+
+.feedback-box h4 {
+    margin: 0 0 8px 0;
+    color: var(--navy);
+}
+
+.final {
+    text-align: center;
+    background: white;
+    padding: 30px;
+    border-radius: 10px;
+}
+
+.final-score {
+    font-size: 52px;
+    color: var(--teal);
+    font-weight: bold;
+    margin: 15px 0;
+}
+
+@media(max-width: 700px) {
+    .container {
+        padding: 12px;
+    }
+    header h1 {
+        font-size: 20px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <h1>NREMT TEI Clickable Table Practice</h1>
+    <p>Option/Check Box Table Items — Clinical Decision-Making & Priority Classification</p>
+</header>
+
+<div class="container">
+
+<!-- WELCOME SCREEN -->
+<section id="welcomeScreen" class="card instruction">
+    <h2>Student Instructions</h2>
+    <p>The updated National Registry (NREMT) exam features Technology-Enhanced Items (TEIs), including <strong>Option/Check Box Table</strong> formats. In these items:</p>
+    <ul>
+        <li>You must classify actions or findings by selecting the single most appropriate column category for <strong>every single row</strong>.</li>
+        <li>The Submit button remains disabled until every row has been addressed.</li>
+        <li>Several distractors are intentionally plausible actions; you must evaluate what belongs where <em>given the clinical situation</em>.</li>
+    </ul>
+    <p>This interactive practice consists of <strong>5 progressive TEI challenges</strong> covering Scene Size-Up, Primary Assessment, Secondary Assessment, Treatment & Transport, and Operations.</p>
+    <button class="primary-btn" onclick="startQuiz()" style="margin-top: 15px;">Begin Clickable Table Practice</button>
+</section>
+
+<!-- QUIZ SCREEN -->
+<section id="quizScreen" class="hidden">
+    <div class="progress" id="progressBar"></div>
+
+    <div class="score-bar">
+        Challenge <span id="qNumber">1</span> of 5
+        &nbsp; | &nbsp;
+        Correct Tables: <span id="currentScore">0</span> / 5
+    </div>
+
+    <div class="card">
+        <div id="scenarioArea"></div>
+        <div class="tei-table-wrapper">
+            <table class="tei-table" id="teiTable">
+                <thead><tr id="tableHeader"></tr></thead>
+                <tbody id="tableBody"></tbody>
+            </table>
+        </div>
+        <div id="feedbackBox" class="feedback-box"></div>
+        <button id="submitBtn" class="primary-btn hidden" style="margin-top: 20px;" onclick="submitTable()" disabled>Submit Classification</button>
+        <button id="nextBtn" class="primary-btn hidden" style="margin-top: 20px;" onclick="nextChallenge()">Next Challenge</button>
+    </div>
+</section>
+
+<!-- FINAL RESULTS SCREEN -->
+<section id="finalResults" class="final hidden">
+    <h2>Clickable Table Practice Completed</h2>
+    <p>Evaluation Summary</p>
+    <div class="final-score">
+        <span id="finalPercent">0</span>%
+    </div>
+    <p id="finalMessage" style="font-size: 16px; margin-bottom: 25px;"></p>
+    <div class="card" style="text-align: left; background: var(--light);">
+        <h3 style="color: var(--navy); margin-top: 0;">Key Takeaway for TEIs:</h3>
+        <p>National Registry TEI tables test whether you can correctly prioritize actions and findings based on live clinical context rather than relying on isolated memorization.</p>
+    </div>
+    <button class="primary-btn" onclick="location.reload()" style="margin-top: 15px;">Restart Practice</button>
+</section>
+
+</div>
+
+<script>
+const challenges = [
+    {
+        title: "1. SCENE SIZE-UP & SAFETY",
+        scenario: "<strong>Scenario:</strong> You are dispatched to an MVC involving two vehicles. One vehicle has significant front-end damage. A passenger is trapped. You smell fuel and see a damaged electrical pole nearby. Traffic is still moving around the crash.<br><br><em>For each action, select the column that best describes its priority.</em>",
+        columns: ["Action", "Immediate Safety Priority", "Scene Size-Up / Planning", "Secondary / Later"],
+        rows: [
+            { text: "Request fire/rescue for the trapped patient", correctCol: 1 },
+            { text: "Identify the damaged electrical pole as a hazard", correctCol: 1 },
+            { text: "Determine the approximate number of patients", correctCol: 2 },
+            { text: "Put on appropriate PPE", correctCol: 1 },
+            { text: "Obtain a SAMPLE history from the trapped patient", correctCol: 3 },
+            { text: "Determine whether additional EMS resources are needed", correctCol: 2 },
+            { text: "Enter the vehicle to begin patient assessment", correctCol: 3 },
+            { text: "Establish a safe approach and operating position", correctCol: 1 }
+        ],
+        rationale: "<strong>Why it's difficult:</strong> Requesting rescue is important, but the student must distinguish recognizing/requesting critical safety resources and hazards from personally entering an unsafe environment or performing secondary assessments."
+    },
+    {
+        title: "2. PRIMARY ASSESSMENT",
+        scenario: "<strong>Scenario:</strong> A 67-year-old female is found sitting upright. She is pale and anxious. Airway: patent | RR: 32/min | SpO₂: 88% | HR: 124/min | BP: 102/64 mmHg | Skin: cool and diaphoretic | Mental status: alert. She reports \"indigestion\" after eating lunch.<br><br><em>For each finding/action, identify the most appropriate priority.</em>",
+        columns: ["Finding / Action", "Immediate Intervention", "Primary Assessment / Monitor", "Secondary Assessment"],
+        rows: [
+            { text: "Address significant respiratory compromise", correctCol: 1 },
+            { text: "Assess breathing effectiveness", correctCol: 2 },
+            { text: "Assess mental status", correctCol: 2 },
+            { text: "Evaluate skin/perfusion", correctCol: 2 },
+            { text: "Assess airway patency", correctCol: 2 },
+            { text: "Obtain OPQRST regarding indigestion", correctCol: 3 },
+            { text: "Ask about cardiac history", correctCol: 3 },
+            { text: "Determine medication history", correctCol: 3 }
+        ],
+        rationale: "<strong>Key trap:</strong> The student's brain wants to pursue the \"indigestion\" history. But the patient has a current severe respiratory and perfusion problem that must take priority."
+    },
+    {
+        title: "3. SECONDARY ASSESSMENT",
+        scenario: "<strong>Scenario:</strong> A 52-year-old male complains of abdominal discomfort. His airway and breathing are adequate. He is alert and currently hemodynamically stable. He says: <em>\"It started after dinner.\"</em> His wife repeatedly says: <em>\"He has a sensitive stomach.\"</em><br><br><em>For each finding, select the assessment component it most directly supports.</em>",
+        columns: ["Finding / Action", "OPQRST", "SAMPLE", "Focused Physical Exam", "Lower Priority"],
+        rows: [
+            { text: "\"It feels like pressure.\"", correctCol: 1 },
+            { text: "Current medications", correctCol: 2 },
+            { text: "Previous episodes of similar symptoms", correctCol: 2 },
+            { text: "Palpate the abdomen", correctCol: 3 },
+            { text: "\"It gets worse when I walk.\"", correctCol: 1 },
+            { text: "Medication allergies", correctCol: 2 },
+            { text: "\"It started about 90 minutes ago.\"", correctCol: 1 },
+            { text: "Ask the wife what she thinks caused it", correctCol: 4 }
+        ],
+        rationale: "<strong>Key trap:</strong> The wife's explanation is plausible, but it is not a clinical assessment finding that should anchor the EMT's decision-making."
+    },
+    {
+        title: "4. PATIENT TREATMENT & TRANSPORT",
+        scenario: "<strong>Scenario:</strong> A patient with severe respiratory distress receives treatment. Initial: RR 34, HR 118, SpO₂ 86%, severe accessory muscle use. 5 mins later: RR 28, HR 112, SpO₂ 93%, less accessory muscle use. However, the patient now says: <em>\"I'm exhausted.\"</em> He becomes increasingly drowsy.<br><br><em>For each finding, determine what it should prompt.</em>",
+        columns: ["Finding", "Continue Treatment", "Reassess Closely", "Prioritize Transport", "Reassuring / No Change"],
+        rows: [
+            { text: "SpO₂ increased from 86% to 93%", correctCol: 1 },
+            { text: "Respiratory rate decreased from 34 to 28", correctCol: 1 },
+            { text: "Less accessory muscle use", correctCol: 1 },
+            { text: "Increasing drowsiness", correctCol: 2 },
+            { text: "Patient reports severe exhaustion", correctCol: 3 },
+            { text: "BP decreased from 138/82 to 126/78", correctCol: 2 },
+            { text: "Patient remains symptomatic", correctCol: 2 }
+        ],
+        rationale: "<strong>The NREMT-level trap:</strong> SpO₂ improved, so students often think the patient is improving. But new drowsiness and exhaustion indicate fatigue and impending respiratory failure. You must track multiple trends simultaneously."
+    },
+    {
+        title: "5. OPERATIONS",
+        scenario: "<strong>Scenario:</strong> You are first on scene at a building collapse. Injured people outside, unknown patients inside, unstable structural damage, dust/debris. One patient calling from inside. Fire/rescue has not yet arrived. Bystanders attempting to enter.<br><br><em>For each action, select its operational priority.</em>",
+        columns: ["Action", "Immediate Operational Priority", "Coordinate / Communicate", "Delay Until Scene Is Safe"],
+        rows: [
+            { text: "Request fire/rescue", correctCol: 2 },
+            { text: "Enter the building to reach the calling patient", correctCol: 3 },
+            { text: "Establish a safe staging area", correctCol: 1 },
+            { text: "Determine approximate number of patients", correctCol: 1 },
+            { text: "Communicate structural hazards to incoming resources", correctCol: 2 },
+            { text: "Allow bystanders to enter and remove patients", correctCol: 3 },
+            { text: "Establish an access/egress plan", correctCol: 1 },
+            { text: "Begin detailed treatment of the first patient you see", correctCol: 3 }
+        ],
+        rationale: "<strong>Why these work well:</strong> TEI tables test whether you can distinguish between immediate staging/command duties, communication tasks, and actions that must be strictly delayed until scene safety is established."
+    }
+];
+
+let currentIndex = 0;
+let score = 0;
+let tableSubmitted = false;
+
+function initProgressBar() {
+    const bar = document.getElementById("progressBar");
+    bar.innerHTML = "";
+    challenges.forEach((_, idx) => {
+        const div = document.createElement("div");
+        div.id = `prog${idx}`;
+        if (idx === 0) div.className = "active";
+        bar.appendChild(div);
+    });
+}
+
+function startQuiz() {
+    document.getElementById("welcomeScreen").classList.add("hidden");
+    document.getElementById("quizScreen").classList.remove("hidden");
+    initProgressBar();
+    loadChallenge();
+}
+
+function loadChallenge() {
+    tableSubmitted = false;
+    const ch = challenges[currentIndex];
+    
+    document.getElementById("qNumber").textContent = currentIndex + 1;
+    document.getElementById("submitBtn").classList.remove("hidden");
+    document.getElementById("submitBtn").disabled = true;
+    document.getElementById("nextBtn").classList.add("hidden");
+    
+    const feedbackBox = document.getElementById("feedbackBox");
+    feedbackBox.classList.remove("show");
+    feedbackBox.innerHTML = "";
+    
+    const area = document.getElementById("scenarioArea");
+    area.innerHTML = `
+        <h2>${ch.title}</h2>
+        <div class="scenario-box">${ch.scenario}</div>
+    `;
+    
+    // Build Table Header
+    const headerTr = document.getElementById("tableHeader");
+    headerTr.innerHTML = "";
+    ch.columns.forEach((col, cIdx) => {
+        const th = document.createElement("th");
+        th.textContent = col;
+        headerTr.appendChild(th);
+    });
+    
+    // Build Table Body
+    const tbody = document.getElementById("tableBody");
+    tbody.innerHTML = "";
+    ch.rows.forEach((row, rIdx) => {
+        const tr = document.createElement("tr");
+        tr.id = `row-${rIdx}`;
+        
+        // Row label cell
+        const tdLabel = document.createElement("td");
+        tdLabel.innerHTML = `<strong>${row.text}</strong>`;
+        tr.appendChild(tdLabel);
+        
+        // Radio option cells (columns index 1 onwards)
+        for (let c = 1; c < ch.columns.length; c++) {
+            const td = document.createElement("td");
+            const input = document.createElement("input");
+            input.type = "radio";
+            input.name = `row_${rIdx}`;
+            input.value = c;
+            input.onchange = checkAllRowsAnswered;
+            td.appendChild(input);
+            tr.appendChild(td);
+        }
+        tbody.appendChild(tr);
+    });
+}
+
+function checkAllRowsAnswered() {
+    if (tableSubmitted) return;
+    const ch = challenges[currentIndex];
+    let allAnswered = true;
+    
+    for (let r = 0; r < ch.rows.length; r++) {
+        const radios = document.querySelectorAll(`input[name='row_${r}']:checked`);
+        if (radios.length === 0) {
+            allAnswered = false;
+            break;
+        }
+    }
+    
+    document.getElementById("submitBtn").disabled = !allAnswered;
+}
+
+function submitTable() {
+    if (tableSubmitted) return;
+    tableSubmitted = true;
+    
+    const ch = challenges[currentIndex];
+    let tableCorrect = true;
+    
+    ch.rows.forEach((row, rIdx) => {
+        const selectedRadio = document.querySelector(`input[name='row_${rIdx}']:checked`);
+        const rowTr = document.getElementById(`row-${rIdx}`);
+        const selectedVal = selectedRadio ? parseInt(selectedRadio.value) : -1;
+        
+        // Disable all inputs in this row
+        const inputs = rowTr.querySelectorAll("input");
+        inputs.forEach(inp => inp.disabled = true);
+        
+        if (selectedVal === row.correctCol) {
+            rowTr.classList.add("correct-row");
+        } else {
+            rowTr.classList.add("incorrect-row");
+            tableCorrect = false;
+        }
+    });
+    
+    if (tableCorrect) {
+        score++;
+    }
+    
+    const feedbackBox = document.getElementById("feedbackBox");
+    feedbackBox.innerHTML = `
+        <h4 style="color: ${tableCorrect ? 'var(--green)' : 'var(--red)'};">
+            ${tableCorrect ? "✓ Table Correctly Classified" : "✗ Classification Errors Detected (Highlighted in Red)"}
+        </h4>
+        <p>${ch.rationale}</p>
+    `;
+    feedbackBox.classList.add("show");
+    
+    document.getElementById("submitBtn").classList.add("hidden");
+    const nextBtn = document.getElementById("nextBtn");
+    nextBtn.classList.remove("hidden");
+    
+    if (currentIndex === challenges.length - 1) {
+        nextBtn.textContent = "View Final Summary";
+    }
+    
+    updateProgressIndicator(true);
+}
+
+function updateProgressIndicator(isComplete) {
+    const progEl = document.getElementById(`prog${currentIndex}`);
+    if (progEl) {
+        progEl.classList.remove("active");
+        if (isComplete) progEl.classList.add("complete");
+    }
+    const nextProg = document.getElementById(`prog${currentIndex + 1}`);
+    if (nextProg && !isComplete) {
+        nextProg.classList.add("active");
+    }
+}
+
+function nextChallenge() {
+    if (currentIndex === challenges.length - 1) {
+        showResults();
+    } else {
+        currentIndex++;
+        const nextProg = document.getElementById(`prog${currentIndex}`);
+        if(nextProg) nextProg.classList.add("active");
+        loadChallenge();
+    }
+}
+
+function showResults() {
+    document.getElementById("quizScreen").classList.add("hidden");
+    document.getElementById("finalResults").classList.remove("hidden");
+    
+    const percent = Math.round((score / challenges.length) * 100);
+    document.getElementById("finalPercent").textContent = percent;
+    
+    const msg = document.getElementById("finalMessage");
+    if (percent >= 90) {
+        msg.textContent = "Masterclass Performance! You expertly classified clinical priorities and operational actions across all NREMT TEI tables.";
+    } else if (percent >= 70) {
+        msg.textContent = "Strong Clinical Insight! You successfully navigated most table classifications, but review subtle distractors regarding scene safety and priority shifts.";
+    } else {
+        msg.textContent = "Keep Practicing! Remember that TEI tables require evaluating each action strictly against live patient status and immediate scene constraints.";
+    }
+}
+</script>
+
+</body>
+</html>
