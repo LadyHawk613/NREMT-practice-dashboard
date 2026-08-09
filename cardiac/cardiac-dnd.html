@@ -246,12 +246,15 @@
     padding: 6px 10px;
     box-shadow: 0 3px 6px rgba(0,0,0,0.2);
     user-select: none;
-    transition: transform 0.1s;
+    transition: transform 0.1s, background 0.2s;
   }
 
   .card:active { cursor: grabbing; }
   .card.dragging { opacity: 0.3; }
   .card:hover { transform: scale(1.02); }
+
+  .card.correct-card { background: #27ae60 !important; }
+  .card.incorrect-card { background: #c0392b !important; }
 
   .card[data-color="1"] { background: linear-gradient(135deg, #ff7675, #d63031); }
   .card[data-color="2"] { background: linear-gradient(135deg, #74b9ff, #0984e3); }
@@ -473,12 +476,15 @@
         labelsCol.appendChild(lbl);
       });
 
-      // Column 2: Drop Zones
+      // Column 2: Drop Zones (Modified height and padding to ensure all fit without vertical scrolling)
       const dropsCol = document.createElement("div");
       dropsCol.className = "matching-drops";
       act.pairs.forEach(p => {
         const drop = document.createElement("div");
         drop.className = "matching-drop-zone";
+        drop.style.height = "calc((100% - 32px) / 5)";
+        drop.style.minHeight = "42px";
+        drop.style.padding = "2px 5px";
         drop.dataset.condition = p.condition;
         dropsCol.appendChild(drop);
       });
@@ -511,6 +517,9 @@
         const card = document.querySelector(".dragging");
         if (!card) return;
 
+        // Clear color status on move
+        card.classList.remove("correct-card", "incorrect-card");
+
         const currentActivity = activities[currentIdx];
 
         if (target.id === "bank") {
@@ -518,7 +527,10 @@
         } else if (target.classList.contains("slot") || target.classList.contains("matching-drop-zone")) {
           // Single-item swap logic
           const existing = target.querySelector(".card");
-          if (existing && existing !== card) document.getElementById("bank").appendChild(existing);
+          if (existing && existing !== card) {
+            existing.classList.remove("correct-card", "incorrect-card");
+            document.getElementById("bank").appendChild(existing);
+          }
           target.appendChild(card);
         } else if (target.classList.contains("drop-container")) {
           // Multi-item append logic
@@ -534,13 +546,21 @@
     let isCorrect = true;
     let totalPlaced = 0;
 
+    // Reset previous color highlights
+    document.querySelectorAll(".card").forEach(c => c.classList.remove("correct-card", "incorrect-card"));
+
     if (act.type === "sorting") {
       act.categories.forEach(cat => {
         const container = document.getElementById(cat.id);
         const cards = container.querySelectorAll(".card");
         totalPlaced += cards.length;
         cards.forEach(card => {
-          if (!cat.correctItems.includes(card.dataset.text)) isCorrect = false;
+          if (cat.correctItems.includes(card.dataset.text)) {
+            card.classList.add("correct-card");
+          } else {
+            card.classList.add("incorrect-card");
+            isCorrect = false;
+          }
         });
         if (cards.length !== cat.correctItems.length) isCorrect = false;
       });
@@ -555,7 +575,12 @@
         const card = slot.querySelector(".card");
         if (!card) { isCorrect = false; return; }
         totalPlaced++;
-        if (card.dataset.text !== act.correctOrder[i].text) isCorrect = false;
+        if (card.dataset.text === act.correctOrder[i].text) {
+          card.classList.add("correct-card");
+        } else {
+          card.classList.add("incorrect-card");
+          isCorrect = false;
+        }
       });
       if (totalPlaced < act.correctOrder.length) {
         message.textContent = "Order all steps first! 📦";
@@ -569,7 +594,12 @@
         if (!card) { isCorrect = false; return; }
         totalPlaced++;
         const pair = act.pairs.find(p => p.condition === drop.dataset.condition);
-        if (card.dataset.text !== pair.finding) isCorrect = false;
+        if (card.dataset.text === pair.finding) {
+          card.classList.add("correct-card");
+        } else {
+          card.classList.add("incorrect-card");
+          isCorrect = false;
+        }
       });
       if (totalPlaced < act.pairs.length) {
         message.textContent = "Match all conditions first! 🔗";
@@ -584,7 +614,7 @@
       checkBtn.style.display = "none";
       nextBtn.style.display = "inline-block";
     } else {
-      message.textContent = "Not quite. Try again!";
+      message.textContent = "Not quite. Check highlighted cards and try again!";
       message.style.color = "#c0392b";
     }
   });
@@ -595,7 +625,7 @@
       loadActivity();
     } else {
       instructions.innerHTML = "<h2>Challenge Complete!</h2>";
-      gameArea.innerHTML = "<div style='font-size: 80px;'>🏆</div>";
+      gameArea.innerHTML = "<div style='font-size: 80px; display: flex; align-items: center; justify-content: center; width: 100%;'>🏆</div>";
       checkBtn.style.display = "none";
       nextBtn.style.display = "none";
       message.textContent = "Great job, EMT!";
