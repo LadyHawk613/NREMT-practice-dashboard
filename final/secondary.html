@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NREMT Final Review: Secondary Assessment — Find the Critical Clue</title>
+
+<style>
+:root {
+    --navy: #071B2D;
+    --teal: #008C95;
+    --gold: #E6B422;
+    --light: #F3F6F8;
+    --white: #FFFFFF;
+    --green: #198754;
+    --red: #C62828;
+    --gray: #66727D;
+    --border: #D5DDE3;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    background: var(--light);
+    color: #17212B;
+}
+
+header {
+    background: var(--navy);
+    color: white;
+    text-align: center;
+    padding: 26px 20px;
+}
+
+header h1 {
+    margin: 0 0 8px;
+    font-size: 28px;
+}
+
+header p {
+    margin: 0;
+    color: #dce8ed;
+}
+
+.container {
+    max-width: 950px;
+    margin: auto;
+    padding: 25px;
+}
+
+.progress {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 25px;
+    flex-wrap: wrap;
+}
+
+.progress div {
+    flex: 1;
+    min-width: 30px;
+    height: 9px;
+    border-radius: 10px;
+    background: #d5dde3;
+    transition: background 0.3s ease;
+}
+
+.progress .active {
+    background: var(--teal);
+}
+
+.progress .complete {
+    background: var(--gold);
+}
+
+.card {
+    background: white;
+    border-radius: 10px;
+    padding: 25px;
+    margin-bottom: 20px;
+    box-shadow: 0 3px 12px rgba(0,0,0,.08);
+}
+
+.card h2 {
+    color: var(--navy);
+    margin-top: 0;
+}
+
+.instruction {
+    border-left: 6px solid var(--gold);
+}
+
+.hidden {
+    display: none !important;
+}
+
+button {
+    font-family: inherit;
+}
+
+.primary-btn {
+    border: none;
+    padding: 13px 22px;
+    border-radius: 7px;
+    font-weight: bold;
+    cursor: pointer;
+    background: var(--teal);
+    color: white;
+    font-size: 15px;
+    transition: opacity 0.2s;
+}
+
+.primary-btn:hover:not(:disabled) {
+    opacity: .9;
+}
+
+.primary-btn:disabled {
+    background: var(--gray);
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+.score-bar {
+    background: var(--navy);
+    color: white;
+    padding: 14px;
+    border-radius: 8px;
+    text-align: center;
+    margin-bottom: 20px;
+    font-weight: bold;
+}
+
+.scenario-box {
+    background: #eef7f8;
+    border: 2px solid var(--teal);
+    padding: 20px;
+    border-radius: 9px;
+    line-height: 1.6;
+    margin-bottom: 20px;
+}
+
+.scenario-question {
+    font-size: 18px;
+    font-weight: bold;
+    color: var(--navy);
+    margin-bottom: 15px;
+}
+
+.option-item {
+    width: 100%;
+    display: flex;
+    align-items: flex-start;
+    text-align: left;
+    background: white;
+    border: 2px solid var(--border);
+    padding: 15px;
+    margin: 10px 0;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 15px;
+    transition: all 0.2s ease;
+}
+
+.option-item:hover:not(.disabled) {
+    border-color: var(--teal);
+    background: #f7fcfc;
+}
+
+.option-item input {
+    margin-top: 3px;
+    margin-right: 12px;
+    transform: scale(1.2);
+    cursor: pointer;
+}
+
+.option-item.correct-highlight {
+    background: #e8f5e9 !important;
+    border-color: var(--green) !important;
+    color: #155d34;
+    font-weight: bold;
+}
+
+.option-item.incorrect-highlight {
+    background: #ffebee !important;
+    border-color: var(--red) !important;
+    color: var(--red);
+}
+
+.feedback-box {
+    margin-top: 20px;
+    background: #fff8e1;
+    border-left: 5px solid var(--gold);
+    padding: 18px;
+    border-radius: 6px;
+    display: none;
+}
+
+.feedback-box.show {
+    display: block;
+}
+
+.feedback-box h4 {
+    margin: 0 0 8px 0;
+    color: var(--navy);
+}
+
+.final {
+    text-align: center;
+    background: white;
+    padding: 30px;
+    border-radius: 10px;
+}
+
+.final-score {
+    font-size: 52px;
+    color: var(--teal);
+    font-weight: bold;
+    margin: 15px 0;
+}
+
+@media(max-width: 700px) {
+    .container {
+        padding: 12px;
+    }
+    header h1 {
+        font-size: 22px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <h1>NREMT Final Review</h1>
+    <p>Activity 2: Find the Critical Clue — Secondary Assessment</p>
+</header>
+
+<div class="container">
+
+<!-- WELCOME SCREEN -->
+<section id="welcomeScreen" class="card instruction">
+    <h2>Information Filtering & Clinical Significance</h2>
+    <p>Each scenario contains more information than you need. Do not simply identify an abnormal finding. Determine which finding should have the greatest influence on your next clinical decision.</p>
+    <p>This assessment consists of <strong>8 interactive case scenarios</strong> (including single-choice and select-all-that-apply questions).</p>
+    <button class="primary-btn" onclick="startQuiz()" style="margin-top: 15px;">Begin Activity</button>
+</section>
+
+<!-- QUIZ SCREEN -->
+<section id="quizScreen" class="hidden">
+    <div class="progress" id="progressBar"></div>
+
+    <div class="score-bar">
+        Scenario <span id="qNumber">1</span> of 8
+        &nbsp; | &nbsp;
+        Correct Decisions: <span id="currentScore">0</span> / 8
+    </div>
+
+    <div class="card">
+        <div id="scenarioArea"></div>
+        <div id="feedbackBox" class="feedback-box"></div>
+        <button id="submitBtn" class="primary-btn hidden" style="margin-top: 20px;" onclick="submitAnswer()">Submit Answer</button>
+        <button id="nextBtn" class="primary-btn hidden" style="margin-top: 20px;" onclick="nextQuestion()">Next Scenario</button>
+    </div>
+</section>
+
+<!-- FINAL RESULTS SCREEN -->
+<section id="finalResults" class="final hidden">
+    <h2>Activity Debriefing</h2>
+    <p>Secondary Assessment Evaluation Completed</p>
+    <div class="final-score">
+        <span id="finalPercent">0</span>%
+    </div>
+    <p id="finalMessage" style="font-size: 16px; margin-bottom: 25px;"></p>
+    <div class="card" style="text-align: left; background: var(--light);">
+        <h3 style="color: var(--navy); margin-top: 0;">Core Clinical Reasoning Takeaway:</h3>
+        <p><strong>DON'T ASK:</strong> "What information do I have?"</p>
+        <p><strong>ASK:</strong> "Which information changes what I need to do?"</p>
+        <p style="margin-top: 15px;"><strong>The NREMT Reasoning Pattern:</strong><br>Finding → Significance → Priority → Action</p>
+    </div>
+    <button class="primary-btn" onclick="location.reload()" style="margin-top: 15px;">Restart Activity</button>
+</section>
+
+</div>
+
+<script>
+const questions = [
+    {
+        title: "Question 1 — “The Patient Who Has a Lot Going On”",
+        type: "single",
+        situation: "You respond to a 74-year-old female complaining of weakness. Her daughter provides the following information:<br>• History of hypertension | Takes three prescription medications<br>• Had knee replacement surgery four years ago | Has not slept well for several nights<br>• Ate toast and coffee approximately three hours ago | Complains of nausea<br>• States that she feels \"different\"<br>• BP: 94/60 mmHg | HR: 118/min | RR: 22/min | Skin: cool and pale | SpO₂: 97%<br><br><em>Her daughter repeatedly tells you: \"She's been under a lot of stress lately.\"</em>",
+        prompt: "Which finding should <strong>MOST</strong> influence your immediate clinical priorities?",
+        options: [
+            { text: "Her history of hypertension", correct: false },
+            { text: "Her poor sleep over the past several nights", correct: false },
+            { text: "Her tachycardia accompanied by hypotension and cool, pale skin", correct: true },
+            { text: "Her nausea after eating", correct: false }
+        ],
+        rationale: "The combination of tachycardia, hypotension, and signs of poor perfusion is more clinically significant than the patient's chronic history or recent lifestyle factors. The EMT should recognize a possible perfusion problem and prioritize treatment and reassessment accordingly.<br><strong>Critical clue:</strong> The findings form a pattern rather than representing isolated abnormalities."
+    },
+    {
+        title: "Question 2 — “The Headache”",
+        type: "single",
+        situation: "A 62-year-old male complains of a severe headache. His wife tells you he has experienced headaches before, has hypertension, did not take his blood pressure medication this morning, worked outside yesterday, has been under considerable stress, and normally wears reading glasses.<br><br><strong>Assessment:</strong><br>• Alert but slow to answer | BP: 184/96 mmHg | HR: 88/min | RR: 18/min | SpO₂: 98% | Pupils appear equal<br><br><em>During your assessment, the wife says: \"Actually, he suddenly said this was the worst headache he has ever had.\"</em>",
+        prompt: "Which finding should <strong>MOST</strong> change your assessment priority?",
+        options: [
+            { text: "The sudden onset of an unusually severe headache", correct: true },
+            { text: "His history of hypertension", correct: false },
+            { text: "His failure to take his medication that morning", correct: false },
+            { text: "His recent outdoor activity", correct: false }
+        ],
+        rationale: "The phrase \"worst headache of my life\", particularly when sudden in onset, is a significant red flag for a potentially serious neurologic emergency. The elevated blood pressure and medication history are relevant, but they should not distract from the acute presentation.<br><strong>Critical clue:</strong> Sudden onset and unusual severity."
+    },
+    {
+        title: "Question 3 — “Normal SpO₂, Abnormal Patient”",
+        type: "single",
+        situation: "You are assessing a 69-year-old female with shortness of breath. She has a history of asthma, seasonal allergies, a rescue inhaler in her purse, a mild cough, no fever, and an SpO₂ of 96%. Her daughter says, <em>\"Her oxygen is fine. She just needs her inhaler.\"</em><br><br><strong>You observe:</strong><br>• RR: 34/min | Accessory muscle use<br>• Difficulty speaking more than three or four words at a time<br>• Increasing fatigue | Audible wheezing",
+        prompt: "Which finding should <strong>MOST</strong> influence your treatment decision?",
+        options: [
+            { text: "Her history of seasonal allergies", correct: false },
+            { text: "Her oxygen saturation of 96%", correct: false },
+            { text: "Her mild cough", correct: false },
+            { text: "Her severe work of breathing and inability to speak normally", correct: true }
+        ],
+        rationale: "A normal or near-normal SpO₂ does not rule out serious respiratory distress. The patient's work of breathing, respiratory rate, speech ability, and fatigue indicate significant respiratory compromise.<br><strong>Critical clue:</strong> Clinical respiratory status is more important than relying on one numerical measurement."
+    },
+    {
+        title: "Question 4 — “The Distracting Injury”",
+        type: "single",
+        situation: "A 27-year-old male is involved in a motorcycle collision. He is alert and repeatedly complains about severe pain in his right ankle.<br><br><strong>Assessment:</strong><br>• Obvious ankle deformity | Small abrasion to the forehead<br>• BP: 118/76 mmHg | HR: 106/min | RR: 20/min | SpO₂: 98% | Skin initially warm and dry<br><br><em>While completing your secondary assessment, he becomes increasingly restless and says: \"I'm freezing.\" His skin is now pale and cool.</em>",
+        prompt: "Which finding should <strong>MOST</strong> change your treatment priority?",
+        options: [
+            { text: "The ankle deformity", correct: false },
+            { text: "Increasing restlessness accompanied by pale, cool skin", correct: true },
+            { text: "The forehead abrasion", correct: false },
+            { text: "The patient's complaint of ankle pain", correct: false }
+        ],
+        rationale: "The ankle injury is obvious and demands treatment, but the change in mental status and skin findings may indicate developing shock. A potentially life-threatening systemic problem takes priority over the obvious extremity injury.<br><strong>Critical clue:</strong> A change from the patient's initial condition is often more significant than a static injury."
+    },
+    {
+        title: "Question 5 — “Which Information Actually Matters?”",
+        type: "single",
+        situation: "A 58-year-old female complains of abdominal pain. She reports pain began approximately two hours ago, she ate pizza for lunch, has a history of GERD, takes an antacid, has no known medication allergies, and had her appendix removed at age 22.<br><br><strong>Assessment:</strong><br>• Describes pain as pressure in the upper abdomen radiating toward her jaw<br>• She is pale and diaphoretic<br>• BP: 108/70 mmHg | HR: 112/min | RR: 22/min | SpO₂: 95%",
+        prompt: "Which finding should <strong>MOST</strong> increase your concern that this may represent a cardiac emergency rather than simple gastrointestinal discomfort?",
+        options: [
+            { text: "Her history of GERD", correct: false },
+            { text: "Eating pizza before the pain began", correct: false },
+            { text: "Upper abdominal pressure radiating toward the jaw with diaphoresis", correct: true },
+            { text: "Her previous appendectomy", correct: false }
+        ],
+        rationale: "The patient's symptoms may represent an atypical presentation of a cardiac emergency. Pressure with radiation toward the jaw, diaphoresis, and tachycardia should prevent the EMT from anchoring on the patient's GERD history or recent meal.<br><strong>Critical clue:</strong> The pattern of symptoms matters more than the most convenient explanation."
+    },
+    {
+        title: "Question 6 — “The Correct Number, Wrong Conclusion”",
+        type: "single",
+        situation: "You are assessing a 76-year-old male with weakness. He is taking several medications.<br><br><strong>Assessment:</strong><br>• BP: 126/78 mmHg | HR: 54/min | RR: 18/min | SpO₂: 98% | Skin: warm and dry | Alert and oriented<br><br><em>His daughter says: \"His pulse is always around 55 because of his heart medication.\"<br>The patient states that he suddenly became weak while walking to the bathroom. You notice that he is now having difficulty maintaining his balance.</em>",
+        prompt: "Which finding deserves the <strong>MOST</strong> immediate attention?",
+        options: [
+            { text: "His heart rate of 54/min", correct: false },
+            { text: "His medication history", correct: false },
+            { text: "His daughter's statement about his normal pulse", correct: false },
+            { text: "The sudden onset of weakness accompanied by a new gait abnormality", correct: true }
+        ],
+        rationale: "A heart rate of 54/min may be normal for this patient, particularly if medication-related. The new neurologic deficit is the more important finding and should prompt focused neurologic assessment and consideration of a time-sensitive emergency.<br><strong>Critical clue:</strong> A value that appears abnormal is not necessarily the most important finding; a new change from baseline may be more significant."
+    },
+    {
+        title: "Question 7 — “The Patient Is Getting Worse” (Select ALL That Apply)",
+        type: "multi",
+        requiredCount: 4,
+        situation: "You are assessing a 66-year-old male with suspected infection.<br><br><strong>Initial findings:</strong><br>• Temperature: 101.8°F | HR: 112/min | RR: 24/min | BP: 108/68 mmHg | SpO₂: 95%<br>• Patient is alert and oriented | Cough for several days, taking OTC cold medication.<br><br><strong>Twenty minutes later:</strong><br>• BP: 92/58 mmHg | HR: 124/min | RR: 30/min | Skin: cool and clammy<br>• Patient is now confused",
+        prompt: "Which findings should <strong>MOST</strong> strongly influence your concern for deterioration? Select <strong>ALL</strong> that apply.",
+        options: [
+            { text: "Increasing respiratory rate", correct: true },
+            { text: "Development of altered mental status", correct: true },
+            { text: "Decreasing blood pressure", correct: true },
+            { text: "History of taking an over-the-counter cold medication", correct: false },
+            { text: "Cool, clammy skin", correct: true }
+        ],
+        rationale: "The most important information is the change in the patient's physiologic status. Increasing respiratory rate, hypotension, altered mental status, and cool/clammy skin collectively suggest worsening perfusion and possible shock. The medication history does not explain away the immediate deterioration.<br><strong>Critical clue:</strong> Look for trends, not isolated values."
+    },
+    {
+        title: "Question 8 — “When the Secondary Assessment Must Change” (Select ALL That Apply)",
+        type: "multi",
+        requiredCount: 3,
+        situation: "You are performing a secondary assessment on a 45-year-old female with abdominal pain.<br><br><strong>Initially:</strong><br>• Alert and oriented | BP: 122/78 mmHg | HR: 96/min | RR: 18/min | SpO₂: 98%<br>• Moderate abdominal tenderness. You begin obtaining SAMPLE and OPQRST information.<br><br><strong>Several minutes later:</strong><br>• Patient becomes pale and says: \"I feel like I'm going to pass out.\"><br>• BP: 86/52 mmHg | HR: 122/min | RR: 26/min | Skin: cool and diaphoretic | Increasingly confused",
+        prompt: "Which actions are <strong>MOST</strong> appropriate now? Select <strong>ALL</strong> that apply.",
+        options: [
+            { text: "Return attention to the primary assessment and immediate life threats", correct: true },
+            { text: "Continue the detailed OPQRST interview until it is complete", correct: false },
+            { text: "Reassess airway, breathing, and circulation", correct: true },
+            { text: "Continue the secondary abdominal examination before transport", correct: false },
+            { text: "Reassess vital signs and prepare for timely transport", correct: true }
+        ],
+        rationale: "The patient's condition has changed significantly. The EMT should return to the primary assessment, reassess ABCs, reassess vital signs, provide appropriate treatment, and prepare for transport. The secondary assessment is not a checklist that must be completed regardless of patient deterioration.<br><strong>Critical clue:</strong> When the patient's condition changes, the priority changes."
+    }
+];
+
+let currentIndex = 0;
+let score = 0;
+let answered = false;
+
+function initProgressBar() {
+    const bar = document.getElementById("progressBar");
+    bar.innerHTML = "";
+    questions.forEach((_, idx) => {
+        const div = document.createElement("div");
+        div.id = `prog${idx}`;
+        if (idx === 0) div.className = "active";
+        bar.appendChild(div);
+    });
+}
+
+function startQuiz() {
+    document.getElementById("welcomeScreen").classList.add("hidden");
+    document.getElementById("quizScreen").classList.remove("hidden");
+    initProgressBar();
+    loadQuestion();
+}
+
+function loadQuestion() {
+    answered = false;
+    const q = questions[currentIndex];
+    
+    document.getElementById("qNumber").textContent = currentIndex + 1;
+    document.getElementById("currentScore").textContent = score;
+    document.getElementById("submitBtn").classList.remove("hidden");
+    document.getElementById("submitBtn").disabled = true;
+    document.getElementById("nextBtn").classList.add("hidden");
+    
+    const feedbackBox = document.getElementById("feedbackBox");
+    feedbackBox.classList.remove("show");
+    feedbackBox.innerHTML = "";
+    
+    const area = document.getElementById("scenarioArea");
+    area.innerHTML = `
+        <h2 style="color: var(--navy); margin-bottom: 15px;">${q.title}</h2>
+        <div class="scenario-box">
+            ${q.situation}
+        </div>
+        <div class="scenario-question">${q.prompt}</div>
+        <div id="optionsArea"></div>
+    `;
+    
+    const optionsArea = document.getElementById("optionsArea");
+    q.options.forEach((opt, index) => {
+        const label = document.createElement("label");
+        label.className = "option-item";
+        
+        const input = document.createElement("input");
+        input.type = q.type === "multi" ? "checkbox" : "radio";
+        input.name = "quizOption";
+        input.value = index;
+        input.onchange = handleSelectionChange;
+        
+        const span = document.createElement("span");
+        span.innerHTML = `<strong>${String.fromCharCode(65 + index)}.</strong> ${opt.text}`;
+        
+        label.appendChild(input);
+        label.appendChild(span);
+        optionsArea.appendChild(label);
+    });
+}
+
+function handleSelectionChange() {
+    if (answered) return;
+    const q = questions[currentIndex];
+    const checked = document.querySelectorAll("input[name='quizOption']:checked");
+    const submitBtn = document.getElementById("submitBtn");
+    
+    if (q.type === "multi") {
+        submitBtn.disabled = checked.length !== q.requiredCount;
+    } else {
+        submitBtn.disabled = checked.length === 0;
+    }
+}
+
+function submitAnswer() {
+    if (answered) return;
+    answered = true;
+    
+    const q = questions[currentIndex];
+    const checkedInputs = document.querySelectorAll("input[name='quizOption']:checked");
+    const optionItems = document.querySelectorAll(".option-item");
+    
+    let userSelections = Array.from(checkedInputs).map(inp => parseInt(inp.value));
+    let correctIndices = [];
+    q.options.forEach((opt, idx) => {
+        if (opt.correct) correctIndices.push(idx);
+    });
+    
+    let isCorrect = false;
+    if (q.type === "single") {
+        isCorrect = userSelections.length === 1 && userSelections[0] === correctIndices[0];
+    } else {
+        if (userSelections.length === correctIndices.length) {
+            isCorrect = userSelections.every(val => correctIndices.includes(val));
+        }
+    }
+    
+    // Highlight options
+    optionItems.forEach((item, idx) => {
+        item.classList.add("disabled");
+        const input = item.querySelector("input");
+        input.disabled = true;
+        if (correctIndices.includes(idx)) {
+            item.classList.add("correct-highlight");
+        } else if (input.checked) {
+            item.classList.add("incorrect-highlight");
+        }
+    });
+    
+    if (isCorrect) {
+        score++;
+        document.getElementById("currentScore").textContent = score;
+    }
+    
+    const feedbackBox = document.getElementById("feedbackBox");
+    feedbackBox.innerHTML = `
+        <h4 style="color: ${isCorrect ? 'var(--green)' : 'var(--red)'};">
+            ${isCorrect ? "✓ Correct Clue Identified" : "✗ Suboptimal Choice"}
+        </h4>
+        <p><strong>Rationale:</strong> ${q.rationale}</p>
+    `;
+    feedbackBox.classList.add("show");
+    
+    document.getElementById("submitBtn").classList.add("hidden");
+    const nextBtn = document.getElementById("nextBtn");
+    nextBtn.classList.remove("hidden");
+    
+    if (currentIndex === questions.length - 1) {
+        nextBtn.textContent = "View Activity Debriefing";
+    }
+    
+    updateProgressIndicator(true);
+}
+
+function updateProgressIndicator(isComplete) {
+    const progEl = document.getElementById(`prog${currentIndex}`);
+    if (progEl) {
+        progEl.classList.remove("active");
+        if (isComplete) progEl.classList.add("complete");
+    }
+    const nextProg = document.getElementById(`prog${currentIndex + 1}`);
+    if (nextProg && !isComplete) {
+        nextProg.classList.add("active");
+    }
+}
+
+function nextQuestion() {
+    if (currentIndex === questions.length - 1) {
+        showResults();
+    } else {
+        currentIndex++;
+        const nextProg = document.getElementById(`prog${currentIndex}`);
+        if(nextProg) nextProg.classList.add("active");
+        loadQuestion();
+    }
+}
+
+function showResults() {
+    document.getElementById("quizScreen").classList.add("hidden");
+    document.getElementById("finalResults").classList.remove("hidden");
+    
+    const percent = Math.round((score / questions.length) * 100);
+    document.getElementById("finalPercent").textContent = percent;
+    
+    const msg = document.getElementById("finalMessage");
+    if (percent >= 90) {
+        msg.textContent = "Master Information Filter! You consistently cut through distracting data and successfully isolated the critical clinical clues that drive life-saving decisions.";
+    } else if (percent >= 70) {
+        msg.textContent = "Good work! You have strong clinical instincts, but review the rationales for scenarios where subtle patient deterioration or atypical presentations were tested.";
+    } else {
+        msg.textContent = "Keep practicing! Remember to look for trends, patterns, and acute changes from baseline rather than relying on isolated numbers or convenient explanations.";
+    }
+}
+</script>
+
+</body>
+</html>
